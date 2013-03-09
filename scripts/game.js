@@ -13,6 +13,7 @@ var levelFileNames = [
 	'levelThree.js',
 	'multiplicity.js',
 	'traps.js',
+    'trees.js',
 ];
 
 var display;
@@ -46,6 +47,16 @@ var objects = {
 			player.killedBy('an invisible trap');
 		}
 	},
+
+    'stream': {
+        'symbol': '░',
+        'passable': true,
+        'onCollision': function (player) {
+            player.killedBy('drowning in deep dark water');
+        }
+    },
+
+
 	'exit' : {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#0ff',
