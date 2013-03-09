@@ -59,6 +59,9 @@ Player.prototype.killedBy = function (killer) {
 
 Player.prototype.pickUpItem = function () {
 	map.placeObject(this._x, this._y, 'empty');
+	// do a little dance to get rid of graphical artifacts
 	this.move('right');
 	this.move('left');
+	this.move('left');
+	this.move('right');
 }

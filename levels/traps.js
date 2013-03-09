@@ -1,4 +1,4 @@
-// {"editable": [[24, 24]]}
+// {"editable": [[26, 26]]}
 
 /*
  * Look out! There are traps scattered all about this level, and
@@ -15,6 +15,8 @@ function startLevel(map) {
         }
     }
 
+    map.player = new Player(5, 5);
+
     for (var i = 0; i < 50; i++) {
         var x = getRandomInt(0, map.getWidth() - 1);
         var y = getRandomInt(0, map.getHeight() - 1);
@@ -25,7 +27,6 @@ function startLevel(map) {
 
     }
 
-    map.player = new Player(5, 5);
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
 }
 
