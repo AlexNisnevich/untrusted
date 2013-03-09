@@ -11,6 +11,7 @@ var display;
 var editor;
 var map;
 var player;
+var currentLevel = 0; //level numbers start at 0 because coding :\
 
 var dimensions = {
 	width: 50,
@@ -128,7 +129,8 @@ function canMoveTo(x,y) {
 }
 
 function init() {
-	display = new ROT.Display({width: dimensions.width, height: dimensions.height});
+	display = new ROT.Display({width: dimensions.width, height: dimensions.height,
+        fontSize: 20, fontStyle: "bold"});
 
     // drawObject takes care of looking up an object's symbol and color
     // according to name (NOT according to the actual object literal!)
@@ -145,10 +147,6 @@ function init() {
         display.draw(x, y, symbol, color);
     };
 
-	display.setOptions({
-		fontSize: 20,
-		fontStyle: "bold"
-	});
 	$('#screen').append(display.getContainer());
 
 	$("canvas").attr("contentEditable", "true");
