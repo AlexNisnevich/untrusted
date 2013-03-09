@@ -18,7 +18,9 @@ var display;
 var output;
 var editor;
 var map;
-var currentLevel = 0; //level numbers start at 0 because coding :\
+
+var currentLevel = 0; // level numbers start at 0 because coding :\
+var pickedUpPhone = false;
 
 var objects = {
 	'empty' : {
@@ -51,12 +53,18 @@ var objects = {
 		}
 	},
 	'player' : {
-		'symbol' : '@',
-		'color' : '#0f0',
-		'passable' : false
+		'symbol': '@',
+		'color': '#0f0',
+		'passable': false
 	},
 	'phone': {
 		'symbol': String.fromCharCode(0x260E), // ☎
+		'passable': true,
+		'onCollision': function (player) {
+			output.drawText(0, 0, 'You have picked up the function phone! You will be able to use it to call functions.');
+			$('#phoneButton').show();
+			pickedUpPhone = true;
+		}
 	}
 };
 
@@ -142,9 +150,8 @@ function loadLevel(lvlCode) {
 		$('#screen canvas').removeClass('focus');
 	});
 
-	// load and initialize level
+	// initialize level
 	editor.setValue(lvlCode);
-	evalLevelCode();
 
 	// get editable line ranges from level metadata
 	levelMetadata = editor.getLine(0);
@@ -185,6 +192,9 @@ function loadLevel(lvlCode) {
 		}
 		return code;
 	}
+
+	// start the level
+	evalLevelCode();
 }
 
 function focusOnMap() {
@@ -207,6 +217,10 @@ function evalLevelCode() {
 		map.reset();
 		validatedStartLevel(map);
 	}
+}
+
+function usePhone() {
+	// TODO: make phone do something
 }
 
 shortcut.add('ctrl+1', focusOnMap);
