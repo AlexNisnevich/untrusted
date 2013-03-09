@@ -51,7 +51,8 @@ var objects = {
 		'passable': false
 	},
     'exit' : {
-        'symbol': "😃'",
+        //'symbol': "😃'",
+        'symbol' : "█",
         'color': '#0ff',
         passable: true
     }
