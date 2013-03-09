@@ -1,4 +1,6 @@
 
+var VERBOTEN = ['eval', 'prototype'];
+
 var validationRulesByLevel = [ null ];
 
 var DummyDisplay = function () {
@@ -7,12 +9,26 @@ var DummyDisplay = function () {
 }
 
 function validate(playerCode, level) {
-	var dummyMap = new Map(new DummyDisplay);
+	output.clear();
+	try {
+		for (var i = 0; i < VERBOTEN.length; i++) {
+			var badWord = VERBOTEN[i];
+			if (playerCode.indexOf(badWord) > -1) {
+				throw 'You are not allowed to use ' + badWord + '!';
+			}
+		}
 
-	eval(playerCode); // get startLevel and (opt) validateLevel methods
+		var dummyMap = new Map(new DummyDisplay);
 
-	if (typeof(validateLevel) != 'undefined' && !validateLevel(dummyMap)) {
-	} else {
+		eval(playerCode); // get startLevel and (opt) validateLevel methods
+
+		startLevel(dummyMap);
+		if (typeof(validateLevel) != 'undefined') {
+			validateLevel(dummyMap);
+		}
+
 		return startLevel;
+	} catch (e) {
+		output.drawText(0, 0, e.toString());
 	}
 }
