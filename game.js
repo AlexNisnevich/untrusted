@@ -112,9 +112,19 @@ function canMoveTo(x,y) {
 
 function init() {
 	display = new ROT.Display({width: dimensions.width, height: dimensions.height});
+	display.setOptions({
+		fontSize: 20,
+		fontStyle: "bold"
+	});
 	$('#screen').append(display.getContainer());
 
-	display.setOptions( {fontSize: 20, fontStyle : "bold"});
+	$("canvas").attr("contentEditable", "true");
+	display.getContainer().addEventListener("keydown", function(e) {
+		console.log(e.keyCode);
+		if (keys[e.keyCode]) {
+			map.player.move(keys[e.keyCode]);
+		}
+	});
 
 	map = new Map();
 
@@ -136,12 +146,3 @@ function evalLevelCode() {
 	map.reset();
 	startLevel(map);
 }
-
-// Event listeners
-
-document.addEventListener("keydown", function(e) {
-	console.log(e.keyCode);
-	if (keys[e.keyCode]) {
-		map.player.move(keys[e.keyCode]);
-	}
-});
