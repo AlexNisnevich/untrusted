@@ -45,17 +45,18 @@ var objects = {
 	},
 	'block': {
 		'symbol': '#',
+		'color': '#f00',
 		'passable': false
 	},
 	'tree': {
 		'symbol': '♣',
+		'color': '#080',
 		'passable': false
 	},
     'exit' : {
-        //'symbol': "😃'",
-        'symbol' : "█",
+        'symbol' : String.fromCharCode(0x2588),
         'color': '#0ff',
-        passable: true
+        'passable': true
     }
 };
 
