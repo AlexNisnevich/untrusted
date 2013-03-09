@@ -10,7 +10,7 @@ var Map = function (display) {
 		for (var x = 0; x < dimensions.width; x++) {
 			this._grid[x] = new Array(dimensions.height);
 			for (var y = 0; y < dimensions.height; y++) {
-				this._grid[x][y] = 'empty';
+				this._grid[x][y] = {type: 'empty'};
 			}
 		}
 		this._playerCount = 0;
@@ -21,13 +21,8 @@ var Map = function (display) {
 
 	this.placeObject = function (x, y, type, bgColor) {
         if (typeof(this._grid[x]) !== 'undefined' && typeof(this._grid[x][y]) !== 'undefined') {
-
-            if (this.player.atLocation(this._grid[x], this._grid[y])) {
-
-            }
-            else {
-                this._grid[x][y] = type;
-                this._display.drawObject(x, y, type, bgColor);
+            if (!this.player.atLocation(x, y) || type == 'empty') {
+                this._grid[x][y].type = type;
             }
         }
 	};
@@ -37,14 +32,14 @@ var Map = function (display) {
 	};
 
 	this.setSquareColor = function (x, y, bgColor) {
-		this._display.drawObject(x, y, this._grid[x][y], bgColor);
+		this._grid[x][y].bgColor = bgColor;
 	};
 
 	this.canMoveTo = function (x, y) {
 		if (x < 0 || x >= dimensions.width || y < 0 || y >= dimensions.height) {
 			return false;
 		}
-		return objects[map._grid[x][y]].passable;
+		return objects[map._grid[x][y].type].passable;
 	};
 
 	// Initialize with empty grid

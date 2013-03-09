@@ -40,7 +40,7 @@ function validateAtLeastXObjects(map, num, type) {
 	var count = 0;
 	for (var x = 0; x < map.getWidth(); x++) {
 		for (var y = 0; y < map.getHeight(); y++) {
-			if (map._grid[x][y] === type) {
+			if (map._grid[x][y].type === type) {
 				count++;
 			}
 		}
@@ -57,7 +57,7 @@ function validateExactlyXManyObjects(map, num, type) {
 		var count = 0;
 		for (var x = 0; x < map.getWidth(); x++) {
 			for (var y = 0; y < map.getHeight(); y++) {
-				if (map._grid[x][y] === type) {
+				if (map._grid[x][y].type === type) {
 					count++;
 				}
 			}

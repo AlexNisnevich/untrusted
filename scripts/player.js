@@ -9,7 +9,8 @@ var Player = function(x, y, map) {
 }
 
 Player.prototype.draw = function () {
-	this._display.draw(this._x, this._y, this._rep, this._fgColor);
+	var bgColor = map._grid[this._x][this._y].bgColor
+	this._display.draw(this._x, this._y, this._rep, this._fgColor, bgColor);
 }
 
 Player.prototype.atLocation = function (x, y) {
@@ -40,12 +41,12 @@ Player.prototype.move = function (direction) {
 	}
 
 	if (map.canMoveTo(new_x, new_y)) {
-		this._display.drawObject(cur_x,cur_y, map._grid[cur_x][cur_y]);
+		this._display.drawObject(cur_x,cur_y, map._grid[cur_x][cur_y].type, map._grid[cur_x][cur_y].bgColor);
 		this._x = new_x;
 		this._y = new_y;
 		this.draw();
-		if (objects[map._grid[new_x][new_y]].onCollision) {
-			objects[map._grid[new_x][new_y]].onCollision(this);
+		if (objects[map._grid[new_x][new_y].type].onCollision) {
+			objects[map._grid[new_x][new_y].type].onCollision(this);
 		}
 	}
 	else {

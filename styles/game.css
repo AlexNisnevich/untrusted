@@ -3,6 +3,11 @@ body {
 	background: #111;
 }
 
+#container {
+	width: 1210px;
+	margin: 0 auto;
+}
+
 #screenPane {
 	float: left;
 	width: 602px;

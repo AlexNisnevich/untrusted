@@ -1,4 +1,4 @@
-// {"editable": [[94,94]]}
+// {"editable": [[96,96]]}
 
 /*
  * trees.js - the obligatory forest level
@@ -45,21 +45,23 @@ function startLevel(map) {
         for (var i = 0; i < map.getWidth(); i++) {
             for (var j = 0; j < map.getHeight(); j++) {
 
-                //initialize to empty if the square contains a forest already
-                if (map._grid[i][j] === 'tree') {
-                    console.log("Removing existing forest");
+                // initialize to empty if the square contains a forest already
+                if (map._grid[i][j].type === 'tree') {
+                    // remove existing forest
                     map.placeObject(i,j,'empty');
                 }
 
-                if (map.player.atLocation(i,j) || map._grid[i][j] === 'exit') {
+                if (map.player.atLocation(i,j) || map._grid[i][j].type === 'exit') {
                     continue;
                 }
+
                 var rv = Math.random();
                 if (rv < 0.45) {
                     map.placeObject(i, j, 'tree');
                 }
             }
         }
+        display.drawAll(map);
     };
 
     functionList['placePhone'] = function () {

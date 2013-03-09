@@ -1,45 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Untrusted - a user javascript adventure game</title>
-    <meta charset='utf8'></meta>
+	<title>Untrusted - a user javascript adventure game</title>
+	<meta charset='utf8'></meta>
+	<link rel="shortcut icon" href="favicon.ico" />
 
-    <script src="lib/jquery-1.9.1.min.js"></script>
-    <script src="lib/shortcut.js"></script>
-    <script src="lib/rotjs-library/rot.js"></script>
+	<script src="lib/jquery-1.9.1.min.js"></script>
+	<script src="lib/shortcut.js"></script>
+	<script src="lib/rotjs-library/rot.js"></script>
 
-    <link rel="stylesheet" href="lib/codemirror-3.1/lib/codemirror.css">
-    <script src="lib/codemirror-3.1/lib/codemirror.js"></script>
-    <script src="lib/codemirror-3.1/mode/javascript/javascript.js"></script>
-    <link rel="stylesheet" href="lib/codemirror-3.1/theme/vibrant-ink.css">
+	<link rel="stylesheet" href="lib/codemirror-3.1/lib/codemirror.css">
+	<script src="lib/codemirror-3.1/lib/codemirror.js"></script>
+	<script src="lib/codemirror-3.1/mode/javascript/javascript.js"></script>
+	<link rel="stylesheet" href="lib/codemirror-3.1/theme/vibrant-ink.css">
 
-    <script src="scripts/game.js"></script>
-    <script src="scripts/map.js"></script>
-    <script src='scripts/player.js'></script>
-    <script src='scripts/objects.js'></script>
-    <script src='scripts/validate.js'></script>
+	<script src="scripts/game.js"></script>
+	<script src="scripts/map.js"></script>
+	<script src='scripts/player.js'></script>
+	<script src='scripts/objects.js'></script>
+	<script src='scripts/validate.js'></script>
 
-    <link rel="stylesheet" href="styles/game.css">
+	<link rel="stylesheet" href="styles/game.css">
 </head>
 <body onload="init()">
-    <div>
-        <h1>Untrusted</h1>
-        <h2>&mdash;or&mdash; the Continuing Adventures of Dr. Eval</h2>
-    </div>
-    <div id="screenPane">
-    	<div id="screen"></div>
-        <div id="output"></div>
-    </div>
-	<div id="editorPane" style="display: none;">
-		<textarea id="editor">
-		</textarea>
-        <div id="buttons">
-            <span><a id="mapButton" onClick="focusOnMap();" title="Ctrl+1: Switch to Map"><span class="keys">^1</span> Switch to Map</a></span>
-            <span><a id="editorButton" onClick="focusOnEditor();" title="Ctrl+2: Switch to Editor"><span class="keys">^2</span> Switch to Editor</a></span>
-            <span><a id="resetButton" onClick="resetEditor();" title="Ctrl+4: Reset Level"><span class="keys">^4</span> Reset Level</a></span>
-            <span><a id="executeButton" onClick="evalLevelCode();" title="Ctrl+5: Execute"><span class="keys">^5</span> Execute</a></span>
-            <span><a id="phoneButton" style="display: none;" onClick="usePhone();" title="Ctrl+6: Use Phone"><span class="keys">^6</span> Phone</a></span>
-        </div>
+	<div id="container">
+		<div>
+			<h1>Untrusted</h1>
+			<h2>&mdash;or&mdash; the Continuing Adventures of Dr. Eval</h2>
+		</div>
+		<div id="screenPane">
+			<div id="screen"></div>
+			<div id="output"></div>
+		</div>
+		<div id="editorPane" style="display: none;">
+			<textarea id="editor">
+			</textarea>
+			<div id="buttons">
+				<span><a id="mapButton" onClick="focusOnMap();" title="Ctrl+1: Switch to Map"><span class="keys">^1</span> Switch to Map</a></span>
+				<span><a id="editorButton" onClick="focusOnEditor();" title="Ctrl+2: Switch to Editor"><span class="keys">^2</span> Switch to Editor</a></span>
+				<span><a id="resetButton" onClick="resetEditor();" title="Ctrl+4: Reset Level"><span class="keys">^4</span> Reset Level</a></span>
+				<span><a id="executeButton" onClick="evalLevelCode();" title="Ctrl+5: Execute"><span class="keys">^5</span> Execute</a></span>
+				<span><a id="phoneButton" style="display: none;" onClick="usePhone();" title="Ctrl+6: Use Phone"><span class="keys">^6</span> Phone</a></span>
+			</div>
+		</div>
 	</div>
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-345959-12']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
 </body>
 </html>

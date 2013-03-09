@@ -29,7 +29,7 @@ function init() {
 
 	// drawObject takes care of looking up an object's symbol and color
 	// according to name (NOT according to the actual object literal!)
-	display.drawObject = function (x, y, object, bgColor) {
+	display.drawObject = function (x, y, object, bgColor, multiplicand) {
 		var symbol = objects[object].symbol;
 		var color;
 		if (objects[object].color) {
@@ -42,7 +42,41 @@ function init() {
 			bgColor = "#000";
 		}
 
+		if (multiplicand) {
+			color = ROT.Color.toHex(ROT.Color.multiply(multiplicand, ROT.Color.fromString(color)));
+			bgColor = ROT.Color.toHex(ROT.Color.multiply(multiplicand, ROT.Color.fromString(bgColor)));
+		}
+
 		display.draw(x, y, symbol, color, bgColor);
+	};
+
+	display.drawAll = function(map, multiplicand) {
+		for (var x = 0; x < dimensions.width; x++) {
+			for (var y = 0; y < dimensions.height; y++) {
+				this.drawObject(x, y, map._grid[x][y].type, map._grid[x][y].bgColor, multiplicand);
+			}
+		}
+		map.player.draw();
+	}
+
+	display.fadeOut = function (map, callback, i) {
+		if (i <= 0) {
+			if (callback) { callback(); }
+		} else {
+			if (!i) { i = 255; }
+			this.drawAll(map, [i, i, i]);
+			setTimeout(function () { display.fadeOut(map, callback, i-10); }, 10);
+		}
+	};
+
+	display.fadeIn = function (map, callback, i) {
+		if (i > 255) {
+			if (callback) { callback(); }
+		} else {
+			if (!i) { i = 0; }
+			this.drawAll(map, [i, i, i]);
+			setTimeout(function () { display.fadeIn(map, callback, i+5); }, 10);
+		}
 	};
 
 	$('#screen').append(display.getContainer());
@@ -73,7 +107,9 @@ function init() {
 
 function moveToNextLevel() {
 	currentLevel++;
-	getLevel(currentLevel);
+	display.fadeOut(map, function () {
+		getLevel(currentLevel);
+	})
 };
 
 // makes an ajax request to get the level text file and
@@ -154,8 +190,9 @@ function loadLevel(lvlCode) {
 		return code;
 	}
 
-	// start the level
+	// start the level and fade into map
 	evalLevelCode();
+	display.fadeIn(map);
 
 	// on first level, display intro text
 	if (currentLevel == 0) {
@@ -182,6 +219,7 @@ function evalLevelCode() {
 	if (validatedStartLevel) {
 		map.reset();
 		validatedStartLevel(map);
+		display.drawAll(map);
 	}
 }
 

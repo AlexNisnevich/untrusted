@@ -5,8 +5,8 @@
  *
  * This is the first level, so we'll give you a hint.
  * In fact, a really obvious hint (hey, it's level 0).
- * The code currently places blocks in a square surrounding
- * you. All you need to do is make a gap.
+ * The code currently places blocks in a rectangle
+ * surrounding you. All you need to do is make a gap.
  * You don't even need to do anything extra. In fact,
  * you should be doing less...
  */
