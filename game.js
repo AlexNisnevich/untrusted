@@ -100,10 +100,23 @@ Player.prototype.move = function (direction) {
 		this._x = new_x;
 		this._y = new_y;
 		this.draw();
+        if (map._grid[this._x][this._y] === 'exit') {
+            moveToNextLevel();
+        }
 	}
 	else {
 		console.log("Can't move to " + new_x + ", " + new_y + ", reported from inside Player.move() method");
 	}
+};
+
+
+function moveToNextLevel() {
+    console.log("On exit square!");
+    map.reset();//TODO maybe unnecessary
+	$.get('levels/levelTwo.js', function (lvlCode) {
+		editor.setValue(lvlCode);
+		evalLevelCode();
+	});
 };
 
 function canMoveTo(x,y) {
