@@ -256,8 +256,10 @@ function evalLevelCode() {
 }
 
 function usePhone() {
-	if (pickedUpPhone) {
-		// TODO: make phone do something
+	if (map.player._phoneFunc) {
+		map.player._phoneFunc();
+	} else {
+		output.write('RotaryPhoneException: Your function phone is not bound to any function.')
 	}
 }
 
