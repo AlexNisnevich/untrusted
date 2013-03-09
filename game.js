@@ -114,8 +114,8 @@ function moveToNextLevel() {
     console.log("On exit square!");
     map.reset();//TODO maybe unnecessary
 	$.get('levels/levelTwo.js', function (lvlCode) {
-		editor.setValue(lvlCode);
-		evalLevelCode();
+		editor.toTextArea();
+		loadLevel(lvlCode);
 	});
 };
 
@@ -132,9 +132,9 @@ function init() {
 
     // drawObject takes care of looking up an object's symbol and color
     // according to name (NOT according to the actual object literal!)
-    display.drawObject = function (x,y, object) {  
+    display.drawObject = function (x,y, object) {
         var symbol = objects[object].symbol;
-        var color; 
+        var color;
         if (objects[object].color) {
             color = objects[object].color;
         }
@@ -160,43 +160,48 @@ function init() {
 
 	map = new Map();
 
+	$.get('levels/blocks.js', function (lvlCode) {
+		loadLevel(lvlCode);
+	});
+}
+
+function loadLevel(lvlCode) {
+	// initialize CodeMirror editor
 	editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
 		theme: 'vibrant-ink',
 		lineNumbers: true
 	});
 	editor.setSize(600, 500);
 
-	$.get('levels/blocks.js', function (lvlCode) {
-		// load and initialize level
-		editor.setValue(lvlCode);
-		evalLevelCode();
+	// load and initialize level
+	editor.setValue(lvlCode);
+	evalLevelCode();
 
-		// get editable line ranges from level metadata
-		levelMetadata = editor.getLine(0);
-		editableLineRanges = JSON.parse(levelMetadata.slice(3)).editable
-		editableLines = [];
-		for (var j = 0; j < editableLineRanges.length; j++) {
-			range = editableLineRanges[j];
-			for (var i = range[0]; i <= range[1]; i++) {
-				editableLines.push(i);
-			}
+	// get editable line ranges from level metadata
+	levelMetadata = editor.getLine(0);
+	editableLineRanges = JSON.parse(levelMetadata.slice(3)).editable;
+	editableLines = [];
+	for (var j = 0; j < editableLineRanges.length; j++) {
+		range = editableLineRanges[j];
+		for (var i = range[0]; i <= range[1]; i++) {
+			editableLines.push(i - 1);
 		}
-		editor.setLine(0, '');
+	}
+	editor.removeLine(0);
 
-		// set bg color for uneditable lines
-		for (var i = 0; i < editor.lineCount(); i++) {
-			if (editableLines.indexOf(i + 1) == -1) {
-				line = $('.CodeMirror-lines').children().first().children().eq(2).children().eq(i);
-				line.css('background', '#311');
-			}
+	// set bg color for uneditable lines
+	for (var i = 0; i < editor.lineCount(); i++) {
+		if (editableLines.indexOf(i) == -1) {
+			line = $('.CodeMirror-lines').children().first().children().eq(2).children().eq(i);
+			line.css('background', '#311');
 		}
+	}
 
-		// only allow editing on editable lines
-		editor.on('beforeChange', function (instance, change) {
-			if (editableLines.indexOf(change.to.line) == -1) {
-				change.cancel();
-			}
-		});
+	// only allow editing on editable lines
+	editor.on('beforeChange', function (instance, change) {
+		if (editableLines.indexOf(change.to.line) == -1) {
+			change.cancel();
+		}
 	});
 }
 
