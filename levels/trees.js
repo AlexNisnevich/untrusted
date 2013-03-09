@@ -11,7 +11,6 @@ function startLevel(map) {
 
     map.player = new Player(2, map.getHeight() - 1);
 
-
     var functionList = {};
     functionList['fortresses'] = function  () {
 
@@ -54,10 +53,9 @@ function startLevel(map) {
                     map.placeObject(i,j,'empty');
                 }
 
-                /*
-                if player.atLocation(i,j) {
+                if (map.player.atLocation(i,j)) {
                     continue;
-                }*/
+                }
                 var rv = Math.random();
                 if (rv < 0.3000) {
                     map.placeObject(i,j,'tree');
