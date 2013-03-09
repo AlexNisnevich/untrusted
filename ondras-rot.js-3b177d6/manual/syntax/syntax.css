@@ -1,0 +1,15 @@
+.keyword {
+	color: #33a;
+}
+
+.number {
+	color: #a33;
+}
+
+.string, .string * {
+	color: #555;
+}
+
+.comment, .comment * {
+	color: #282;
+}

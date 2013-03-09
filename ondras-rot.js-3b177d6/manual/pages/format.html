@@ -1,0 +1,64 @@
+<h2>String formatting</h2>
+
+<p>The <code>String.format</code> function is used to perform complex replacements within string templates. This functionality is also available in <code>String.prototype</code> for your convenience:</p>
+
+<div class="example">
+SHOW(
+	String.format("%s %s", "hello", "world"),
+	"%s %s".format("hello", "world")
+);</div>
+
+<p>It is possible to alter and enrich the behavior of this function by adding mappings to the <code>String.format.map</code> object. Keys correspond to individual formatting specifiers; values are method names to be called. The default value of <code>String.format.map</code> is <code>{s:"toString"}</code>.</p>
+
+<div class="example">
+var myObj = {
+	foo: function() { return "bar"; }
+}
+String.format.map.f = "foo";
+
+SHOW( "%f".format(myObj) );
+</div>
+
+<p>Finally, using formatting specifier with an upper-case letter will result in a capitalized replacement. Let's show a more convoluted example:</p>
+
+<div class="example">
+var Item = function(name) {
+	this._name = name;
+}
+Item.prototype.a = function() {
+	var first = this._name.charAt(0);
+	return (first.match(/[aeiouy]/i) ? "an" : "a") + " " + this._name;
+}
+Item.prototype.the = function() {
+	return "the " + this._name;
+}
+
+String.format.map.a = "a";
+String.format.map.the = "the";
+
+var apple = new Item("apple");
+var banana = new Item("banana");
+var template = "You eat %a. %The was delicious.";
+
+SHOW( template.format(apple, apple) );
+SHOW( template.format(banana, banana) );
+</div>
+
+<p>It is possible to pass additional arguments to the formatting function, using the <em>{,}</em> notation.</p>
+
+<div class="example">
+var Animal = function(name) {
+	this._name = name;
+}
+
+Animal.prototype.adjective = function(x) {
+	return x + " " + this._name;
+}
+
+String.format.map.adjective = "adjective";
+
+var cat = new Animal("cat");
+var template = "You see a %{adjective,black}.";
+
+SHOW( template.format(cat) );
+</div>

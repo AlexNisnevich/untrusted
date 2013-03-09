@@ -1,0 +1,61 @@
+<h2>JavaScript prototype improvements</h2>
+
+<p><strong>rot.js</strong> adds several new methods to JavaScript primordial objects: <code>Array</code>, <code>String</code>, <code>Number</code>, <code>Date</code>, <code>Object</code> and <code>Function</code>. Some of these are <a href="http://en.wikipedia.org/wiki/ECMAScript#ECMAScript.2C_5th_Edition">ECMAScript 5</a> 
+<a href="http://en.wikipedia.org/wiki/Polyfill">polyfills</a>, some are purely syntactic sugar.</p>
+
+<h3>Array</h3>
+
+<div class="example">
+SHOW(
+	["apples", "oranges", "zombies"].random(),
+	["apples", "oranges", "zombies"].randomize()
+);</div>
+
+<h3>String</h3>
+
+<p>A more verbose explanation about how <code>String.format</code> works is available on a dedicated <a href="#format">string formatting page</a>.
+
+<div class="example">
+SHOW(
+	"hello world".capitalize(),
+	"hello %s, this is %s".format("world", "sparta"),
+	"7".lpad("0", 3),
+	"123".rpad(".", 6)
+);</div>
+
+<h3>Number</h3>
+
+<p>The built-in modulus operator (%) yields negative results for negative arguments. <code>Number.prototype.mod</code> is guaranteed to return a positive value.</p>
+
+<div class="example">
+SHOW(
+	( 15)  %  7 ,
+	(-15)  %  7 ,
+	( 15).mod(7),
+	(-15).mod(7)
+);</div>
+
+<h3>Object</h3>
+
+<p><code>Object.create</code> is a standardized way to create a new object with a hidden prototype link to other given object.</p>
+
+<div class="example">
+var obj1 = {price: 100};
+var obj2 = Object.create(obj1);
+
+SHOW(obj2.price);</div>
+
+<h3>Date</h3>
+
+<div class="example">SHOW(Date.now()); /* same as new Date().getTime() */</div>
+
+<h3>Function</h3>
+
+<div class="example">
+var F1 = function() {};
+F1.prototype.alert = function() { SHOW("hi"); }
+
+var F2 = function() {};
+F2.extend(F1);
+
+new F2().alert();</div>

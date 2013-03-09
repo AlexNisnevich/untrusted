@@ -1,0 +1,139 @@
+#menu {
+	position: fixed;
+	left: 0px;
+	top: 10px;
+	z-index: 1;
+}
+
+#menu, #menu ul {
+	margin: 0;
+	padding: 0px;
+	list-style-type: none;
+	width: 180px;
+}
+
+#menu a, #menu h2 {
+	display: block;
+	text-decoration: none;
+	padding-left: 16px;
+	background-color: #000;
+	line-height: 200%;
+}
+
+#menu h2 {
+	margin: 0;
+	text-align: center;
+	text-transform: uppercase;
+	padding-right: 16px;
+	border-top-left-radius: 10px;
+}
+
+#menu a {
+	position: relative;
+	z-index: 1;
+	outline-style: none;
+}
+
+#menu a.active:before {
+	content: "●";
+	position: absolute;
+	left: 2px;
+	top: 0;
+}
+
+#menu a:not(:last-child) {
+	border-right: 3px solid #fff;
+}
+
+#menu li {
+	position: relative;
+}
+
+#menu li:first-child > * {
+	border-top-right-radius: 10px;
+}
+
+#menu li:last-child > * {
+	border-bottom-right-radius: 10px;
+}
+
+#menu li ul {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 0;
+}
+
+/* submenu offset */
+
+#menu li li:not(:first-child) a {
+	margin-left: 3px;
+}
+
+#menu li li:first-child a {
+	padding-left: 19px;
+}
+
+#menu li li:first-child a.active:before {
+	left: 5px;
+}
+
+/* item hovers */
+
+#menu li:hover > a {
+	background-color: #333;
+}
+
+/* main menu transitions */
+
+#menu li, #menu h2 {
+	-webkit-transition: all 1s;
+	-moz-transition: all 1s;
+	transition: all 1s;
+}
+
+#menu > li:not(:first-child) {
+	-webkit-transform: translate(-100%, 0);
+	-moz-transform: translate(-100%, 0);
+	-ms-transform: translate(-100%, 0);
+	transform: translate(-100%, 0);
+}
+
+#menu > li:first-child {
+	-webkit-transform-origin: 0 100%;
+	-moz-transform-origin: 0 100%;
+	-ms-transform-origin: 0 100%;
+	-webkit-transform-origin: 0 100%;
+
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+#menu:hover > * {
+	-webkit-transform: none !important;
+	-moz-transform: none !important;
+	-ms-transform: none !important;
+	transform: none !important;
+}
+
+#menu:hover h2 {
+	border-top-left-radius: 0px;
+}
+
+/* submenu transitions */
+
+#menu li ul {
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+#menu li:hover ul {
+	display: block;
+}
+
+#menu li:hover ul {
+	left: 180px;
+}

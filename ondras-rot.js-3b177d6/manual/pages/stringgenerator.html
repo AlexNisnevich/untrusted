@@ -1,0 +1,34 @@
+<h2>String generator</h2>
+
+<p><code>ROT.StringGenerator</code> is an implementation of a high order Markov process. This machine learning technique needs to be <em>trained</em> first (with a set of typical strings); after training, it generates strings similar to those used as a training set.</p>
+
+<p>Read more about the implementation (Dirichlet prior, simplified Katz back-off) in this <a href="http://www.roguebasin.roguelikedevelopment.org/index.php?title=Names_from_a_high_order_Markov_Process_and_a_simplified_Katz_back-off_scheme">RogueBasin article</a>. The constructor accepts an optional configuration object with the following keys:</p>
+
+<ul>
+	<li><code>words</code> &ndash; use word mode? (default: false, use letters instead)</li>
+	<li><code>order</code> &ndash; how many preceding characters are used to generate next character</li>
+	<li><code>prior</code> &ndash; default probability weight for all (unexpected) events (Dirichlet prior)</li>
+</ul>
+
+<p>There are only two important public methods: <code>observe()</code> for training and <code>generate()</code> for producing results. In the following example, we will use <strong><a href="http://docs.oracle.com/javase/7/docs/api/allclasses-frame.html">all standard Java 7 class names</a></strong> as a training set; let's see what new Java stuff our generator produces.</p>
+
+<div class="example">
+var sg = new ROT.StringGenerator();
+
+var r = new XMLHttpRequest();
+r.open("get", "java.txt", true);
+r.send();
+
+r.onreadystatechange = function() {
+	if (r.readyState != 4) { return; }
+
+	var lines = r.responseText.split("\n");
+	while (lines.length) { 
+		var line = lines.pop().trim();
+		if (!line) { continue; }
+		sg.observe(line); 
+	}
+
+	for (var i=0; i&lt;20; i++) { SHOW(sg.generate()); }
+}
+</div>

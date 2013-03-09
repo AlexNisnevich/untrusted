@@ -1,0 +1,45 @@
+<h2>Map generation</h2>
+
+<p>There are several map generator tools in <code>rot.js</code>; they all share the same usage pattern. You first need to instantialize the proper <code>ROT.Map.*</code> 
+object and pass size (plus any additional relevant options) to its constructor; you can then call the main <code>create</code> method (repeatedly, if you want).</p>
+
+<p>This toolkit does not force usage of any particular memory structure to store the map data. Instead, the map creation process is <em>callback-based</em>: 
+you supply a callback function as an argument to the <code>create</code> method; 
+the map creator will call your function repeatedly and pass it the generated map information. Your callback should accept these arguments:</p>
+
+<ul>
+	<li><code>x</code> &ndash; horizontal coordinate of a map's cell</li>
+	<li><code>y</code> &ndash; vertical coordinate of a map's cell</li>
+	<li><code>value</code> &ndash; integer value corresponding to the type of generated cell (different values might be supplied by different map generators)</li>
+</ul>
+
+<p>These examples use the simplest map generator, <code>Arena</code>: a fully dug room.</p>
+
+<div class="example">
+var map = new ROT.Map.Arena(3, 3);
+var userCallback = function(x, y, value) {
+	SHOW("Value %s generated at [%s,%s]".format(value, x, y));
+}
+map.create(userCallback);
+</div>
+
+<p>We can use <code><a href="#display">ROT.Display</a></code> to show the generated map (although it would make more sense to store the generated data as well). For debugging purposes, 
+<code>ROT.Display</code> provides a built-in convenience method <code>DEBUG</code>, which works as a universal debugging callback.</p>
+
+<div class="example">
+var map = new ROT.Map.Arena(10, 5);
+
+var display1 = new ROT.Display({width:10, height:5, fontSize:18});
+SHOW(display1.getContainer());
+
+map.create(function(x, y, wall) {
+	display1.draw(x, y, wall ? "#" : ".");
+});
+
+/* debugging with small font */
+var display2 = new ROT.Display({width:10, height:5, fontSize:8});
+SHOW(display2.getContainer());
+map.create(display2.DEBUG);
+</div>
+
+<p>Read more about various types of generators: <a href="#map/maze">Maze</a>, <a href="#map/cellular">Cellular</a> and <a href="#map/dungeon">Dungeon</a>.</p>

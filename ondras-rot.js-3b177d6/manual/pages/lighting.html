@@ -1,0 +1,83 @@
+<h2>Global lighting</h2>
+
+<p>Lighting module is one of the most convoluted parts of <code>rot.js</code>: it is a mix of various concepts introduced in simpler components. <code>ROT.Lighting</code> is used to compute how multiple light sources mix and reflect in a cellular map (using a highly simplified radiosity-like algorithm).</p>
+
+<p>To compute a lighting, you need the following:</p>
+<ul>
+	<li>a <code>ROT.FOV</code> instance, which is used to compute the areas lit by light sources;</li>
+	<li>a <code>lightingCallback</code> which notifies you about the resulting light for a given coordinates;</li>
+	<li>a set of lights, defined by their position (x, y) and color.</li>
+</ul>
+
+<p>If you decide to use a <em>two-pass</em> lighting (more light, more realistic light spread, more computation time), you also need:</p>
+<ul>
+	<li>a <code>reflectivityCallback</code> which is used to return how much individual map cells reflect incoming light. Please note that wall cells should not reflect any light for the purpose of lighting computation.</li>
+</ul>
+
+<p>Finally, the <code>ROT.Lighting</code> function accepts an optional configuration object as its second argument. This object may contain:</p>
+<ul>
+	<li><code>range</code> &ndash; maximum range for the most powerful light source</li>
+	<li><code>passes</code> &ndash; number of computation passes (1: no reflectivity used, 2: reflectivity used)</li>
+	<li><code>emissionThreshold</code> &ndash; minimal amount of light at a cell to be re-emited (only for passes>1)</li>
+</ul>
+
+<div class="example">
+ROT.RNG.setSeed(12345);
+
+ROT.DEFAULT_WIDTH = 60;
+ROT.DEFAULT_HEIGHT = 40;
+var mapData = {};
+var lightData = {};
+
+/* build a map */
+var map = new ROT.Map.Cellular().randomize(0.5);
+var createCallback = function(x, y, value) {
+	mapData[x+","+y] = value;
+}
+for (var i=0; i&lt;4; i++) { 
+	map.create(createCallback);
+}
+
+/* prepare a FOV algorithm */
+var lightPasses = function(x, y) { 
+	return (mapData[x+","+y] == 1);
+}
+var fov = new ROT.FOV.PreciseShadowcasting(lightPasses, {topology:4});
+
+/* prepare a lighting algorithm */
+var reflectivity = function(x, y) {
+	return (mapData[x+","+y] == 1 ? 0.3 : 0);
+}
+var lighting = new ROT.Lighting(reflectivity, {range:12, passes:2});
+lighting.setFOV(fov);
+lighting.setLight(12, 12, [240, 240, 30]);
+lighting.setLight(20, 20, [240, 60, 60]);
+lighting.setLight(45, 25, [200, 200, 200]);
+
+var lightingCallback = function(x, y, color) {
+	lightData[x+","+y] = color;
+}
+lighting.compute(lightingCallback);
+
+/* draw the resulting mix of mapData and lightData */
+var display = new ROT.Display({fontSize:8});
+SHOW(display.getContainer());
+
+/* all cells are lit by ambient light; some are also lit by light sources */
+var ambientLight = [100, 100, 100];
+for (var id in mapData) {
+	var parts = id.split(",");
+	var x = parseInt(parts[0]);
+	var y = parseInt(parts[1]);
+
+	var baseColor = (mapData[id] ? [100, 100, 100] : [50, 50, 50]);
+	var light = ambientLight;
+
+	if (id in lightData) { /* add light from our computation */
+		light = ROT.Color.add(light, lightData[id]);
+	}
+
+	var finalColor = ROT.Color.multiply(baseColor, light);
+	display.draw(x, y, null, null, ROT.Color.toRGB(finalColor));
+}
+</div>

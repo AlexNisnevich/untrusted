@@ -1,0 +1,62 @@
+<h2>Cellular automata generator</h2>
+
+<p>Interesting cave systems can be created using <code>ROT.Map.Cellular</code>, a generator which simulates a cellular automaton. Using this generator is a bit more complex, 
+because it offers richer features and is more configurable.</p>
+
+<p>Apart from the traditional width and height arguments, <code>ROT.Map.Cellular</code> accepts also a configuration object with the following optional keys:</p>
+<ul>
+	<li><code>born</code> &ndash; array of neighbor counts; when an empty cell has this number of neighbors, a new cell is born</li>
+	<li><code>survive</code> &ndash; array of neighbor counts; when an existing cell has this number of neighbors, it will survive into next iteration</li>
+	<li><code>topology</code> &ndash; how are neighbors defined: a cell can have four, six or eight neighbors. Six neighbors correspond to the "hex" layouting algorithm 
+	of <a href="#display">ROT.Display</a>.</li>
+</ul>
+
+<p>It is also possible to initialize/set values for the first generation of cells. Two methods are provided:</p>
+<ul>
+	<li><code>set(x, y, value)</code> to directly set a cell</li>
+	<li><code>randomize(probability)</code> set all cells to "alive" with a given probability (0 = no cells, 1 = all cells)</li>
+</ul>
+
+<p>It is possible (and desirable) to call the <code>create</code> method repeatedly: every call will create a new generation. There is no need to specify a callback, 
+if you only want to advance into next generation, without actually retrieving the current map data. By default, the <em>born</em> and <em>survive</em> options 
+are set according to this <a href="http://www.roguebasin.roguelikedevelopment.org/index.php/Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels">Roguebasin article</a>.</p>
+
+<p><code>ROT.Map.Cellular</code> uses the following callback values:</p>
+<ul>
+	<li><code>0</code>: no cell</li>
+	<li><code>1</code>: alive cell</li>
+</ul>
+
+<div class="example">
+var w = 80, h = 40;
+var map = new ROT.Map.Cellular(w, h);
+
+/* cells with 1/2 probability */
+map.randomize(0.5);
+
+/* generate and show four generations */
+for (var i=0; i&lt;4; i++) {
+	var display = new ROT.Display({width:w, height:h, fontSize:4});
+	SHOW(display.getContainer());
+	map.create(display.DEBUG);
+}
+</div>
+
+<div class="example">
+var w = 100, h = 60;
+var display = new ROT.Display({width:w, height:h, fontSize:6});
+SHOW(display.getContainer());
+
+/* custom born/survive rules */
+var map = new ROT.Map.Cellular(w, h, {
+	born: [4, 5, 6, 7, 8],
+	survive: [2, 3, 4, 5]
+});
+
+map.randomize(0.9);
+
+/* generate fifty iterations, show the last one */
+for (var i=49; i&gt;=0; i--) {
+	map.create(i ? null : display.DEBUG);
+}
+</div>

@@ -1,0 +1,38 @@
+<h2>Keyboard handling</h2>
+
+<p>Taking care of user input boils down to listening for proper keyboard events (<em>keydown</em>, <em>keypress</em>, <em>keyup</em>) and processing them. <code>rot.js</code> does not offer any support methods or objects; instead, it defines a large set of <code>ROT.VK_*</code> constants to distinguish between pressed keys. For a complete listing, please check out the <a href="../doc/symbols/ROT.html">generated docs</a>.</p>
+
+<p>There are also several general keyboard-related JavaScript guidelines:</p>
+
+<ol>
+	<li><em>keydown</em> and <en>keyup</em> events correspond to physical keys. Check their <code>keyCode</code> property and compare with <code>ROT.VK_*</code> constants.</li>
+	<li><em>keypress</em> event corresponds to a printable character being generated. Check its <code>charCode</code> property; <code>String.fromCharCode(x)</code> will create the corresponding character.</li>
+	<li>Your mileage may vary across different browsers.</li>
+</ol>
+
+<p>A very simple keyboard handler is shown below:</p>
+
+<div class="example">
+var input = document.createElement("input");
+var out1 = document.createElement("div");
+var out2 = document.createElement("div");
+SHOW(input, out1, out2);
+input.focus();
+
+input.addEventListener("keydown", function(e) {
+	var code = e.keyCode;
+
+	var vk = "?"; /* find the corresponding constant */
+	for (var name in ROT) {
+		if (ROT[name] == code &amp;&amp; name.indexOf("VK_") == 0) { vk = name; }
+	}
+
+	out1.innerHTML = "Keydown: code is " + code + " (" + vk + ")";
+});
+
+input.addEventListener("keypress", function(e) {
+	var code = e.charCode;
+	var ch = String.fromCharCode(code);
+	out2.innerHTML = "Keypress: char is " + ch;
+});
+</div>

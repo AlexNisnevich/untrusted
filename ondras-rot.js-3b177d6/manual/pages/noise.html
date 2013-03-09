@@ -1,0 +1,39 @@
+<h2>Noise generation</h2>
+
+<div class="example">
+var w = 256;
+var h = 100;
+var noise = new ROT.Noise.Simplex();
+
+var display = new ROT.Display({width:w, height:h, fontSize:3});
+SHOW(display.getContainer());
+
+for (var j=0;j&lt;h;j++) {
+	for (var i=0;i&lt;w;i++) {
+		var val = noise.get(i/20, j/20) * 255;
+
+		var r = ~~(val&gt;0 ? val : 0);
+		var g = ~~(val&lt;0 ? -val : 0);
+		display.draw(i, j, "", "", "rgb("+r+","+g+",0)");
+	}
+}
+</div>
+
+<div class="example">
+var w = 120;
+var h = 50;
+var noise = new ROT.Noise.Simplex();
+
+var display = new ROT.Display({width:w, height:h, fontSize:12, layout:"hex"});
+SHOW(display.getContainer());
+
+for (var j=0;j&lt;h;j++) {
+    for (var i=j%2;i&lt;w;i+=2) {
+        var val = noise.get(i/60, j/60) * 255;
+
+        var r = ~~(val&gt;0 ? val : 0);
+        var g = ~~(val&lt;0 ? -val : 0);
+        display.draw(i, j, "", "", "rgb("+r+","+g+",0)");
+    }
+}
+</div>

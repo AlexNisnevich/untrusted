@@ -1,0 +1,81 @@
+<h2>ASCII console display</h2>
+
+<p><code>ROT.Display</code> provides a canvas-based output that resembles a traditional TTY console.</p>
+
+<h3>Creating a display</h3>
+
+<div class="example">
+var display = new ROT.Display({width:20, height:5});
+SHOW(display.getContainer()); /* do not forget to append to page! */
+</div>
+
+<h3>Configuring the display</h3>
+
+<p>The display is configured using these values:</p>
+<ul>
+	<li><code>width</code> &ndash; horizontal size, in characters</li>
+	<li><code>height</code> &ndash; vertical size, in characters</li>
+	<li><code>fontSize</code> &ndash; in pixels, default 15</li>
+	<li><code>fontFamily</code> &ndash; string, default "monospace"</li>
+	<li><code>fps</code> &ndash; int, target frames-per-second rate, default 25</li>
+	<li><code>fg</code> &ndash; default foreground color; valid CSS color string</li>
+	<li><code>bg</code> &ndash; default background color; valid CSS color string</li>
+	<li><code>spacing</code> &ndash; spacing adjustment coefficient; 1 = normal, &lt;1 tighter, &gt;1 looser</li>
+	<li><code>layout</code> &ndash; what layouting algorithm shall be used; "rect" or "hex"</li>
+</ul>
+
+<p>You can configure the display by passing a configuration object to the constructor; alternatively, all options can be changed at runtime using the <code>setOptions</code> method.</p>
+
+<div class="example">
+var display = new ROT.Display({width:20, height:5});
+SHOW(display.getContainer());
+display.setOptions({
+	width: 30,
+	fontSize: 8,
+	fontStyle: "bold",
+	bg: "#a00"
+});
+</div>
+
+<h3>Drawing individual characters</h3>
+
+<div class="example">
+var display = new ROT.Display({width:40, height:9});
+SHOW(display.getContainer());
+
+display.draw(5,  4, "@");
+display.draw(15, 4, "%", "#0f0");          /* foreground color */
+display.draw(25, 4, "#", "#f00", "#009");  /* and background color */
+</div>
+
+<h3>Drawing strings</h3>
+
+<div class="example">
+var display = new ROT.Display({width:40, height:20});
+SHOW(display.getContainer());
+
+display.drawText(5,  2, "Hello world");
+
+/* last argument specifies maximum length */
+display.drawText(20, 5, "This line of text is very long.", 16);
+
+/* lines are broken at word boundaries; lines are trimmed */
+var words = ["lorem", "ipsum", "dolor", "sit", "amet"];
+var long = [];
+for (var i=0;i&lt;30;i++) { long.push(words.random()); }
+long = long.join(" ");
+
+display.drawText(1, 10, long, 38);
+</div>
+
+<h3>Specifying foreground/background color in strings</h3>
+
+<p>Colors can be changed using a trivial syntax, <code>%c{ foreground }</code> and <code>%b{ background }</code>. Empty color name switches to default.</p>
+<div class="example">
+var display = new ROT.Display({width:40, height:5});
+SHOW(display.getContainer());
+
+var str = "Goodbye %c{red}cr%b{blue}u%b{}el %c{}world"
+display.drawText(5,  2, str);
+</div>
+

@@ -1,0 +1,79 @@
+<h2>Random Number Generator</h2>
+
+<p>While the built-in <code>Math.random()</code> function provides suitable results for game development purposes, it has its own weaknesses. 
+Most notably, it is not possible to seed the generator in order to reproduce a deterministic sequence of values. This is where <code>ROT.RNG</code> object comes to play.</p>
+
+<p><strong>Note:</strong> We use the excellent <em>Alea</em> algorithm, developed by Johannes Baagøe. For more information about the code, please see 
+<a href="http://baagoe.org/en/wiki/Better_random_numbers_for_javascript">his article on RNGs in JavaScript</a>. Alea is distributed under the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT License</a>.</p>
+
+<h2>Generating random values</h2>
+
+<p>Three main modes of operation are available:</p>
+
+<ul>
+	<li><code>ROT.RNG.getUniform()</code> &ndash; random number [0..1) with uniform distribution (similar to <code>Math.random()</code>)</li>
+	<li><code>ROT.RNG.getNormal(mean, stddev)</code> &ndash; random number with normal distribution, parametrized by a mean value and standard deviation</li>
+	<li><code>ROT.RNG.getPercentage()</code> &ndash; random integer 1..100</li>
+</ul>
+
+<div class="example">
+SHOW(
+	ROT.RNG.getUniform(),
+	ROT.RNG.getNormal(0, 10),
+	ROT.RNG.getPercentage()
+)
+</div>
+
+<div class="example">
+var canvas = document.createElement("canvas");
+canvas.width = 500;
+canvas.height = 200;
+SHOW(canvas);
+
+var ctx = canvas.getContext("2d");
+ctx.fillStyle = "#fff";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+ctx.fillStyle = "#f00";
+
+var data = [];
+for (var i=0;i&lt;40000;i++) {       /* generate histogram */
+	var num = Math.round(ROT.RNG.getNormal(250, 100));
+	data[num] = (data[num] || 0) + 1;
+}
+
+for (var i=0;i&lt;data.length;i++) { /* plot histogram */
+	ctx.fillRect(i, canvas.height-data[i], 1, data[i]);
+}
+</div>
+
+
+<h2>Working with RNG state</h2>
+
+<p>RNG's internal state can be retrieved and set to produce identical results.</p>
+
+<div class="example">
+var state = ROT.RNG.getState();
+SHOW(ROT.RNG.getUniform());
+
+ROT.RNG.setState(state);
+SHOW(ROT.RNG.getUniform());
+</div>
+
+<p>The RNG can be seeded by a given number. Seeding initializes RNG's internal state. 
+Retrieving the current seed is not very useful, but might come handy if you want to reproduce a behavior resulting from a random seed.</p>
+
+<div class="example">
+var seed = ROT.RNG.getSeed();
+
+ROT.RNG.setSeed(12345);
+SHOW(
+	ROT.RNG.getUniform(),
+	ROT.RNG.getUniform()
+);
+
+ROT.RNG.setSeed(12345);
+SHOW(
+	ROT.RNG.getUniform(),
+	ROT.RNG.getUniform()
+);
+</div>

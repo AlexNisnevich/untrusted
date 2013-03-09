@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>rot.js tests</title>
+
+	<link rel="shortcut icon" type="image/png" href="lib/jasmine-1.2.0/jasmine_favicon.png">
+	<link rel="stylesheet" type="text/css" href="lib/jasmine-1.2.0/jasmine.css">
+
+	<script>
+		if (!Function.prototype.bind) {
+			/**
+			 * ES5 Function.prototype.bind for rhino
+			 */
+			Function.prototype.bind = function(thisObj) { 
+				var fn = this;
+				var args = Array.prototype.slice.call(arguments, 1); 
+				return function() { 
+					return fn.apply(thisObj, args.concat(Array.prototype.slice.call(arguments))); 
+				}
+			}
+		};
+		if (!String.prototype.trim) {
+			/**
+			 * ES5 String.prototype.trim for rhino
+			 */
+			String.prototype.trim = function() {
+				return this.replace(/^\s+|\s+$/g, "");
+			}
+		};
+	</script>
+
+	<script src="lib/jasmine-1.2.0/jasmine.js"></script>
+	<script src="lib/jasmine-1.2.0/jasmine-html.js"></script>
+	<script src="reporters/jasmine.console_reporter.js"></script>
+
+	<script src="../rot.js"></script>
+
+	<script src="spec/js.js"></script>
+	<script src="spec/rng.js"></script>
+	<script src="spec/path.js"></script>
+	<script src="spec/scheduler.js"></script>
+	<script src="spec/engine.js"></script>
+	<script src="spec/dungeon.js"></script>
+	<script src="spec/text.js"></script>
+	<script src="spec/display.js"></script>
+	<script src="spec/fov.js"></script>
+	<script src="spec/color.js"></script>
+
+	<script type="text/javascript">
+		(function() {
+			var jasmineEnv = jasmine.getEnv();
+
+			jasmineEnv.addReporter(new jasmine.ConsoleReporter());
+
+			var htmlReporter = new jasmine.HtmlReporter();
+			jasmineEnv.addReporter(htmlReporter);
+
+			jasmineEnv.specFilter = function(spec) {
+				return htmlReporter.specFilter(spec);
+			};
+
+			var currentWindowOnload = window.onload;
+
+			window.onload = function() {
+				if (currentWindowOnload) { currentWindowOnload(); }
+				jasmineEnv.execute();
+			};
+		})();
+	</script>
+</head>
+
+<body>
+</body>
+</html>

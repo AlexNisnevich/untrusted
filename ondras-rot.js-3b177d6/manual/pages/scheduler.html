@@ -1,0 +1,37 @@
+<h2>Turn scheduling</h2>
+
+<p>In turn-based games, <em>actors</em> (player, enemies, everything that moves or acts) often differ by their speed. However, since the game happens in turns, 
+the speed is more accurately described as a frequency in which turns happen for a particular actor. <code>ROT.Scheduler</code> is a simple tool designed to 
+simplify the task of selecting proper actor for a turn, based on the abstract speed of all actors.</p>
+
+<p>First, you need to fill the scheduler instance with actors. There are very few requirements on actors: they need to be JS objects with method <code>getSpeed()</code>, 
+which returns a number. An actor with speed=100 will get twice as many turns as actor with speed=50.<br/>
+You can then repeatedly call the scheduler's <code>next()</code> method: it returns the actor whose turn should start.</p>
+
+<div class="example">
+var scheduler = new ROT.Scheduler();
+var getSpeed = function() {
+	return this.speed;
+}
+
+/* generate four actors */
+for (var i=0;i&lt;4;i++) {
+	var actor = {
+		speed: ROT.RNG.getPercentage(),
+		number: i+1,
+		getSpeed: getSpeed
+	}
+	scheduler.add(actor);
+	SHOW("Object #%s has speed %s.".format(actor.number, actor.speed));
+}
+
+/* simulate several turns */
+var turns = [];
+for (var i=0;i&lt;40;i++) {
+	var next = scheduler.next();
+	turns.push(next.number);
+}
+
+SHOW("\nGenerated order of turns:");
+SHOW(turns.join(" ") + " ...");
+</div>

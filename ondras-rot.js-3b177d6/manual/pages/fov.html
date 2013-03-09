@@ -1,0 +1,58 @@
+<h2>Field of View (FOV) computation</h2>
+
+<p>FOV algorithms return a set coordinates, visible from a starting place. Computing these works in the same fashion 
+as <a href="#map">Map generators</a> do: using a user-supplied callback function. This time, however, user has to supply two callbacks:</p>
+
+<ul>
+	<li>Input callback, passed as a constructor argument, which provides visiblity information;</li>
+	<li>Output callback, passed as an argument to the <code>compute</code> method, which receives FOV data.</li>
+</ul>
+
+<p>Input callback is called by the FOV algorithm to retrieve visibility information for a given coordinate pair. This callback must return <code>true</code> (light passes) 
+or <code>false</code> (light does nto pass). Output callback is called with these arguments: <code>x</code>, <code>y</code>, <code>r</code> and <code>visibility</code>: 
+the meaning is that "the place at [x,y] is visible with a distance of r". The last argument specifies the amount of visibility (0..1).</p>
+
+<p>FOV computation is initiated by calling the <code>compute</code> method with the following arguments:</p>
+
+<ol>
+	<li><code>x</code></li>
+	<li><code>y</code></li>
+	<li><code>r</code> &ndash; maximum visibility radius</li>
+	<li><code>callback</code> &ndash; output callback function</li>
+</ol>
+
+<h3>Precise shadowcasting</h3>
+
+<p>For now, there is only one FOV algorithm available: the <a href="http://www.roguebasin.roguelikedevelopment.org/index.php?title=Precise_Shadowcasting_in_JavaScript">Precise Shadowcasting</a>.</p>
+
+<div class="example">
+ROT.RNG.setSeed(12345);
+ROT.DEFAULT_WIDTH = 80;
+ROT.DEFAULT_HEIGHT = 30;
+
+var display = new ROT.Display({fontSize:12});
+SHOW(display.getContainer());
+
+/* create a map */
+var data = {};
+new ROT.Map.Uniform().create(function(x, y, type) {
+	data[x+","+y] = type;
+	display.DEBUG(x, y, type);
+});
+
+/* input callback */
+var lightPasses = function(x, y) {
+	var key = x+","+y;
+	if (key in data) { return (data[key] == 0); }
+	return false;
+}
+
+var fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
+
+/* output callback */
+fov.compute(50, 22, 10, function(x, y, r, visibility) {
+	var ch = (r ? "" : "@");
+	var color = (data[x+","+y] ? "#aa0": "#660");
+	display.draw(x, y, ch, "#fff", color);
+});
+</div>

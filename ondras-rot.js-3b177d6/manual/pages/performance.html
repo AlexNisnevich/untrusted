@@ -1,0 +1,11 @@
+<h2>Performance tips</h2>
+
+<ul class="performance">
+	<li><strong>The JS file is too large?</strong> Feed it to your favorite JS minification tool, such as <a href="https://developers.google.com/closure/compiler/">Google Closure Compiler</a>.</li>
+
+	<li><strong>Slow display output?</strong> If you use a rectangular layout, you can enable glyph caching by calling <code>ROT.Display.Rect.cache = true</code>. This enables rendering into tiny cacheable canvases, but will improve performance only if you do not use too many glyph/color/bgcolor combinations. Your mileage may vary.</li>
+
+	<li>
+		<strong>Too much time spent in lighting computations?</strong> Decrease the maximum light range or switch to 1-pass lighting.</li>
+	</li>
+</ul>

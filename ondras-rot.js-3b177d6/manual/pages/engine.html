@@ -1,0 +1,44 @@
+<h2>Asynchronous game engine</h2>
+
+<p>Client-side JavaScript is non-blocking: all long-running operations are asynchronous. The <code>ROT.Engine</code> loop is well suited for orchestrating the possibly-async coordination of various game actors.</p>
+
+<p>To control a game loop, you add individual entities (called <em>actors</em>) to the engine. Every entity must implement the <code>getSpeed()</code> method (since it is fed to the built-in <a href="#scheduler">scheduler</a> and the <code>act()</code> method. Once the engine is started, it correctly calls the <code>act()</code> method on proper actors. It is possible to recursively stop (lock) the engine, should some operation (such as displaying a dialog or waiting for user input) block the execution. Once all lock levels are unlocked, the engine continues its execution.</p>
+
+<div class="example">
+var engine = new ROT.Engine();
+var output = [];
+
+/* sample actor: pauses the execution when dead */
+var actor1 = {
+	getSpeed: function() { return 100; },
+	lives: 3,
+	act: function() {
+		output.push(".");
+		this.lives--;
+		if (!this.lives) { 
+			engine.removeActor(actor1);
+			engine.lock();              /* pause execution */
+			setTimeout(unlock, 500);    /* wait for 500ms */
+		}
+	}
+}
+engine.addActor(actor1);
+
+var unlock = function() {               /* called asynchronously */
+	var actor2 = {
+		getSpeed: function() { return 100; },
+		act: function() {
+			output.push("@");
+			engine.removeActor(actor2);
+		}
+	}
+
+	output = [];
+	engine.addActor(actor2);            /* add second actor */
+	engine.unlock();                    /* continue execution */
+	SHOW(output.join(""));
+}
+
+engine.start();
+SHOW(output.join(""));
+</div>

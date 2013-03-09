@@ -1,0 +1,127 @@
+<h2>Comparison of different hex indexing approaches</h2>
+
+<p>
+	This page summarizes various types of indexing hexagonal cells. Features examined: storage (in 2D array), neighbors, distance, straight lines.
+</p>
+
+<h3>#1: Non-orthogonal</h3>
+
+<p>Horizontal lines have constant "y" coordinate. "x" coordinate increases "down &amp; right".</p>
+
+<ul class="comparison">
+	<li><strong>Distance: </strong><code>sign(dx) == sign(dy) ? max(|dx|, |dy|) : |dx|+|dy|</code></li>
+	<li class="bad"><strong>Storage: </strong>2D array stores a parallelogram area</li>
+	<li class="good"><strong>Neighbors: </strong><code>(&minus;1,0); (1,0); (&minus;1,&minus;1); (1,&minus;1); (&minus;1,1); (1,1)</code></li>
+	<li class="good"><strong>Straight lines: </strong><code>(x &pm; n, y); (x &pm; n, y &pm; n); (x &mp; n, y &pm; n)</code></li>
+</ul>
+
+<div class="example">
+var o = {width:6, height:4, layout:"hex", fg:"#000", spacing:4};
+var display = new ROT.Display(o);
+SHOW(display.getContainer());
+
+display.draw(0, 0, "0,0", "", "#fff");
+display.draw(2, 0, "1,0", "", "#ccc");
+display.draw(4, 0, "2,0", "", "#888");
+display.draw(1, 1, "1,1", "", "#888");
+display.draw(3, 1, "2,1", "", "#fff");
+display.draw(5, 1, "3,1", "", "#ccc");
+display.draw(0, 2, "0,2", "", "#fff");
+display.draw(2, 2, "1,2", "", "#ccc");
+display.draw(4, 2, "2,2", "", "#888");
+display.draw(1, 3, "1,3", "", "#888");
+display.draw(3, 3, "2,3", "", "#fff");
+display.draw(5, 3, "3,3", "", "#ccc");
+</div>
+
+<h3>#2: Odd shift</h3>
+
+<p>Horizontal lines have constant "y" coordinate. "x" coordinate increases "right". Odd lines are shifted to the right (half a cell).</p>
+
+<ul class="comparison">
+	<li class="bad"><strong>Distance: </strong><code>max(|dy|, |dx| + floor(|dy|/2) + penalty); penalty = ( (even(y1) &amp;&amp; odd(y2) &amp;&amp; (x1 &lt; x2)) || (even(y2) &amp;&amp; odd(y1) &amp;&amp; (x2 &lt; x1)) ) ? 1 : 0</code></li>
+	<li class="good"><strong>Storage: </strong> visually corresponds to a 2D array</li>
+	<li class="bad"><strong>Neighbors: </strong>even lines <code>(&minus;1,0); (1,0); (&minus;1,&minus;1); (0,&minus;1); (&minus;1,1); (0,1)</code>, odd lines <code>(&minus;1,0); (1,0); (0,&minus;1); (1,&minus;1); (0,1); (1,1)</code></li>
+	<li class="bad"><strong>Straight lines: </strong><code>(x &pm; n, y); (x &pm; n/2, y &pm; n); (x &pm; n/2, y &pm; n)</code>, even and odd lines use different rounding</li>
+</ul>
+
+<div class="example">
+var o = {width:6, height:4, layout:"hex", fg:"#000", spacing:4};
+var display = new ROT.Display(o);
+SHOW(display.getContainer());
+
+display.draw(0, 0, "0,0", "", "#fff");
+display.draw(2, 0, "1,0", "", "#ccc");
+display.draw(4, 0, "2,0", "", "#888");
+display.draw(1, 1, "0,1", "", "#888");
+display.draw(3, 1, "1,1", "", "#fff");
+display.draw(5, 1, "2,1", "", "#ccc");
+display.draw(0, 2, "0,2", "", "#fff");
+display.draw(2, 2, "1,2", "", "#ccc");
+display.draw(4, 2, "2,2", "", "#888");
+display.draw(1, 3, "0,3", "", "#888");
+display.draw(3, 3, "1,3", "", "#fff");
+display.draw(5, 3, "2,3", "", "#ccc");
+</div>
+
+<h3>#3: Double width</h3>
+
+<p>Horizontal lines have constant "y" coordinate. "x" coordinate increases "right" by two. Even lines have even "x" values; odd lines have odd "x" values.</p>
+
+<ul class="comparison">
+	<li><strong>Distance: </strong><code>|dy| + max(0, (|dx|&minus;|dy|)/2)</code></li>
+	<li class="bad"><strong>Storage: </strong>needs twice the storage &ndash; half of the possible coordinate values (with odd sum) is not used at all.</li>
+	<li class="good"><strong>Neighbors: </strong><code>(&minus;2,0); (2,0); (&minus;1,&minus;1); (1,1); (&minus;1,1); (1,&minus;1)</code></li>
+	<li class="good"><strong>Straight lines: </strong><code>(x &pm; 2n, y); (x &pm; n, y &pm; n); (x &mp; n, y &pm; n)</code></li>
+	<li><strong>Remarks: </strong>x+y is always even.</li>
+</ul>
+
+<div class="example">
+var o = {width:6, height:4, layout:"hex", fg:"#000", spacing:4};
+var display = new ROT.Display(o);
+SHOW(display.getContainer());
+
+display.draw(0, 0, "0,0", "", "#fff");
+display.draw(2, 0, "2,0", "", "#ccc");
+display.draw(4, 0, "4,0", "", "#888");
+display.draw(1, 1, "1,1", "", "#888");
+display.draw(3, 1, "3,1", "", "#fff");
+display.draw(5, 1, "5,1", "", "#ccc");
+display.draw(0, 2, "0,2", "", "#fff");
+display.draw(2, 2, "2,2", "", "#ccc");
+display.draw(4, 2, "4,2", "", "#888");
+display.draw(1, 3, "1,3", "", "#888");
+display.draw(3, 3, "3,3", "", "#fff");
+display.draw(5, 3, "5,3", "", "#ccc");
+</div>
+
+<h3>#4: Cube projection</h3>
+
+<p>Horizontal lines have constant "y" coordinate. Diagonal lines have constant "x" and "z" coordinates. Neighboring cells differ by 1 in two coordinates.</p>
+
+<ul class="comparison">
+	<li class="good"><strong>Distance: </strong><code>max(|dx|,|dy|,|dz|)</code></li>
+	<li class="bad"><strong>Storage: </strong>WTF</li>
+	<li class="good"><strong>Neighbors: </strong><code>(1,0,&minus;1); (&minus;1,0,1); (0,1,&minus;1); (0,&minus;1,1); (1,&minus;1,0); (&minus;1,1,0)</code></li>
+	<li class="good"><strong>Straight lines: </strong><code>(x &pm; n, y, z &mp; n); (x &pm; n, y &mp; n, z); (x, y &pm; n, z &mp; n)</code></li>
+	<li><strong>Remarks: </strong>x+y+z = 0</li>
+</ul>
+
+<div class="example">
+var o = {width:6, height:4, layout:"hex", fg:"#000", spacing:4};
+var display = new ROT.Display(o);
+SHOW(display.getContainer());
+
+display.draw(0, 0, "0,0,0",   "", "#fff");
+display.draw(2, 0, "1,0,-1",  "", "#ccc");
+display.draw(4, 0, "2,0,-2",  "", "#888");
+display.draw(1, 1, "1,-1,0",  "", "#888");
+display.draw(3, 1, "2,-1,-1", "", "#fff");
+display.draw(5, 1, "3,-1,-2", "", "#ccc");
+display.draw(0, 2, "1,-2,1",  "", "#fff");
+display.draw(2, 2, "2,-2,0",  "", "#ccc");
+display.draw(4, 2, "3,-2,-1", "", "#888");
+display.draw(1, 3, "2,-3,1",  "", "#888");
+display.draw(3, 3, "3,-3,0",  "", "#fff");
+display.draw(5, 3, "4,-3,-1", "", "#ccc");
+</div>
