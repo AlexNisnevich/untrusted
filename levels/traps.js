@@ -1,7 +1,7 @@
 // {"editable": [[26, 26]]}
 
 /*
- * Look out! There are traps scattered all about this level, and
+ * Look out! There are traps scattered all about this level, but
  * you don't know where they are. Tread carefully.
  */
 function getRandomInt (min, max) {
@@ -15,7 +15,7 @@ function startLevel(map) {
         }
     }
 
-    map.player = new Player(5, 5);
+    map.player = new Player(map.getWidth() - 5, 5);
 
     for (var i = 0; i < 50; i++) {
         var x = getRandomInt(0, map.getWidth() - 1);
@@ -27,7 +27,7 @@ function startLevel(map) {
 
     }
 
-    map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
+    map.placeObject(2, map.getHeight() - 1, 'exit');
 }
 
 function validateLevel(map) {

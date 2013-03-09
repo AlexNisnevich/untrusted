@@ -3,7 +3,7 @@ function startLevel(map) {
 
     display.drawText(1,1, "This is the ELECTRONIC VOID where players go to languish when we run out of levels that we can put together in twelve hours. Farewell, Dr. Eval.");
 
-    map.player = new Player(20, 20);
+    map.player = new Player(map.getWidth()-1, map.getHeight()-1);
 
-    map.placeObject(dimensions.width-1, dimensions.height-1, 'exit');
+    map.placeObject(1, map.getHeight()-1, 'exit');
 }

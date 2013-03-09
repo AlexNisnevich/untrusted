@@ -1,4 +1,4 @@
-// {"editable": [[95,95]]}
+// {"editable": [[93,93]]}
 
 /*
  * trees.js - the obligatory forest level
@@ -25,8 +25,6 @@ function startLevel(map) {
 
         var x = genRandomValue("width");
         var y = genRandomValue("height");
-        console.log('x '+x);
-        console.log('y ' + y);
 
         for (var i = x-2; i < x+2; i++) {
             map.placeObject(i,y-2, 'block');
