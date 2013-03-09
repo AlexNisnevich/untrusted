@@ -32,3 +32,17 @@ function validate(playerCode, level) {
 		output.drawText(0, 0, e.toString());
 	}
 }
+
+function validateAtLeastXObjects(map, num, type) {
+	var count = 0;
+	for (var x = 0; x < map.getWidth(); x++) {
+		for (var y = 0; y < map.getHeight(); y++) {
+			if (map._grid[x][y] === type) {
+				count++;
+			}
+		}
+	}
+	if (count < num) {
+		throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+	}
+}

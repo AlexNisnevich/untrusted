@@ -28,3 +28,7 @@ function startLevel(map) {
     map.player = new Player(5, 5);
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
 }
+
+function validateLevel(map) {
+    validateAtLeastXObjects(map, 40, 'trap');
+}

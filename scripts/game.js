@@ -99,7 +99,7 @@ function init() {
 		$('.CodeMirror').removeClass('focus');
 	});
 
-	output = new ROT.Display({width: dimensions.width, height: 1, fontSize: 20});
+	output = new ROT.Display({width: dimensions.width * 1.33, height: 2, fontSize: 15});
 	$('#output').append(output.getContainer());
 
 	map = new Map(display);
@@ -194,3 +194,4 @@ function evalLevelCode() {
 shortcut.add('ctrl+1', focusOnMap);
 shortcut.add('ctrl+2', focusOnEditor);
 shortcut.add('ctrl+5', evalLevelCode);
+shortcut.add('ctrl+0', moveToNextLevel); // TODO: REMOVE THIS LINE WHEN NOT NEEDED
