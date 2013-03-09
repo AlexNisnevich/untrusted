@@ -4,6 +4,7 @@
     <title>Hacking Game</title>
     <meta charset='utf8'></meta>
     <script src="jquery-1.9.1.min.js"></script>
+    <script src="shortcut.js"></script>
     <script src="rotjs-library/rot.js"></script>
 
     <link rel="stylesheet" href="codemirror-3.1/lib/codemirror.css">
@@ -19,7 +20,11 @@
 	<div id="editorPane">
 		<textarea id="editor">
 		</textarea>
-		<button id="executeButton" onClick="evalLevelCode();">Execute</button>
+        <div id="buttons">
+            <button id="mapButton" onClick="focusOnMap();">Switch to Map [Ctrl+1]</button>
+            <button id="editorButton" onClick="focusOnEditor();">Switch to Editor [Ctrl+2]</button>
+    		<button id="executeButton" onClick="evalLevelCode();">Execute [Ctrl+5]</button>
+        </div>
 	</div>
 </body>
 </html>

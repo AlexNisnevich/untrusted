@@ -217,7 +217,7 @@ function loadLevel(lvlCode) {
 		dragDrop: false,
 		extraKeys: {'Enter': function () {}}
 	});
-	editor.setSize(600, 500);
+	editor.setSize(600, 473);
 	editor.on("focus", function(instance) {
 		$('.CodeMirror').addClass('focus');
 		$('#screen canvas').removeClass('focus');
@@ -258,8 +258,20 @@ function loadLevel(lvlCode) {
 	editor.refresh();
 }
 
+function focusOnMap() {
+	$('canvas').attr('tabindex', '0').click().focus();
+}
+
+function focusOnEditor() {
+	editor.focus();
+}
+
 function evalLevelCode() {
 	eval(editor.getValue());
 	map.reset();
 	startLevel(map);
 }
+
+shortcut.add('ctrl+1', focusOnMap);
+shortcut.add('ctrl+2', focusOnEditor);
+shortcut.add('ctrl+5', evalLevelCode);
