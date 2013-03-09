@@ -9,6 +9,8 @@ var keys = {
 
 var levelFileNames = [
 	'blocks.js',
+    'levelTwo.js',
+    'multiplicity.js',
 	'traps.js',
 ];
 
@@ -79,6 +81,12 @@ var objects = {
 		'onCollision': function (player) {
 			moveToNextLevel();
 		}
+    },
+
+    'player' : {
+        'symbol' : '@',
+        'color' : '#0f0',
+        'passable' : false
     }
 };
 
@@ -88,10 +96,15 @@ var Player = function(x,y) {
 	this._rep = "@";
 	this._fgColor = "#0f0";
 	this.draw();
+
 }
 
 Player.prototype.draw = function () {
 	display.draw(this._x, this._y, this._rep, this._fgColor);
+}
+
+Player.prototype.atLocation = function (x, y) {
+    return (this._x === x && this._y === y);
 }
 
 Player.prototype.move = function (direction) {
@@ -267,9 +280,12 @@ function focusOnEditor() {
 }
 
 function evalLevelCode() {
-	eval(editor.getValue());
-	map.reset();
-	startLevel(map);
+    var playerCode = editor.getValue();
+    if (validate(playerCode)) {
+        eval(editor.getValue());
+        map.reset();
+        startLevel(map);
+    }
 }
 
 shortcut.add('ctrl+1', focusOnMap);
