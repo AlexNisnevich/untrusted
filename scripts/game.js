@@ -21,6 +21,7 @@ var editor;
 var map;
 
 var currentLevel = 0; // level numbers start at 0 because coding :\
+var pickedUpComputer = false;
 var pickedUpPhone = false;
 
 var objects = {
@@ -58,11 +59,22 @@ var objects = {
 		'color': '#0f0',
 		'passable': false
 	},
+	'computer': {
+		'symbol': String.fromCharCode(0x26BC), // ⚼
+		'color': '#ccc',
+		'passable': true,
+		'onCollision': function (player) {
+			output.write('You have picked up the computer! You can use it to get to the exit.');
+			$('#editorPane').show();
+			editor.refresh();
+			pickedUpComputer = true;
+		}
+	},
 	'phone': {
 		'symbol': String.fromCharCode(0x260E), // ☎
 		'passable': true,
 		'onCollision': function (player) {
-			output.drawText(0, 0, 'You have picked up the function phone! You will be able to use it to call functions.');
+			output.write('You have picked up the function phone! You will be able to use it to call functions.');
 			$('#phoneButton').show();
 			pickedUpPhone = true;
 		}
@@ -113,10 +125,14 @@ function init() {
 
 	output = new ROT.Display({width: dimensions.width * 1.33, height: 2, fontSize: 15});
 	$('#output').append(output.getContainer());
+	output.write = function(text) {
+		output.clear();
+		output.drawText(0, 0, text);
+	}
 
 	map = new Map(display);
-
 	getLevel(currentLevel);
+	focusOnMap();
 }
 
 // makes an ajax request to get the level text file and
@@ -196,6 +212,11 @@ function loadLevel(lvlCode) {
 
 	// start the level
 	evalLevelCode();
+
+	// on first level, display intro text
+	if (currentLevel == 0) {
+		output.write('Dr. Eval awoke in a strange dungeon, with no apparent way out. He spied his trusty computer ...');
+	}
 }
 
 function focusOnMap() {
@@ -221,11 +242,14 @@ function evalLevelCode() {
 }
 
 function usePhone() {
-	// TODO: make phone do something
+	if (pickedUpPhone) {
+		// TODO: make phone do something
+	}
 }
 
 shortcut.add('ctrl+1', focusOnMap);
 shortcut.add('ctrl+2', focusOnEditor);
 shortcut.add('ctrl+4', resetEditor);
 shortcut.add('ctrl+5', evalLevelCode);
+shortcut.add('ctrl+6', usePhone);
 shortcut.add('ctrl+0', moveToNextLevel); // TODO: REMOVE THIS LINE WHEN NOT NEEDED

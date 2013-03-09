@@ -22,5 +22,9 @@ function startLevel(map) {
         map.placeObject(x, map.getHeight() - 10, 'block');
     }
 
+    if (!pickedUpComputer) {
+        map.placeObject(15, 12, 'computer');
+    }
+
     map.placeObject(map.getWidth()-7, map.getHeight()-5, 'exit');
 }
