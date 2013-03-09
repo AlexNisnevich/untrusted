@@ -154,13 +154,17 @@ function init() {
 			map.player.move(keys[e.keyCode]);
 		}
 	});
+	display.getContainer().addEventListener("click", function(e) {
+		$(display.getContainer()).addClass('focus');
+		$('.CodeMirror').removeClass('focus');
+	});
 
 	map = new Map();
 
     getLevel(currentLevel);
 }
 
-// makes an ajax request to get the level text file and 
+// makes an ajax request to get the level text file and
 // then loads it into the game
 function getLevel(levelNumber) {
     var fileName;
@@ -182,9 +186,15 @@ function loadLevel(lvlCode) {
 	// initialize CodeMirror editor
 	editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
 		theme: 'vibrant-ink',
-		lineNumbers: true
+		lineNumbers: true,
+		dragDrop: false,
+		extraKeys: {'Enter': function () {}}
 	});
 	editor.setSize(600, 500);
+	editor.on("focus", function(instance) {
+		$('.CodeMirror').addClass('focus');
+		$('#screen canvas').removeClass('focus');
+	});
 
 	// load and initialize level
 	editor.setValue(lvlCode);
@@ -202,20 +212,23 @@ function loadLevel(lvlCode) {
 	}
 	editor.removeLine(0);
 
-	// set bg color for uneditable lines
-	for (var i = 0; i < editor.lineCount(); i++) {
-		if (editableLines.indexOf(i) == -1) {
-			line = $('.CodeMirror-lines').children().first().children().eq(2).children().eq(i);
-			line.css('background', '#311');
-		}
-	}
-
-	// only allow editing on editable lines
+	// only allow editing on editable lines, and don't allow removal of lines
 	editor.on('beforeChange', function (instance, change) {
-		if (editableLines.indexOf(change.to.line) == -1) {
+		if (editableLines.indexOf(change.to.line) == -1 || change.to.line != change.from.line) {
 			change.cancel();
 		}
 	});
+
+	// set bg color for uneditable line
+	editor.on('update', function (instance) {
+		for (var i = 0; i < editor.lineCount(); i++) {
+			if (editableLines.indexOf(i) == -1) {
+				line = $('.CodeMirror-lines').children().first().children().eq(2).children().eq(i);
+				line.addClass('disabled');
+			}
+		}
+	});
+	editor.refresh();
 }
 
 function evalLevelCode() {

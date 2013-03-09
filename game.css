@@ -1,0 +1,40 @@
+
+body {
+	background: #111;
+}
+
+#screen {
+	float: left;
+}
+
+#screen canvas {
+	border: 2px solid #333;
+}
+
+#screen canvas.focus {
+	border: 2px solid yellow;
+}
+
+#editorPane {
+	float: left;
+}
+
+#editorPane #editor {
+	display: none;
+}
+
+#editorPane #executeButton {
+	position: relative; top: -2em; left: 530px;
+}
+
+.CodeMirror {
+	border: 2px solid #333;
+}
+
+.CodeMirror.focus {
+	border: 2px solid yellow;
+}
+
+.CodeMirror-lines .disabled {
+	background: #311 !important;
+}
