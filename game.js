@@ -7,7 +7,12 @@ var keys = {
 	40: 'down'
 };
 
-var levelFileNames = ['blocks.js', 'levelTwo.js', 'multiplicity.js'];
+var levelFileNames = [
+	'blocks.js',
+    'levelTwo.js',
+    'multiplicity.js',
+	'traps.js',
+];
 
 var display;
 var editor;
@@ -31,9 +36,16 @@ var Map = function () {
 		}
 	};
 
-	this.placeObject = function (x, y, type) {
+	this.getWidth = function () { return dimensions.width; }
+	this.getHeight = function () { return dimensions.height; }
+
+	this.placeObject = function (x, y, type, bgColor) {
 		this._grid[x][y] = type;
-		display.drawObject(x, y, type);
+		display.drawObject(x, y, type, bgColor);
+	};
+
+	this.setSquareColor = function (x, y, bgColor) {
+		display.drawObject(x, y, this._grid[x][y], bgColor);
 	};
 
 	// Initialize with empty grid
@@ -55,10 +67,20 @@ var objects = {
 		'color': '#080',
 		'passable': false
 	},
+	'trap': {
+		'symbol': ' ',
+		'passable': true,
+		'onCollision': function (player) {
+			player.killedBy('an invisible trap');
+		}
+	},
     'exit' : {
         'symbol' : String.fromCharCode(0x2588),
         'color': '#0ff',
-        'passable': true
+        'passable': true,
+		'onCollision': function (player) {
+			moveToNextLevel();
+		}
     },
 
     'player' : {
@@ -108,13 +130,13 @@ Player.prototype.move = function (direction) {
 		new_y = cur_y;
 	}
 
-	if (canMoveTo(new_x,new_y)) {
+	if (canMoveTo(new_x, new_y)) {
 		display.drawObject(cur_x,cur_y, map._grid[cur_x][cur_y]);
 		this._x = new_x;
 		this._y = new_y;
 		this.draw();
-        if (map._grid[this._x][this._y] === 'exit') {
-            moveToNextLevel();
+        if (objects[map._grid[new_x][new_y]].onCollision) {
+        	objects[map._grid[new_x][new_y]].onCollision(this);
         }
 	}
 	else {
@@ -122,6 +144,10 @@ Player.prototype.move = function (direction) {
 	}
 };
 
+Player.prototype.killedBy = function (killer) {
+	alert('You have been killed by ' + killer + '!');
+	getLevel(currentLevel);
+}
 
 function moveToNextLevel() {
     console.log("On exit square!");
@@ -143,17 +169,20 @@ function init() {
 
     // drawObject takes care of looking up an object's symbol and color
     // according to name (NOT according to the actual object literal!)
-    display.drawObject = function (x,y, object) {
+    display.drawObject = function (x, y, object, bgColor) {
         var symbol = objects[object].symbol;
         var color;
         if (objects[object].color) {
             color = objects[object].color;
-        }
-        else {
+        } else {
             color = "#fff";
         }
 
-        display.draw(x, y, symbol, color);
+        if (!bgColor) {
+        	bgColor = "#000";
+        }
+
+        display.draw(x, y, symbol, color, bgColor);
     };
 
 	$('#screen').append(display.getContainer());

@@ -12,15 +12,15 @@ function startLevel(map) {
 
     map.player = new Player(15, 15);
 
-    for (y = 5; y <= dimensions.height - 5; y++) {
+    for (y = 5; y <= map.getHeight() - 5; y++) {
         map.placeObject(5, y, 'block');
-        map.placeObject(dimensions.width - 5, y, 'block');
+        map.placeObject(map.getWidth() - 5, y, 'block');
     }
 
-    for (x = 5; x <= dimensions.width - 5; x++) {
+    for (x = 5; x <= map.getWidth() - 5; x++) {
         map.placeObject(x, 5, 'block');
-        map.placeObject(x, dimensions.height - 5, 'block');
+        map.placeObject(x, map.getHeight() - 5, 'block');
     }
 
-    map.placeObject(dimensions.width-1, dimensions.height-1, 'exit');
+    map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
 }
