@@ -115,7 +115,7 @@ function init() {
 
 	map = new Map();
 
-	$.get('levels/blocks', function (lvlCode) {
+	$.get('levels/blocks.js', function (lvlCode) {
 		$('#editor').val(lvlCode);
 		evalLevelCode();
 	});
