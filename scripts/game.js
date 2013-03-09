@@ -47,7 +47,6 @@ var objects = {
 			player.killedBy('an invisible trap');
 		}
 	},
-
     'stream': {
         'symbol': '░',
         'passable': true,
@@ -55,8 +54,6 @@ var objects = {
             player.killedBy('drowning in deep dark water');
         }
     },
-
-
 	'exit' : {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#0ff',
@@ -77,7 +74,7 @@ var objects = {
 		'passable': true,
 		'onCollision': function (player) {
 			output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
-			$('#editorPane').show();
+			$('#editorPane').fadeIn();
 			editor.refresh();
 			pickedUpComputer = true;
 			player.pickUpItem();
@@ -96,7 +93,6 @@ var objects = {
 };
 
 function moveToNextLevel() {
-	console.log("On exit square!");
 	currentLevel++;
 	getLevel(currentLevel);
 };

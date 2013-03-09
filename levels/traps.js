@@ -15,7 +15,7 @@ function startLevel(map) {
         }
     }
 
-    map.player = new Player(map.getWidth() - 5, 5);
+    map.placePlayer(map.getWidth() - 5, 5);
 
     for (var i = 0; i < 50; i++) {
         var x = getRandomInt(0, map.getWidth() - 1);

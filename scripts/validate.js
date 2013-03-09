@@ -5,6 +5,7 @@ var validationRulesByLevel = [ null ];
 
 var DummyDisplay = function () {
 	this.clear = function () {};
+	this.draw = function () {};
 	this.drawObject = function () {};
 };
 

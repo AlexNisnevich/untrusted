@@ -1,14 +1,15 @@
-var Player = function(x,y) {
+var Player = function(x, y, map) {
 	this._x = x;
 	this._y = y;
 	this._rep = "@";
 	this._fgColor = "#0f0";
+	this._display = map._display;
 	this.draw();
 	map._playerCount++;
 }
 
 Player.prototype.draw = function () {
-	display.draw(this._x, this._y, this._rep, this._fgColor);
+	this._display.draw(this._x, this._y, this._rep, this._fgColor);
 }
 
 Player.prototype.atLocation = function (x, y) {
@@ -39,7 +40,7 @@ Player.prototype.move = function (direction) {
 	}
 
 	if (map.canMoveTo(new_x, new_y)) {
-		display.drawObject(cur_x,cur_y, map._grid[cur_x][cur_y]);
+		this._display.drawObject(cur_x,cur_y, map._grid[cur_x][cur_y]);
 		this._x = new_x;
 		this._y = new_y;
 		this.draw();

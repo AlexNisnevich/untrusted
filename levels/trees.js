@@ -9,7 +9,7 @@
  */
 function startLevel(map) {
 
-    map.player = new Player(2, map.getHeight() - 1);
+    map.placePlayer(2, map.getHeight() - 1);
 
     var functionList = {};
     functionList['fortresses'] = function  () {

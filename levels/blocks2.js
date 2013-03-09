@@ -9,7 +9,7 @@
  */
 function startLevel(map) {
 
-    map.player = new Player(map.getWidth()-7, map.getHeight()-5);
+    map.placePlayer(map.getWidth()-7, map.getHeight()-5);
 
     for (y = 10; y <= map.getHeight() - 3; y++) {
         map.placeObject(5, y, 'block');

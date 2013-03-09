@@ -32,6 +32,10 @@ var Map = function (display) {
         }
 	};
 
+	this.placePlayer = function (x, y) {
+		this.player = new Player(x, y, this);
+	};
+
 	this.setSquareColor = function (x, y, bgColor) {
 		this._display.drawObject(x, y, this._grid[x][y], bgColor);
 	};
