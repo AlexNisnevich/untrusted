@@ -1,7 +1,7 @@
 // {"editable": [[24, 24]]}
 
 /*
- * Look out! There are 50 traps scattered about this level, and
+ * Look out! There are traps scattered all about this level, and
  * you don't know where they are. Tread carefully.
  */
 function getRandomInt (min, max) {

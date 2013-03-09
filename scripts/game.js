@@ -19,7 +19,9 @@ var display;
 var output;
 var editor;
 var map;
-var currentLevel = 0; //level numbers start at 0 because coding :\
+
+var currentLevel = 0; // level numbers start at 0 because coding :\
+var pickedUpPhone = false;
 
 var objects = {
 	'empty' : {
@@ -54,7 +56,7 @@ var objects = {
 
 
 	'exit' : {
-		'symbol' : String.fromCharCode(0x2588),
+		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#0ff',
 		'passable': true,
 		'onCollision': function (player) {
@@ -62,9 +64,18 @@ var objects = {
 		}
 	},
 	'player' : {
-		'symbol' : '@',
-		'color' : '#0f0',
-		'passable' : false
+		'symbol': '@',
+		'color': '#0f0',
+		'passable': false
+	},
+	'phone': {
+		'symbol': String.fromCharCode(0x260E), // ☎
+		'passable': true,
+		'onCollision': function (player) {
+			output.drawText(0, 0, 'You have picked up the function phone! You will be able to use it to call functions.');
+			$('#phoneButton').show();
+			pickedUpPhone = true;
+		}
 	}
 };
 
@@ -150,9 +161,8 @@ function loadLevel(lvlCode) {
 		$('#screen canvas').removeClass('focus');
 	});
 
-	// load and initialize level
+	// initialize level
 	editor.setValue(lvlCode);
-	evalLevelCode();
 
 	// get editable line ranges from level metadata
 	levelMetadata = editor.getLine(0);
@@ -177,12 +187,25 @@ function loadLevel(lvlCode) {
 	editor.on('update', function (instance) {
 		for (var i = 0; i < editor.lineCount(); i++) {
 			if (editableLines.indexOf(i) == -1) {
-				line = $('.CodeMirror-lines').children().first().children().eq(2).children().eq(i);
-				line.addClass('disabled');
+				instance.addLineClass(i, 'wrap', 'disabled');
 			}
 		}
 	});
 	editor.refresh();
+
+	// editor.getPlayerCode returns only the code written in editable lines
+	editor.getPlayerCode = function () {
+		var code = '';
+		for (var i = 0; i < editor.lineCount(); i++) {
+			if (editableLines.indexOf(i) > -1) {
+				code += editor.getLine(i) + ' \n';
+			}
+		}
+		return code;
+	}
+
+	// start the level
+	evalLevelCode();
 }
 
 function focusOnMap() {
@@ -198,12 +221,17 @@ function resetEditor() {
 }
 
 function evalLevelCode() {
-	var playerCode = editor.getValue();
-	var validatedStartLevel = validate(playerCode, currentLevel);
+	var allCode = editor.getValue();
+	var playerCode = editor.getPlayerCode();
+	var validatedStartLevel = validate(allCode, playerCode, currentLevel);
 	if (validatedStartLevel) {
 		map.reset();
 		validatedStartLevel(map);
 	}
+}
+
+function usePhone() {
+	// TODO: make phone do something
 }
 
 shortcut.add('ctrl+1', focusOnMap);

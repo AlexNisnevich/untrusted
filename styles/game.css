@@ -3,6 +3,11 @@ body {
 	background: #111;
 }
 
+#screenPane {
+	float: left;
+	width: 602px;
+}
+
 #screen {
 	float: left;
 }
@@ -24,16 +29,34 @@ body {
 }
 
 #editorPane #buttons {
-	border: 2px solid #333;
-	border-top: 0;
+	margin-top: 5px;
+	padding: 7px;
+	background: #000;
+	font-family: monospace;
+	color: #fff;
+	cursor: pointer;
+}
+
+#editorPane #buttons a:hover {
+	background: #fff;
+	color: #000;
+}
+
+#editorPane #buttons .keys {
+	background: #fff;
+	color: #000;
 }
 
 .CodeMirror {
 	border: 2px solid #333;
+	border-left: 0;
+	margin-left: 2px;
 }
 
 .CodeMirror.focus {
 	border: 2px solid yellow;
+	border-left: 2px solid yellow;
+	margin-left: 0;
 }
 
 .CodeMirror-lines .disabled {
