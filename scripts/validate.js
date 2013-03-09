@@ -51,19 +51,15 @@ function validateAtLeastXObjects(map, num, type) {
 }
 
 function validateExactlyXManyObjects(map, num, type) {
-	if (type == 'player') {
-		return (map._playerCount === num);
-	} else {
-		var count = 0;
-		for (var x = 0; x < map.getWidth(); x++) {
-			for (var y = 0; y < map.getHeight(); y++) {
-				if (map._grid[x][y].type === type) {
-					count++;
-				}
+	var count = 0;
+	for (var x = 0; x < map.getWidth(); x++) {
+		for (var y = 0; y < map.getHeight(); y++) {
+			if (map._grid[x][y].type === type) {
+				count++;
 			}
 		}
-		if (count != num) {
-			throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-		}
+	}
+	if (count != num) {
+		throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
 	}
 }

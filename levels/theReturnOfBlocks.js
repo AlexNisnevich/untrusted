@@ -30,6 +30,5 @@ function validateLevel(map) {
     numBlocks = 2 * (map.getHeight()-13) + 2 * (map.getWidth()-10);
 
     validateAtLeastXObjects(map, numBlocks, 'block');
-    validateExactlyXManyObjects(map, 1, 'player');
     validateExactlyXManyObjects(map, 1, 'exit');
 }

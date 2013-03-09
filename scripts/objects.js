@@ -44,8 +44,7 @@ var objects = {
 		'passable': false
 	},
 	'computer': {
-		//'symbol': String.fromCharCode(0x26BC), // ⚼
-		'symbol': String.fromCharCode(0x26C1), // ⛁
+		'symbol': String.fromCharCode(0x2318), // ⌘
 		'color': '#ccc',
 		'passable': true,
 		'onCollision': function (player) {

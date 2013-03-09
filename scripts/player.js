@@ -5,7 +5,6 @@ var Player = function(x, y, map) {
 	this._fgColor = "#0f0";
 	this._display = map._display;
 	this.draw();
-	map._playerCount++;
 }
 
 Player.prototype.draw = function () {
@@ -64,8 +63,6 @@ Player.prototype.pickUpItem = function () {
 	// do a little dance to get rid of graphical artifacts
 	this.move('right');
 	this.move('left');
-	this.move('left');
-	this.move('right');
 }
 
 Player.prototype.setPhoneCallback = function(func) {

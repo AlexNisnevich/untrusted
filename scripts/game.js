@@ -56,7 +56,8 @@ function init() {
 				this.drawObject(x, y, map._grid[x][y].type, map._grid[x][y].bgColor, multiplicand);
 			}
 		}
-		map.player.draw();
+		if (map.player) { map.player.draw(); }
+
 	}
 
 	display.fadeOut = function (map, callback, i) {

@@ -13,7 +13,7 @@ var Map = function (display) {
 				this._grid[x][y] = {type: 'empty'};
 			}
 		}
-		this._playerCount = 0;
+		this.player = null;
 	};
 
 	this.getWidth = function () { return dimensions.width; }
@@ -28,6 +28,9 @@ var Map = function (display) {
 	};
 
 	this.placePlayer = function (x, y) {
+		if (this.player) {
+			throw "Can't place player twice!";
+		}
 		this.player = new Player(x, y, this);
 	};
 
