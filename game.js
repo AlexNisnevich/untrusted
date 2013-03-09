@@ -50,7 +50,13 @@ var objects = {
 	'tree': {
 		'symbol': '♣',
 		'passable': false
-	}
+	},
+    'exit' : {
+        //'symbol': "😃'",
+        'symbol' : "█",
+        'color': '#0ff',
+        passable: true
+    }
 };
 
 var Player = function(x,y) {
@@ -118,7 +124,7 @@ function init() {
 	});
 	editor.setSize(600, 500);
 
-	$.get('levels/blocks', function (lvlCode) {
+	$.get('levels/blocks.js', function (lvlCode) {
 		editor.setValue(lvlCode);
 		evalLevelCode();
 	});
