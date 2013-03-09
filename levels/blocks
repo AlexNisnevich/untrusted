@@ -10,4 +10,7 @@ function startLevel(map) {
     }
 
     map.player = new Player(15, 15);
+
+    // exit square always at bottom right corner
+    map.placeObject(dimensions.width-1, dimensions.height-1, 'exit');
 }

@@ -49,7 +49,12 @@ var objects = {
 	'tree': {
 		'symbol': '♣',
 		'passable': false
-	}
+	},
+    'exit' : {
+        'symbol': "😃'",
+        'color': '#0ff',
+        passable: true
+    }
 };
 
 var Player = function(x,y) {
