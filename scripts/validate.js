@@ -51,7 +51,7 @@ function validateAtLeastXObjects(map, num, type) {
 
 function validateExactlyXManyObjects(map, num, type) {
 	if (type == 'player') {
-		return (map._numPlayers == num);
+		return (map._playerCount === num);
 	} else {
 		var count = 0;
 		for (var x = 0; x < map.getWidth(); x++) {

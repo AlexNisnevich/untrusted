@@ -71,14 +71,16 @@ var objects = {
 		'passable': false
 	},
 	'computer': {
-		'symbol': String.fromCharCode(0x26BC), // ⚼
+		//'symbol': String.fromCharCode(0x26BC), // ⚼
+		'symbol': String.fromCharCode(0x26C1), // ⛁
 		'color': '#ccc',
 		'passable': true,
 		'onCollision': function (player) {
-			output.write('You have picked up the computer! You can use it to get to the exit.');
+			output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
 			$('#editorPane').show();
 			editor.refresh();
 			pickedUpComputer = true;
+			player.pickUpItem();
 		}
 	},
 	'phone': {
@@ -88,6 +90,7 @@ var objects = {
 			output.write('You have picked up the function phone! You will be able to use it to call functions.');
 			$('#phoneButton').show();
 			pickedUpPhone = true;
+			player.pickUpItem();
 		}
 	}
 };
