@@ -1,6 +1,8 @@
-// {"editable": [[26, 26]]}
+// {"editable": [[28, 28]]}
 
 /*
+ * traps.js
+ *
  * Look out! There are traps scattered all about this level, but
  * you don't know where they are. Tread carefully.
  */

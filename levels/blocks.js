@@ -1,8 +1,10 @@
-// {"editable": [[14, 23]]}
+// {"editable": [[16, 24]]}
 
 /*
+ * blocks.js
+ *
  * This is the first level, so we'll give you a hint.
- * In fact, a really obvious hint (hey it's level 0).
+ * In fact, a really obvious hint (hey, it's level 0).
  * The code currently places blocks in a square surrounding
  * you. All you need to do is make a gap.
  * You don't even need to do anything extra. In fact,

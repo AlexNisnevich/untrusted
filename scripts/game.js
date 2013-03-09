@@ -9,7 +9,7 @@ var keys = {
 
 var levelFileNames = [
 	'blocks.js',
-	'blocks2.js',
+	'theReturnOfBlocks.js',
 	'levelThree.js',
 	'multiplicity.js',
 	'traps.js',
@@ -22,80 +22,6 @@ var editor;
 var map;
 
 var currentLevel = 0; // level numbers start at 0 because coding :\
-var pickedUpComputer = false;
-var pickedUpPhone = false;
-
-var objects = {
-	'empty' : {
-		'symbol': ' ',
-		'passable': true
-	},
-	'block': {
-		'symbol': '#',
-		'color': '#f00',
-		'passable': false
-	},
-	'tree': {
-		'symbol': '♣',
-		'color': '#080',
-		'passable': false
-	},
-	'trap': {
-		'symbol': ' ',
-		'passable': true,
-		'onCollision': function (player) {
-			player.killedBy('an invisible trap');
-		}
-	},
-    'stream': {
-        'symbol': '░',
-        'passable': true,
-        'onCollision': function (player) {
-            player.killedBy('drowning in deep dark water');
-        }
-    },
-	'exit' : {
-		'symbol' : String.fromCharCode(0x2395), // ⎕
-		'color': '#0ff',
-		'passable': true,
-		'onCollision': function (player) {
-			moveToNextLevel();
-		}
-	},
-	'player' : {
-		'symbol': '@',
-		'color': '#0f0',
-		'passable': false
-	},
-	'computer': {
-		//'symbol': String.fromCharCode(0x26BC), // ⚼
-		'symbol': String.fromCharCode(0x26C1), // ⛁
-		'color': '#ccc',
-		'passable': true,
-		'onCollision': function (player) {
-			output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
-			$('#editorPane').fadeIn();
-			editor.refresh();
-			pickedUpComputer = true;
-			player.pickUpItem();
-		}
-	},
-	'phone': {
-		'symbol': String.fromCharCode(0x260E), // ☎
-		'passable': true,
-		'onCollision': function (player) {
-			output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
-			$('#phoneButton').show();
-			pickedUpPhone = true;
-			player.pickUpItem();
-		}
-	}
-};
-
-function moveToNextLevel() {
-	currentLevel++;
-	getLevel(currentLevel);
-};
 
 function init() {
 	display = new ROT.Display({width: dimensions.width, height: dimensions.height,
@@ -144,6 +70,11 @@ function init() {
 	getLevel(currentLevel);
 	focusOnMap();
 }
+
+function moveToNextLevel() {
+	currentLevel++;
+	getLevel(currentLevel);
+};
 
 // makes an ajax request to get the level text file and
 // then loads it into the game

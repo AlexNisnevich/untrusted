@@ -1,6 +1,8 @@
-// {"editable": [[13, 22]]}
+// {"editable": [[15, 23]]}
 
 /*
+ * theReturnOfBlocks.js
+ *
  * Of course, you mustn't think that we'd let you
  * get away with just anything! The validateLevel
  * function enforces constraints on what you can do.

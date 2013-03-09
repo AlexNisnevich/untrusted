@@ -4,11 +4,11 @@
  * multiplicity.js
  *
  * N.B. level filenames can be hints!
- * I mean lots of games do that, why
+ * I mean, lots of games do that, why
  * shouldn't this one?
  *
- * This level also looks exactly like the first
- * level, but with fewer lines of code that
+ * This level also looks an awful lot like the first
+ * couple, but with fewer lines of code that
  * you can edit. That is also a hint! Aren't
  * you happy that I am giving you hints? :)
  */

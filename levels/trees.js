@@ -1,4 +1,4 @@
-// {"editable": [[95,95]]}
+// {"editable": [[94,94]]}
 
 /*
  * trees.js - the obligatory forest level
@@ -8,12 +8,11 @@
  * changed. Fortunately, he had another tool at his disposal ...
  */
 function startLevel(map) {
-
     map.placePlayer(2, map.getHeight() - 1);
 
     var functionList = {};
-    functionList['fortresses'] = function  () {
 
+    functionList['fortresses'] = function () {
         function genRandomValue(direction) {
             if (direction === "height") {
                 return Math.floor(Math.random() * (map.getHeight() +1));
@@ -63,7 +62,7 @@ function startLevel(map) {
         }
     };
 
-    functionList['placePhone'] = function() {
+    functionList['placePhone'] = function () {
         map.placeObject(map.player._x + 1, map.player._y, 'phone');
     }
 
