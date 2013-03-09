@@ -18,6 +18,7 @@ var dimensions = {
 
 var Map = function () {
 	this.reset = function () {
+		display.clear();
 		this._grid = new Array(dimensions.width);
 		for (var x = 0; x < dimensions.width; x++) {
 			this._grid[x] = new Array(dimensions.height);
@@ -117,6 +118,7 @@ function init() {
 
 function evalLevelCode() {
 	eval($('#editor').val());
+	map.reset();
 	startLevel(map);
 }
 
