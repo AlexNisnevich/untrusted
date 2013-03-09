@@ -56,3 +56,9 @@ Player.prototype.killedBy = function (killer) {
 	alert('You have been killed by ' + killer + '!');
 	getLevel(currentLevel);
 }
+
+Player.prototype.pickUpItem = function () {
+	map.placeObject(this._x, this._y, 'empty');
+	this.move('right');
+	this.move('left');
+}
