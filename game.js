@@ -8,6 +8,7 @@ var keys = {
 }
 
 var display;
+var editor;
 var map;
 var player;
 
@@ -110,14 +111,21 @@ function init() {
 
 	map = new Map();
 
+	editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+		theme: 'vibrant-ink',
+		lineNumbers: true,
+		matchBrackets: true
+	});
+	editor.setSize(600, 500);
+
 	$.get('levels/blocks', function (lvlCode) {
-		$('#editor').val(lvlCode);
+		editor.setValue(lvlCode);
 		evalLevelCode();
 	});
 }
 
 function evalLevelCode() {
-	eval($('#editor').val());
+	eval(editor.getValue());
 	map.reset();
 	startLevel(map);
 }

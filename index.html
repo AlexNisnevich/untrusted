@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <head>
     <title>Hacking Game</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="jquery-1.9.1.min.js"></script>
     <script src="rotjs-library/rot.js"></script>
+
+    <link rel="stylesheet" href="codemirror-3.1/lib/codemirror.css">
+    <script src="codemirror-3.1/lib/codemirror.js"></script>
+    <script src="codemirror-3.1/addon/edit/matchbrackets.js"></script>
+    <script src="codemirror-3.1/mode/javascript/javascript.js"></script>
+    <link rel="stylesheet" href="codemirror-3.1/theme/vibrant-ink.css">
+
 	<script src="game.js"></script>
 </head>
 <body onload="init()">
 	<div id="screen" style="float: left;"></div>
 	<div style="float: left;">
-		<textarea id="editor" style="width: 600px; height: 500px; margin-left: 10px;">
+		<textarea id="editor">
 		</textarea>
+		<button onClick="evalLevelCode();" style="position: relative; top: -2em; left: 530px;">Execute</button>
 	</div>
 </body>
 </html>
