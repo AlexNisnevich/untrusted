@@ -45,6 +45,8 @@ function init() {
     display = new ROT.Display({width: dimensions.width, height: dimensions.height});
     document.body.appendChild(display.getContainer());
 
+    display.setOptions( {fontSize: 20, fontStyle : "bold"});
+
     // all maps start out initialized to completely empty squares
     for (var x = 0; x < dimensions.width; x++) {
         for (var y = 0; y < dimensions.height; y++) {
