@@ -1,4 +1,4 @@
-// {"editable": [[3, 11]]}
+// {"editable": [[3, 4]]}
 function startLevel(map) {
 
     display.drawText(1,1, "This is a dummy level. The player is never supposed to get here");
