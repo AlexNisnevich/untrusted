@@ -5,7 +5,7 @@ var keys = {
 	38: 'up',
 	39: 'right',
 	40: 'down'
-}
+};
 
 var display;
 var editor;
@@ -116,7 +116,6 @@ function init() {
     // drawObject takes care of looking up an object's symbol and color
     // according to name (NOT according to the actual object literal!)
     display.drawObject = function (x,y, object) {  
-        console.log(object);
         var symbol = objects[object].symbol;
         var color; 
         if (objects[object].color) {
