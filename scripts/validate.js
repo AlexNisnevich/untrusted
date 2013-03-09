@@ -8,19 +8,19 @@ var DummyDisplay = function () {
 	this.drawObject = function () {};
 };
 
-function validate(playerCode, level) {
+function validate(allCode, playerCode, level) {
 	output.clear();
 	try {
 		for (var i = 0; i < VERBOTEN.length; i++) {
 			var badWord = VERBOTEN[i];
-			if (playerCode.indexOf(badWord) > -1) { 
+			if (playerCode.indexOf(badWord) > -1) {
 				throw 'You are not allowed to use ' + badWord + '!';
 			}
 		}
 
 		var dummyMap = new Map(new DummyDisplay);
 
-		eval(playerCode); // get startLevel and (opt) validateLevel methods
+		eval(allCode); // get startLevel and (opt) validateLevel methods
 
 		startLevel(dummyMap);
 		if (typeof(validateLevel) != 'undefined') {

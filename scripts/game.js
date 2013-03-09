@@ -43,7 +43,7 @@ var objects = {
 		}
 	},
 	'exit' : {
-		'symbol' : String.fromCharCode(0x2588),
+		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#0ff',
 		'passable': true,
 		'onCollision': function (player) {
@@ -54,6 +54,9 @@ var objects = {
 		'symbol' : '@',
 		'color' : '#0f0',
 		'passable' : false
+	},
+	'phone': {
+		'symbol': String.fromCharCode(0x260E), // ☎
 	}
 };
 
@@ -166,12 +169,22 @@ function loadLevel(lvlCode) {
 	editor.on('update', function (instance) {
 		for (var i = 0; i < editor.lineCount(); i++) {
 			if (editableLines.indexOf(i) == -1) {
-				line = $('.CodeMirror-lines').children().first().children().eq(2).children().eq(i);
-				line.addClass('disabled');
+				instance.addLineClass(i, 'wrap', 'disabled');
 			}
 		}
 	});
 	editor.refresh();
+
+	// editor.getPlayerCode returns only the code written in editable lines
+	editor.getPlayerCode = function () {
+		var code = '';
+		for (var i = 0; i < editor.lineCount(); i++) {
+			if (editableLines.indexOf(i) > -1) {
+				code += editor.getLine(i) + ' \n';
+			}
+		}
+		return code;
+	}
 }
 
 function focusOnMap() {
@@ -187,8 +200,9 @@ function resetEditor() {
 }
 
 function evalLevelCode() {
-	var playerCode = editor.getValue();
-	var validatedStartLevel = validate(playerCode, currentLevel);
+	var allCode = editor.getValue();
+	var playerCode = editor.getPlayerCode();
+	var validatedStartLevel = validate(allCode, playerCode, currentLevel);
 	if (validatedStartLevel) {
 		map.reset();
 		validatedStartLevel(map);
