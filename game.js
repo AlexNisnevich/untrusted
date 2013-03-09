@@ -1,11 +1,20 @@
 
 // directions for moving entities
+var keys = {
+	37: 'left',
+	38: 'up',
+	39: 'right',
+	40: 'down'
+}
+
 var UP = "up";
 var DOWN = "down";
 var LEFT = "left";
 var RIGHT = "right";
 
 var display;
+var player;
+
 var dimensions = {
 	width: 80,
 	height: 25
@@ -17,12 +26,11 @@ for (var i = 0; i < dimensions.width; i++) {
 }
 
 var objects = {
-
     'empty' : {
         'symbol': ' ',
         'passable': true
     },
-    
+
 	'block': {
 		'symbol': '#',
 		'passable': false
@@ -64,6 +72,7 @@ Player.prototype.move = function (direction) {
     var cur_y = this._y;
     var new_x;
     var new_y;
+
     if (direction === UP) {
         new_x = cur_x;
         new_y = cur_y - 1;
@@ -73,11 +82,11 @@ Player.prototype.move = function (direction) {
         new_y = cur_y + 1;
     }
     else if (direction === LEFT) {
-        new_x = cur_x + 1;
+        new_x = cur_x - 1;
         new_y = cur_y;
     }
     else if (direction === RIGHT) {
-        new_x = cur_x - 1;
+        new_x = cur_x + 1;
         new_y = cur_y;
     }
 
@@ -92,10 +101,9 @@ Player.prototype.move = function (direction) {
     }
 };
 
-function canMoveTo(x,y) { //TODO flesh this out
-    return true;
+function canMoveTo(x,y) {
+    return objects[map[x][y]].passable;
 }
-
 
 function placeObject(type, x, y) {
 	map[x][y] = type;
@@ -112,4 +120,15 @@ function startLevel1() {
     	placeObject('block', x, 5);
     	placeObject('block', x, dimensions.height - 5);
 	}
+
+	player = new Player(15, 15);
 }
+
+// Event listeners
+
+document.addEventListener("keydown", function(e) {
+	console.log(e.keyCode);
+    if (keys[e.keyCode]) {
+    	player.move(keys[e.keyCode]);
+    }
+});
