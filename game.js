@@ -107,6 +107,10 @@ Player.prototype.move = function (direction) {
 };
 
 function canMoveTo(x,y) {
+    if (x < 0 || x >= dimensions.width || y < 0 || y >= dimensions.height) {
+        return false;
+    }
+
 	return objects[map._grid[x][y]].passable;
 }
 
@@ -136,7 +140,6 @@ function init() {
 
 	$("canvas").attr("contentEditable", "true");
 	display.getContainer().addEventListener("keydown", function(e) {
-		console.log(e.keyCode);
 		if (keys[e.keyCode]) {
 			map.player.move(keys[e.keyCode]);
 		}
