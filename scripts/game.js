@@ -127,11 +127,11 @@ function getLevel(levelNumber) {
 		if (editor) {
 			editor.toTextArea();
 		}
-		loadLevel(codeText);
+		loadLevel(codeText, levelNumber);
 	});
 }
 
-function loadLevel(lvlCode) {
+function loadLevel(lvlCode, lvlNum) {
 	// initialize CodeMirror editor
 	editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
 		theme: 'vibrant-ink',
@@ -191,9 +191,8 @@ function loadLevel(lvlCode) {
 		return code;
 	}
 
-	// start the level and fade into map
-	evalLevelCode();
-	display.fadeIn(map);
+	// start the level
+	evalLevelCode(lvlNum);
 
 	// on first level, display intro text
 	if (currentLevel == 0) {
@@ -213,14 +212,18 @@ function resetEditor() {
     getLevel(currentLevel);
 }
 
-function evalLevelCode() {
+function evalLevelCode(lvlNum) {
 	var allCode = editor.getValue();
 	var playerCode = editor.getPlayerCode();
 	var validatedStartLevel = validate(allCode, playerCode, currentLevel);
 	if (validatedStartLevel) {
 		map.reset();
 		validatedStartLevel(map);
-		display.drawAll(map);
+		if (lvlNum < levelFileNames.length) {
+			// don't do this for dummy level
+			display.drawAll(map);
+			display.fadeIn(map);
+		}
 	}
 }
 
@@ -237,3 +240,4 @@ shortcut.add('ctrl+2', focusOnEditor);
 shortcut.add('ctrl+4', resetEditor);
 shortcut.add('ctrl+5', evalLevelCode);
 shortcut.add('ctrl+6', usePhone);
+shortcut.add('ctrl+0', moveToNextLevel);
