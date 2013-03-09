@@ -273,7 +273,7 @@ function loadLevel(lvlCode) {
 
 function evalLevelCode() {
     var playerCode = editor.getValue();
-    if (validate(playerCode)) {
+    if (validate(playerCode, currentLevel)) {
         eval(editor.getValue());
         map.reset();
         startLevel(map);
