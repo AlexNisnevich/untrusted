@@ -4,7 +4,7 @@
  * trees.js - the obligatory forest level
  *
  * the way this level works is that the player has to find a phone
- * so they can call functions, then in code bind that callback to the 
+ * so they can call functions, then in code bind that callback to the
  * function to clear trees *without* resetting player position
  */
 function startLevel(map) {
@@ -43,7 +43,7 @@ function startLevel(map) {
             map.placeObject(i+2,j, 'block');
         }
     };
-    
+
     functionList['generateForest'] = function () {
         for (var i = 0; i < map.getWidth(); i++) {
             for (var j = 0; j < map.getHeight(); j++) {
@@ -58,8 +58,8 @@ function startLevel(map) {
                     continue;
                 }
                 var rv = Math.random();
-                if (rv < 0.3000) {
-                    map.placeObject(i,j,'tree');
+                if (rv < 0.45) {
+                    map.placeObject(i, j, 'tree');
                 }
             }
         }
