@@ -191,8 +191,12 @@ function loadLevel(lvlCode, lvlNum) {
 		return code;
 	}
 
-	// start the level
+	// start the level and fade in
 	evalLevelCode(lvlNum);
+	if (lvlNum < levelFileNames.length) {
+		// don't fade in for dummy level
+		display.fadeIn(map);
+	}
 
 	// on first level, display intro text
 	if (currentLevel == 0) {
@@ -219,11 +223,11 @@ function evalLevelCode(lvlNum) {
 	if (validatedStartLevel) {
 		map.reset();
 		validatedStartLevel(map);
-		if (lvlNum < levelFileNames.length) {
+		if (lvlNum >= levelFileNames.length) {
 			// don't do this for dummy level
-			display.drawAll(map);
-			display.fadeIn(map);
+			return;
 		}
+		display.drawAll(map);
 	}
 }
 
@@ -240,4 +244,3 @@ shortcut.add('ctrl+2', focusOnEditor);
 shortcut.add('ctrl+4', resetEditor);
 shortcut.add('ctrl+5', evalLevelCode);
 shortcut.add('ctrl+6', usePhone);
-shortcut.add('ctrl+0', moveToNextLevel);
