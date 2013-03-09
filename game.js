@@ -7,11 +7,6 @@ var keys = {
 	40: 'down'
 }
 
-var UP = "up";
-var DOWN = "down";
-var LEFT = "left";
-var RIGHT = "right";
-
 var display;
 var map;
 var player;
@@ -22,27 +17,30 @@ var dimensions = {
 };
 
 var Map = function () {
-	// Initialize with empty grid
-	this._grid = new Array(dimensions.width);
-	for (var x = 0; x < dimensions.width; x++) {
-		this._grid[x] = new Array(dimensions.height);
-		for (var y = 0; y < dimensions.height; y++) {
-			this._grid[x][y] = 'empty';
+	this.reset = function () {
+		this._grid = new Array(dimensions.width);
+		for (var x = 0; x < dimensions.width; x++) {
+			this._grid[x] = new Array(dimensions.height);
+			for (var y = 0; y < dimensions.height; y++) {
+				this._grid[x][y] = 'empty';
+			}
 		}
-	}
+	};
 
 	this.placeObject = function (x, y, type) {
 		this._grid[x][y] = type;
 		display.draw(x, y, objects[type].symbol);
-	}
-}
+	};
+
+	// Initialize with empty grid
+	this.reset();
+};
 
 var objects = {
 	'empty' : {
 		'symbol': ' ',
 		'passable': true
 	},
-
 	'block': {
 		'symbol': '#',
 		'passable': false
@@ -71,19 +69,19 @@ Player.prototype.move = function (direction) {
 	var new_x;
 	var new_y;
 
-	if (direction === UP) {
+	if (direction === 'up') {
 		new_x = cur_x;
 		new_y = cur_y - 1;
 	}
-	else if (direction === DOWN) {
+	else if (direction === 'down') {
 		new_x = cur_x;
 		new_y = cur_y + 1;
 	}
-	else if (direction === LEFT) {
+	else if (direction === 'left') {
 		new_x = cur_x - 1;
 		new_y = cur_y;
 	}
-	else if (direction === RIGHT) {
+	else if (direction === 'right') {
 		new_x = cur_x + 1;
 		new_y = cur_y;
 	}
