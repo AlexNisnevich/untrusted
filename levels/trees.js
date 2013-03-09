@@ -1,4 +1,4 @@
-// {"editable": [[1, 23]]}
+// {"editable": []}
 
 /*
  * trees.js - the obligatory forest level
@@ -11,8 +11,6 @@ function startLevel(map) {
 
     map.player = new Player(2, map.getHeight() - 1);
 
-    // so you can call functions
-    //map.placeObject(2, map.getHeight()-2, 'phone');
 
     var functionList = {};
     functionList['fortresses'] = function  () {
@@ -50,6 +48,12 @@ function startLevel(map) {
     functionList['generateForest'] = function () {
         for (var i = 0; i < map.getWidth(); i++) {
             for (var j = 0; j < map.getHeight(); j++) {
+
+                //initialize to empty if the square contains a forest already
+                if (map._grid[i][j] === 'forest') {
+                    map.placeObject(i,j,'empty');
+                }
+
                 /*
                 if player.atLocation(i,j) {
                     continue;
@@ -62,6 +66,10 @@ function startLevel(map) {
         }
     };
 
+    functionList['placePhone'] = function() {
+        map.placeObject(map.player._x + 1, map.player._y, 'phone');
+    }
+
     //generate forest
     functionList['generateForest']();
 
@@ -71,9 +79,10 @@ function startLevel(map) {
     functionList['fortresses']();
     functionList['fortresses']();
 
-    
+    // so you can call functions
+    functionList['placePhone']();
 
-    //player.phoneCallback = functionList["key"];
+    //map.player.setPhoneCallback(functionList["generateForest"])
 
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
 }
