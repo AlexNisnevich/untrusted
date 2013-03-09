@@ -12,13 +12,14 @@
     <link rel="stylesheet" href="codemirror-3.1/theme/vibrant-ink.css">
 
 	<script src="game.js"></script>
+    <link rel="stylesheet" href="game.css">
 </head>
 <body onload="init()">
-	<div id="screen" style="float: left;"></div>
-	<div style="float: left;">
+	<div id="screen"></div>
+	<div id="editorPane">
 		<textarea id="editor">
 		</textarea>
-		<button onClick="evalLevelCode();" style="position: relative; top: -2em; left: 530px;">Execute</button>
+		<button id="executeButton" onClick="evalLevelCode();">Execute</button>
 	</div>
 </body>
 </html>

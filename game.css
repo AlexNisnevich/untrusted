@@ -1,0 +1,20 @@
+
+#screen {
+	float: left;
+}
+
+#editorPane {
+	float: left;
+}
+
+#editorPane #editor {
+	display: none;
+}
+
+#editorPane #executeButton {
+	position: relative; top: -2em; left: 530px;
+}
+
+.CodeMirror-lines .disabled {
+	background: #311 !important;
+}
