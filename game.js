@@ -7,7 +7,7 @@ var keys = {
 	40: 'down'
 };
 
-var levelFileNames = ['blocks.js', 'levelTwo.js'];
+var levelFileNames = ['blocks.js', 'levelTwo.js', 'multiplicity.js'];
 
 var display;
 var editor;
@@ -59,6 +59,12 @@ var objects = {
         'symbol' : String.fromCharCode(0x2588),
         'color': '#0ff',
         'passable': true
+    },
+
+    'player' : {
+        'symbol' : '@',
+        'color' : '#0f0',
+        'passable' : false
     }
 };
 
@@ -68,10 +74,15 @@ var Player = function(x,y) {
 	this._rep = "@";
 	this._fgColor = "#0f0";
 	this.draw();
+
 }
 
 Player.prototype.draw = function () {
 	display.draw(this._x, this._y, this._rep, this._fgColor);
+}
+
+Player.prototype.atLocation = function (x, y) {
+    return (this._x === x && this._y === y);
 }
 
 Player.prototype.move = function (direction) {
