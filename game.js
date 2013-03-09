@@ -155,13 +155,17 @@ function init() {
 			map.player.move(keys[e.keyCode]);
 		}
 	});
+	display.getContainer().addEventListener("click", function(e) {
+		$(display.getContainer()).addClass('focus');
+		$('.CodeMirror').removeClass('focus');
+	});
 
 	map = new Map();
 
     getLevel(currentLevel);
 }
 
-// makes an ajax request to get the level text file and 
+// makes an ajax request to get the level text file and
 // then loads it into the game
 function getLevel(levelNumber) {
     var fileName;
@@ -188,6 +192,10 @@ function loadLevel(lvlCode) {
 		extraKeys: {'Enter': function () {}}
 	});
 	editor.setSize(600, 500);
+	editor.on("focus", function(instance) {
+		$('.CodeMirror').addClass('focus');
+		$('#screen canvas').removeClass('focus');
+	});
 
 	// load and initialize level
 	editor.setValue(lvlCode);

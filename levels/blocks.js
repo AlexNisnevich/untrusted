@@ -1,4 +1,4 @@
-// {"editable": [[3, 11]]}
+// {"editable": [[2, 11]]}
 function startLevel(map) {
     for (y = 5; y <= dimensions.height - 5; y++) {
         map.placeObject(5, y, 'block');
