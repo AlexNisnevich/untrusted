@@ -12,7 +12,6 @@ var levelFileNames = ['blocks.js', 'levelTwo.js'];
 var display;
 var editor;
 var map;
-var player;
 var currentLevel = 0; //level numbers start at 0 because coding :\
 
 var dimensions = {
