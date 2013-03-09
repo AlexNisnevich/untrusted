@@ -19,8 +19,16 @@ var Map = function (display) {
 	this.getHeight = function () { return dimensions.height; }
 
 	this.placeObject = function (x, y, type, bgColor) {
-		this._grid[x][y] = type;
-		this._display.drawObject(x, y, type, bgColor);
+        if (typeof(this._grid[x]) !== 'undefined' && typeof(this._grid[x][y]) !== 'undefined') {
+
+            if (this.player.atLocation(this._grid[x], this._grid[y])) {
+
+            }
+            else {
+                this._grid[x][y] = type;
+                this._display.drawObject(x, y, type, bgColor);
+            }
+        }
 	};
 
 	this.setSquareColor = function (x, y, bgColor) {
