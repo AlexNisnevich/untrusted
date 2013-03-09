@@ -23,7 +23,7 @@
 <body onload="init()">
     <h1>Untrusted</h1>
     <h2>&mdash;or&mdash; the Continuing Adventures of Dr. Eval</h2>
-    <div style="float: left; width: 600px;">
+    <div id="screenPane">
     	<div id="screen"></div>
         <div id="output"></div>
     </div>
@@ -31,10 +31,10 @@
 		<textarea id="editor">
 		</textarea>
         <div id="buttons">
-            <button id="mapButton" onClick="focusOnMap();">Switch to Map [Ctrl+1]</button>
-            <button id="editorButton" onClick="focusOnEditor();">Switch to Editor [Ctrl+2]</button>
-            <button id="resetButton" onClick="resetEditor();">Reset Level [Ctrl+4]</button>
-            <button id="executeButton" onClick="evalLevelCode();">Execute [Ctrl+5]</button>
+            <span><a id="mapButton" onClick="focusOnMap();"><span class="keys">^1</span> Switch to Map</a></span>
+            <span><a id="editorButton" onClick="focusOnEditor();"><span class="keys">^2</span> Switch to Editor</a></span>
+            <span><a id="resetButton" onClick="resetEditor();"><span class="keys">^4</span> Reset Level</a></span>
+            <span><a id="executeButton" onClick="evalLevelCode();"><span class="keys">^5</span> Execute</a></span>
         </div>
 	</div>
 </body>
