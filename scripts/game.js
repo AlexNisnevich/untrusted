@@ -182,6 +182,10 @@ function focusOnEditor() {
 	editor.focus();
 }
 
+function resetEditor() {
+    getLevel(currentLevel);
+}
+
 function evalLevelCode() {
 	var playerCode = editor.getValue();
 	var validatedStartLevel = validate(playerCode, currentLevel);
@@ -194,3 +198,4 @@ function evalLevelCode() {
 shortcut.add('ctrl+1', focusOnMap);
 shortcut.add('ctrl+2', focusOnEditor);
 shortcut.add('ctrl+5', evalLevelCode);
+shortcut.add('ctrl+4', resetEditor);
