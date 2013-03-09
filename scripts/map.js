@@ -13,6 +13,7 @@ var Map = function (display) {
 				this._grid[x][y] = 'empty';
 			}
 		}
+		this._playerCount = 0;
 	};
 
 	this.getWidth = function () { return dimensions.width; }
