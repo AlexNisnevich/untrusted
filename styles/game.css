@@ -39,3 +39,18 @@ body {
 .CodeMirror-lines .disabled {
 	background: #311 !important;
 }
+
+h1 {
+	display: inline;
+    color: white;
+    font-family: "Lucida Grande", "DejaVu Sans", "Helvetica";
+    font-weight: bold;
+    font-size: 2em;
+}
+
+h2 {
+	margin-left: 0.5em;
+	display: inline;
+    color: yellow;
+    font-style: italic;
+}

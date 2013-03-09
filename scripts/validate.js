@@ -1,19 +1,19 @@
 
-var VERBOTEN = ['eval', 'prototype'];
+var VERBOTEN = ['eval', 'prototype', 'delete', 'moveToNextLevel'];
 
 var validationRulesByLevel = [ null ];
 
 var DummyDisplay = function () {
 	this.clear = function () {};
 	this.drawObject = function () {};
-}
+};
 
 function validate(playerCode, level) {
 	output.clear();
 	try {
 		for (var i = 0; i < VERBOTEN.length; i++) {
 			var badWord = VERBOTEN[i];
-			if (playerCode.indexOf(badWord) > -1) {
+			if (playerCode.indexOf(badWord) > -1) { 
 				throw 'You are not allowed to use ' + badWord + '!';
 			}
 		}
