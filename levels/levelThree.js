@@ -1,4 +1,4 @@
-// {"editable": [[18, 18], [33,33]]}
+// {"editable": [[17, 17], [32,32]]}
 
 /*
  * levelThree.js
@@ -8,7 +8,6 @@
  * It would be really sad to put a lot of effort
  * into making a game and then having that game
  * suck :(
- *
  */
 function startLevel(map) {
 

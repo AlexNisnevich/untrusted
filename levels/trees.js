@@ -1,11 +1,11 @@
-// {"editable": [[93,93]]}
+// {"editable": [[95,95]]}
 
 /*
  * trees.js - the obligatory forest level
  *
- * the way this level works is that the player has to find a phone
- * so they can call functions, then in code bind that callback to the
- * function to clear trees *without* resetting player position
+ * Dr. Eval was in a pickle. He needed to move through the shifting
+ * forest without resetting his own position every time the forest
+ * changed. Fortunately, he had another tool at his disposal ...
  */
 function startLevel(map) {
 
@@ -79,19 +79,21 @@ function startLevel(map) {
         output.write("lol no I'm not moving you to the exit, player! Suck it!");
     }
 
-    //generate forest
+    // generate forest
     functionList['generateForest']();
 
-    //generate fortresses
+    // generate fortresses
     functionList['fortresses']();
     functionList['fortresses']();
     functionList['fortresses']();
     functionList['fortresses']();
 
     // so you can call functions
-    functionList['placePhone']();
+    if (!pickedUpPhone) {
+        functionList['placePhone']();
+    }
 
-    map.player.setPhoneCallback(functionList["movePlayerToExit"])
+    map.player.setPhoneCallback(functionList["movePlayerToExit"]);
 
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
 }

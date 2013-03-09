@@ -1,7 +1,9 @@
-// {"editable": [[22, 22]]}
-/* multiplicity.js
+// {"editable": [[23, 23]]}
+
+/*
+ * multiplicity.js
  *
- * N.B. level filenames are hints!
+ * N.B. level filenames can be hints!
  * I mean lots of games do that, why
  * shouldn't this one?
  *
@@ -9,7 +11,6 @@
  * level, but with fewer lines of code that
  * you can edit. That is also a hint! Aren't
  * you happy that I am giving you hints? :)
- *
  */
 
 function startLevel(map) {

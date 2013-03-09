@@ -87,7 +87,7 @@ var objects = {
 		'symbol': String.fromCharCode(0x260E), // ☎
 		'passable': true,
 		'onCollision': function (player) {
-			output.write('You have picked up the function phone! You will be able to use it to call functions.');
+			output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
 			$('#phoneButton').show();
 			pickedUpPhone = true;
 			player.pickUpItem();
@@ -271,4 +271,3 @@ shortcut.add('ctrl+2', focusOnEditor);
 shortcut.add('ctrl+4', resetEditor);
 shortcut.add('ctrl+5', evalLevelCode);
 shortcut.add('ctrl+6', usePhone);
-shortcut.add('ctrl+0', moveToNextLevel); // TODO: REMOVE THIS LINE WHEN NOT NEEDED
