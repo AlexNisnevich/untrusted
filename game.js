@@ -45,17 +45,18 @@ var objects = {
 	},
 	'block': {
 		'symbol': '#',
+		'color': '#f00',
 		'passable': false
 	},
 	'tree': {
 		'symbol': '♣',
+		'color': '#080',
 		'passable': false
 	},
     'exit' : {
-        //'symbol': "😃'",
-        'symbol' : "█",
+        'symbol' : String.fromCharCode(0x2588),
         'color': '#0ff',
-        passable: true
+        'passable': true
     }
 };
 
@@ -128,10 +129,19 @@ function init() {
         display.draw(x, y, symbol, color);
     };
 
-
+	display.setOptions({
+		fontSize: 20,
+		fontStyle: "bold"
+	});
 	$('#screen').append(display.getContainer());
 
-	display.setOptions( {fontSize: 20, fontStyle : "bold"});
+	$("canvas").attr("contentEditable", "true");
+	display.getContainer().addEventListener("keydown", function(e) {
+		console.log(e.keyCode);
+		if (keys[e.keyCode]) {
+			map.player.move(keys[e.keyCode]);
+		}
+	});
 
 	map = new Map();
 
@@ -153,12 +163,3 @@ function evalLevelCode() {
 	map.reset();
 	startLevel(map);
 }
-
-// Event listeners
-
-document.addEventListener("keydown", function(e) {
-	console.log(e.keyCode);
-	if (keys[e.keyCode]) {
-		map.player.move(keys[e.keyCode]);
-	}
-});
