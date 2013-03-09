@@ -1,5 +1,5 @@
 
-var VERBOTEN = ['eval', 'prototype', 'delete'];
+var VERBOTEN = ['eval', 'prototype', 'delete', 'moveToNextLevel'];
 
 var validationRulesByLevel = [ null ];
 
