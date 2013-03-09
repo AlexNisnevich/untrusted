@@ -7,6 +7,8 @@ var keys = {
 	40: 'down'
 };
 
+var levelFileNames = ['blocks.js', 'levelTwo.js'];
+
 var display;
 var editor;
 var map;
@@ -113,11 +115,8 @@ Player.prototype.move = function (direction) {
 
 function moveToNextLevel() {
     console.log("On exit square!");
-    map.reset();//TODO maybe unnecessary
-	$.get('levels/levelTwo.js', function (lvlCode) {
-		editor.toTextArea();
-		loadLevel(lvlCode);
-	});
+    currentLevel++;
+    getLevel(currentLevel);
 };
 
 function canMoveTo(x,y) {
@@ -149,6 +148,7 @@ function init() {
 
 	$('#screen').append(display.getContainer());
 
+    // required so all canvas elements can detect keyboard events
 	$("canvas").attr("contentEditable", "true");
 	display.getContainer().addEventListener("keydown", function(e) {
 		if (keys[e.keyCode]) {
@@ -158,8 +158,24 @@ function init() {
 
 	map = new Map();
 
-	$.get('levels/blocks.js', function (lvlCode) {
-		loadLevel(lvlCode);
+    getLevel(currentLevel);
+}
+
+// makes an ajax request to get the level text file and 
+// then loads it into the game
+function getLevel(levelNumber) {
+    var fileName;
+    if (levelNumber < levelFileNames.length) {
+        fileName = levelFileNames[levelNumber];
+    }
+    else {
+        fileName = "dummyLevel.js";
+    }
+	$.get('levels/' + fileName, function (codeText) {
+        if (editor) {
+            editor.toTextArea();
+        }
+		loadLevel(codeText);
 	});
 }
 
