@@ -197,8 +197,11 @@ function loadLevel(lvlCode) {
 	editor.removeLine(0);
 
 	// only allow editing on editable lines, and don't allow removal of lines
+	// also, set a line length limit of 80 chars
 	editor.on('beforeChange', function (instance, change) {
-		if (editableLines.indexOf(change.to.line) == -1 || change.to.line != change.from.line) {
+		if (editableLines.indexOf(change.to.line) == -1 ||
+				change.to.line != change.from.line ||
+				(change.to.ch > 80 && change.to.ch >= change.from.ch)) {
 			change.cancel();
 		}
 	});

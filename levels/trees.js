@@ -97,5 +97,7 @@ function startLevel(map) {
 }
 
 function validateLevel(map) {
-
+    validateAtLeastXObjects(map, 100, 'tree');
+    validateExactlyXManyObjects(map, 1, 'player');
+    validateExactlyXManyObjects(map, 1, 'exit');
 }

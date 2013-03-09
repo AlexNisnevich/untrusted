@@ -32,4 +32,6 @@ function startLevel(map) {
 
 function validateLevel(map) {
     validateAtLeastXObjects(map, 40, 'trap');
+    validateExactlyXManyObjects(map, 1, 'player');
+    validateExactlyXManyObjects(map, 1, 'exit');
 }
