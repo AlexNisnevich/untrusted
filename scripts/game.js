@@ -9,7 +9,8 @@ var keys = {
 
 var levelFileNames = [
 	'blocks.js',
-	'levelTwo.js',
+	'blocks2.js',
+	'levelThree.js',
 	'multiplicity.js',
 	'traps.js',
 ];

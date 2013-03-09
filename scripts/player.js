@@ -4,7 +4,7 @@ var Player = function(x,y) {
 	this._rep = "@";
 	this._fgColor = "#0f0";
 	this.draw();
-
+	map._playerCount++;
 }
 
 Player.prototype.draw = function () {
