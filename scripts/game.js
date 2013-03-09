@@ -24,9 +24,9 @@ var dimensions = {
 	height: 25
 };
 
-var Map = function () {
+var Map = function (display) {
 	this.reset = function () {
-		display.clear();
+		this._display.clear();
 		this._grid = new Array(dimensions.width);
 		for (var x = 0; x < dimensions.width; x++) {
 			this._grid[x] = new Array(dimensions.height);
@@ -41,14 +41,15 @@ var Map = function () {
 
 	this.placeObject = function (x, y, type, bgColor) {
 		this._grid[x][y] = type;
-		display.drawObject(x, y, type, bgColor);
+		this._display.drawObject(x, y, type, bgColor);
 	};
 
 	this.setSquareColor = function (x, y, bgColor) {
-		display.drawObject(x, y, this._grid[x][y], bgColor);
+		this._display.drawObject(x, y, this._grid[x][y], bgColor);
 	};
 
 	// Initialize with empty grid
+	this._display = display;
 	this.reset();
 };
 
@@ -199,7 +200,7 @@ function init() {
 		$('.CodeMirror').removeClass('focus');
 	});
 
-	map = new Map();
+	map = new Map(display);
 
     getLevel(currentLevel);
 }
@@ -281,10 +282,10 @@ function focusOnEditor() {
 
 function evalLevelCode() {
     var playerCode = editor.getValue();
-    if (validate(playerCode, currentLevel)) {
-        eval(editor.getValue());
+    var validatedStartLevel = validate(playerCode, currentLevel);
+    if (validatedStartLevel) {
         map.reset();
-        startLevel(map);
+        validatedStartLevel(map);
     }
 }
 

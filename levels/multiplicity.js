@@ -1,8 +1,8 @@
-// {"editable": [[23, 23]]}
+// {"editable": [[22, 22]]}
 /* multiplicity.js
  *
  * N.B. level filenames are hints!
- * I mean lots of games do that, why 
+ * I mean lots of games do that, why
  * shouldn't this one?
  *
  * This level also looks exactly like the first
