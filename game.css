@@ -23,8 +23,9 @@ body {
 	display: none;
 }
 
-#editorPane #executeButton {
-	position: relative; top: -2em; left: 530px;
+#editorPane #buttons {
+	border: 2px solid #333;
+	border-top: 0;
 }
 
 .CodeMirror {
