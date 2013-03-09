@@ -7,10 +7,13 @@ var keys = {
 	40: 'down'
 };
 
+var levelFileNames = ['blocks.js', 'levelTwo.js'];
+
 var display;
 var editor;
 var map;
 var player;
+var currentLevel = 0; //level numbers start at 0 because coding :\
 
 var dimensions = {
 	width: 50,
@@ -112,11 +115,8 @@ Player.prototype.move = function (direction) {
 
 function moveToNextLevel() {
     console.log("On exit square!");
-    map.reset();//TODO maybe unnecessary
-	$.get('levels/levelTwo.js', function (lvlCode) {
-		editor.toTextArea();
-		loadLevel(lvlCode);
-	});
+    currentLevel++;
+    getLevel(currentLevel);
 };
 
 function canMoveTo(x,y) {
@@ -128,7 +128,8 @@ function canMoveTo(x,y) {
 }
 
 function init() {
-	display = new ROT.Display({width: dimensions.width, height: dimensions.height});
+	display = new ROT.Display({width: dimensions.width, height: dimensions.height,
+        fontSize: 20, fontStyle: "bold"});
 
     // drawObject takes care of looking up an object's symbol and color
     // according to name (NOT according to the actual object literal!)
@@ -145,12 +146,9 @@ function init() {
         display.draw(x, y, symbol, color);
     };
 
-	display.setOptions({
-		fontSize: 20,
-		fontStyle: "bold"
-	});
 	$('#screen').append(display.getContainer());
 
+    // required so all canvas elements can detect keyboard events
 	$("canvas").attr("contentEditable", "true");
 	display.getContainer().addEventListener("keydown", function(e) {
 		if (keys[e.keyCode]) {
@@ -160,8 +158,24 @@ function init() {
 
 	map = new Map();
 
-	$.get('levels/blocks.js', function (lvlCode) {
-		loadLevel(lvlCode);
+    getLevel(currentLevel);
+}
+
+// makes an ajax request to get the level text file and 
+// then loads it into the game
+function getLevel(levelNumber) {
+    var fileName;
+    if (levelNumber < levelFileNames.length) {
+        fileName = levelFileNames[levelNumber];
+    }
+    else {
+        fileName = "dummyLevel.js";
+    }
+	$.get('levels/' + fileName, function (codeText) {
+        if (editor) {
+            editor.toTextArea();
+        }
+		loadLevel(codeText);
 	});
 }
 
