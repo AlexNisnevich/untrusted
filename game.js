@@ -5,7 +5,7 @@ var keys = {
 	38: 'up',
 	39: 'right',
 	40: 'down'
-}
+};
 
 var display;
 var editor;
@@ -31,7 +31,7 @@ var Map = function () {
 
 	this.placeObject = function (x, y, type) {
 		this._grid[x][y] = type;
-		display.draw(x, y, objects[type].symbol);
+		display.drawObject(x, y, type);
 	};
 
 	// Initialize with empty grid
@@ -96,22 +96,55 @@ Player.prototype.move = function (direction) {
 	}
 
 	if (canMoveTo(new_x,new_y)) {
-		display.draw(cur_x,cur_y, objects[map._grid[cur_x][cur_y]].symbol);
+		display.drawObject(cur_x,cur_y, map._grid[cur_x][cur_y]);
 		this._x = new_x;
 		this._y = new_y;
 		this.draw();
+        if (map._grid[this._x][this._y] === 'exit') {
+            moveToNextLevel();
+        }
 	}
 	else {
 		console.log("Can't move to " + new_x + ", " + new_y + ", reported from inside Player.move() method");
 	}
 };
 
+
+function moveToNextLevel() {
+    console.log("On exit square!");
+    map.reset();//TODO maybe unnecessary
+	$.get('levels/levelTwo.js', function (lvlCode) {
+		editor.setValue(lvlCode);
+		evalLevelCode();
+	});
+};
+
 function canMoveTo(x,y) {
+    if (x < 0 || x >= dimensions.width || y < 0 || y >= dimensions.height) {
+        return false;
+    }
+
 	return objects[map._grid[x][y]].passable;
 }
 
 function init() {
 	display = new ROT.Display({width: dimensions.width, height: dimensions.height});
+
+    // drawObject takes care of looking up an object's symbol and color
+    // according to name (NOT according to the actual object literal!)
+    display.drawObject = function (x,y, object) {  
+        var symbol = objects[object].symbol;
+        var color; 
+        if (objects[object].color) {
+            color = objects[object].color;
+        }
+        else {
+            color = "#fff";
+        }
+
+        display.draw(x, y, symbol, color);
+    };
+
 	display.setOptions({
 		fontSize: 20,
 		fontStyle: "bold"
@@ -120,7 +153,6 @@ function init() {
 
 	$("canvas").attr("contentEditable", "true");
 	display.getContainer().addEventListener("keydown", function(e) {
-		console.log(e.keyCode);
 		if (keys[e.keyCode]) {
 			map.player.move(keys[e.keyCode]);
 		}
