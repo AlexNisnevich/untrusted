@@ -1,4 +1,4 @@
-// {"editable": []}
+// {"editable": [[95,95]]}
 
 /*
  * trees.js - the obligatory forest level
@@ -49,11 +49,12 @@ function startLevel(map) {
             for (var j = 0; j < map.getHeight(); j++) {
 
                 //initialize to empty if the square contains a forest already
-                if (map._grid[i][j] === 'forest') {
+                if (map._grid[i][j] === 'tree') {
+                    console.log("Removing existing forest");
                     map.placeObject(i,j,'empty');
                 }
 
-                if (map.player.atLocation(i,j)) {
+                if (map.player.atLocation(i,j) || map._grid[i][j] === 'exit') {
                     continue;
                 }
                 var rv = Math.random();
@@ -68,6 +69,18 @@ function startLevel(map) {
         map.placeObject(map.player._x + 1, map.player._y, 'phone');
     }
 
+    functionList['movePlayerToExit'] = function () {
+        output.write("So, how 'bout them <LOCAL SPORTS TEAM>?");
+    }
+
+    functionList['movePlayerToExitForRealz'] = function () {
+        output.write("Did you know that penguins have nuclear weapons? I sure didn't!");
+    }
+
+    functionList['movePlayerToExitDamnit'] = function () {
+        output.write("lol no I'm not moving you to the exit, player! Suck it!");
+    }
+
     //generate forest
     functionList['generateForest']();
 
@@ -80,7 +93,7 @@ function startLevel(map) {
     // so you can call functions
     functionList['placePhone']();
 
-    //map.player.setPhoneCallback(functionList["generateForest"])
+    map.player.setPhoneCallback(functionList["movePlayerToExit"])
 
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
 }

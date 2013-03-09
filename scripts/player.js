@@ -65,3 +65,7 @@ Player.prototype.pickUpItem = function () {
 	this.move('left');
 	this.move('right');
 }
+
+Player.prototype.setPhoneCallback = function(func) {
+    this._phoneFunc = func;
+}
