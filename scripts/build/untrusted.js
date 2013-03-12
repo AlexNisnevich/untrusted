@@ -1,1 +1,509 @@
-var keys={37:"left",38:"up",39:"right",40:"down"};var levelFileNames=["blocks.js","theReturnOfBlocks.js","levelThree.js","multiplicity.js","traps.js","trees.js",];var display;var output;var editor;var map;var currentLevel=0;function init(){display=new ROT.Display({width:dimensions.width,height:dimensions.height,fontSize:20,fontStyle:"bold"});display.drawObject=function(c,g,e,b,f){var a=objects[e].symbol;var d;if(objects[e].color){d=objects[e].color}else{d="#fff"}if(!b){b="#000"}if(f){d=ROT.Color.toHex(ROT.Color.multiply(f,ROT.Color.fromString(d)));b=ROT.Color.toHex(ROT.Color.multiply(f,ROT.Color.fromString(b)))}display.draw(c,g,a,d,b)};display.drawAll=function(c,b){for(var a=0;a<dimensions.width;a++){for(var d=0;d<dimensions.height;d++){this.drawObject(a,d,c._grid[a][d].type,c._grid[a][d].bgColor,b)}}if(c.player){c.player.draw()}};display.fadeOut=function(c,b,a){if(a<=0){if(b){b()}}else{if(!a){a=255}this.drawAll(c,[a,a,a]);setTimeout(function(){display.fadeOut(c,b,a-10)},10)}};display.fadeIn=function(c,b,a){if(a>255){if(b){b()}}else{if(!a){a=0}this.drawAll(c,[a,a,a]);setTimeout(function(){display.fadeIn(c,b,a+5)},10)}};$("#screen").append(display.getContainer());$("canvas").first().attr("contentEditable","true");display.getContainer().addEventListener("keydown",function(a){if(keys[a.keyCode]){map.player.move(keys[a.keyCode])}});display.getContainer().addEventListener("click",function(a){$(display.getContainer()).addClass("focus");$(".CodeMirror").removeClass("focus")});output=new ROT.Display({width:dimensions.width*1.33,height:2,fontSize:15});$("#output").append(output.getContainer());output.write=function(a){output.clear();output.drawText(0,0,a)};map=new Map(display);getLevel(currentLevel);focusOnMap()}function moveToNextLevel(){currentLevel++;display.fadeOut(map,function(){getLevel(currentLevel)})}function getLevel(a){var b;if(a<levelFileNames.length){b=levelFileNames[a]}else{b="dummyLevel.js"}$.get("levels/"+b,function(c){if(editor){editor.toTextArea()}loadLevel(c,a)})}function loadLevel(d,c){editor=createEditor("editor",d,600,500);editor.on("focus",function(e){$(".CodeMirror").addClass("focus");$("#screen canvas").removeClass("focus")});editor.setValue(d);levelMetadata=editor.getLine(0);editableLineRanges=JSON.parse(levelMetadata.slice(3)).editable;editableLines=[];for(var a=0;a<editableLineRanges.length;a++){range=editableLineRanges[a];for(var b=range[0];b<=range[1];b++){editableLines.push(b-1)}}editor.removeLine(0);editor.on("beforeChange",function(e,f){if(editableLines.indexOf(f.to.line)==-1||f.to.line!=f.from.line||(f.to.ch>80&&f.to.ch>=f.from.ch)){f.cancel()}});editor.on("update",function(e){for(var f=0;f<editor.lineCount();f++){if(editableLines.indexOf(f)==-1){e.addLineClass(f,"wrap","disabled")}}});editor.refresh();editor.getPlayerCode=function(){var f="";for(var e=0;e<editor.lineCount();e++){if(editableLines.indexOf(e)>-1){f+=editor.getLine(e)+" \n"}}return f};evalLevelCode(c);if(c<levelFileNames.length){display.fadeIn(map)}if(currentLevel==0){output.write("Dr. Eval awoke in a strange dungeon, with no apparent way out. He spied his trusty computer ...")}}function focusOnMap(){$("canvas").first().attr("tabindex","0").click().focus()}function focusOnEditor(){editor.focus()}function resetEditor(){getLevel(currentLevel)}function evalLevelCode(b){var a=editor.getValue();var c=editor.getPlayerCode();var d=validate(a,c,currentLevel);if(d){map.reset();d(map);if(b>=levelFileNames.length){return}display.drawAll(map)}}function usePhone(){if(map.player._phoneFunc){map.player._phoneFunc()}else{output.write("RotaryPhoneException: Your function phone is not bound to any function.")}}shortcut.add("ctrl+1",focusOnMap);shortcut.add("ctrl+2",focusOnEditor);shortcut.add("ctrl+4",resetEditor);shortcut.add("ctrl+5",evalLevelCode);shortcut.add("ctrl+6",usePhone);var createEditor=function(a,c,d,e){var b=CodeMirror.fromTextArea(document.getElementById(a),{theme:"vibrant-ink",lineNumbers:true,dragDrop:false,extraKeys:{Enter:function(){}}});b.setSize(d,e);b.setValue(c);return b};var dimensions={width:50,height:25};var Map=function(a){this.reset=function(){this._display.clear();this._grid=new Array(dimensions.width);for(var b=0;b<dimensions.width;b++){this._grid[b]=new Array(dimensions.height);for(var c=0;c<dimensions.height;c++){this._grid[b][c]={type:"empty"}}}this.player=null};this.getWidth=function(){return dimensions.width};this.getHeight=function(){return dimensions.height};this.placeObject=function(c,e,d,b){if(typeof(this._grid[c])!=="undefined"&&typeof(this._grid[c][e])!=="undefined"){if(!this.player.atLocation(c,e)||d=="empty"){this._grid[c][e].type=d}}};this.placePlayer=function(b,c){if(this.player){throw"Can't place player twice!"}this.player=new Player(b,c,this)};this.setSquareColor=function(c,d,b){this._grid[c][d].bgColor=b};this.canMoveTo=function(b,c){if(b<0||b>=dimensions.width||c<0||c>=dimensions.height){return false}return objects[map._grid[b][c].type].passable};this._display=a;this.reset()};var pickedUpComputer=false;var pickedUpPhone=false;var objects={empty:{symbol:" ",passable:true},block:{symbol:"#",color:"#f00",passable:false},tree:{symbol:"♣",color:"#080",passable:false},trap:{symbol:" ",passable:true,onCollision:function(a){a.killedBy("an invisible trap")}},stream:{symbol:"░",passable:true,onCollision:function(a){a.killedBy("drowning in deep dark water")}},exit:{symbol:String.fromCharCode(9109),color:"#0ff",passable:true,onCollision:function(a){moveToNextLevel()}},player:{symbol:"@",color:"#0f0",passable:false},computer:{symbol:String.fromCharCode(8984),color:"#ccc",passable:true,onCollision:function(a){a.pickUpItem();pickedUpComputer=true;output.write("You have picked up the computer! You can use it to get past the walls to the exit.");$("#editorPane").fadeIn();editor.refresh()}},phone:{symbol:String.fromCharCode(9742),passable:true,onCollision:function(a){a.pickUpItem();pickedUpPhone=true;output.write("You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.");$("#phoneButton").show()}}};var Player=function(a,c,b){this._x=a;this._y=c;this._rep="@";this._fgColor="#0f0";this._display=b._display;this.draw()};Player.prototype.draw=function(){var a=map._grid[this._x][this._y].bgColor;this._display.draw(this._x,this._y,this._rep,this._fgColor,a)};Player.prototype.atLocation=function(a,b){return(this._x===a&&this._y===b)};Player.prototype.move=function(e){var d=this._x;var c=this._y;var b;var a;if(e==="up"){b=d;a=c-1}else{if(e==="down"){b=d;a=c+1}else{if(e==="left"){b=d-1;a=c}else{if(e==="right"){b=d+1;a=c}}}}if(map.canMoveTo(b,a)){this._display.drawObject(d,c,map._grid[d][c].type,map._grid[d][c].bgColor);this._x=b;this._y=a;this.draw();if(objects[map._grid[b][a].type].onCollision){objects[map._grid[b][a].type].onCollision(this)}}else{console.log("Can't move to "+b+", "+a+", reported from inside Player.move() method")}};Player.prototype.killedBy=function(a){alert("You have been killed by "+a+"!");getLevel(currentLevel)};Player.prototype.pickUpItem=function(){map.placeObject(this._x,this._y,"empty");this.move("left");this.move("right")};Player.prototype.setPhoneCallback=function(a){this._phoneFunc=a};var VERBOTEN=["eval","prototype","delete","return","moveToNextLevel"];var validationRulesByLevel=[null];var DummyDisplay=function(){this.clear=function(){};this.draw=function(){};this.drawObject=function(){}};function validate(allCode,playerCode,level){validateLevel=function(){};output.clear();try{for(var i=0;i<VERBOTEN.length;i++){var badWord=VERBOTEN[i];if(playerCode.indexOf(badWord)>-1){throw"You are not allowed to use "+badWord+"!"}}var dummyMap=new Map(new DummyDisplay);eval(allCode);startLevel(dummyMap);if(typeof(validateLevel)!="undefined"){validateLevel(dummyMap)}return startLevel}catch(e){output.drawText(0,0,e.toString())}}function validateAtLeastXObjects(e,b,c){var d=0;for(var a=0;a<e.getWidth();a++){for(var f=0;f<e.getHeight();f++){if(e._grid[a][f].type===c){d++}}}if(d<b){throw"Not enough "+c+"s on the map! Expected: "+b+", found: "+d}}function validateExactlyXManyObjects(e,b,c){var d=0;for(var a=0;a<e.getWidth();a++){for(var f=0;f<e.getHeight();f++){if(e._grid[a][f].type===c){d++}}}if(d!=b){throw"Wrong number of "+c+"s on the map! Expected: "+b+", found: "+d}};
+
+// directions for moving entities
+var keys = {
+	37: 'left',
+	38: 'up',
+	39: 'right',
+	40: 'down'
+};
+
+var levelFileNames = [
+	'blocks.js',
+	'theReturnOfBlocks.js',
+	'levelThree.js',
+	'multiplicity.js',
+	'traps.js',
+    'trees.js',
+];
+
+var display;
+var output;
+var editor;
+var map;
+
+var currentLevel = 0; // level numbers start at 0 because coding :\
+
+function init() {
+	display = new ROT.Display({width: dimensions.width, height: dimensions.height,
+		fontSize: 20, fontStyle: "bold"});
+
+	// drawObject takes care of looking up an object's symbol and color
+	// according to name (NOT according to the actual object literal!)
+	display.drawObject = function (x, y, object, bgColor, multiplicand) {
+		var symbol = objects[object].symbol;
+		var color;
+		if (objects[object].color) {
+			color = objects[object].color;
+		} else {
+			color = "#fff";
+		}
+
+		if (!bgColor) {
+			bgColor = "#000";
+		}
+
+		if (multiplicand) {
+			color = ROT.Color.toHex(ROT.Color.multiply(multiplicand, ROT.Color.fromString(color)));
+			bgColor = ROT.Color.toHex(ROT.Color.multiply(multiplicand, ROT.Color.fromString(bgColor)));
+		}
+
+		display.draw(x, y, symbol, color, bgColor);
+	};
+
+	display.drawAll = function(map, multiplicand) {
+		for (var x = 0; x < dimensions.width; x++) {
+			for (var y = 0; y < dimensions.height; y++) {
+				this.drawObject(x, y, map._grid[x][y].type, map._grid[x][y].bgColor, multiplicand);
+			}
+		}
+		if (map.player) { map.player.draw(); }
+
+	}
+
+	display.fadeOut = function (map, callback, i) {
+		if (i <= 0) {
+			if (callback) { callback(); }
+		} else {
+			if (!i) { i = 255; }
+			this.drawAll(map, [i, i, i]);
+			setTimeout(function () { display.fadeOut(map, callback, i-10); }, 10);
+		}
+	};
+
+	display.fadeIn = function (map, callback, i) {
+		if (i > 255) {
+			if (callback) { callback(); }
+		} else {
+			if (!i) { i = 0; }
+			this.drawAll(map, [i, i, i]);
+			setTimeout(function () { display.fadeIn(map, callback, i+5); }, 10);
+		}
+	};
+
+	$('#screen').append(display.getContainer());
+
+	// required so all canvas elements can detect keyboard events
+	$("canvas").first().attr("contentEditable", "true");
+	display.getContainer().addEventListener("keydown", function(e) {
+		if (keys[e.keyCode]) {
+			map.player.move(keys[e.keyCode]);
+		}
+	});
+	display.getContainer().addEventListener("click", function(e) {
+		$(display.getContainer()).addClass('focus');
+		$('.CodeMirror').removeClass('focus');
+	});
+
+	output = new ROT.Display({width: dimensions.width * 1.33, height: 2, fontSize: 15});
+	$('#output').append(output.getContainer());
+	output.write = function(text) {
+		output.clear();
+		output.drawText(0, 0, text);
+	}
+
+	map = new Map(display);
+	getLevel(currentLevel);
+	focusOnMap();
+}
+
+function moveToNextLevel() {
+	currentLevel++;
+	display.fadeOut(map, function () {
+		getLevel(currentLevel);
+	})
+};
+
+// makes an ajax request to get the level text file and
+// then loads it into the game
+function getLevel(levelNumber) {
+	var fileName;
+	if (levelNumber < levelFileNames.length) {
+		fileName = levelFileNames[levelNumber];
+	}
+	else {
+		fileName = "dummyLevel.js";
+	}
+	$.get('levels/' + fileName, function (codeText) {
+		if (editor) {
+			editor.toTextArea();
+		}
+		loadLevel(codeText, levelNumber);
+	});
+}
+
+function loadLevel(lvlCode, lvlNum) {
+	// initialize CodeMirror editor
+    editor = createEditor("editor", lvlCode, 600, 500);
+	editor.on("focus", function(instance) {
+		$('.CodeMirror').addClass('focus');
+		$('#screen canvas').removeClass('focus');
+	});
+
+	// initialize level
+	editor.setValue(lvlCode);
+
+	// get editable line ranges from level metadata
+	levelMetadata = editor.getLine(0);
+	editableLineRanges = JSON.parse(levelMetadata.slice(3)).editable;
+	editableLines = [];
+	for (var j = 0; j < editableLineRanges.length; j++) {
+		range = editableLineRanges[j];
+		for (var i = range[0]; i <= range[1]; i++) {
+			editableLines.push(i - 1);
+		}
+	}
+	editor.removeLine(0);
+
+	// only allow editing on editable lines, and don't allow removal of lines
+	// also, set a line length limit of 80 chars
+	editor.on('beforeChange', function (instance, change) {
+		if (editableLines.indexOf(change.to.line) == -1 ||
+				change.to.line != change.from.line ||
+				(change.to.ch > 80 && change.to.ch >= change.from.ch)) {
+			change.cancel();
+		}
+	});
+
+	// set bg color for uneditable line
+	editor.on('update', function (instance) {
+		for (var i = 0; i < editor.lineCount(); i++) {
+			if (editableLines.indexOf(i) == -1) {
+				instance.addLineClass(i, 'wrap', 'disabled');
+			}
+		}
+	});
+	editor.refresh();
+
+	// editor.getPlayerCode returns only the code written in editable lines
+	editor.getPlayerCode = function () {
+		var code = '';
+		for (var i = 0; i < editor.lineCount(); i++) {
+			if (editableLines.indexOf(i) > -1) {
+				code += editor.getLine(i) + ' \n';
+			}
+		}
+		return code;
+	}
+
+	// start the level and fade in
+	evalLevelCode(lvlNum);
+	if (lvlNum < levelFileNames.length) {
+		// don't fade in for dummy level
+		display.fadeIn(map);
+	}
+
+	// on first level, display intro text
+	if (currentLevel == 0) {
+		output.write('Dr. Eval awoke in a strange dungeon, with no apparent way out. He spied his trusty computer ...');
+	}
+}
+
+function focusOnMap() {
+	$('canvas').first().attr('tabindex', '0').click().focus();
+}
+
+function focusOnEditor() {
+	editor.focus();
+}
+
+function resetEditor() {
+    getLevel(currentLevel);
+}
+
+function evalLevelCode(lvlNum) {
+	var allCode = editor.getValue();
+	var playerCode = editor.getPlayerCode();
+	var validatedStartLevel = validate(allCode, playerCode, currentLevel);
+	if (validatedStartLevel) {
+		map.reset();
+		validatedStartLevel(map);
+		if (lvlNum >= levelFileNames.length) {
+			// don't do this for dummy level
+			return;
+		}
+		display.drawAll(map);
+	}
+}
+
+function usePhone() {
+	if (map.player._phoneFunc) {
+		map.player._phoneFunc();
+	} else {
+		output.write('RotaryPhoneException: Your function phone is not bound to any function.')
+	}
+}
+
+shortcut.add('ctrl+1', focusOnMap);
+shortcut.add('ctrl+2', focusOnEditor);
+shortcut.add('ctrl+4', resetEditor);
+shortcut.add('ctrl+5', evalLevelCode);
+shortcut.add('ctrl+6', usePhone);
+
+// Editor object
+
+var createEditor = function (domElemId, levelCode, width, height) {
+
+    var ed = CodeMirror.fromTextArea(document.getElementById(domElemId),
+            { theme: 'vibrant-ink', 
+            lineNumbers: true,
+            dragDrop: false,
+            extraKeys: {'Enter': function () {}}
+            }); 
+    ed.setSize(width, height); //TODO this line causes wonky cursor behavior, might be a bug in CodeMirror?
+    ed.setValue(levelCode);
+    return ed;
+};
+var dimensions = {
+	width: 50,
+	height: 25
+};
+
+var Map = function (display) {
+	this.reset = function () {
+		this._display.clear();
+		this._grid = new Array(dimensions.width);
+		for (var x = 0; x < dimensions.width; x++) {
+			this._grid[x] = new Array(dimensions.height);
+			for (var y = 0; y < dimensions.height; y++) {
+				this._grid[x][y] = {type: 'empty'};
+			}
+		}
+		this.player = null;
+	};
+
+	this.getWidth = function () { return dimensions.width; }
+	this.getHeight = function () { return dimensions.height; }
+
+	this.placeObject = function (x, y, type, bgColor) {
+        if (typeof(this._grid[x]) !== 'undefined' && typeof(this._grid[x][y]) !== 'undefined') {
+            if (!this.player.atLocation(x, y) || type == 'empty') {
+                this._grid[x][y].type = type;
+            }
+        }
+	};
+
+	this.placePlayer = function (x, y) {
+		if (this.player) {
+			throw "Can't place player twice!";
+		}
+		this.player = new Player(x, y, this);
+	};
+
+	this.setSquareColor = function (x, y, bgColor) {
+		this._grid[x][y].bgColor = bgColor;
+	};
+
+	this.canMoveTo = function (x, y) {
+		if (x < 0 || x >= dimensions.width || y < 0 || y >= dimensions.height) {
+			return false;
+		}
+		return objects[map._grid[x][y].type].passable;
+	};
+
+	// Initialize with empty grid
+	this._display = display;
+	this.reset();
+};
+var pickedUpComputer = false;
+var pickedUpPhone = false;
+
+var objects = {
+	'empty' : {
+		'symbol': ' ',
+		'passable': true
+	},
+	'block': {
+		'symbol': '#',
+		'color': '#f00',
+		'passable': false
+	},
+	'tree': {
+		'symbol': '♣',
+		'color': '#080',
+		'passable': false
+	},
+	'trap': {
+		'symbol': ' ',
+		'passable': true,
+		'onCollision': function (player) {
+			player.killedBy('an invisible trap');
+		}
+	},
+    'stream': {
+        'symbol': '░',
+        'passable': true,
+        'onCollision': function (player) {
+            player.killedBy('drowning in deep dark water');
+        }
+    },
+	'exit' : {
+		'symbol' : String.fromCharCode(0x2395), // ⎕
+		'color': '#0ff',
+		'passable': true,
+		'onCollision': function (player) {
+			moveToNextLevel();
+		}
+	},
+	'player' : {
+		'symbol': '@',
+		'color': '#0f0',
+		'passable': false
+	},
+	'computer': {
+		'symbol': String.fromCharCode(0x2318), // ⌘
+		'color': '#ccc',
+		'passable': true,
+		'onCollision': function (player) {
+			player.pickUpItem();
+			pickedUpComputer = true;
+			output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
+			$('#editorPane').fadeIn();
+			editor.refresh();
+		}
+	},
+	'phone': {
+		'symbol': String.fromCharCode(0x260E), // ☎
+		'passable': true,
+		'onCollision': function (player) {
+			player.pickUpItem();
+			pickedUpPhone = true;
+			output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
+			$('#phoneButton').show();
+		}
+	}
+};
+var Player = function(x, y, map) {
+	this._x = x;
+	this._y = y;
+	this._rep = "@";
+	this._fgColor = "#0f0";
+	this._display = map._display;
+	this.draw();
+}
+
+Player.prototype.draw = function () {
+	var bgColor = map._grid[this._x][this._y].bgColor
+	this._display.draw(this._x, this._y, this._rep, this._fgColor, bgColor);
+}
+
+Player.prototype.atLocation = function (x, y) {
+	return (this._x === x && this._y === y);
+}
+
+Player.prototype.move = function (direction) {
+	var cur_x = this._x;
+	var cur_y = this._y;
+	var new_x;
+	var new_y;
+
+	if (direction === 'up') {
+		new_x = cur_x;
+		new_y = cur_y - 1;
+	}
+	else if (direction === 'down') {
+		new_x = cur_x;
+		new_y = cur_y + 1;
+	}
+	else if (direction === 'left') {
+		new_x = cur_x - 1;
+		new_y = cur_y;
+	}
+	else if (direction === 'right') {
+		new_x = cur_x + 1;
+		new_y = cur_y;
+	}
+
+	if (map.canMoveTo(new_x, new_y)) {
+		this._display.drawObject(cur_x,cur_y, map._grid[cur_x][cur_y].type, map._grid[cur_x][cur_y].bgColor);
+		this._x = new_x;
+		this._y = new_y;
+		this.draw();
+		if (objects[map._grid[new_x][new_y].type].onCollision) {
+			objects[map._grid[new_x][new_y].type].onCollision(this);
+		}
+	}
+	else {
+		console.log("Can't move to " + new_x + ", " + new_y + ", reported from inside Player.move() method");
+	}
+};
+
+Player.prototype.killedBy = function (killer) {
+	alert('You have been killed by ' + killer + '!');
+	getLevel(currentLevel);
+}
+
+Player.prototype.pickUpItem = function () {
+	map.placeObject(this._x, this._y, 'empty');
+	// do a little dance to get rid of graphical artifacts //TODO fix this
+	this.move('left');
+	this.move('right');
+}
+
+Player.prototype.setPhoneCallback = function(func) {
+    this._phoneFunc = func;
+}
+
+var VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel'];
+
+var validationRulesByLevel = [ null ];
+
+var DummyDisplay = function () {
+	this.clear = function () {};
+	this.draw = function () {};
+	this.drawObject = function () {};
+};
+
+function validate(allCode, playerCode, level) {
+	validateLevel = function () {};
+
+	output.clear();
+	try {
+		for (var i = 0; i < VERBOTEN.length; i++) {
+			var badWord = VERBOTEN[i];
+			if (playerCode.indexOf(badWord) > -1) {
+				throw 'You are not allowed to use ' + badWord + '!';
+			}
+		}
+
+		var dummyMap = new Map(new DummyDisplay);
+
+		eval(allCode); // get startLevel and (opt) validateLevel methods
+
+		startLevel(dummyMap);
+		if (typeof(validateLevel) != 'undefined') {
+			validateLevel(dummyMap);
+		}
+
+		return startLevel;
+	} catch (e) {
+		output.drawText(0, 0, e.toString());
+	}
+}
+
+function validateAtLeastXObjects(map, num, type) {
+	var count = 0;
+	for (var x = 0; x < map.getWidth(); x++) {
+		for (var y = 0; y < map.getHeight(); y++) {
+			if (map._grid[x][y].type === type) {
+				count++;
+			}
+		}
+	}
+	if (count < num) {
+		throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+	}
+}
+
+function validateExactlyXManyObjects(map, num, type) {
+	var count = 0;
+	for (var x = 0; x < map.getWidth(); x++) {
+		for (var y = 0; y < map.getHeight(); y++) {
+			if (map._grid[x][y].type === type) {
+				count++;
+			}
+		}
+	}
+	if (count != num) {
+		throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+	}
+}

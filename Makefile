@@ -1,8 +1,10 @@
-# Source: http://nefariousdesigns.co.uk/website-builds-using-make.html
+# Partially based off of:
+# http://nefariousdesigns.co.uk/website-builds-using-make.html
 
-js-page-target = scripts/build/untrusted.js
+js-target = scripts/build/untrusted.js
+js-target-min = scripts/build/untrusted.min.js
 
-js-page-prereq = scripts/game.js \
+js-modules = scripts/game.js \
                  scripts/editor.js \
                  scripts/map.js \
                  scripts/objects.js \
@@ -11,12 +13,33 @@ js-page-prereq = scripts/game.js \
 
 yui-jar = tools/yuicompressor-2.4.8pre.jar
 
-$(js-page-target): $(js-page-prereq)
-	@rm -f $(js-page-target)
+# `make` merges and compresses scripts
+$(js-target-min): $(js-modules)
+	@rm -f $(js-target-min)
 	@echo "Merging JS files…\t\t\t\c"
-	@cat $(js-page-prereq) > scripts/build/tmp.js
+	@cat $(js-modules) > $(js-target)
 	@echo "[ Done ]"
 	@echo "Compressing merged JS…\t\c"
-	@java -jar $(yui-jar) -o $(js-page-target) scripts/build/tmp.js
+	@java -jar $(yui-jar) -o $(js-target-min) $(js-target)
 	@echo "[ Done ]"
-	@rm -f scripts/build/tmp.js
+
+# to use `make deploy` to deploy Untrusted to your own server, create
+# a deploy.sh script (ncftpput is helpful for uploading via FTP).
+deploy: $(js-target-min)
+	@echo "Deploying to server…\t\t\t\c"
+	@rm -rf _site
+	@mkdir _site
+	@cp -R levels scripts styles index.html _site
+	@./deploy.sh _site
+	@rm -rf _site
+	@echo "[ Done ]"
+
+# `make deploy-full` also deploys libs
+deploy-full: $(js-target-min)
+	@echo "Deploying to server…\t\t\t\c"
+	@rm -rf _site
+	@mkdir _site
+	@cp -R levels scripts styles lib index.html _site
+	@./deploy.sh _site
+	@rm -rf _site
+	@echo "[ Done ]"
