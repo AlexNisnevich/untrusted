@@ -5,6 +5,7 @@ js-target = scripts/build/untrusted.js
 js-target-min = scripts/build/untrusted.min.js
 
 js-modules = scripts/game.js \
+                 scripts/display.js \
                  scripts/editor.js \
                  scripts/map.js \
                  scripts/objects.js \

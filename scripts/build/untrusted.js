@@ -1,12 +1,4 @@
 
-// directions for moving entities
-var keys = {
-	37: 'left',
-	38: 'up',
-	39: 'right',
-	40: 'down'
-};
-
 var levelFileNames = [
 	'blocks.js',
 	'theReturnOfBlocks.js',
@@ -24,91 +16,38 @@ var map;
 var currentLevel = 0; // level numbers start at 0 because coding :\
 
 function init() {
+	// Initialize map display
 	display = new ROT.Display({
 		width: dimensions.width,
 		height: dimensions.height,
 		fontFamily: '"droid sans mono", monospace',
 		fontSize: 20,
-		// fontStyle: "bold"
+		// fontStyle: "bold" // Droid Sans Mono's boldface makes many characters spill over
 	});
-
-	// drawObject takes care of looking up an object's symbol and color
-	// according to name (NOT according to the actual object literal!)
-	display.drawObject = function (x, y, object, bgColor, multiplicand) {
-		var symbol = objects[object].symbol;
-		var color;
-		if (objects[object].color) {
-			color = objects[object].color;
-		} else {
-			color = "#fff";
-		}
-
-		if (!bgColor) {
-			bgColor = "#000";
-		}
-
-		if (multiplicand) {
-			color = ROT.Color.toHex(ROT.Color.multiply(multiplicand, ROT.Color.fromString(color)));
-			bgColor = ROT.Color.toHex(ROT.Color.multiply(multiplicand, ROT.Color.fromString(bgColor)));
-		}
-
-		display.draw(x, y, symbol, color, bgColor);
-	};
-
-	display.drawAll = function(map, multiplicand) {
-		for (var x = 0; x < dimensions.width; x++) {
-			for (var y = 0; y < dimensions.height; y++) {
-				this.drawObject(x, y, map._grid[x][y].type, map._grid[x][y].bgColor, multiplicand);
-			}
-		}
-		if (map.player) { map.player.draw(); }
-
-	}
-
-	display.fadeOut = function (map, callback, i) {
-		if (i <= 0) {
-			if (callback) { callback(); }
-		} else {
-			if (!i) { i = 255; }
-			this.drawAll(map, [i, i, i]);
-			setTimeout(function () { display.fadeOut(map, callback, i-10); }, 10);
-		}
-	};
-
-	display.fadeIn = function (map, callback, i) {
-		if (i > 255) {
-			if (callback) { callback(); }
-		} else {
-			if (!i) { i = 0; }
-			this.drawAll(map, [i, i, i]);
-			setTimeout(function () { display.fadeIn(map, callback, i+5); }, 10);
-		}
-	};
-
+	display.setupEventHandlers();
 	$('#screen').append(display.getContainer());
 
-	// required so all canvas elements can detect keyboard events
-	$("canvas").first().attr("contentEditable", "true");
-	display.getContainer().addEventListener("keydown", function(e) {
-		if (keys[e.keyCode]) {
-			map.player.move(keys[e.keyCode]);
-		}
+	// Initialize output display
+	output = new ROT.Display({
+		width: dimensions.width * 1.33,
+		height: 2,
+		fontFamily: '"droid sans mono", monospace',
+		fontSize: 15
 	});
-	display.getContainer().addEventListener("click", function(e) {
-		$(display.getContainer()).addClass('focus');
-		$('.CodeMirror').removeClass('focus');
-	});
-
-	output = new ROT.Display({width: dimensions.width * 1.33, height: 2, fontSize: 15});
 	$('#output').append(output.getContainer());
-	output.write = function(text) {
-		output.clear();
-		output.drawText(0, 0, text);
-	}
 
+	// Start first level
 	map = new Map(display);
+	editor = createEditor("editor", '', 600, 500); // dummy editor
 	getLevel(currentLevel);
-	focusOnMap();
+	display.focus();
+
+	// Enable shortcut keys
+	shortcut.add('ctrl+1', display.focus);
+	shortcut.add('ctrl+2', editor.focus);
+	shortcut.add('ctrl+4', resetEditor);
+	shortcut.add('ctrl+5', evalLevelCode);
+	shortcut.add('ctrl+6', usePhone);
 }
 
 function moveToNextLevel() {
@@ -139,10 +78,6 @@ function getLevel(levelNumber) {
 function loadLevel(lvlCode, lvlNum) {
 	// initialize CodeMirror editor
     editor = createEditor("editor", lvlCode, 600, 500);
-	editor.on("focus", function(instance) {
-		$('.CodeMirror').addClass('focus');
-		$('#screen canvas').removeClass('focus');
-	});
 
 	// initialize level
 	editor.setValue(lvlCode);
@@ -203,14 +138,6 @@ function loadLevel(lvlCode, lvlNum) {
 	}
 }
 
-function focusOnMap() {
-	$('canvas').first().attr('tabindex', '0').click().focus();
-}
-
-function focusOnEditor() {
-	editor.focus();
-}
-
 function resetEditor() {
     getLevel(currentLevel);
 }
@@ -237,26 +164,114 @@ function usePhone() {
 		output.write('RotaryPhoneException: Your function phone is not bound to any function.')
 	}
 }
+ROT.Display.prototype.setupEventHandlers = function() {
+	// directions for moving entities
+	var keys = {
+		37: 'left',
+		38: 'up',
+		39: 'right',
+		40: 'down'
+	};
 
-shortcut.add('ctrl+1', focusOnMap);
-shortcut.add('ctrl+2', focusOnEditor);
-shortcut.add('ctrl+4', resetEditor);
-shortcut.add('ctrl+5', evalLevelCode);
-shortcut.add('ctrl+6', usePhone);
+	// contentEditable is required for canvas elements to detect keyboard events
+	$(this.getContainer()).attr("contentEditable", "true");
+	this.getContainer().addEventListener("keydown", function(e) {
+		if (keys[e.keyCode]) {
+			map.player.move(keys[e.keyCode]);
+		}
+	});
+
+	this.getContainer().addEventListener("click", function(e) {
+		$(this).addClass('focus');
+		$('.CodeMirror').removeClass('focus');
+	});
+}
+
+// drawObject takes care of looking up an object's symbol and color
+// according to name (NOT according to the actual object literal!)
+ROT.Display.prototype.drawObject = function (x, y, object, bgColor, multiplicand) {
+	var symbol = objects[object].symbol;
+	var color;
+	if (objects[object].color) {
+		color = objects[object].color;
+	} else {
+		color = "#fff";
+	}
+
+	if (!bgColor) {
+		bgColor = "#000";
+	}
+
+	if (multiplicand) {
+		color = ROT.Color.toHex(ROT.Color.multiply(multiplicand, ROT.Color.fromString(color)));
+		bgColor = ROT.Color.toHex(ROT.Color.multiply(multiplicand, ROT.Color.fromString(bgColor)));
+	}
+
+	this.draw(x, y, symbol, color, bgColor);
+};
+
+ROT.Display.prototype.drawAll = function(map, multiplicand) {
+	for (var x = 0; x < dimensions.width; x++) {
+		for (var y = 0; y < dimensions.height; y++) {
+			this.drawObject(x, y, map._grid[x][y].type, map._grid[x][y].bgColor, multiplicand);
+		}
+	}
+	if (map.player) { map.player.draw(); }
+}
+
+ROT.Display.prototype.fadeOut = function (map, callback, i) {
+	var display = this;
+	if (i <= 0) {
+		if (callback) { callback(); }
+	} else {
+		if (!i) { i = 255; }
+		this.drawAll(map, [i, i, i]);
+		setTimeout(function () {
+			display.fadeOut(map, callback, i-10);
+		}, 10);
+	}
+};
+
+ROT.Display.prototype.fadeIn = function (map, callback, i) {
+	var display = this;
+	if (i > 255) {
+		if (callback) { callback(); }
+	} else {
+		if (!i) { i = 0; }
+		this.drawAll(map, [i, i, i]);
+		setTimeout(function () {
+			display.fadeIn(map, callback, i+5);
+		}, 10);
+	}
+};
+
+ROT.Display.prototype.write = function(text) {
+	output.clear();
+	output.drawText(0, 0, text);
+}
+
+ROT.Display.prototype.focus = function() {
+	$(this.getContainer()).attr('tabindex', '0').click().focus();
+}
 
 // Editor object
 
 var createEditor = function (domElemId, levelCode, width, height) {
+	var ed = CodeMirror.fromTextArea(document.getElementById(domElemId), {
+		theme: 'vibrant-ink',
+		lineNumbers: true,
+		dragDrop: false,
+		extraKeys: {'Enter': function () {}}
+	});
 
-    var ed = CodeMirror.fromTextArea(document.getElementById(domElemId),
-            { theme: 'vibrant-ink', 
-            lineNumbers: true,
-            dragDrop: false,
-            extraKeys: {'Enter': function () {}}
-            }); 
-    ed.setSize(width, height); //TODO this line causes wonky cursor behavior, might be a bug in CodeMirror?
-    ed.setValue(levelCode);
-    return ed;
+	ed.setSize(width, height); //TODO this line causes wonky cursor behavior, might be a bug in CodeMirror?
+	ed.setValue(levelCode);
+	ed.on("focus", function(instance) {
+		$('.CodeMirror').addClass('focus');
+		$('#screen canvas').removeClass('focus');
+	});
+
+	return ed;
 };
 var dimensions = {
 	width: 50,
