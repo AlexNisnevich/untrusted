@@ -19,7 +19,7 @@ $(js-target-min): $(js-modules)
 	@echo "Merging JS files…\t\t\t\c"
 	@cat $(js-modules) > $(js-target)
 	@echo "[ Done ]"
-	@echo "Compressing merged JS…\t\c"
+	@echo "Compressing merged JS…\t\t\t\c"
 	@java -jar $(yui-jar) -o $(js-target-min) $(js-target)
 	@echo "[ Done ]"
 

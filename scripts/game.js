@@ -24,8 +24,13 @@ var map;
 var currentLevel = 0; // level numbers start at 0 because coding :\
 
 function init() {
-	display = new ROT.Display({width: dimensions.width, height: dimensions.height,
-		fontSize: 20, fontStyle: "bold"});
+	display = new ROT.Display({
+		width: dimensions.width,
+		height: dimensions.height,
+		fontFamily: '"droid sans mono", monospace',
+		fontSize: 20,
+		// fontStyle: "bold"
+	});
 
 	// drawObject takes care of looking up an object's symbol and color
 	// according to name (NOT according to the actual object literal!)
@@ -57,7 +62,6 @@ function init() {
 			}
 		}
 		if (map.player) { map.player.draw(); }
-
 	}
 
 	display.fadeOut = function (map, callback, i) {
