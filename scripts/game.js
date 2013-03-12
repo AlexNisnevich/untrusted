@@ -133,13 +133,7 @@ function getLevel(levelNumber) {
 
 function loadLevel(lvlCode, lvlNum) {
 	// initialize CodeMirror editor
-	editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-		theme: 'vibrant-ink',
-		lineNumbers: true,
-		dragDrop: false,
-		extraKeys: {'Enter': function () {}}
-	});
-	editor.setSize(600, 500);
+    editor = createEditor("editor", lvlCode, 600, 500);
 	editor.on("focus", function(instance) {
 		$('.CodeMirror').addClass('focus');
 		$('#screen canvas').removeClass('focus');

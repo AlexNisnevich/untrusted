@@ -3,6 +3,7 @@
 js-page-target = scripts/build/untrusted.js
 
 js-page-prereq = scripts/game.js \
+                 scripts/editor.js \
                  scripts/map.js \
                  scripts/objects.js \
                  scripts/player.js \
