@@ -13,9 +13,9 @@ yui-jar = tools/yuicompressor-2.4.8pre.jar
 $(js-page-target): $(js-page-prereq)
 	@rm -f $(js-page-target)
 	@echo "Merging JS files…\t\t\t\c"
-	@cat $(js-page-prereq) > $(js-path)build/tmp.js
+	@cat $(js-page-prereq) > scripts/build/tmp.js
 	@echo "[ Done ]"
 	@echo "Compressing merged JS…\t\c"
-	@java -jar $(yui-jar) -o $(js-page-target) $(js-path)build/tmp.js
+	@java -jar $(yui-jar) -o $(js-page-target) scripts/build/tmp.js
 	@echo "[ Done ]"
-	@rm -f $(js-path)build/tmp.js
+	@rm -f scripts/build/tmp.js
