@@ -1,4 +1,13 @@
+ROT.Display.create = function(game, opts) {
+	opts['fontFamily'] = '"droid sans mono", monospace';
+	var display = new ROT.Display(opts);
+	display.game = game;
+	return display;
+}
+
 ROT.Display.prototype.setupEventHandlers = function() {
+	var game = this.game;
+
 	// directions for moving entities
 	var keys = {
 		37: 'left',
@@ -24,10 +33,10 @@ ROT.Display.prototype.setupEventHandlers = function() {
 // drawObject takes care of looking up an object's symbol and color
 // according to name (NOT according to the actual object literal!)
 ROT.Display.prototype.drawObject = function (x, y, object, bgColor, multiplicand) {
-	var symbol = game.objects[object].symbol;
+	var symbol = this.game.objects[object].symbol;
 	var color;
-	if (game.objects[object].color) {
-		color = game.objects[object].color;
+	if (this.game.objects[object].color) {
+		color = this.game.objects[object].color;
 	} else {
 		color = "#fff";
 	}

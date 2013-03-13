@@ -1,7 +1,12 @@
+$(document).ready(function() {
+	new Game();
+});
+
 function Game() {
 	_currentPlayer = null;
 
 	this.levelFileNames = [
+		null, // to start levels at 1
 		'blocks.js',
 		'theReturnOfBlocks.js',
 		'levelThree.js',
@@ -10,17 +15,18 @@ function Game() {
 	    'trees.js',
 	];
 
-	this.currentLevel = 0; // level numbers start at 0 because coding :\
+	this.currentLevel = 1;
 
 	this.setCurrentPlayer = function (p) { _currentPlayer = p; }
 	this.getCurrentPlayer = function () { return _currentPlayer; }
 
 	this.init = function () {
+		var game = this;
+
 		// Initialize map display
-		this.display = new ROT.Display({
+		this.display = ROT.Display.create(this, {
 			width: dimensions.width,
 			height: dimensions.height,
-			fontFamily: '"droid sans mono", monospace',
 			fontSize: 20,
 			// fontStyle: "bold" // Droid Sans Mono's boldface makes many characters spill over
 		});
@@ -28,18 +34,17 @@ function Game() {
 		$('#screen').append(this.display.getContainer());
 
 		// Initialize output display
-		this.output = new ROT.Display({
+		this.output = ROT.Display.create(this, {
 			width: dimensions.width * 1.33,
 			height: 2,
-			fontFamily: '"droid sans mono", monospace',
 			fontSize: 15
 		});
 		$('#output').append(this.output.getContainer());
 
 		// Start first level
-		this.map = new Map(this.display);
+		this.map = new Map(this.display, this);
 		_currentPlayer = new Player(-1, -1, this.map);
-		this.editor = createEditor("editor", '', 600, 500); // dummy editor
+		this.editor = CodeMirror.create("editor", '', 600, 500, this); // dummy editor
 		this.getLevel(this.currentLevel);
 		this.display.focus();
 
@@ -50,11 +55,20 @@ function Game() {
 		shortcut.add('ctrl+4', function () { game.resetEditor(); return true; });
 		shortcut.add('ctrl+5', function () { game.evalLevelCode(); return true; });
 		shortcut.add('ctrl+6', function () { game.usePhone(); return true; });
+
+		// Enable buttons
+		$("#mapButton").click( function () { game.display.focus();} );
+		$("#editorButton").click( function () { game.editor.focus();} );
+		$("#resetButton").click( function () { game.resetEditor();} );
+		$("#executeButton").click( function () { game.evalLevelCode();} );
+		$("#phoneButton").click( function () { game.usePhone();} );
 	}
 
 	this.moveToNextLevel = function () {
 		var game = this;
+
 		this.currentLevel++;
+		this.output.write('Loading level ' + this.currentLevel + ' ...');
 		this.display.fadeOut(this.map, function () {
 			game.getLevel(game.currentLevel);
 		})
@@ -64,6 +78,7 @@ function Game() {
 	// then loads it into the game
 	this.getLevel = function (levelNumber) {
 		var game = this;
+
 		this.currentLevel = levelNumber;
 
 		var fileName;
@@ -83,7 +98,7 @@ function Game() {
 
 	this.loadLevel = function (lvlCode, lvlNum) {
 		// initialize CodeMirror editor
-	    this.editor = createEditor("editor", lvlCode, 600, 500);
+	    this.editor = CodeMirror.create("editor", lvlCode, 600, 500, this);
 
 		// start the level and fade in
 		this.evalLevelCode(lvlNum);
@@ -109,15 +124,16 @@ function Game() {
 		if (validatedStartLevel) {
 			this.map.reset();
 
-			var map = this.map; var display = this.display; var output = this.output;
+			var game = this; var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
 
 			// ugly, but some player things must persist across map load (e.g. picking up computer & phone)
 			_currentPlayer = this.map.getPlayer();
 
-			// don't call drawAll on dummy level
-			if (lvlNum >= this.levelFileNames.length) { return;	}
-			this.display.drawAll(map);
+			// don't refresh display for dummy level
+			if (!(lvlNum >= this.levelFileNames.length)) {
+				this.map.refresh();
+			}
 		}
 	}
 
@@ -132,7 +148,16 @@ function Game() {
 	// Constructor
 	this.init();
 }
+ROT.Display.create = function(game, opts) {
+	opts['fontFamily'] = '"droid sans mono", monospace';
+	var display = new ROT.Display(opts);
+	display.game = game;
+	return display;
+}
+
 ROT.Display.prototype.setupEventHandlers = function() {
+	var game = this.game;
+
 	// directions for moving entities
 	var keys = {
 		37: 'left',
@@ -158,10 +183,10 @@ ROT.Display.prototype.setupEventHandlers = function() {
 // drawObject takes care of looking up an object's symbol and color
 // according to name (NOT according to the actual object literal!)
 ROT.Display.prototype.drawObject = function (x, y, object, bgColor, multiplicand) {
-	var symbol = game.objects[object].symbol;
+	var symbol = this.game.objects[object].symbol;
 	var color;
-	if (game.objects[object].color) {
-		color = game.objects[object].color;
+	if (this.game.objects[object].color) {
+		color = this.game.objects[object].color;
 	} else {
 		color = "#fff";
 	}
@@ -224,7 +249,7 @@ ROT.Display.prototype.focus = function() {
 
 // Editor object
 
-function createEditor(domElemId, levelCode, width, height) {
+CodeMirror.create = function(domElemId, levelCode, width, height, game) {
 	var ed = CodeMirror.fromTextArea(document.getElementById(domElemId), {
 		theme: 'vibrant-ink',
 		lineNumbers: true,
@@ -236,6 +261,7 @@ function createEditor(domElemId, levelCode, width, height) {
 		}}
 	});
 
+	ed.game = game;
 	ed.setSize(width, height); //TODO this line causes wonky cursor behavior, might be a bug in CodeMirror?
 	ed.setValue(levelCode);
 
@@ -244,7 +270,7 @@ function createEditor(domElemId, levelCode, width, height) {
 		$('#screen canvas').removeClass('focus');
 	});
 
-	this.editableLines = [];
+	ed.editableLines = [];
 	if (levelCode && levelCode != '') {
 		// get editable line ranges from level metadata
 		var levelMetadata = levelCode.split('\n')[0];
@@ -252,14 +278,14 @@ function createEditor(domElemId, levelCode, width, height) {
 		for (var j = 0; j < editableLineRanges.length; j++) {
 			range = editableLineRanges[j];
 			for (var i = range[0]; i <= range[1]; i++) {
-				this.editableLines.push(i - 1);
+				ed.editableLines.push(i - 1);
 			}
 		}
 		ed.removeLine(0);
 
 		// beforeChange event handler handles editing restrictions
 		ed.on('beforeChange', function (instance, change) {
-			if (this.editableLines.indexOf(change.to.line) == -1) {
+			if (ed.editableLines.indexOf(change.to.line) == -1) {
 				// only allow editing on editable lines
 				change.cancel();
 				return;
@@ -281,13 +307,12 @@ function createEditor(domElemId, levelCode, width, height) {
 					change.text[0] = change.text[0].substr(0, allowedLength);
 				}
 			}
-			console.log(change);
 		});
 
 		// set bg color for uneditable lines
 		ed.on('update', function (instance) {
 			for (var i = 0; i < instance.lineCount(); i++) {
-				if (this.editableLines.indexOf(i) == -1) {
+				if (ed.editableLines.indexOf(i) == -1) {
 					instance.addLineClass(i, 'wrap', 'disabled');
 				}
 			}
@@ -303,7 +328,7 @@ CodeMirror.prototype.getPlayerCode = function () {
 	var code = '';
 	for (var i = 0; i < this.lineCount(); i++) {
 		if (this.editableLines && this.editableLines.indexOf(i) > -1) {
-			code += game.editor.getLine(i) + ' \n';
+			code += this.game.editor.getLine(i) + ' \n';
 		}
 	}
 	return code;
@@ -313,7 +338,7 @@ var dimensions = {
 	height: 25
 };
 
-function Map(display) {
+function Map(display, game) {
 	// Private variables
 	var _player;
 	var _grid;
@@ -334,6 +359,10 @@ function Map(display) {
 	this.getGrid = function () { return _grid; }
 	this.getWidth = function () { return dimensions.width; }
 	this.getHeight = function () { return dimensions.height; }
+
+	this.refresh = function () {
+		this.display.drawAll(this);
+	}
 
 	this.placeObject = function (x, y, type, bgColor) {
         if (typeof(_grid[x]) !== 'undefined' && typeof(_grid[x][y]) !== 'undefined') {
@@ -359,10 +388,11 @@ function Map(display) {
 		if (x < 0 || x >= dimensions.width || y < 0 || y >= dimensions.height) {
 			return false;
 		}
-		return !(game.objects[this.getGrid()[x][y].type].impassable);
+		return !(this.game.objects[this.getGrid()[x][y].type].impassable);
 	};
 
 	// Initialize with empty grid
+	this.game = game;
 	this.display = display;
 	this.reset();
 };
@@ -370,8 +400,8 @@ function Map(display) {
 Objects can have the following parameters:
 	color: '#fff' by default
 	impassable: true if it blocks the player from movement (false by default)
-	onCollision: function (player) called when player moves over the object
-	onPickUp: function (player) called when player picks up the item
+	onCollision: function (player, game) called when player moves over the object
+	onPickUp: function (player, game) called when player picks up the item
 	symbol: Unicode character representing the object
 	type: 'item' or null
 */
@@ -391,7 +421,7 @@ Game.prototype.objects = {
 	'exit' : {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#0ff',
-		'onCollision': function (player) {
+		'onCollision': function (player, game) {
 			game.moveToNextLevel();
 		}
 	},
@@ -412,15 +442,15 @@ Game.prototype.objects = {
 
 	'trap': {
 		'symbol': ' ',
-		'onCollision': function (player) {
-			game.map.getPlayer().killedBy('an invisible trap');
+		'onCollision': function (player, game) {
+			player.killedBy('an invisible trap');
 		}
 	},
 
 	'stream': {
 		'symbol': '░',
-		'onCollision': function (player) {
-			game.map.getPlayer().killedBy('drowning in deep dark water');
+		'onCollision': function (player, game) {
+			player.killedBy('drowning in deep dark water');
 		}
 	},
 
@@ -430,7 +460,7 @@ Game.prototype.objects = {
 		'type': 'item',
 		'symbol': String.fromCharCode(0x2318), // ⌘
 		'color': '#ccc',
-		'onPickUp': function (player) {
+		'onPickUp': function (player, game) {
 			game.output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
 			$('#editorPane').fadeIn();
 			game.editor.refresh();
@@ -440,7 +470,7 @@ Game.prototype.objects = {
 	'phone': {
 		'type': 'item',
 		'symbol': String.fromCharCode(0x260E), // ☎
-		'onPickUp': function (player) {
+		'onPickUp': function (player, game) {
 			game.output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
 			$('#phoneButton').show();
 		}
@@ -451,17 +481,34 @@ function Player(x, y, map) {
 	var _y = y;
 	var _inventory = [];
 
-	this._rep = "@";
-	this._fgColor = "#0f0";
-	this._map = map;
-	this._display = this._map.display;
+	this.rep = "@";
+	this.fgColor = "#0f0";
+
+	this.map = map;
+	this.display = map.display;
+	this.game = map.game;
 
 	this.getX = function () { return _x; }
 	this.getY = function () { return _y; }
 
+	this.init = function () {
+		// inherit global items from game.currentPlayer
+		// (Ideally, it would be nice to store global items as
+		//	a class variable, but then we can't make them private.)
+		var currentPlayer = this.game.getCurrentPlayer()
+		if (currentPlayer) {
+			if (currentPlayer.hasItem('computer')) {
+				_inventory.push('computer');
+			}
+			if (currentPlayer.hasItem('phone')) {
+				_inventory.push('phone');
+			}
+		}
+	}
+
 	this.draw = function () {
-		var bgColor = this._map.getGrid()[_x][_y].bgColor
-		this._display.draw(_x, _y, this._rep, this._fgColor, bgColor);
+		var bgColor = this.map.getGrid()[_x][_y].bgColor
+		this.display.draw(_x, _y, this.rep, this.fgColor, bgColor);
 	}
 
 	this.atLocation = function (x, y) {
@@ -491,8 +538,8 @@ function Player(x, y, map) {
 			new_y = cur_y;
 		}
 
-		if (this._map.canMoveTo(new_x, new_y)) {
-			this._display.drawObject(cur_x,cur_y, this._map.getGrid()[cur_x][cur_y].type, this._map.getGrid()[cur_x][cur_y].bgColor);
+		if (this.map.canMoveTo(new_x, new_y)) {
+			this.display.drawObject(cur_x,cur_y, this.map.getGrid()[cur_x][cur_y].type, this.map.getGrid()[cur_x][cur_y].bgColor);
 			_x = new_x;
 			_y = new_y;
 			this.draw();
@@ -501,12 +548,12 @@ function Player(x, y, map) {
 	};
 
 	this.afterMove = function (x, y) {
-		var objectName = this._map.getGrid()[x][y].type;
-		var object = game.objects[objectName];
+		var objectName = this.map.getGrid()[x][y].type;
+		var object = this.game.objects[objectName];
 		if (object.type == 'item') {
 			this.pickUpItem(objectName, object);
 		} else if (object.onCollision) {
-			object.onCollision(this);
+			object.onCollision(this, this.game);
 		}
 	}
 
@@ -518,13 +565,10 @@ function Player(x, y, map) {
 	this.pickUpItem = function (objectName, object) {
 		_inventory.push(objectName);
 		map.placeObject(_x, _y, 'empty');
-
-		// do a little dance to get rid of graphical artifacts //TODO fix this
-		this.move('left');
-		this.move('right');
+		map.refresh();
 
 		if (object.onPickUp) {
-			object.onPickUp(this);
+			object.onPickUp(this, this.game);
 		}
 	}
 
@@ -535,6 +579,9 @@ function Player(x, y, map) {
 	this.setPhoneCallback = function(func) {
 	    this._phoneFunc = func;
 	}
+
+	// Constructor
+	this.init();
 }
 
 var VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel'];
@@ -588,8 +635,8 @@ Game.prototype.validate = function(allCode, playerCode, level) {
 			}
 		}
 
-		var display = this.display; var output = this.output;
-		var dummyMap = new Map(new DummyDisplay);
+		var game = this; var display = this.display; var output = this.output;
+		var dummyMap = new Map(new DummyDisplay, this);
 
 		eval(allCode); // get startLevel and (opt) validateLevel methods
 

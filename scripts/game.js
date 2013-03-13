@@ -1,7 +1,12 @@
+$(document).ready(function() {
+	new Game();
+});
+
 function Game() {
 	_currentPlayer = null;
 
 	this.levelFileNames = [
+		null, // to start levels at 1
 		'blocks.js',
 		'theReturnOfBlocks.js',
 		'levelThree.js',
@@ -10,17 +15,18 @@ function Game() {
 	    'trees.js',
 	];
 
-	this.currentLevel = 0; // level numbers start at 0 because coding :\
+	this.currentLevel = 1;
 
 	this.setCurrentPlayer = function (p) { _currentPlayer = p; }
 	this.getCurrentPlayer = function () { return _currentPlayer; }
 
 	this.init = function () {
+		var game = this;
+
 		// Initialize map display
-		this.display = new ROT.Display({
+		this.display = ROT.Display.create(this, {
 			width: dimensions.width,
 			height: dimensions.height,
-			fontFamily: '"droid sans mono", monospace',
 			fontSize: 20,
 			// fontStyle: "bold" // Droid Sans Mono's boldface makes many characters spill over
 		});
@@ -28,18 +34,17 @@ function Game() {
 		$('#screen').append(this.display.getContainer());
 
 		// Initialize output display
-		this.output = new ROT.Display({
+		this.output = ROT.Display.create(this, {
 			width: dimensions.width * 1.33,
 			height: 2,
-			fontFamily: '"droid sans mono", monospace',
 			fontSize: 15
 		});
 		$('#output').append(this.output.getContainer());
 
 		// Start first level
-		this.map = new Map(this.display);
+		this.map = new Map(this.display, this);
 		_currentPlayer = new Player(-1, -1, this.map);
-		this.editor = createEditor("editor", '', 600, 500); // dummy editor
+		this.editor = CodeMirror.create("editor", '', 600, 500, this); // dummy editor
 		this.getLevel(this.currentLevel);
 		this.display.focus();
 
@@ -50,11 +55,20 @@ function Game() {
 		shortcut.add('ctrl+4', function () { game.resetEditor(); return true; });
 		shortcut.add('ctrl+5', function () { game.evalLevelCode(); return true; });
 		shortcut.add('ctrl+6', function () { game.usePhone(); return true; });
+
+		// Enable buttons
+		$("#mapButton").click( function () { game.display.focus();} );
+		$("#editorButton").click( function () { game.editor.focus();} );
+		$("#resetButton").click( function () { game.resetEditor();} );
+		$("#executeButton").click( function () { game.evalLevelCode();} );
+		$("#phoneButton").click( function () { game.usePhone();} );
 	}
 
 	this.moveToNextLevel = function () {
 		var game = this;
+
 		this.currentLevel++;
+		this.output.write('Loading level ' + this.currentLevel + ' ...');
 		this.display.fadeOut(this.map, function () {
 			game.getLevel(game.currentLevel);
 		})
@@ -64,6 +78,7 @@ function Game() {
 	// then loads it into the game
 	this.getLevel = function (levelNumber) {
 		var game = this;
+
 		this.currentLevel = levelNumber;
 
 		var fileName;
@@ -83,7 +98,7 @@ function Game() {
 
 	this.loadLevel = function (lvlCode, lvlNum) {
 		// initialize CodeMirror editor
-	    this.editor = createEditor("editor", lvlCode, 600, 500);
+	    this.editor = CodeMirror.create("editor", lvlCode, 600, 500, this);
 
 		// start the level and fade in
 		this.evalLevelCode(lvlNum);
@@ -109,15 +124,16 @@ function Game() {
 		if (validatedStartLevel) {
 			this.map.reset();
 
-			var map = this.map; var display = this.display; var output = this.output;
+			var game = this; var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
 
 			// ugly, but some player things must persist across map load (e.g. picking up computer & phone)
 			_currentPlayer = this.map.getPlayer();
 
-			// don't call drawAll on dummy level
-			if (lvlNum >= this.levelFileNames.length) { return;	}
-			this.display.drawAll(map);
+			// don't refresh display for dummy level
+			if (!(lvlNum >= this.levelFileNames.length)) {
+				this.map.refresh();
+			}
 		}
 	}
 

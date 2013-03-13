@@ -2,8 +2,8 @@
 Objects can have the following parameters:
 	color: '#fff' by default
 	impassable: true if it blocks the player from movement (false by default)
-	onCollision: function (player) called when player moves over the object
-	onPickUp: function (player) called when player picks up the item
+	onCollision: function (player, game) called when player moves over the object
+	onPickUp: function (player, game) called when player picks up the item
 	symbol: Unicode character representing the object
 	type: 'item' or null
 */
@@ -23,7 +23,7 @@ Game.prototype.objects = {
 	'exit' : {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#0ff',
-		'onCollision': function (player) {
+		'onCollision': function (player, game) {
 			game.moveToNextLevel();
 		}
 	},
@@ -44,15 +44,15 @@ Game.prototype.objects = {
 
 	'trap': {
 		'symbol': ' ',
-		'onCollision': function (player) {
-			game.map.getPlayer().killedBy('an invisible trap');
+		'onCollision': function (player, game) {
+			player.killedBy('an invisible trap');
 		}
 	},
 
 	'stream': {
 		'symbol': '░',
-		'onCollision': function (player) {
-			game.map.getPlayer().killedBy('drowning in deep dark water');
+		'onCollision': function (player, game) {
+			player.killedBy('drowning in deep dark water');
 		}
 	},
 
@@ -62,7 +62,7 @@ Game.prototype.objects = {
 		'type': 'item',
 		'symbol': String.fromCharCode(0x2318), // ⌘
 		'color': '#ccc',
-		'onPickUp': function (player) {
+		'onPickUp': function (player, game) {
 			game.output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
 			$('#editorPane').fadeIn();
 			game.editor.refresh();
@@ -72,7 +72,7 @@ Game.prototype.objects = {
 	'phone': {
 		'type': 'item',
 		'symbol': String.fromCharCode(0x260E), // ☎
-		'onPickUp': function (player) {
+		'onPickUp': function (player, game) {
 			game.output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
 			$('#phoneButton').show();
 		}

@@ -1,7 +1,7 @@
 
 // Editor object
 
-function createEditor(domElemId, levelCode, width, height) {
+CodeMirror.create = function(domElemId, levelCode, width, height, game) {
 	var ed = CodeMirror.fromTextArea(document.getElementById(domElemId), {
 		theme: 'vibrant-ink',
 		lineNumbers: true,
@@ -13,6 +13,7 @@ function createEditor(domElemId, levelCode, width, height) {
 		}}
 	});
 
+	ed.game = game;
 	ed.setSize(width, height); //TODO this line causes wonky cursor behavior, might be a bug in CodeMirror?
 	ed.setValue(levelCode);
 
@@ -21,7 +22,7 @@ function createEditor(domElemId, levelCode, width, height) {
 		$('#screen canvas').removeClass('focus');
 	});
 
-	this.editableLines = [];
+	ed.editableLines = [];
 	if (levelCode && levelCode != '') {
 		// get editable line ranges from level metadata
 		var levelMetadata = levelCode.split('\n')[0];
@@ -29,14 +30,14 @@ function createEditor(domElemId, levelCode, width, height) {
 		for (var j = 0; j < editableLineRanges.length; j++) {
 			range = editableLineRanges[j];
 			for (var i = range[0]; i <= range[1]; i++) {
-				this.editableLines.push(i - 1);
+				ed.editableLines.push(i - 1);
 			}
 		}
 		ed.removeLine(0);
 
 		// beforeChange event handler handles editing restrictions
 		ed.on('beforeChange', function (instance, change) {
-			if (this.editableLines.indexOf(change.to.line) == -1) {
+			if (ed.editableLines.indexOf(change.to.line) == -1) {
 				// only allow editing on editable lines
 				change.cancel();
 				return;
@@ -58,13 +59,12 @@ function createEditor(domElemId, levelCode, width, height) {
 					change.text[0] = change.text[0].substr(0, allowedLength);
 				}
 			}
-			console.log(change);
 		});
 
 		// set bg color for uneditable lines
 		ed.on('update', function (instance) {
 			for (var i = 0; i < instance.lineCount(); i++) {
-				if (this.editableLines.indexOf(i) == -1) {
+				if (ed.editableLines.indexOf(i) == -1) {
 					instance.addLineClass(i, 'wrap', 'disabled');
 				}
 			}
@@ -80,7 +80,7 @@ CodeMirror.prototype.getPlayerCode = function () {
 	var code = '';
 	for (var i = 0; i < this.lineCount(); i++) {
 		if (this.editableLines && this.editableLines.indexOf(i) > -1) {
-			code += game.editor.getLine(i) + ' \n';
+			code += this.game.editor.getLine(i) + ' \n';
 		}
 	}
 	return code;

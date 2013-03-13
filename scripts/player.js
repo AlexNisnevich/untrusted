@@ -3,17 +3,34 @@ function Player(x, y, map) {
 	var _y = y;
 	var _inventory = [];
 
-	this._rep = "@";
-	this._fgColor = "#0f0";
-	this._map = map;
-	this._display = this._map.display;
+	this.rep = "@";
+	this.fgColor = "#0f0";
+
+	this.map = map;
+	this.display = map.display;
+	this.game = map.game;
 
 	this.getX = function () { return _x; }
 	this.getY = function () { return _y; }
 
+	this.init = function () {
+		// inherit global items from game.currentPlayer
+		// (Ideally, it would be nice to store global items as
+		//	a class variable, but then we can't make them private.)
+		var currentPlayer = this.game.getCurrentPlayer()
+		if (currentPlayer) {
+			if (currentPlayer.hasItem('computer')) {
+				_inventory.push('computer');
+			}
+			if (currentPlayer.hasItem('phone')) {
+				_inventory.push('phone');
+			}
+		}
+	}
+
 	this.draw = function () {
-		var bgColor = this._map.getGrid()[_x][_y].bgColor
-		this._display.draw(_x, _y, this._rep, this._fgColor, bgColor);
+		var bgColor = this.map.getGrid()[_x][_y].bgColor
+		this.display.draw(_x, _y, this.rep, this.fgColor, bgColor);
 	}
 
 	this.atLocation = function (x, y) {
@@ -43,8 +60,8 @@ function Player(x, y, map) {
 			new_y = cur_y;
 		}
 
-		if (this._map.canMoveTo(new_x, new_y)) {
-			this._display.drawObject(cur_x,cur_y, this._map.getGrid()[cur_x][cur_y].type, this._map.getGrid()[cur_x][cur_y].bgColor);
+		if (this.map.canMoveTo(new_x, new_y)) {
+			this.display.drawObject(cur_x,cur_y, this.map.getGrid()[cur_x][cur_y].type, this.map.getGrid()[cur_x][cur_y].bgColor);
 			_x = new_x;
 			_y = new_y;
 			this.draw();
@@ -53,12 +70,12 @@ function Player(x, y, map) {
 	};
 
 	this.afterMove = function (x, y) {
-		var objectName = this._map.getGrid()[x][y].type;
-		var object = game.objects[objectName];
+		var objectName = this.map.getGrid()[x][y].type;
+		var object = this.game.objects[objectName];
 		if (object.type == 'item') {
 			this.pickUpItem(objectName, object);
 		} else if (object.onCollision) {
-			object.onCollision(this);
+			object.onCollision(this, this.game);
 		}
 	}
 
@@ -70,13 +87,10 @@ function Player(x, y, map) {
 	this.pickUpItem = function (objectName, object) {
 		_inventory.push(objectName);
 		map.placeObject(_x, _y, 'empty');
-
-		// do a little dance to get rid of graphical artifacts //TODO fix this
-		this.move('left');
-		this.move('right');
+		map.refresh();
 
 		if (object.onPickUp) {
-			object.onPickUp(this);
+			object.onPickUp(this, this.game);
 		}
 	}
 
@@ -87,4 +101,7 @@ function Player(x, y, map) {
 	this.setPhoneCallback = function(func) {
 	    this._phoneFunc = func;
 	}
+
+	// Constructor
+	this.init();
 }

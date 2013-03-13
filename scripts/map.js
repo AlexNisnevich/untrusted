@@ -3,7 +3,7 @@ var dimensions = {
 	height: 25
 };
 
-function Map(display) {
+function Map(display, game) {
 	// Private variables
 	var _player;
 	var _grid;
@@ -24,6 +24,10 @@ function Map(display) {
 	this.getGrid = function () { return _grid; }
 	this.getWidth = function () { return dimensions.width; }
 	this.getHeight = function () { return dimensions.height; }
+
+	this.refresh = function () {
+		this.display.drawAll(this);
+	}
 
 	this.placeObject = function (x, y, type, bgColor) {
         if (typeof(_grid[x]) !== 'undefined' && typeof(_grid[x][y]) !== 'undefined') {
@@ -49,10 +53,11 @@ function Map(display) {
 		if (x < 0 || x >= dimensions.width || y < 0 || y >= dimensions.height) {
 			return false;
 		}
-		return !(game.objects[this.getGrid()[x][y].type].impassable);
+		return !(this.game.objects[this.getGrid()[x][y].type].impassable);
 	};
 
 	// Initialize with empty grid
+	this.game = game;
 	this.display = display;
 	this.reset();
 };
