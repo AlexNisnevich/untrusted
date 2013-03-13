@@ -108,7 +108,7 @@ function Game() {
 		}
 
 		// on first level, display intro text
-		if (this.currentLevel == 0) {
+		if (this.currentLevel == 1) {
 			this.output.write('Dr. Eval awoke in a strange dungeon, with no apparent way out. He spied his trusty computer ...');
 		}
 	}
