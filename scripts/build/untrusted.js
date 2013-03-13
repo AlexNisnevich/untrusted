@@ -220,7 +220,11 @@ function createEditor(domElemId, levelCode, width, height) {
 		theme: 'vibrant-ink',
 		lineNumbers: true,
 		dragDrop: false,
-		extraKeys: {'Enter': function () {}}
+		extraKeys: {'Enter': function (instance) {
+			var cursorPos = instance.getCursor();
+			cursorPos.line++;
+			instance.setCursor(cursorPos);
+		}}
 	});
 
 	ed.setSize(width, height); //TODO this line causes wonky cursor behavior, might be a bug in CodeMirror?
@@ -244,17 +248,34 @@ function createEditor(domElemId, levelCode, width, height) {
 		}
 		ed.removeLine(0);
 
-		// only allow editing on editable lines, and don't allow removal of lines
-		// also, set a line length limit of 80 chars
+		// beforeChange event handler handles editing restrictions
 		ed.on('beforeChange', function (instance, change) {
-			if (this.editableLines.indexOf(change.to.line) == -1 ||
-					change.to.line != change.from.line ||
-					(change.to.ch > 80 && change.to.ch >= change.from.ch)) {
+			if (this.editableLines.indexOf(change.to.line) == -1) {
+				// only allow editing on editable lines
 				change.cancel();
+				return;
+			} else if (change.origin == '+delete') {
+				// don't allow multi-line deletion
+				if (change.to.line != change.from.line) {
+					change.cancel();
+				}
+			} else { // change.origin is '+input' or 'paste'
+				// don't allow multi-line paste - only paste first line
+				if (change.text.length > 1) {
+					change.text = [change.text[0]]
+				}
+
+				// enforce 80-char limit
+				var lineLength = instance.getLine(change.to.line).length;
+				if (lineLength + change.text[0].length > 80) {
+					var allowedLength = Math.max(80 - lineLength, 0)
+					change.text[0] = change.text[0].substr(0, allowedLength);
+				}
 			}
+			console.log(change);
 		});
 
-		// set bg color for uneditable line
+		// set bg color for uneditable lines
 		ed.on('update', function (instance) {
 			for (var i = 0; i < instance.lineCount(); i++) {
 				if (this.editableLines.indexOf(i) == -1) {
