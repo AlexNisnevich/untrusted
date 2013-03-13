@@ -43,11 +43,12 @@ function init() {
 	display.focus();
 
 	// Enable shortcut keys
-	shortcut.add('ctrl+1', display.focus);
-	shortcut.add('ctrl+2', editor.focus);
-	shortcut.add('ctrl+4', resetEditor);
-	shortcut.add('ctrl+5', evalLevelCode);
-	shortcut.add('ctrl+6', usePhone);
+	shortcut.add('ctrl+1', function () { display.focus(); return true; });
+	shortcut.add('ctrl+2', function () { editor.focus(); return true; });
+	shortcut.add('ctrl+3', function () { return true; });
+	shortcut.add('ctrl+4', function () { resetEditor(); return true; });
+	shortcut.add('ctrl+5', function () { evalLevelCode(); return true; });
+	shortcut.add('ctrl+6', function () { usePhone(); return true; });
 }
 
 function moveToNextLevel() {
@@ -158,8 +159,8 @@ function evalLevelCode(lvlNum) {
 }
 
 function usePhone() {
-	if (map.player._phoneFunc) {
-		map.player._phoneFunc();
+	if (map.getPlayer()._phoneFunc) {
+		map.getPlayer()._phoneFunc();
 	} else {
 		output.write('RotaryPhoneException: Your function phone is not bound to any function.')
 	}
@@ -177,7 +178,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
 	$(this.getContainer()).attr("contentEditable", "true");
 	this.getContainer().addEventListener("keydown", function(e) {
 		if (keys[e.keyCode]) {
-			map.player.move(keys[e.keyCode]);
+			map.getPlayer().move(keys[e.keyCode]);
 		}
 	});
 
@@ -213,10 +214,10 @@ ROT.Display.prototype.drawObject = function (x, y, object, bgColor, multiplicand
 ROT.Display.prototype.drawAll = function(map, multiplicand) {
 	for (var x = 0; x < dimensions.width; x++) {
 		for (var y = 0; y < dimensions.height; y++) {
-			this.drawObject(x, y, map._grid[x][y].type, map._grid[x][y].bgColor, multiplicand);
+			this.drawObject(x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor, multiplicand);
 		}
 	}
-	if (map.player) { map.player.draw(); }
+	if (map.getPlayer()) { map.getPlayer().draw(); }
 }
 
 ROT.Display.prototype.fadeOut = function (map, callback, i) {
@@ -251,7 +252,7 @@ ROT.Display.prototype.write = function(text) {
 }
 
 ROT.Display.prototype.focus = function() {
-	$(this.getContainer()).attr('tabindex', '0').click().focus();
+	$(display.getContainer()).attr('tabindex', '0').click().focus();
 }
 
 // Editor object
@@ -278,50 +279,57 @@ var dimensions = {
 	height: 25
 };
 
-var Map = function (display) {
+function Map(display) {
+	// Private variables
+	var _player;
+	var _grid;
+
 	this.reset = function () {
-		this._display.clear();
-		this._grid = new Array(dimensions.width);
+		this.display.clear();
+		_grid = new Array(dimensions.width);
 		for (var x = 0; x < dimensions.width; x++) {
-			this._grid[x] = new Array(dimensions.height);
+			_grid[x] = new Array(dimensions.height);
 			for (var y = 0; y < dimensions.height; y++) {
-				this._grid[x][y] = {type: 'empty'};
+				_grid[x][y] = {type: 'empty'};
 			}
 		}
-		this.player = null;
+		_player = null;
 	};
 
+	this.getPlayer = function () { return _player; }
+	this.getGrid = function () { return _grid; }
 	this.getWidth = function () { return dimensions.width; }
 	this.getHeight = function () { return dimensions.height; }
 
 	this.placeObject = function (x, y, type, bgColor) {
-        if (typeof(this._grid[x]) !== 'undefined' && typeof(this._grid[x][y]) !== 'undefined') {
-            if (!this.player.atLocation(x, y) || type == 'empty') {
-                this._grid[x][y].type = type;
+        if (typeof(_grid[x]) !== 'undefined' && typeof(_grid[x][y]) !== 'undefined') {
+            if (!_player.atLocation(x, y) || type == 'empty') {
+                _grid[x][y].type = type;
             }
         }
 	};
 
 	this.placePlayer = function (x, y) {
-		if (this.player) {
+		if (_player) {
 			throw "Can't place player twice!";
 		}
-		this.player = new Player(x, y, this);
+		_player = new Player(x, y, this);
+		_player.draw();
 	};
 
 	this.setSquareColor = function (x, y, bgColor) {
-		this._grid[x][y].bgColor = bgColor;
+		_grid[x][y].bgColor = bgColor;
 	};
 
 	this.canMoveTo = function (x, y) {
 		if (x < 0 || x >= dimensions.width || y < 0 || y >= dimensions.height) {
 			return false;
 		}
-		return objects[map._grid[x][y].type].passable;
+		return objects[map.getGrid()[x][y].type].passable;
 	};
 
 	// Initialize with empty grid
-	this._display = display;
+	this.display = display;
 	this.reset();
 };
 var pickedUpComputer = false;
@@ -393,74 +401,76 @@ var objects = {
 	}
 };
 var Player = function(x, y, map) {
-	this._x = x;
-	this._y = y;
+	var _x = x;
+	var _y = y;
 	this._rep = "@";
 	this._fgColor = "#0f0";
-	this._display = map._display;
-	this.draw();
-}
+	this._display = map.display;
 
-Player.prototype.draw = function () {
-	var bgColor = map._grid[this._x][this._y].bgColor
-	this._display.draw(this._x, this._y, this._rep, this._fgColor, bgColor);
-}
+	this.getX = function () { return _x; }
+	this.getY = function () { return _y; }
 
-Player.prototype.atLocation = function (x, y) {
-	return (this._x === x && this._y === y);
-}
-
-Player.prototype.move = function (direction) {
-	var cur_x = this._x;
-	var cur_y = this._y;
-	var new_x;
-	var new_y;
-
-	if (direction === 'up') {
-		new_x = cur_x;
-		new_y = cur_y - 1;
-	}
-	else if (direction === 'down') {
-		new_x = cur_x;
-		new_y = cur_y + 1;
-	}
-	else if (direction === 'left') {
-		new_x = cur_x - 1;
-		new_y = cur_y;
-	}
-	else if (direction === 'right') {
-		new_x = cur_x + 1;
-		new_y = cur_y;
+	this.draw = function () {
+		var bgColor = map.getGrid()[_x][_y].bgColor
+		this._display.draw(_x, _y, this._rep, this._fgColor, bgColor);
 	}
 
-	if (map.canMoveTo(new_x, new_y)) {
-		this._display.drawObject(cur_x,cur_y, map._grid[cur_x][cur_y].type, map._grid[cur_x][cur_y].bgColor);
-		this._x = new_x;
-		this._y = new_y;
-		this.draw();
-		if (objects[map._grid[new_x][new_y].type].onCollision) {
-			objects[map._grid[new_x][new_y].type].onCollision(this);
+	this.atLocation = function (x, y) {
+		return (_x === x && _y === y);
+	}
+
+	this.move = function (direction) {
+		var cur_x = _x;
+		var cur_y = _y;
+		var new_x;
+		var new_y;
+
+		if (direction === 'up') {
+			new_x = cur_x;
+			new_y = cur_y - 1;
 		}
+		else if (direction === 'down') {
+			new_x = cur_x;
+			new_y = cur_y + 1;
+		}
+		else if (direction === 'left') {
+			new_x = cur_x - 1;
+			new_y = cur_y;
+		}
+		else if (direction === 'right') {
+			new_x = cur_x + 1;
+			new_y = cur_y;
+		}
+
+		if (map.canMoveTo(new_x, new_y)) {
+			this._display.drawObject(cur_x,cur_y, map.getGrid()[cur_x][cur_y].type, map.getGrid()[cur_x][cur_y].bgColor);
+			_x = new_x;
+			_y = new_y;
+			this.draw();
+			if (objects[map.getGrid()[new_x][new_y].type].onCollision) {
+				objects[map.getGrid()[new_x][new_y].type].onCollision(this);
+			}
+		}
+		else {
+			console.log("Can't move to " + new_x + ", " + new_y + ", reported from inside Player.move() method");
+		}
+	};
+
+	this.killedBy = function (killer) {
+		alert('You have been killed by ' + killer + '!');
+		getLevel(currentLevel);
 	}
-	else {
-		console.log("Can't move to " + new_x + ", " + new_y + ", reported from inside Player.move() method");
+
+	this.pickUpItem = function () {
+		map.placeObject(_x, _y, 'empty');
+		// do a little dance to get rid of graphical artifacts //TODO fix this
+		this.move('left');
+		this.move('right');
 	}
-};
 
-Player.prototype.killedBy = function (killer) {
-	alert('You have been killed by ' + killer + '!');
-	getLevel(currentLevel);
-}
-
-Player.prototype.pickUpItem = function () {
-	map.placeObject(this._x, this._y, 'empty');
-	// do a little dance to get rid of graphical artifacts //TODO fix this
-	this.move('left');
-	this.move('right');
-}
-
-Player.prototype.setPhoneCallback = function(func) {
-    this._phoneFunc = func;
+	this.setPhoneCallback = function(func) {
+	    this._phoneFunc = func;
+	}
 }
 
 var VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel'];
@@ -504,7 +514,7 @@ function validateAtLeastXObjects(map, num, type) {
 	var count = 0;
 	for (var x = 0; x < map.getWidth(); x++) {
 		for (var y = 0; y < map.getHeight(); y++) {
-			if (map._grid[x][y].type === type) {
+			if (map.getGrid()[x][y].type === type) {
 				count++;
 			}
 		}
@@ -518,7 +528,7 @@ function validateExactlyXManyObjects(map, num, type) {
 	var count = 0;
 	for (var x = 0; x < map.getWidth(); x++) {
 		for (var y = 0; y < map.getHeight(); y++) {
-			if (map._grid[x][y].type === type) {
+			if (map.getGrid()[x][y].type === type) {
 				count++;
 			}
 		}

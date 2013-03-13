@@ -1,4 +1,4 @@
-// {"editable": [[96,96]]}
+// {"editable": [[98, 98]]}
 
 /*
  * trees.js - the obligatory forest level
@@ -46,12 +46,13 @@ function startLevel(map) {
             for (var j = 0; j < map.getHeight(); j++) {
 
                 // initialize to empty if the square contains a forest already
-                if (map._grid[i][j].type === 'tree') {
+                if (map.getGrid()[i][j].type === 'tree') {
                     // remove existing forest
-                    map.placeObject(i,j,'empty');
+                    map.placeObject(i,j, 'empty');
                 }
 
-                if (map.player.atLocation(i,j) || map._grid[i][j].type === 'exit') {
+                if (map.getPlayer().atLocation(i,j) ||
+                        map.getGrid()[i][j].type === 'exit') {
                     continue;
                 }
 
@@ -65,7 +66,8 @@ function startLevel(map) {
     };
 
     functionList['placePhone'] = function () {
-        map.placeObject(map.player._x + 1, map.player._y, 'phone');
+        map.placeObject(map.getPlayer().getX() + 1,
+                            map.getPlayer().getY(), 'phone');
     }
 
     functionList['movePlayerToExit'] = function () {
@@ -94,7 +96,7 @@ function startLevel(map) {
         functionList['placePhone']();
     }
 
-    map.player.setPhoneCallback(functionList["movePlayerToExit"]);
+    map.getPlayer().setPhoneCallback(functionList["movePlayerToExit"]);
 
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
 }

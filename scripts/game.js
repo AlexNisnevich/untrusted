@@ -43,11 +43,12 @@ function init() {
 	display.focus();
 
 	// Enable shortcut keys
-	shortcut.add('ctrl+1', display.focus);
-	shortcut.add('ctrl+2', editor.focus);
-	shortcut.add('ctrl+4', resetEditor);
-	shortcut.add('ctrl+5', evalLevelCode);
-	shortcut.add('ctrl+6', usePhone);
+	shortcut.add('ctrl+1', function () { display.focus(); return true; });
+	shortcut.add('ctrl+2', function () { editor.focus(); return true; });
+	shortcut.add('ctrl+3', function () { return true; });
+	shortcut.add('ctrl+4', function () { resetEditor(); return true; });
+	shortcut.add('ctrl+5', function () { evalLevelCode(); return true; });
+	shortcut.add('ctrl+6', function () { usePhone(); return true; });
 }
 
 function moveToNextLevel() {
@@ -158,8 +159,8 @@ function evalLevelCode(lvlNum) {
 }
 
 function usePhone() {
-	if (map.player._phoneFunc) {
-		map.player._phoneFunc();
+	if (map.getPlayer()._phoneFunc) {
+		map.getPlayer()._phoneFunc();
 	} else {
 		output.write('RotaryPhoneException: Your function phone is not bound to any function.')
 	}

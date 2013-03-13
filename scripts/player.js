@@ -1,70 +1,72 @@
 var Player = function(x, y, map) {
-	this._x = x;
-	this._y = y;
+	var _x = x;
+	var _y = y;
 	this._rep = "@";
 	this._fgColor = "#0f0";
-	this._display = map._display;
-	this.draw();
-}
+	this._display = map.display;
 
-Player.prototype.draw = function () {
-	var bgColor = map._grid[this._x][this._y].bgColor
-	this._display.draw(this._x, this._y, this._rep, this._fgColor, bgColor);
-}
+	this.getX = function () { return _x; }
+	this.getY = function () { return _y; }
 
-Player.prototype.atLocation = function (x, y) {
-	return (this._x === x && this._y === y);
-}
-
-Player.prototype.move = function (direction) {
-	var cur_x = this._x;
-	var cur_y = this._y;
-	var new_x;
-	var new_y;
-
-	if (direction === 'up') {
-		new_x = cur_x;
-		new_y = cur_y - 1;
-	}
-	else if (direction === 'down') {
-		new_x = cur_x;
-		new_y = cur_y + 1;
-	}
-	else if (direction === 'left') {
-		new_x = cur_x - 1;
-		new_y = cur_y;
-	}
-	else if (direction === 'right') {
-		new_x = cur_x + 1;
-		new_y = cur_y;
+	this.draw = function () {
+		var bgColor = map.getGrid()[_x][_y].bgColor
+		this._display.draw(_x, _y, this._rep, this._fgColor, bgColor);
 	}
 
-	if (map.canMoveTo(new_x, new_y)) {
-		this._display.drawObject(cur_x,cur_y, map._grid[cur_x][cur_y].type, map._grid[cur_x][cur_y].bgColor);
-		this._x = new_x;
-		this._y = new_y;
-		this.draw();
-		if (objects[map._grid[new_x][new_y].type].onCollision) {
-			objects[map._grid[new_x][new_y].type].onCollision(this);
+	this.atLocation = function (x, y) {
+		return (_x === x && _y === y);
+	}
+
+	this.move = function (direction) {
+		var cur_x = _x;
+		var cur_y = _y;
+		var new_x;
+		var new_y;
+
+		if (direction === 'up') {
+			new_x = cur_x;
+			new_y = cur_y - 1;
 		}
+		else if (direction === 'down') {
+			new_x = cur_x;
+			new_y = cur_y + 1;
+		}
+		else if (direction === 'left') {
+			new_x = cur_x - 1;
+			new_y = cur_y;
+		}
+		else if (direction === 'right') {
+			new_x = cur_x + 1;
+			new_y = cur_y;
+		}
+
+		if (map.canMoveTo(new_x, new_y)) {
+			this._display.drawObject(cur_x,cur_y, map.getGrid()[cur_x][cur_y].type, map.getGrid()[cur_x][cur_y].bgColor);
+			_x = new_x;
+			_y = new_y;
+			this.draw();
+			if (objects[map.getGrid()[new_x][new_y].type].onCollision) {
+				objects[map.getGrid()[new_x][new_y].type].onCollision(this);
+			}
+		}
+		else {
+			console.log("Can't move to " + new_x + ", " + new_y + ", reported from inside Player.move() method");
+		}
+	};
+
+	this.killedBy = function (killer) {
+		alert('You have been killed by ' + killer + '!');
+		getLevel(currentLevel);
 	}
-	else {
-		console.log("Can't move to " + new_x + ", " + new_y + ", reported from inside Player.move() method");
+
+	this.pickUpItem = function () {
+		map.placeObject(_x, _y, 'empty');
+		// do a little dance to get rid of graphical artifacts //TODO fix this
+		this.move('left');
+		this.move('right');
 	}
-};
 
-Player.prototype.killedBy = function (killer) {
-	alert('You have been killed by ' + killer + '!');
-	getLevel(currentLevel);
-}
-
-Player.prototype.pickUpItem = function () {
-	map.placeObject(this._x, this._y, 'empty');
-	// do a little dance to get rid of graphical artifacts //TODO fix this
-	this.move('left');
-	this.move('right');
-}
-
-Player.prototype.setPhoneCallback = function(func) {
-    this._phoneFunc = func;
+	this.setPhoneCallback = function(func) {
+	    this._phoneFunc = func;
+	}
 }

@@ -11,7 +11,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
 	$(this.getContainer()).attr("contentEditable", "true");
 	this.getContainer().addEventListener("keydown", function(e) {
 		if (keys[e.keyCode]) {
-			map.player.move(keys[e.keyCode]);
+			map.getPlayer().move(keys[e.keyCode]);
 		}
 	});
 
@@ -47,10 +47,10 @@ ROT.Display.prototype.drawObject = function (x, y, object, bgColor, multiplicand
 ROT.Display.prototype.drawAll = function(map, multiplicand) {
 	for (var x = 0; x < dimensions.width; x++) {
 		for (var y = 0; y < dimensions.height; y++) {
-			this.drawObject(x, y, map._grid[x][y].type, map._grid[x][y].bgColor, multiplicand);
+			this.drawObject(x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor, multiplicand);
 		}
 	}
-	if (map.player) { map.player.draw(); }
+	if (map.getPlayer()) { map.getPlayer().draw(); }
 }
 
 ROT.Display.prototype.fadeOut = function (map, callback, i) {
@@ -85,5 +85,5 @@ ROT.Display.prototype.write = function(text) {
 }
 
 ROT.Display.prototype.focus = function() {
-	$(this.getContainer()).attr('tabindex', '0').click().focus();
+	$(display.getContainer()).attr('tabindex', '0').click().focus();
 }
