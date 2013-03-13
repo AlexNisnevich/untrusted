@@ -11,7 +11,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
 	$(this.getContainer()).attr("contentEditable", "true");
 	this.getContainer().addEventListener("keydown", function(e) {
 		if (keys[e.keyCode]) {
-			map.getPlayer().move(keys[e.keyCode]);
+			game.map.getPlayer().move(keys[e.keyCode]);
 		}
 	});
 
@@ -80,10 +80,10 @@ ROT.Display.prototype.fadeIn = function (map, callback, i) {
 };
 
 ROT.Display.prototype.write = function(text) {
-	output.clear();
-	output.drawText(0, 0, text);
+	this.clear();
+	this.drawText(0, 0, text);
 }
 
 ROT.Display.prototype.focus = function() {
-	$(display.getContainer()).attr('tabindex', '0').click().focus();
+	$(this.getContainer()).attr('tabindex', '0').click().focus();
 }

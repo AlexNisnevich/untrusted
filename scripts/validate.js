@@ -9,10 +9,38 @@ var DummyDisplay = function () {
 	this.drawObject = function () {};
 };
 
-function validate(allCode, playerCode, level) {
+Game.prototype.validate = function(allCode, playerCode, level) {
+	function validateAtLeastXObjects(map, num, type) {
+		var count = 0;
+		for (var x = 0; x < map.getWidth(); x++) {
+			for (var y = 0; y < map.getHeight(); y++) {
+				if (map.getGrid()[x][y].type === type) {
+					count++;
+				}
+			}
+		}
+		if (count < num) {
+			throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+		}
+	}
+
+	function validateExactlyXManyObjects(map, num, type) {
+		var count = 0;
+		for (var x = 0; x < map.getWidth(); x++) {
+			for (var y = 0; y < map.getHeight(); y++) {
+				if (map.getGrid()[x][y].type === type) {
+					count++;
+				}
+			}
+		}
+		if (count != num) {
+			throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+		}
+	}
+
 	validateLevel = function () {};
 
-	output.clear();
+	this.output.clear();
 	try {
 		for (var i = 0; i < VERBOTEN.length; i++) {
 			var badWord = VERBOTEN[i];
@@ -21,6 +49,7 @@ function validate(allCode, playerCode, level) {
 			}
 		}
 
+		var display = this.display; var output = this.output;
 		var dummyMap = new Map(new DummyDisplay);
 
 		eval(allCode); // get startLevel and (opt) validateLevel methods
@@ -32,34 +61,7 @@ function validate(allCode, playerCode, level) {
 
 		return startLevel;
 	} catch (e) {
-		output.drawText(0, 0, e.toString());
-	}
-}
-
-function validateAtLeastXObjects(map, num, type) {
-	var count = 0;
-	for (var x = 0; x < map.getWidth(); x++) {
-		for (var y = 0; y < map.getHeight(); y++) {
-			if (map.getGrid()[x][y].type === type) {
-				count++;
-			}
-		}
-	}
-	if (count < num) {
-		throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-	}
-}
-
-function validateExactlyXManyObjects(map, num, type) {
-	var count = 0;
-	for (var x = 0; x < map.getWidth(); x++) {
-		for (var y = 0; y < map.getHeight(); y++) {
-			if (map.getGrid()[x][y].type === type) {
-				count++;
-			}
-		}
-	}
-	if (count != num) {
-		throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+		this.output.drawText(0, 0, e.toString());
+		throw e;
 	}
 }

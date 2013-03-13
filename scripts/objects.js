@@ -20,14 +20,14 @@ var objects = {
 		'symbol': ' ',
 		'passable': true,
 		'onCollision': function (player) {
-			player.killedBy('an invisible trap');
+			game.map.getPlayer().killedBy('an invisible trap');
 		}
 	},
     'stream': {
         'symbol': '░',
         'passable': true,
         'onCollision': function (player) {
-            player.killedBy('drowning in deep dark water');
+            game.map.getPlayer().killedBy('drowning in deep dark water');
         }
     },
 	'exit' : {
@@ -35,7 +35,7 @@ var objects = {
 		'color': '#0ff',
 		'passable': true,
 		'onCollision': function (player) {
-			moveToNextLevel();
+			game.moveToNextLevel();
 		}
 	},
 	'player' : {
@@ -48,20 +48,20 @@ var objects = {
 		'color': '#ccc',
 		'passable': true,
 		'onCollision': function (player) {
-			player.pickUpItem();
+			game.map.getPlayer().pickUpItem();
 			pickedUpComputer = true;
-			output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
+			game.output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
 			$('#editorPane').fadeIn();
-			editor.refresh();
+			game.editor.refresh();
 		}
 	},
 	'phone': {
 		'symbol': String.fromCharCode(0x260E), // ☎
 		'passable': true,
 		'onCollision': function (player) {
-			player.pickUpItem();
+			game.map.getPlayer().pickUpItem();
 			pickedUpPhone = true;
-			output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
+			game.output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
 			$('#phoneButton').show();
 		}
 	}

@@ -1,4 +1,4 @@
-var Player = function(x, y, map) {
+function Player(x, y, map) {
 	var _x = x;
 	var _y = y;
 	this._rep = "@";
@@ -48,9 +48,6 @@ var Player = function(x, y, map) {
 			if (objects[map.getGrid()[new_x][new_y].type].onCollision) {
 				objects[map.getGrid()[new_x][new_y].type].onCollision(this);
 			}
-		}
-		else {
-			console.log("Can't move to " + new_x + ", " + new_y + ", reported from inside Player.move() method");
 		}
 	};
 

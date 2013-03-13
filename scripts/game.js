@@ -1,167 +1,125 @@
+function Game() {
+	this.levelFileNames = [
+		'blocks.js',
+		'theReturnOfBlocks.js',
+		'levelThree.js',
+		'multiplicity.js',
+		'traps.js',
+	    'trees.js',
+	];
 
-var levelFileNames = [
-	'blocks.js',
-	'theReturnOfBlocks.js',
-	'levelThree.js',
-	'multiplicity.js',
-	'traps.js',
-    'trees.js',
-];
+	this.currentLevel = 0; // level numbers start at 0 because coding :\
 
-var display;
-var output;
-var editor;
-var map;
+	this.init = function () {
+		// Initialize map display
+		this.display = new ROT.Display({
+			width: dimensions.width,
+			height: dimensions.height,
+			fontFamily: '"droid sans mono", monospace',
+			fontSize: 20,
+			// fontStyle: "bold" // Droid Sans Mono's boldface makes many characters spill over
+		});
+		this.display.setupEventHandlers();
+		$('#screen').append(this.display.getContainer());
 
-var currentLevel = 0; // level numbers start at 0 because coding :\
+		// Initialize output display
+		this.output = new ROT.Display({
+			width: dimensions.width * 1.33,
+			height: 2,
+			fontFamily: '"droid sans mono", monospace',
+			fontSize: 15
+		});
+		$('#output').append(this.output.getContainer());
 
-function init() {
-	// Initialize map display
-	display = new ROT.Display({
-		width: dimensions.width,
-		height: dimensions.height,
-		fontFamily: '"droid sans mono", monospace',
-		fontSize: 20,
-		// fontStyle: "bold" // Droid Sans Mono's boldface makes many characters spill over
-	});
-	display.setupEventHandlers();
-	$('#screen').append(display.getContainer());
+		// Start first level
+		this.map = new Map(this.display);
+		this.editor = createEditor("editor", '', 600, 500); // dummy editor
+		this.getLevel(this.currentLevel);
+		this.display.focus();
 
-	// Initialize output display
-	output = new ROT.Display({
-		width: dimensions.width * 1.33,
-		height: 2,
-		fontFamily: '"droid sans mono", monospace',
-		fontSize: 15
-	});
-	$('#output').append(output.getContainer());
-
-	// Start first level
-	map = new Map(display);
-	editor = createEditor("editor", '', 600, 500); // dummy editor
-	getLevel(currentLevel);
-	display.focus();
-
-	// Enable shortcut keys
-	shortcut.add('ctrl+1', function () { display.focus(); return true; });
-	shortcut.add('ctrl+2', function () { editor.focus(); return true; });
-	shortcut.add('ctrl+3', function () { return true; });
-	shortcut.add('ctrl+4', function () { resetEditor(); return true; });
-	shortcut.add('ctrl+5', function () { evalLevelCode(); return true; });
-	shortcut.add('ctrl+6', function () { usePhone(); return true; });
-}
-
-function moveToNextLevel() {
-	currentLevel++;
-	display.fadeOut(map, function () {
-		getLevel(currentLevel);
-	})
-};
-
-// makes an ajax request to get the level text file and
-// then loads it into the game
-function getLevel(levelNumber) {
-	var fileName;
-	if (levelNumber < levelFileNames.length) {
-		fileName = levelFileNames[levelNumber];
+		// Enable shortcut keys
+		shortcut.add('ctrl+1', function () { game.display.focus(); return true; });
+		shortcut.add('ctrl+2', function () { game.editor.focus(); return true; });
+		shortcut.add('ctrl+3', function () { return true; });
+		shortcut.add('ctrl+4', function () { game.resetEditor(); return true; });
+		shortcut.add('ctrl+5', function () { game.evalLevelCode(); return true; });
+		shortcut.add('ctrl+6', function () { game.usePhone(); return true; });
 	}
-	else {
-		fileName = "dummyLevel.js";
-	}
-	$.get('levels/' + fileName, function (codeText) {
-		if (editor) {
-			editor.toTextArea();
+
+	this.moveToNextLevel = function () {
+		var game = this;
+		this.currentLevel++;
+		this.display.fadeOut(this.map, function () {
+			game.getLevel(game.currentLevel);
+		})
+	};
+
+	// makes an ajax request to get the level text file and
+	// then loads it into the game
+	this.getLevel = function (levelNumber) {
+		var game = this;
+		this.currentLevel = levelNumber;
+
+		var fileName;
+		if (levelNumber < this.levelFileNames.length) {
+			fileName = this.levelFileNames[levelNumber];
+		} else {
+			fileName = "dummyLevel.js";
 		}
-		loadLevel(codeText, levelNumber);
-	});
-}
 
-function loadLevel(lvlCode, lvlNum) {
-	// initialize CodeMirror editor
-    editor = createEditor("editor", lvlCode, 600, 500);
-
-	// initialize level
-	editor.setValue(lvlCode);
-
-	// get editable line ranges from level metadata
-	levelMetadata = editor.getLine(0);
-	editableLineRanges = JSON.parse(levelMetadata.slice(3)).editable;
-	editableLines = [];
-	for (var j = 0; j < editableLineRanges.length; j++) {
-		range = editableLineRanges[j];
-		for (var i = range[0]; i <= range[1]; i++) {
-			editableLines.push(i - 1);
-		}
-	}
-	editor.removeLine(0);
-
-	// only allow editing on editable lines, and don't allow removal of lines
-	// also, set a line length limit of 80 chars
-	editor.on('beforeChange', function (instance, change) {
-		if (editableLines.indexOf(change.to.line) == -1 ||
-				change.to.line != change.from.line ||
-				(change.to.ch > 80 && change.to.ch >= change.from.ch)) {
-			change.cancel();
-		}
-	});
-
-	// set bg color for uneditable line
-	editor.on('update', function (instance) {
-		for (var i = 0; i < editor.lineCount(); i++) {
-			if (editableLines.indexOf(i) == -1) {
-				instance.addLineClass(i, 'wrap', 'disabled');
+		$.get('levels/' + fileName, function (codeText) {
+			if (game.editor) {
+				game.editor.toTextArea();
 			}
-		}
-	});
-	editor.refresh();
+			game.loadLevel(codeText, levelNumber);
+		});
+	}
 
-	// editor.getPlayerCode returns only the code written in editable lines
-	editor.getPlayerCode = function () {
-		var code = '';
-		for (var i = 0; i < editor.lineCount(); i++) {
-			if (editableLines.indexOf(i) > -1) {
-				code += editor.getLine(i) + ' \n';
+	this.loadLevel = function (lvlCode, lvlNum) {
+		// initialize CodeMirror editor
+	    this.editor = createEditor("editor", lvlCode, 600, 500);
+
+		// start the level and fade in
+		this.evalLevelCode(lvlNum);
+		if (lvlNum < this.levelFileNames.length) {
+			// don't fade in for dummy level
+			this.display.fadeIn(this.map);
+		}
+
+		// on first level, display intro text
+		if (this.currentLevel == 0) {
+			this.output.write('Dr. Eval awoke in a strange dungeon, with no apparent way out. He spied his trusty computer ...');
+		}
+	}
+
+	this.resetEditor = function () {
+	    this.getLevel(this.currentLevel);
+	}
+
+	this.evalLevelCode = function (lvlNum) {
+		var allCode = this.editor.getValue();
+		var playerCode = this.editor.getPlayerCode();
+		var validatedStartLevel = this.validate(allCode, playerCode, this.currentLevel);
+		if (validatedStartLevel) {
+			this.map.reset();
+			var map = this.map; var display = this.display; var output = this.output;
+			validatedStartLevel(map);
+			if (lvlNum >= this.levelFileNames.length) {
+				// don't call drawAll on dummy level
+				return;
 			}
+			this.display.drawAll(map);
 		}
-		return code;
 	}
 
-	// start the level and fade in
-	evalLevelCode(lvlNum);
-	if (lvlNum < levelFileNames.length) {
-		// don't fade in for dummy level
-		display.fadeIn(map);
-	}
-
-	// on first level, display intro text
-	if (currentLevel == 0) {
-		output.write('Dr. Eval awoke in a strange dungeon, with no apparent way out. He spied his trusty computer ...');
-	}
-}
-
-function resetEditor() {
-    getLevel(currentLevel);
-}
-
-function evalLevelCode(lvlNum) {
-	var allCode = editor.getValue();
-	var playerCode = editor.getPlayerCode();
-	var validatedStartLevel = validate(allCode, playerCode, currentLevel);
-	if (validatedStartLevel) {
-		map.reset();
-		validatedStartLevel(map);
-		if (lvlNum >= levelFileNames.length) {
-			// don't do this for dummy level
-			return;
+	this.usePhone = function () {
+		if (this.map.getPlayer()._phoneFunc) {
+			this.map.getPlayer()._phoneFunc();
+		} else {
+			this.output.write('RotaryPhoneException: Your function phone is not bound to any function.')
 		}
-		display.drawAll(map);
 	}
-}
 
-function usePhone() {
-	if (map.getPlayer()._phoneFunc) {
-		map.getPlayer()._phoneFunc();
-	} else {
-		output.write('RotaryPhoneException: Your function phone is not bound to any function.')
-	}
+	// Constructor
+	this.init();
 }
