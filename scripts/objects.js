@@ -1,66 +1,78 @@
-var pickedUpComputer = false;
-var pickedUpPhone = false;
+/*
+Objects can have the following parameters:
+	color: '#fff' by default
+	impassable: true if it blocks the player from movement (false by default)
+	onCollision: function (player) called when player moves over the object
+	onPickUp: function (player) called when player picks up the item
+	symbol: Unicode character representing the object
+	type: 'item' or null
+*/
 
-var objects = {
+Game.prototype.objects = {
+	// special
+
 	'empty' : {
-		'symbol': ' ',
-		'passable': true
+		'symbol': ' '
 	},
-	'block': {
-		'symbol': '#',
-		'color': '#f00',
-		'passable': false
+
+	'player' : {
+		'symbol': '@',
+		'color': '#0f0'
 	},
-	'tree': {
-		'symbol': '♣',
-		'color': '#080',
-		'passable': false
-	},
-	'trap': {
-		'symbol': ' ',
-		'passable': true,
-		'onCollision': function (player) {
-			game.map.getPlayer().killedBy('an invisible trap');
-		}
-	},
-    'stream': {
-        'symbol': '░',
-        'passable': true,
-        'onCollision': function (player) {
-            game.map.getPlayer().killedBy('drowning in deep dark water');
-        }
-    },
+
 	'exit' : {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#0ff',
-		'passable': true,
 		'onCollision': function (player) {
 			game.moveToNextLevel();
 		}
 	},
-	'player' : {
-		'symbol': '@',
-		'color': '#0f0',
-		'passable': false
+
+	// obstacles
+
+	'block': {
+		'symbol': '#',
+		'color': '#f00',
+		'impassable': true
 	},
+
+	'tree': {
+		'symbol': '♣',
+		'color': '#080',
+		'impassable': true
+	},
+
+	'trap': {
+		'symbol': ' ',
+		'onCollision': function (player) {
+			game.map.getPlayer().killedBy('an invisible trap');
+		}
+	},
+
+	'stream': {
+		'symbol': '░',
+		'onCollision': function (player) {
+			game.map.getPlayer().killedBy('drowning in deep dark water');
+		}
+	},
+
+	// items
+
 	'computer': {
+		'type': 'item',
 		'symbol': String.fromCharCode(0x2318), // ⌘
 		'color': '#ccc',
-		'passable': true,
-		'onCollision': function (player) {
-			game.map.getPlayer().pickUpItem();
-			pickedUpComputer = true;
+		'onPickUp': function (player) {
 			game.output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
 			$('#editorPane').fadeIn();
 			game.editor.refresh();
 		}
 	},
+
 	'phone': {
+		'type': 'item',
 		'symbol': String.fromCharCode(0x260E), // ☎
-		'passable': true,
-		'onCollision': function (player) {
-			game.map.getPlayer().pickUpItem();
-			pickedUpPhone = true;
+		'onPickUp': function (player) {
 			game.output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
 			$('#phoneButton').show();
 		}

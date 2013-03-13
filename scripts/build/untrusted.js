@@ -1,4 +1,6 @@
 function Game() {
+	_currentPlayer = null;
+
 	this.levelFileNames = [
 		'blocks.js',
 		'theReturnOfBlocks.js',
@@ -9,6 +11,9 @@ function Game() {
 	];
 
 	this.currentLevel = 0; // level numbers start at 0 because coding :\
+
+	this.setCurrentPlayer = function (p) { _currentPlayer = p; }
+	this.getCurrentPlayer = function () { return _currentPlayer; }
 
 	this.init = function () {
 		// Initialize map display
@@ -33,6 +38,7 @@ function Game() {
 
 		// Start first level
 		this.map = new Map(this.display);
+		_currentPlayer = new Player(-1, -1, this.map);
 		this.editor = createEditor("editor", '', 600, 500); // dummy editor
 		this.getLevel(this.currentLevel);
 		this.display.focus();
@@ -102,12 +108,15 @@ function Game() {
 		var validatedStartLevel = this.validate(allCode, playerCode, this.currentLevel);
 		if (validatedStartLevel) {
 			this.map.reset();
+
 			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
-			if (lvlNum >= this.levelFileNames.length) {
-				// don't call drawAll on dummy level
-				return;
-			}
+
+			// ugly, but some player things must persist across map load (e.g. picking up computer & phone)
+			_currentPlayer = this.map.getPlayer();
+
+			// don't call drawAll on dummy level
+			if (lvlNum >= this.levelFileNames.length) { return;	}
 			this.display.drawAll(map);
 		}
 	}
@@ -149,10 +158,10 @@ ROT.Display.prototype.setupEventHandlers = function() {
 // drawObject takes care of looking up an object's symbol and color
 // according to name (NOT according to the actual object literal!)
 ROT.Display.prototype.drawObject = function (x, y, object, bgColor, multiplicand) {
-	var symbol = objects[object].symbol;
+	var symbol = game.objects[object].symbol;
 	var color;
-	if (objects[object].color) {
-		color = objects[object].color;
+	if (game.objects[object].color) {
+		color = game.objects[object].color;
 	} else {
 		color = "#fff";
 	}
@@ -350,76 +359,88 @@ function Map(display) {
 		if (x < 0 || x >= dimensions.width || y < 0 || y >= dimensions.height) {
 			return false;
 		}
-		return objects[this.getGrid()[x][y].type].passable;
+		return !(game.objects[this.getGrid()[x][y].type].impassable);
 	};
 
 	// Initialize with empty grid
 	this.display = display;
 	this.reset();
 };
-var pickedUpComputer = false;
-var pickedUpPhone = false;
+/*
+Objects can have the following parameters:
+	color: '#fff' by default
+	impassable: true if it blocks the player from movement (false by default)
+	onCollision: function (player) called when player moves over the object
+	onPickUp: function (player) called when player picks up the item
+	symbol: Unicode character representing the object
+	type: 'item' or null
+*/
 
-var objects = {
+Game.prototype.objects = {
+	// special
+
 	'empty' : {
-		'symbol': ' ',
-		'passable': true
+		'symbol': ' '
 	},
-	'block': {
-		'symbol': '#',
-		'color': '#f00',
-		'passable': false
+
+	'player' : {
+		'symbol': '@',
+		'color': '#0f0'
 	},
-	'tree': {
-		'symbol': '♣',
-		'color': '#080',
-		'passable': false
-	},
-	'trap': {
-		'symbol': ' ',
-		'passable': true,
-		'onCollision': function (player) {
-			game.map.getPlayer().killedBy('an invisible trap');
-		}
-	},
-    'stream': {
-        'symbol': '░',
-        'passable': true,
-        'onCollision': function (player) {
-            game.map.getPlayer().killedBy('drowning in deep dark water');
-        }
-    },
+
 	'exit' : {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#0ff',
-		'passable': true,
 		'onCollision': function (player) {
 			game.moveToNextLevel();
 		}
 	},
-	'player' : {
-		'symbol': '@',
-		'color': '#0f0',
-		'passable': false
+
+	// obstacles
+
+	'block': {
+		'symbol': '#',
+		'color': '#f00',
+		'impassable': true
 	},
+
+	'tree': {
+		'symbol': '♣',
+		'color': '#080',
+		'impassable': true
+	},
+
+	'trap': {
+		'symbol': ' ',
+		'onCollision': function (player) {
+			game.map.getPlayer().killedBy('an invisible trap');
+		}
+	},
+
+	'stream': {
+		'symbol': '░',
+		'onCollision': function (player) {
+			game.map.getPlayer().killedBy('drowning in deep dark water');
+		}
+	},
+
+	// items
+
 	'computer': {
+		'type': 'item',
 		'symbol': String.fromCharCode(0x2318), // ⌘
 		'color': '#ccc',
-		'passable': true,
-		'onCollision': function (player) {
-			game.map.getPlayer().pickUpItem();
-			pickedUpComputer = true;
+		'onPickUp': function (player) {
 			game.output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
 			$('#editorPane').fadeIn();
 			game.editor.refresh();
 		}
 	},
+
 	'phone': {
+		'type': 'item',
 		'symbol': String.fromCharCode(0x260E), // ☎
-		'passable': true,
-		'onCollision': function (player) {
-			game.map.getPlayer().pickUpItem();
-			pickedUpPhone = true;
+		'onPickUp': function (player) {
 			game.output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
 			$('#phoneButton').show();
 		}
@@ -428,15 +449,18 @@ var objects = {
 function Player(x, y, map) {
 	var _x = x;
 	var _y = y;
+	var _inventory = [];
+
 	this._rep = "@";
 	this._fgColor = "#0f0";
-	this._display = map.display;
+	this._map = map;
+	this._display = this._map.display;
 
 	this.getX = function () { return _x; }
 	this.getY = function () { return _y; }
 
 	this.draw = function () {
-		var bgColor = map.getGrid()[_x][_y].bgColor
+		var bgColor = this._map.getGrid()[_x][_y].bgColor
 		this._display.draw(_x, _y, this._rep, this._fgColor, bgColor);
 	}
 
@@ -467,27 +491,45 @@ function Player(x, y, map) {
 			new_y = cur_y;
 		}
 
-		if (map.canMoveTo(new_x, new_y)) {
-			this._display.drawObject(cur_x,cur_y, map.getGrid()[cur_x][cur_y].type, map.getGrid()[cur_x][cur_y].bgColor);
+		if (this._map.canMoveTo(new_x, new_y)) {
+			this._display.drawObject(cur_x,cur_y, this._map.getGrid()[cur_x][cur_y].type, this._map.getGrid()[cur_x][cur_y].bgColor);
 			_x = new_x;
 			_y = new_y;
 			this.draw();
-			if (objects[map.getGrid()[new_x][new_y].type].onCollision) {
-				objects[map.getGrid()[new_x][new_y].type].onCollision(this);
-			}
+			this.afterMove(_x, _y);
 		}
 	};
+
+	this.afterMove = function (x, y) {
+		var objectName = this._map.getGrid()[x][y].type;
+		var object = game.objects[objectName];
+		if (object.type == 'item') {
+			this.pickUpItem(objectName, object);
+		} else if (object.onCollision) {
+			object.onCollision(this);
+		}
+	}
 
 	this.killedBy = function (killer) {
 		alert('You have been killed by ' + killer + '!');
 		getLevel(currentLevel);
 	}
 
-	this.pickUpItem = function () {
+	this.pickUpItem = function (objectName, object) {
+		_inventory.push(objectName);
 		map.placeObject(_x, _y, 'empty');
+
 		// do a little dance to get rid of graphical artifacts //TODO fix this
 		this.move('left');
 		this.move('right');
+
+		if (object.onPickUp) {
+			object.onPickUp(this);
+		}
+	}
+
+	this.hasItem = function (object) {
+		return _inventory.indexOf(object) > -1;
 	}
 
 	this.setPhoneCallback = function(func) {
@@ -497,7 +539,8 @@ function Player(x, y, map) {
 
 var VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel'];
 
-var validationRulesByLevel = [ null ];
+// We may want to have level-specific hidden validation rules in the future.
+// var validationRulesByLevel = [ null ];
 
 var DummyDisplay = function () {
 	this.clear = function () {};

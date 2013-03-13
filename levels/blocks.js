@@ -1,4 +1,4 @@
-// {"editable": [[16, 24]]}
+// {"editable": [[15, 23]]}
 
 /*
  * blocks.js
@@ -11,7 +11,6 @@
  * you should be doing less...
  */
 function startLevel(map) {
-
     map.placePlayer(7, 5);
 
     for (y = 3; y <= map.getHeight() - 10; y++) {
@@ -24,7 +23,7 @@ function startLevel(map) {
         map.placeObject(x, map.getHeight() - 10, 'block');
     }
 
-    if (!pickedUpComputer) {
+    if (!game.getCurrentPlayer().hasItem('computer')) {
         map.placeObject(15, 12, 'computer');
     }
 

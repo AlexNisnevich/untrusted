@@ -24,10 +24,10 @@ ROT.Display.prototype.setupEventHandlers = function() {
 // drawObject takes care of looking up an object's symbol and color
 // according to name (NOT according to the actual object literal!)
 ROT.Display.prototype.drawObject = function (x, y, object, bgColor, multiplicand) {
-	var symbol = objects[object].symbol;
+	var symbol = game.objects[object].symbol;
 	var color;
-	if (objects[object].color) {
-		color = objects[object].color;
+	if (game.objects[object].color) {
+		color = game.objects[object].color;
 	} else {
 		color = "#fff";
 	}

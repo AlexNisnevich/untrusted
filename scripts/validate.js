@@ -1,7 +1,8 @@
 
 var VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel'];
 
-var validationRulesByLevel = [ null ];
+// We may want to have level-specific hidden validation rules in the future.
+// var validationRulesByLevel = [ null ];
 
 var DummyDisplay = function () {
 	this.clear = function () {};

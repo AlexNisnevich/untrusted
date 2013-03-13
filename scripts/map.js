@@ -49,7 +49,7 @@ function Map(display) {
 		if (x < 0 || x >= dimensions.width || y < 0 || y >= dimensions.height) {
 			return false;
 		}
-		return objects[this.getGrid()[x][y].type].passable;
+		return !(game.objects[this.getGrid()[x][y].type].impassable);
 	};
 
 	// Initialize with empty grid

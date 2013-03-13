@@ -1,4 +1,6 @@
 function Game() {
+	_currentPlayer = null;
+
 	this.levelFileNames = [
 		'blocks.js',
 		'theReturnOfBlocks.js',
@@ -9,6 +11,9 @@ function Game() {
 	];
 
 	this.currentLevel = 0; // level numbers start at 0 because coding :\
+
+	this.setCurrentPlayer = function (p) { _currentPlayer = p; }
+	this.getCurrentPlayer = function () { return _currentPlayer; }
 
 	this.init = function () {
 		// Initialize map display
@@ -33,6 +38,7 @@ function Game() {
 
 		// Start first level
 		this.map = new Map(this.display);
+		_currentPlayer = new Player(-1, -1, this.map);
 		this.editor = createEditor("editor", '', 600, 500); // dummy editor
 		this.getLevel(this.currentLevel);
 		this.display.focus();
@@ -102,12 +108,15 @@ function Game() {
 		var validatedStartLevel = this.validate(allCode, playerCode, this.currentLevel);
 		if (validatedStartLevel) {
 			this.map.reset();
+
 			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
-			if (lvlNum >= this.levelFileNames.length) {
-				// don't call drawAll on dummy level
-				return;
-			}
+
+			// ugly, but some player things must persist across map load (e.g. picking up computer & phone)
+			_currentPlayer = this.map.getPlayer();
+
+			// don't call drawAll on dummy level
+			if (lvlNum >= this.levelFileNames.length) { return;	}
 			this.display.drawAll(map);
 		}
 	}
