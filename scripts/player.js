@@ -10,6 +10,8 @@ function Player(x, y, map) {
 	this.display = map.display;
 	this.game = map.game;
 
+	this.canMove = false;
+
 	this.getX = function () { return _x; }
 	this.getY = function () { return _y; }
 
@@ -38,6 +40,11 @@ function Player(x, y, map) {
 	}
 
 	this.move = function (direction) {
+		// are we allowing keyboard input right now?
+		if (!this.canMove) {
+			return false;
+		}
+
 		var cur_x = _x;
 		var cur_y = _y;
 		var new_x;

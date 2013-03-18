@@ -69,6 +69,7 @@ function Game() {
 
 		this.currentLevel++;
 		this.output.write('Loading level ' + this.currentLevel + ' ...');
+		this.getCurrentPlayer().canMove = false;
 		this.display.fadeOut(this.map, function () {
 			game.getLevel(game.currentLevel);
 		})
@@ -104,7 +105,8 @@ function Game() {
 		this.evalLevelCode(lvlNum);
 		if (lvlNum < this.levelFileNames.length) {
 			// don't fade in for dummy level
-			this.display.fadeIn(this.map);
+			this.display.fadeIn(this.map, function () {
+			});
 		}
 
 		// on first level, display intro text
@@ -127,8 +129,8 @@ function Game() {
 			var game = this; var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
 
-			// ugly, but some player things must persist across map load (e.g. picking up computer & phone)
 			_currentPlayer = this.map.getPlayer();
+			_currentPlayer.canMove = true;
 
 			// don't refresh display for dummy level
 			if (!(lvlNum >= this.levelFileNames.length)) {
