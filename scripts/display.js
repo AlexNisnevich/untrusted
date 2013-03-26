@@ -1,5 +1,4 @@
 ROT.Display.create = function(game, opts) {
-	opts['fontFamily'] = '"droid sans mono", monospace';
 	var display = new ROT.Display(opts);
 	display.game = game;
 	return display;

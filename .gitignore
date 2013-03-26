@@ -1,2 +1,4 @@
 *.swp
 deploy.sh
+
+scripts/build/*
