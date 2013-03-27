@@ -9,8 +9,9 @@ function CodeEditor(textAreaDomID, width, height) {
     var charLimit = 80;
 
     var editableLines = [];
+    var editableSections = {};
 
-    function setEditableLines(codeString) {
+    function setEditableLinesAndSections(codeString) {
         editableLines = [];
         var lineArray = codeString.split("\n");
 
@@ -30,18 +31,29 @@ function CodeEditor(textAreaDomID, width, height) {
             }
             else {
                 if (inEditableBlock) {
-                    editableLines.push(i+1);// the +1 is to convert from 0-based to 1-based line numbering
+                    editableLines.push(i);
+                } else {
+                    // check if there are any editable sections
+                    var sections = [];
+                    var startPoint = null;
+                    for (var j = 0; j < currentLine.length - 2; j++) {
+                        if (currentLine.slice(j,j+3) === symbols.begin_char) {
+                            currentLine = currentLine.slice(0,j) + currentLine.slice(j+3, currentLine.length);
+                            startPoint = j;
+                        } else if (currentLine.slice(j,j+3) === symbols.end_char) {
+                            currentLine = currentLine.slice(0,j) + currentLine.slice(j+3, currentLine.length);
+                            sections.push([startPoint, j]);
+                        }
+                    }
+                    if (sections.length > 0) {
+                        lineArray[i] = currentLine;
+                        editableSections[i] = sections;
+                    }
                 }
             }
         }
 
-        //console.log("Editable Lines: " + editableLines);
         return lineArray.join("\n");
-    }
-
-    //TODO
-    function setEditableSections(codeString) {
-        return codeString;
     }
 
     /* begining of initialization code */
@@ -67,24 +79,54 @@ function CodeEditor(textAreaDomID, width, height) {
 
     // set bg color for uneditable lines
     this.internalEditor.on('update', function (instance) {
+        // mark uneditable lines
         for (var i = 0; i < instance.lineCount(); i++) {
-            if (editableLines.indexOf(i + 1) == -1) {
+            if (editableLines.indexOf(i) == -1) {
                 instance.addLineClass(i, 'wrap', 'disabled');
             }
         }
     });
+
+    this.internalEditor.on('change', function (instance) {
+        // mark editable sections within uneditable lines
+        for (var line in editableSections) {
+            if (editableSections.hasOwnProperty(line)) {
+                var sections = editableSections[line];
+                for (var i = 0; i < sections.length; i++) {
+                    var section = sections[i];
+                    var from = {'line': parseInt(line), 'ch': section[0]};
+                    var to = {'line': parseInt(line), 'ch': section[1]};
+                    instance.markText(from, to, {'className': 'editableSection'});
+                }
+            }
+        }
+    })
 
     /* end of initialization code */
 
     //this function enforces editing restrictions
     //when set to 'beforeChange' on the editor
     function enforceRestrictions(instance, change) {
-        function notInEditableArea(c) {
-            var lineNum = c.to.line + 1;
-            return (editableLines.indexOf(lineNum) === -1);
+        function inEditableArea(c) {
+            var lineNum = c.to.line;
+            if (editableLines.indexOf(lineNum) > -1) {
+                // editable line?
+                return true;
+            } else if (editableSections[lineNum]) {
+                // this line has editable sections - are we in one of them?
+                var sections = editableSections[lineNum];
+                for (var i = 0; i < sections.length; i++) {
+                    var section = sections[i];
+                    if (c.from.ch > section[0] && c.to.ch > section[0] &&
+                        c.from.ch < section[1] && c.to.ch < section[1]) {
+                        return true;
+                    }
+                }
+                return false;
+            }
         }
 
-        if (notInEditableArea(change)) {
+        if (!inEditableArea(change)) {
             change.cancel();
         }
         else if (change.to.line !== change.from.line) {
@@ -115,8 +157,7 @@ function CodeEditor(textAreaDomID, width, height) {
          * strip our notation from the string and as a side effect build up
          * a data structure of editable areas
          */
-        codeString = setEditableLines(codeString);
-        codeString = setEditableSections(codeString);
+        codeString = setEditableLinesAndSections(codeString);
 
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);

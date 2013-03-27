@@ -68,6 +68,10 @@ body {
 	background: #311 !important;
 }
 
+.CodeMirror-lines .disabled .editableSection {
+	background: #000 !important;
+}
+
 h1 {
 	display: inline;
     color: white;
