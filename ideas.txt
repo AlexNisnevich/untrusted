@@ -2,9 +2,13 @@
 UNIVERSALLY, player cannot add new \n characters and
 cannot add more than 80 characters per line
 
+--only for blocking off whole lines
 #BEGIN_EDITABLE#
 #END_EDITABLE#
 
 --initially we can look for specifically the string "#BEGIN_EDITABLE#" after a newline or "#END_EDITABLE#" and then a newline
+
+--for sections within a line
+#{# #}#
 
 
