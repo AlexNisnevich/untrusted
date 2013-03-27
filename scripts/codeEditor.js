@@ -35,10 +35,9 @@ function CodeEditor(textAreaDomID, width, height) {
             }
         }
 
-        console.log("Editable Lines: " + editableLines);
+        //console.log("Editable Lines: " + editableLines);
         return lineArray.join("\n");
     }
-
 
     //TODO
     function setEditableSections(codeString) {

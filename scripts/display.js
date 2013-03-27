@@ -1,8 +1,14 @@
 ROT.Display.create = function(game, opts) {
+	opts['fontFamily'] = '"droid sans mono", monospace';
 	var display = new ROT.Display(opts);
 	display.game = game;
 	return display;
 }
+
+// multiplicand is used for fading effects
+// [255, 255, 255]: fully displayed
+// [0, 0, 0]: completely hidden
+ROT.Display.prototype.multiplicand = [255, 255, 255];
 
 ROT.Display.prototype.setupEventHandlers = function() {
 	var game = this.game;
@@ -31,7 +37,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
 
 // drawObject takes care of looking up an object's symbol and color
 // according to name (NOT according to the actual object literal!)
-ROT.Display.prototype.drawObject = function (x, y, object, bgColor, multiplicand) {
+ROT.Display.prototype.drawObject = function (x, y, object, bgColor) {
 	var symbol = this.game.objects[object].symbol;
 	var color;
 	if (this.game.objects[object].color) {
@@ -44,18 +50,30 @@ ROT.Display.prototype.drawObject = function (x, y, object, bgColor, multiplicand
 		bgColor = "#000";
 	}
 
-	if (multiplicand) {
-		color = ROT.Color.toHex(ROT.Color.multiply(multiplicand, ROT.Color.fromString(color)));
-		bgColor = ROT.Color.toHex(ROT.Color.multiply(multiplicand, ROT.Color.fromString(bgColor)));
-	}
+	color = ROT.Color.toHex(ROT.Color.multiply(this.multiplicand, ROT.Color.fromString(color)));
+	bgColor = ROT.Color.toHex(ROT.Color.multiply(this.multiplicand, ROT.Color.fromString(bgColor)));
 
 	this.draw(x, y, symbol, color, bgColor);
 };
 
-ROT.Display.prototype.drawAll = function(map, multiplicand) {
+ROT.Display.prototype.drawAll = function(map) {
 	for (var x = 0; x < dimensions.width; x++) {
 		for (var y = 0; y < dimensions.height; y++) {
-			this.drawObject(x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor, multiplicand);
+			this.drawObject(x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
+		}
+	}
+	if (map.getPlayer()) { map.getPlayer().draw(); }
+}
+
+ROT.Display.prototype.drawAround = function(map, xCenter, yCenter) {
+	var xStart = Math.max(0, xCenter - 2);
+	var xEnd = Math.min(dimensions.width - 1, xCenter + 2);
+	var yStart = Math.max(0, yCenter - 2);
+	var yEnd = Math.min(dimensions.height - 1, yCenter + 2);
+
+	for (var x = xStart; x <= xEnd; x++) {
+		for (var y = yStart; y <= yEnd; y++) {
+			this.drawObject(x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
 		}
 	}
 	if (map.getPlayer()) { map.getPlayer().draw(); }
@@ -67,7 +85,8 @@ ROT.Display.prototype.fadeOut = function (map, callback, i) {
 		if (callback) { callback(); }
 	} else {
 		if (!i) { i = 255; }
-		this.drawAll(map, [i, i, i]);
+		this.multiplicand = [i, i, i];
+		this.drawAll(map);
 		setTimeout(function () {
 			display.fadeOut(map, callback, i-10);
 		}, 10);
@@ -80,7 +99,8 @@ ROT.Display.prototype.fadeIn = function (map, callback, i) {
 		if (callback) { callback(); }
 	} else {
 		if (!i) { i = 0; }
-		this.drawAll(map, [i, i, i]);
+		this.multiplicand = [i, i, i];
+		this.drawAll(map);
 		setTimeout(function () {
 			display.fadeIn(map, callback, i+5);
 		}, 10);

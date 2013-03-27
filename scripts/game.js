@@ -27,8 +27,7 @@ function Game() {
 		this.display = ROT.Display.create(this, {
 			width: dimensions.width,
 			height: dimensions.height,
-			fontSize: 20,
-			// fontStyle: "bold" // Droid Sans Mono's boldface makes many characters spill over
+			fontSize: 20
 		});
 		this.display.setupEventHandlers();
 		$('#screen').append(this.display.getContainer());

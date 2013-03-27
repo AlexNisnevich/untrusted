@@ -84,6 +84,7 @@ function Player(x, y, map) {
 		} else if (object.onCollision) {
 			object.onCollision(this, this.game);
 		}
+		this.game.display.drawAround(this.map, x, y); // in case there are any artifacts
 	}
 
 	this.killedBy = function (killer) {
