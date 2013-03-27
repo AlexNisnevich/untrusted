@@ -1,5 +1,3 @@
-// {"editable": [[98, 98]]}
-
 /*
  * trees.js - the obligatory forest level
  *
@@ -96,7 +94,9 @@ function startLevel(map) {
         functionList['placePhone']();
     }
 
+#BEGIN_EDITABLE#
     map.getPlayer().setPhoneCallback(functionList["movePlayerToExit"]);
+#END_EDITABLE#
 
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
 }

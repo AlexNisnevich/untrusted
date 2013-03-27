@@ -1,4 +1,3 @@
-// {"editable": []}
 function startLevel(map) {
     map.placePlayer(map.getWidth()-1, map.getHeight()-1);
     map.placeObject(1, map.getHeight()-1, 'exit');

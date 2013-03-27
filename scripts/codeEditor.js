@@ -1,5 +1,4 @@
 function CodeEditor(textAreaDomID, width, height) {
-
     var symbols = {
         'begin_line':'#BEGIN_EDITABLE#',
         'end_line':'#END_EDITABLE#',
@@ -126,6 +125,27 @@ function CodeEditor(textAreaDomID, width, height) {
         this.internalEditor.refresh();
     };
 
-    //TODO this needs to get only the lines of code that a player input
-    this.getPlayerCode = function () { };
+    // returns all contents
+    this.getCode = function () {
+        return this.internalEditor.getValue();
+    }
+
+    // returns only the code written in editable lines
+    this.getPlayerCode = function () {
+        var code = '';
+        for (var i = 0; i < this.internalEditor.lineCount(); i++) {
+            if (editableLines && editableLines.indexOf(i) > -1) {
+                code += this.internalEditor.getLine(i) + ' \n';
+            }
+        }
+        return code;
+    };
+
+    this.refresh = function () {
+        this.internalEditor.refresh();
+    }
+
+    this.focus = function () {
+        this.internalEditor.focus();
+    }
 }

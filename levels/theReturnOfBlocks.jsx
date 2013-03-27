@@ -1,5 +1,3 @@
-// {"editable": [[15, 23]]}
-
 /*
  * theReturnOfBlocks.js
  *
@@ -10,8 +8,8 @@
  * blocks.
  */
 function startLevel(map) {
-
     map.placePlayer(map.getWidth()-7, map.getHeight()-5);
+#BEGIN_EDITABLE#
 
     for (y = 10; y <= map.getHeight() - 3; y++) {
         map.placeObject(5, y, 'block');
@@ -22,6 +20,7 @@ function startLevel(map) {
         map.placeObject(x, 10, 'block');
         map.placeObject(x, map.getHeight() - 3, 'block');
     }
+#END_EDITABLE#
 
     map.placeObject(7, 5, 'exit');
 }
