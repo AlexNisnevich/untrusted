@@ -75,6 +75,9 @@ function Game() {
 		})
 	};
 
+    //TODO clean up getLevel and loadLevel to make the code path
+    //more readable and also not re-create the editor every time
+    
 	// makes an ajax request to get the level text file and
 	// then loads it into the game
 	this.getLevel = function (levelNumber) {
