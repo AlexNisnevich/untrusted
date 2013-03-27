@@ -1,5 +1,3 @@
-// {"editable": [[15, 23]]}
-
 /*
  * blocks.js
  *

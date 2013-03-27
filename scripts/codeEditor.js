@@ -67,28 +67,33 @@ function CodeEditor(textAreaDomID, width, height) {
     });
     this.internalEditor.setSize(width,height);
 
+    // set bg color for uneditable lines
+    this.internalEditor.on('update', function (instance) {
+        for (var i = 0; i < instance.lineCount(); i++) {
+            if (editableLines.indexOf(i + 1) == -1) {
+                instance.addLineClass(i, 'wrap', 'disabled');
+            }
+        }
+    });
 
     /* end of initialization code */
-    
+
     //this function enforces editing restrictions
     //when set to 'beforeChange' on the editor
     function enforceRestrictions(instance, change) {
-
         function notInEditableArea(c) {
-            return false;
+            var lineNum = c.to.line + 1;
+            return (editableLines.indexOf(lineNum) === -1);
         }
 
         if (notInEditableArea(change)) {
             change.cancel();
         }
-
-        else if (change.origin === '+delete') {
+        else if (change.to.line !== change.from.line) {
             // don't allow multi-line deletion
-            if (change.to.line !== change.from.line) {
-                change.cancel();
-            }
-        } 
-        else { // change.origin is '+input' or 'paste'
+            change.cancel();
+        }
+        else {
             // don't allow multi-line paste - only paste first line
             if (change.text.length > 1) {
                 change.text = [change.text[0]];
@@ -103,7 +108,6 @@ function CodeEditor(textAreaDomID, width, height) {
         }
     }
 
-
     this.loadCode = function(codeString) {
         this.internalEditor.off('beforeChange',enforceRestrictions);
 
@@ -111,13 +115,15 @@ function CodeEditor(textAreaDomID, width, height) {
          * logic: before setting the value of the editor to the code string,
          * we run it through setEditableLines and setEditableSections, which
          * strip our notation from the string and as a side effect build up
-         * a data structure of editable areas 
+         * a data structure of editable areas
          */
         codeString = setEditableLines(codeString);
         codeString = setEditableSections(codeString);
 
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);
+
+        this.internalEditor.refresh();
     };
 
     //TODO this needs to get only the lines of code that a player input
