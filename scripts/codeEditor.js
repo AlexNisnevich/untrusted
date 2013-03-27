@@ -89,6 +89,7 @@ function CodeEditor(textAreaDomID, width, height) {
 
     this.internalEditor.on('change', function (instance) {
         // mark editable sections within uneditable lines
+        $('.editableSection').removeClass('editableSection');
         for (var line in editableSections) {
             if (editableSections.hasOwnProperty(line)) {
                 var sections = editableSections[line];
@@ -144,6 +145,20 @@ function CodeEditor(textAreaDomID, width, height) {
             if (lineLength + change.text[0].length > charLimit) {
                 var allowedLength = Math.max(charLimit - lineLength, 0);
                 change.text[0] = change.text[0].substr(0, allowedLength);
+            }
+
+            // modify editable sections accordingly
+            if (editableSections[change.to.line]) {
+                var sections = editableSections[change.to.line];
+                for (var i = 0; i < sections.length; i++) {
+                    // move any sections that we are to the left of
+                    if (change.to.ch < sections[i][1]) {
+                        var delta = change.text[0].length - (change.to.ch - change.from.ch);
+                        sections[i][1] += delta;
+                    }
+                }
+                console.log(change);
+                console.log(sections);
             }
         }
     }

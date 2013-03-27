@@ -58,6 +58,10 @@ body {
 	margin-left: 2px;
 }
 
+.CodeMirror-cursor, .CodeMirror-selected {
+	z-index: 10;
+}
+
 .CodeMirror.focus {
 	border: 2px solid yellow;
 	border-left: 2px solid yellow;
@@ -69,7 +73,7 @@ body {
 }
 
 .CodeMirror-lines .disabled .editableSection {
-	background: #000 !important;
+	background: rgba(0, 0, 0, 0.5); /* semi-transparent so we can see selection over it */
 }
 
 h1 {
