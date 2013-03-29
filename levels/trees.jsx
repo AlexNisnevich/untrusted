@@ -65,7 +65,7 @@ function startLevel(map) {
 
     functionList['placePhone'] = function () {
         map.placeObject(map.getPlayer().getX() + 1,
-                        map.getPlayer().getY(), 'computer');
+                        map.getPlayer().getY(), 'phone');
     }
 
     functionList['movePlayerToExit'] = function () {

@@ -151,10 +151,13 @@ function CodeEditor(textAreaDomID, width, height) {
             if (editableSections[change.to.line]) {
                 var sections = editableSections[change.to.line];
                 for (var i = 0; i < sections.length; i++) {
-                    // move any sections that we are to the left of
+                    // move any section start/end points that we are to the left of
+                    var delta = change.text[0].length - (change.to.ch - change.from.ch);
                     if (change.to.ch < sections[i][1]) {
-                        var delta = change.text[0].length - (change.to.ch - change.from.ch);
                         sections[i][1] += delta;
+                    }
+                    if (change.to.ch < sections[i][0]) {
+                        sections[i][0] += delta;
                     }
                 }
                 console.log(change);
@@ -182,6 +185,7 @@ function CodeEditor(textAreaDomID, width, height) {
 
     //TODO this needs to get only the lines of code that a player input
     this.getPlayerCode = function () { };
+
     // returns all contents
     this.getCode = function () {
         return this.internalEditor.getValue();
