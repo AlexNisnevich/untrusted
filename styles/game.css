@@ -13,9 +13,6 @@ body {
 	width: 100%;
 }
 
-#screenPane {
-	width: 602px;
-}
 
 #screen canvas {
 	border: 2px solid #333;
@@ -25,7 +22,8 @@ body {
 	border: 2px solid yellow;
 }
 
-#editorPane {
+#screenPane {
+	width: 602px;
 	position: absolute;
 	top: 0;
 	right: 4px;
