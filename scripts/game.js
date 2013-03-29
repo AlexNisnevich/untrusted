@@ -47,7 +47,7 @@ function Game() {
 		// Start first level
 		this.map = new Map(this.display, this);
 		_currentPlayer = new Player(-1, -1, this.map);
-		this.editor = CodeMirror.create("editor", '', 600, 500, this); // dummy editor
+		this.editor = new CodeEditor("editor", 600, 500);
 		this.getLevel(this.currentLevel);
 		this.display.focus();
 
@@ -96,16 +96,13 @@ function Game() {
 		}
 
 		$.get('levels/' + fileName, function (codeText) {
-			if (game.editor) {
-				game.editor.toTextArea();
-			}
 			game.loadLevel(codeText, levelNumber);
 		});
 	}
 
 	this.loadLevel = function (lvlCode, lvlNum) {
-		// initialize CodeMirror editor
-	    this.editor = CodeMirror.create("editor", lvlCode, 600, 500, this);
+		// load level code in editor
+	    this.editor.loadCode(lvlCode);
 
 		// start the level and fade in
 		this.evalLevelCode(lvlNum);
@@ -126,7 +123,7 @@ function Game() {
 	}
 
 	this.evalLevelCode = function (lvlNum) {
-		var allCode = this.editor.getValue();
+		var allCode = this.editor.getCode();
 		var playerCode = this.editor.getPlayerCode();
 		var validatedStartLevel = this.validate(allCode, playerCode, this.currentLevel);
 		if (validatedStartLevel) {

@@ -1,5 +1,3 @@
-// {"editable": [[23, 23]]}
-
 /*
  * multiplicity.js
  *
@@ -21,7 +19,9 @@ function startLevel(map) {
         map.placeObject(7, y, 'block');
         map.placeObject(map.getWidth() - 3, y, 'block');
     }
+#BEGIN_EDITABLE#
 
+#END_EDITABLE#
     for (x = 7; x <= map.getWidth() - 3; x++) {
         map.placeObject(x, 7, 'block');
         map.placeObject(x, map.getHeight() - 3, 'block');

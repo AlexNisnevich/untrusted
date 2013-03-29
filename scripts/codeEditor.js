@@ -1,8 +1,4 @@
 function CodeEditor(textAreaDomID, width, height) {
-<<<<<<< HEAD
-
-=======
->>>>>>> 6494181db6d2cd0de27ea6b0e14db0b61fdcb4c2
     var symbols = {
         'begin_line':'#BEGIN_EDITABLE#',
         'end_line':'#END_EDITABLE#',
@@ -13,8 +9,9 @@ function CodeEditor(textAreaDomID, width, height) {
     var charLimit = 80;
 
     var editableLines = [];
+    var editableSections = {};
 
-    function setEditableLines(codeString) {
+    function setEditableLinesAndSections(codeString) {
         editableLines = [];
         var lineArray = codeString.split("\n");
 
@@ -34,19 +31,29 @@ function CodeEditor(textAreaDomID, width, height) {
             }
             else {
                 if (inEditableBlock) {
-                    editableLines.push(i+1);// the +1 is to convert from 0-based to 1-based line numbering
+                    editableLines.push(i);
+                } else {
+                    // check if there are any editable sections
+                    var sections = [];
+                    var startPoint = null;
+                    for (var j = 0; j < currentLine.length - 2; j++) {
+                        if (currentLine.slice(j,j+3) === symbols.begin_char) {
+                            currentLine = currentLine.slice(0,j) + currentLine.slice(j+3, currentLine.length);
+                            startPoint = j;
+                        } else if (currentLine.slice(j,j+3) === symbols.end_char) {
+                            currentLine = currentLine.slice(0,j) + currentLine.slice(j+3, currentLine.length);
+                            sections.push([startPoint, j]);
+                        }
+                    }
+                    if (sections.length > 0) {
+                        lineArray[i] = currentLine;
+                        editableSections[i] = sections;
+                    }
                 }
             }
         }
 
-        //console.log("Editable Lines: " + editableLines);
         return lineArray.join("\n");
-    }
-
-
-    //TODO
-    function setEditableSections(codeString) {
-        return codeString;
     }
 
     /* begining of initialization code */
@@ -72,24 +79,55 @@ function CodeEditor(textAreaDomID, width, height) {
 
     // set bg color for uneditable lines
     this.internalEditor.on('update', function (instance) {
+        // mark uneditable lines
         for (var i = 0; i < instance.lineCount(); i++) {
-            if (editableLines.indexOf(i + 1) == -1) {
+            if (editableLines.indexOf(i) == -1) {
                 instance.addLineClass(i, 'wrap', 'disabled');
             }
         }
     });
+
+    this.internalEditor.on('change', function (instance) {
+        // mark editable sections within uneditable lines
+        $('.editableSection').removeClass('editableSection');
+        for (var line in editableSections) {
+            if (editableSections.hasOwnProperty(line)) {
+                var sections = editableSections[line];
+                for (var i = 0; i < sections.length; i++) {
+                    var section = sections[i];
+                    var from = {'line': parseInt(line), 'ch': section[0]};
+                    var to = {'line': parseInt(line), 'ch': section[1]};
+                    instance.markText(from, to, {'className': 'editableSection'});
+                }
+            }
+        }
+    })
 
     /* end of initialization code */
 
     //this function enforces editing restrictions
     //when set to 'beforeChange' on the editor
     function enforceRestrictions(instance, change) {
-        function notInEditableArea(c) {
-            var lineNum = c.to.line + 1;
-            return (editableLines.indexOf(lineNum) === -1);
+        function inEditableArea(c) {
+            var lineNum = c.to.line;
+            if (editableLines.indexOf(lineNum) > -1) {
+                // editable line?
+                return true;
+            } else if (editableSections[lineNum]) {
+                // this line has editable sections - are we in one of them?
+                var sections = editableSections[lineNum];
+                for (var i = 0; i < sections.length; i++) {
+                    var section = sections[i];
+                    if (c.from.ch > section[0] && c.to.ch > section[0] &&
+                        c.from.ch < section[1] && c.to.ch < section[1]) {
+                        return true;
+                    }
+                }
+                return false;
+            }
         }
 
-        if (notInEditableArea(change)) {
+        if (!inEditableArea(change)) {
             change.cancel();
         }
         else if (change.to.line !== change.from.line) {
@@ -108,6 +146,23 @@ function CodeEditor(textAreaDomID, width, height) {
                 var allowedLength = Math.max(charLimit - lineLength, 0);
                 change.text[0] = change.text[0].substr(0, allowedLength);
             }
+
+            // modify editable sections accordingly
+            if (editableSections[change.to.line]) {
+                var sections = editableSections[change.to.line];
+                for (var i = 0; i < sections.length; i++) {
+                    // move any section start/end points that we are to the left of
+                    var delta = change.text[0].length - (change.to.ch - change.from.ch);
+                    if (change.to.ch < sections[i][1]) {
+                        sections[i][1] += delta;
+                    }
+                    if (change.to.ch < sections[i][0]) {
+                        sections[i][0] += delta;
+                    }
+                }
+                console.log(change);
+                console.log(sections);
+            }
         }
     }
 
@@ -120,8 +175,7 @@ function CodeEditor(textAreaDomID, width, height) {
          * strip our notation from the string and as a side effect build up
          * a data structure of editable areas
          */
-        codeString = setEditableLines(codeString);
-        codeString = setEditableSections(codeString);
+        codeString = setEditableLinesAndSections(codeString);
 
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);
@@ -129,10 +183,9 @@ function CodeEditor(textAreaDomID, width, height) {
         this.internalEditor.refresh();
     };
 
-<<<<<<< HEAD
     //TODO this needs to get only the lines of code that a player input
     this.getPlayerCode = function () { };
-=======
+
     // returns all contents
     this.getCode = function () {
         return this.internalEditor.getValue();
@@ -156,5 +209,4 @@ function CodeEditor(textAreaDomID, width, height) {
     this.focus = function () {
         this.internalEditor.focus();
     }
->>>>>>> 6494181db6d2cd0de27ea6b0e14db0b61fdcb4c2
 }

@@ -1,5 +1,3 @@
-// {"editable": [[28, 28]]}
-
 /*
  * traps.js
  *
@@ -26,7 +24,9 @@ function startLevel(map) {
             // don't place trap over exit!
             map.placeObject(x, y, 'trap', '#f00');
         }
+#BEGIN_EDITABLE#
 
+#END_EDITABLE#
     }
 
     map.placeObject(2, map.getHeight() - 1, 'exit');
