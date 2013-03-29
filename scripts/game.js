@@ -17,12 +17,12 @@ function Game() {
 
 	this.levelFileNames = [
 		null, // to start levels at 1
-		'blocks.js',
-		'theReturnOfBlocks.js',
-		'levelThree.js',
-		'multiplicity.js',
-		'traps.js',
-	    'trees.js',
+	    'trees.jsx',
+		'blocks.jsx',
+		'theReturnOfBlocks.jsx',
+		'levelThree.jsx',
+		'multiplicity.jsx',
+		'traps.jsx',
 	];
 
 	this.currentLevel = 1;
@@ -53,7 +53,7 @@ function Game() {
 		// Start first level
 		this.map = new Map(this.display, this);
 		_currentPlayer = new Player(-1, -1, this.map);
-		this.editor = CodeMirror.create("editor", '', 600, 500, this); // dummy editor
+		this.editor = new CodeEditor("editor", 600, 500);
 		this.getLevel(this.currentLevel);
 		this.display.focus();
 
@@ -84,6 +84,9 @@ function Game() {
 		})
 	};
 
+    //TODO clean up getLevel and loadLevel to make the code path
+    //more readable and also not re-create the editor every time
+
 	// makes an ajax request to get the level text file and
 	// then loads it into the game
 	this.getLevel = function (levelNumber) {
@@ -99,16 +102,13 @@ function Game() {
 		}
 
 		$.get('levels/' + fileName, function (codeText) {
-			if (game.editor) {
-				game.editor.toTextArea();
-			}
 			game.loadLevel(codeText, levelNumber);
 		});
 	}
 
 	this.loadLevel = function (lvlCode, lvlNum) {
-		// initialize CodeMirror editor
-	    this.editor = CodeMirror.create("editor", lvlCode, 600, 500, this);
+		// load level code in editor
+	    this.editor.loadCode(lvlCode);
 
 		// start the level and fade in
 		this.evalLevelCode(lvlNum);
@@ -129,7 +129,7 @@ function Game() {
 	}
 
 	this.evalLevelCode = function (lvlNum) {
-		var allCode = this.editor.getValue();
+		var allCode = this.editor.getCode();
 		var playerCode = this.editor.getPlayerCode();
 		var validatedStartLevel = this.validate(allCode, playerCode, this.currentLevel);
 		if (validatedStartLevel) {

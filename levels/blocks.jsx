@@ -1,5 +1,3 @@
-// {"editable": [[15, 23]]}
-
 /*
  * blocks.js
  *
@@ -12,6 +10,7 @@
  */
 function startLevel(map) {
     map.placePlayer(7, 5);
+#BEGIN_EDITABLE#
 
     for (y = 3; y <= map.getHeight() - 10; y++) {
         map.placeObject(5, y, 'block');
@@ -22,6 +21,7 @@ function startLevel(map) {
         map.placeObject(x, 3, 'block');
         map.placeObject(x, map.getHeight() - 10, 'block');
     }
+#END_EDITABLE#
 
     if (!game.getCurrentPlayer().hasItem('computer')) {
         map.placeObject(15, 12, 'computer');
