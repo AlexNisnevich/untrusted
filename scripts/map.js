@@ -1,7 +1,3 @@
-var dimensions = {
-	width: 50,
-	height: 25
-};
 
 function Map(display, game) {
 	// Private variables
@@ -10,10 +6,10 @@ function Map(display, game) {
 
 	this.reset = function () {
 		this.display.clear();
-		_grid = new Array(dimensions.width);
-		for (var x = 0; x < dimensions.width; x++) {
-			_grid[x] = new Array(dimensions.height);
-			for (var y = 0; y < dimensions.height; y++) {
+		_grid = new Array(game.dimensions.width);
+		for (var x = 0; x < game.dimensions.width; x++) {
+			_grid[x] = new Array(game.dimensions.height);
+			for (var y = 0; y < game.dimensions.height; y++) {
 				_grid[x][y] = {type: 'empty'};
 			}
 		}
@@ -22,8 +18,8 @@ function Map(display, game) {
 
 	this.getPlayer = function () { return _player; }
 	this.getGrid = function () { return _grid; }
-	this.getWidth = function () { return dimensions.width; }
-	this.getHeight = function () { return dimensions.height; }
+	this.getWidth = function () { return game.dimensions.width; }
+	this.getHeight = function () { return game.dimensions.height; }
 
 	this.refresh = function () {
 		this.display.drawAll(this);
@@ -50,7 +46,7 @@ function Map(display, game) {
 	};
 
 	this.canMoveTo = function (x, y) {
-		if (x < 0 || x >= dimensions.width || y < 0 || y >= dimensions.height) {
+		if (x < 0 || x >= game.dimensions.width || y < 0 || y >= game.dimensions.height) {
 			return false;
 		}
 		return !(this.game.objects[this.getGrid()[x][y].type].impassable);

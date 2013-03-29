@@ -1,8 +1,18 @@
+/*
 $(document).ready(function() {
 	new Game();
 });
+*/
 
 function Game() {
+
+    var dimensions = {
+        width: 50,
+        height: 25
+    };
+
+    this.dimensions = dimensions;
+
 	_currentPlayer = null;
 
 	this.levelFileNames = [
