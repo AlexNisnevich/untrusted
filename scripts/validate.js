@@ -1,5 +1,5 @@
 
-var VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel'];
+Game.prototype.VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel'];
 
 // We may want to have level-specific hidden validation rules in the future.
 // var validationRulesByLevel = [ null ];
@@ -43,8 +43,8 @@ Game.prototype.validate = function(allCode, playerCode, level) {
 
 	this.output.clear();
 	try {
-		for (var i = 0; i < VERBOTEN.length; i++) {
-			var badWord = VERBOTEN[i];
+		for (var i = 0; i < this.VERBOTEN.length; i++) {
+			var badWord = this.VERBOTEN[i];
 			if (playerCode.indexOf(badWord) > -1) {
 				throw 'You are not allowed to use ' + badWord + '!';
 			}
