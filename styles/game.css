@@ -8,13 +8,13 @@ body {
 	margin: 0 auto;
 }
 
-#screenPane {
-	float: left;
-	width: 602px;
+#panes {
+	position: relative;
+	width: 100%;
 }
 
-#screen {
-	float: left;
+#screenPane {
+	width: 602px;
 }
 
 #screen canvas {
@@ -26,7 +26,9 @@ body {
 }
 
 #editorPane {
-	float: left;
+	position: absolute;
+	top: 0;
+	right: 4px;
 }
 
 #editorPane #editor {
