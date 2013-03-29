@@ -65,7 +65,7 @@ function startLevel(map) {
 
     functionList['placePhone'] = function () {
         map.placeObject(map.getPlayer().getX() + 1,
-                            map.getPlayer().getY(), 'phone');
+                        map.getPlayer().getY(), 'phone');
     }
 
     functionList['movePlayerToExit'] = function () {
@@ -94,9 +94,7 @@ function startLevel(map) {
         functionList['placePhone']();
     }
 
-#BEGIN_EDITABLE#
-    map.getPlayer().setPhoneCallback(functionList["movePlayerToExit"]);
-#END_EDITABLE#
+    map.getPlayer().setPhoneCallback(functionList[#{#"movePlayerToExit"#}#]);
 
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
 }
