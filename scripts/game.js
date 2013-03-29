@@ -7,12 +7,12 @@ function Game() {
 
 	this.levelFileNames = [
 		null, // to start levels at 1
-	    'trees.jsx',
 		'blocks.jsx',
 		'theReturnOfBlocks.jsx',
 		'levelThree.jsx',
 		'multiplicity.jsx',
 		'traps.jsx',
+	    'trees.jsx',
 	];
 
 	this.currentLevel = 1;
