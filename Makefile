@@ -15,7 +15,7 @@ js-modules = scripts/game.js \
 
 js-modules-debug = scripts/game.js \
                  scripts/display.js \
-                 scripts/editor.js \
+                 scripts/codeEditor.js \
                  scripts/map.js \
                  scripts/objects.js \
                  scripts/player.js \
