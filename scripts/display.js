@@ -57,8 +57,9 @@ ROT.Display.prototype.drawObject = function (x, y, object, bgColor) {
 };
 
 ROT.Display.prototype.drawAll = function(map) {
-	for (var x = 0; x < dimensions.width; x++) {
-		for (var y = 0; y < dimensions.height; y++) {
+	var game = this.game;
+	for (var x = 0; x < game.dimensions.width; x++) {
+		for (var y = 0; y < game.dimensions.height; y++) {
 			this.drawObject(x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
 		}
 	}
@@ -66,10 +67,11 @@ ROT.Display.prototype.drawAll = function(map) {
 }
 
 ROT.Display.prototype.drawAround = function(map, xCenter, yCenter) {
+	var game = this.game;
 	var xStart = Math.max(0, xCenter - 2);
-	var xEnd = Math.min(dimensions.width - 1, xCenter + 2);
+	var xEnd = Math.min(game.dimensions.width - 1, xCenter + 2);
 	var yStart = Math.max(0, yCenter - 2);
-	var yEnd = Math.min(dimensions.height - 1, yCenter + 2);
+	var yEnd = Math.min(game.dimensions.height - 1, yCenter + 2);
 
 	for (var x = xStart; x <= xEnd; x++) {
 		for (var y = yStart; y <= yEnd; y++) {
