@@ -160,8 +160,6 @@ function CodeEditor(textAreaDomID, width, height) {
                         sections[i][0] += delta;
                     }
                 }
-                console.log(change);
-                console.log(sections);
             }
         }
     }
@@ -183,20 +181,26 @@ function CodeEditor(textAreaDomID, width, height) {
         this.internalEditor.refresh();
     };
 
-    //TODO this needs to get only the lines of code that a player input
-    this.getPlayerCode = function () { };
-
     // returns all contents
     this.getCode = function () {
         return this.internalEditor.getValue();
     }
 
-    // returns only the code written in editable lines
+    // returns only the code written in editable lines and sections
     this.getPlayerCode = function () {
         var code = '';
         for (var i = 0; i < this.internalEditor.lineCount(); i++) {
             if (editableLines && editableLines.indexOf(i) > -1) {
                 code += this.internalEditor.getLine(i) + ' \n';
+            }
+        }
+        for (var line in editableSections) {
+            if (editableSections.hasOwnProperty(line)) {
+                var sections = editableSections[line];
+                for (var i = 0; i < sections.length; i++) {
+                    var section = sections[i];
+                    code += this.internalEditor.getLine(line).slice(section[0], section[1]) + ' \n';
+                }
             }
         }
         return code;
