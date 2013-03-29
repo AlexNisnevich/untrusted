@@ -1,9 +1,3 @@
-/*
-$(document).ready(function() {
-	new Game();
-});
-*/
-
 function Game() {
 
     var dimensions = {
@@ -17,12 +11,12 @@ function Game() {
 
 	this.levelFileNames = [
 		null, // to start levels at 1
-		'blocks.js',
-		'theReturnOfBlocks.js',
-		'levelThree.js',
-		'multiplicity.js',
-		'traps.js',
-	    'trees.js',
+		'blocks.jsx',
+		'theReturnOfBlocks.jsx',
+		'levelThree.jsx',
+		'multiplicity.jsx',
+		'traps.jsx',
+	    'trees.jsx',
 	];
 
 	this.currentLevel = 1;
@@ -86,7 +80,7 @@ function Game() {
 
     //TODO clean up getLevel and loadLevel to make the code path
     //more readable and also not re-create the editor every time
-    
+
 	// makes an ajax request to get the level text file and
 	// then loads it into the game
 	this.getLevel = function (levelNumber) {
