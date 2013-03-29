@@ -180,6 +180,8 @@ function CodeEditor(textAreaDomID, width, height) {
         this.internalEditor.refresh();
     };
 
+    //TODO this needs to get only the lines of code that a player input
+    this.getPlayerCode = function () { };
     // returns all contents
     this.getCode = function () {
         return this.internalEditor.getValue();
