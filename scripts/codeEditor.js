@@ -77,6 +77,11 @@ function CodeEditor(textAreaDomID, width, height) {
     });
     this.internalEditor.setSize(width,height);
 
+    // fixes the cursor lag bug
+    this.internalEditor.on('cursorActivity', function(instance) {
+        instance.refresh();
+    });
+
     // set bg color for uneditable lines
     this.internalEditor.on('update', function (instance) {
         // mark uneditable lines
