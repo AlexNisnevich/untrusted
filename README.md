@@ -33,7 +33,15 @@ make scripts/build/untrusted.js
 git add scripts/build/untrusted.js
 ```
 
-To run the game locally, you need to set up a local server. One easy way to do that is with Python's SimpleHTTPServer:
+To run the game locally, you need to set up a local server to serve index.html. One easy way to do that is with Python's SimpleHTTPServer:
+
+(python2)
 ```
 python -m SimpleHTTPServer
+```
+
+(python3)
+
+```
+python -m http.server <port number>
 ```
