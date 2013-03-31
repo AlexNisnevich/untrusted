@@ -92,6 +92,14 @@ function CodeEditor(textAreaDomID, width, height) {
         }
     });
 
+    //automatically smart-indent if the cursor is at position 0
+    this.internalEditor.on('cursorActivity',function (instance) {
+        var loc = instance.getCursor();
+        if (loc.ch === 0) {
+            instance.indentLine(loc.line, "prev");
+        }
+    });
+
     this.internalEditor.on('change', function (instance) {
         // mark editable sections within uneditable lines
         $('.editableSection').removeClass('editableSection');
@@ -170,19 +178,17 @@ function CodeEditor(textAreaDomID, width, height) {
     }
 
     this.loadCode = function(codeString) {
-        this.internalEditor.off('beforeChange',enforceRestrictions);
-
         /*
          * logic: before setting the value of the editor to the code string,
          * we run it through setEditableLines and setEditableSections, which
          * strip our notation from the string and as a side effect build up
          * a data structure of editable areas
          */
-        codeString = setEditableLinesAndSections(codeString);
 
+        this.internalEditor.off('beforeChange',enforceRestrictions);
+        codeString = setEditableLinesAndSections(codeString);
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);
-
         this.internalEditor.refresh();
     };
 
