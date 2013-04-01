@@ -10,8 +10,8 @@ function Game() {
 	_currentPlayer = null;
 
 	this.levelFileNames = [
-		null, // to start levels at 1
-		'blocks.jsx',
+		'dummyLevel.jsx', // dummy level to display when level not found
+		'blocks.jsx', // levels start here
 		'theReturnOfBlocks.jsx',
 		'levelThree.jsx',
 		'multiplicity.jsx',
@@ -92,7 +92,7 @@ function Game() {
 		if (levelNumber < this.levelFileNames.length) {
 			fileName = this.levelFileNames[levelNumber];
 		} else {
-			fileName = "dummyLevel.js";
+			fileName = this.levelFileNames[0];
 		}
 
 		$.get('levels/' + fileName, function (codeText) {

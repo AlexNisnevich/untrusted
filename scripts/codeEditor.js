@@ -11,10 +11,13 @@ function CodeEditor(textAreaDomID, width, height) {
     var editableLines = [];
     var editableSections = {};
 
+    // preprocesses code and determines the location
+    // of editable lines and sections
     function setEditableLinesAndSections(codeString) {
         editableLines = [];
-        var lineArray = codeString.split("\n");
+        editableSections = {};
 
+        var lineArray = codeString.split("\n");
         var inEditableBlock = false;
 
         for (var i = 0; i < lineArray.length; i++) {
@@ -56,70 +59,8 @@ function CodeEditor(textAreaDomID, width, height) {
         return lineArray.join("\n");
     }
 
-    /* begining of initialization code */
-
-    this.internalEditor = CodeMirror.fromTextArea(document.getElementById(textAreaDomID), {
-        theme: 'vibrant-ink',
-        lineNumbers: true,
-        dragDrop: false,
-        extraKeys: {'Enter': function (instance) { //increments the line by one without inserting anything
-            var cursorPos = instance.getCursor();
-            cursorPos.line++;
-            instance.setCursor(cursorPos);
-        }}
-
-    });
-
-    // implements yellow box when changing focus
-    this.internalEditor.on("focus", function(instance) {
-        $('.CodeMirror').addClass('focus');
-        $('#screen canvas').removeClass('focus');
-    });
-    this.internalEditor.setSize(width,height);
-
-    // fixes the cursor lag bug
-    this.internalEditor.on('cursorActivity', function(instance) {
-        instance.refresh();
-    });
-
-    // set bg color for uneditable lines
-    this.internalEditor.on('update', function (instance) {
-        // mark uneditable lines
-        for (var i = 0; i < instance.lineCount(); i++) {
-            if (editableLines.indexOf(i) == -1) {
-                instance.addLineClass(i, 'wrap', 'disabled');
-            }
-        }
-    });
-
-    //automatically smart-indent if the cursor is at position 0
-    this.internalEditor.on('cursorActivity',function (instance) {
-        var loc = instance.getCursor();
-        if (loc.ch === 0) {
-            instance.indentLine(loc.line, "prev");
-        }
-    });
-
-    this.internalEditor.on('change', function (instance) {
-        // mark editable sections within uneditable lines
-        $('.editableSection').removeClass('editableSection');
-        for (var line in editableSections) {
-            if (editableSections.hasOwnProperty(line)) {
-                var sections = editableSections[line];
-                for (var i = 0; i < sections.length; i++) {
-                    var section = sections[i];
-                    var from = {'line': parseInt(line), 'ch': section[0]};
-                    var to = {'line': parseInt(line), 'ch': section[1]};
-                    instance.markText(from, to, {'className': 'editableSection'});
-                }
-            }
-        }
-    })
-
-    /* end of initialization code */
-
-    //this function enforces editing restrictions
-    //when set to 'beforeChange' on the editor
+    // enforces editing restrictions when set as the handler
+    // for the 'beforeChange' event
     function enforceRestrictions(instance, change) {
         function inEditableArea(c) {
             var lineNum = c.to.line;
@@ -177,6 +118,45 @@ function CodeEditor(textAreaDomID, width, height) {
         }
     }
 
+    this.initialize = function() {
+        this.internalEditor = CodeMirror.fromTextArea(document.getElementById(textAreaDomID), {
+            theme: 'vibrant-ink',
+            lineNumbers: true,
+            dragDrop: false,
+            extraKeys: {'Enter': function (instance) {
+                //increments the line by one without inserting anything
+                var cursorPos = instance.getCursor();
+                cursorPos.line++;
+                instance.setCursor(cursorPos);
+            }}
+        });
+
+        this.internalEditor.setSize(width, height);
+
+        // set up event handlers
+
+        this.internalEditor.on("focus", function(instance) {
+            // implements yellow box when changing focus
+            $('.CodeMirror').addClass('focus');
+            $('#screen canvas').removeClass('focus');
+        });
+
+        this.internalEditor.on('cursorActivity',function (instance) {
+            // fixes the cursor lag bug
+            instance.refresh();
+
+            // automatically smart-indent if the cursor is at position 0
+            // and the line is empty
+            var loc = instance.getCursor();
+            if (loc.ch === 0 && instance.getLine(loc.line).trim() == "") {
+                instance.indentLine(loc.line, "prev");
+            }
+        });
+
+        this.internalEditor.on('change', this.markEditableSections);
+    }
+
+    // loads code into editor
     this.loadCode = function(codeString) {
         /*
          * logic: before setting the value of the editor to the code string,
@@ -189,8 +169,35 @@ function CodeEditor(textAreaDomID, width, height) {
         codeString = setEditableLinesAndSections(codeString);
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);
+        this.markUneditableLines();
         this.internalEditor.refresh();
     };
+
+    // marks uneditable lines within editor
+    this.markUneditableLines = function() {
+        var instance = this.internalEditor;
+        for (var i = 0; i < instance.lineCount(); i++) {
+            if (editableLines.indexOf(i) == -1) {
+                instance.addLineClass(i, 'wrap', 'disabled');
+            }
+        }
+    }
+
+    // marks editable sections inside uneditable lines within editor
+    this.markEditableSections = function(instance) {
+        $('.editableSection').removeClass('editableSection');
+        for (var line in editableSections) {
+            if (editableSections.hasOwnProperty(line)) {
+                var sections = editableSections[line];
+                for (var i = 0; i < sections.length; i++) {
+                    var section = sections[i];
+                    var from = {'line': parseInt(line), 'ch': section[0]};
+                    var to = {'line': parseInt(line), 'ch': section[1]};
+                    instance.markText(from, to, {'className': 'editableSection'});
+                }
+            }
+        }
+    }
 
     // returns all contents
     this.getCode = function () {
@@ -224,4 +231,6 @@ function CodeEditor(textAreaDomID, width, height) {
     this.focus = function () {
         this.internalEditor.focus();
     }
+
+    this.initialize(); // run initialization code
 }
