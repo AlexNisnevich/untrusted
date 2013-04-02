@@ -90,7 +90,7 @@ function startLevel(map) {
     functionList['fortresses']();
 
     // so you can call functions
-    if (!game.getCurrentPlayer().hasItem('phone')) {
+    if (!map.getPlayer().hasItem('phone')) {
         functionList['placePhone']();
     }
 

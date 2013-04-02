@@ -50,7 +50,7 @@ Game.prototype.validate = function(allCode, playerCode, level) {
 			}
 		}
 
-		var game = this; var display = this.display; var output = this.output;
+		var display = this.display; var output = this.output;
 		var dummyMap = new Map(new DummyDisplay, this);
 
 		eval(allCode); // get startLevel and (opt) validateLevel methods

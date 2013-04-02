@@ -130,7 +130,7 @@ function Game() {
 		if (validatedStartLevel) {
 			this.map.reset();
 
-			var game = this; var map = this.map; var display = this.display; var output = this.output;
+			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
 
 			_currentPlayer = this.map.getPlayer();

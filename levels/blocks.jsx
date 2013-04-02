@@ -23,7 +23,7 @@ function startLevel(map) {
     }
 #END_EDITABLE#
 
-    if (!game.getCurrentPlayer().hasItem('computer')) {
+    if (!map.getPlayer().hasItem('computer')) {
         map.placeObject(15, 12, 'computer');
     }
 
