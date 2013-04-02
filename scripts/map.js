@@ -45,6 +45,10 @@ function Map(display, game) {
 		_grid[x][y].bgColor = bgColor;
 	};
 
+	this.createNewObject = function (name, properties) {
+		this.game.objects[name] = properties;
+	}
+
 	this.canMoveTo = function (x, y) {
 		if (x < 0 || x >= game.dimensions.width || y < 0 || y >= game.dimensions.height) {
 			return false;

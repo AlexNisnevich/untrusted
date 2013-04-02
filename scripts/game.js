@@ -1,11 +1,11 @@
 function Game() {
 
-    var dimensions = {
-        width: 50,
-        height: 25
-    };
+	var dimensions = {
+		width: 50,
+		height: 25
+	};
 
-    this.dimensions = dimensions;
+	this.dimensions = dimensions;
 
 	_currentPlayer = null;
 
@@ -16,7 +16,8 @@ function Game() {
 		'levelThree.jsx',
 		'multiplicity.jsx',
 		'traps.jsx',
-	    'trees.jsx',
+		'trees.jsx',
+		'river.jsx'
 	];
 
 	this.currentLevel = 1;
@@ -78,8 +79,8 @@ function Game() {
 		})
 	};
 
-    //TODO clean up getLevel and loadLevel to make the code path
-    //more readable and also not re-create the editor every time
+	//TODO clean up getLevel and loadLevel to make the code path
+	//more readable and also not re-create the editor every time
 
 	// makes an ajax request to get the level text file and
 	// then loads it into the game
@@ -102,7 +103,7 @@ function Game() {
 
 	this.loadLevel = function (lvlCode, lvlNum) {
 		// load level code in editor
-	    this.editor.loadCode(lvlCode);
+		this.editor.loadCode(lvlCode);
 
 		// start the level and fade in
 		this.evalLevelCode(lvlNum);
@@ -119,7 +120,7 @@ function Game() {
 	}
 
 	this.resetEditor = function () {
-	    this.getLevel(this.currentLevel);
+		this.getLevel(this.currentLevel);
 	}
 
 	this.evalLevelCode = function (lvlNum) {

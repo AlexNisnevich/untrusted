@@ -49,13 +49,6 @@ Game.prototype.objects = {
 		}
 	},
 
-	'stream': {
-		'symbol': '░',
-		'onCollision': function (player, game) {
-			player.killedBy('drowning in deep dark water');
-		}
-	},
-
 	// items
 
 	'computer': {

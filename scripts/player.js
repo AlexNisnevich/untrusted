@@ -89,7 +89,7 @@ function Player(x, y, map) {
 
 	this.killedBy = function (killer) {
 		alert('You have been killed by ' + killer + '!');
-		getLevel(currentLevel);
+		this.game.getLevel(this.game.currentLevel);
 	}
 
 	this.pickUpItem = function (objectName, object) {
