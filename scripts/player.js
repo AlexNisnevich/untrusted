@@ -68,7 +68,7 @@ function Player(x, y, map) {
 		}
 
 		if (this.map.canMoveTo(new_x, new_y)) {
-			this.display.drawObject(cur_x,cur_y, this.map.getGrid()[cur_x][cur_y].type, this.map.getGrid()[cur_x][cur_y].bgColor);
+			this.display.drawObject(map, cur_x, cur_y, this.map.getGrid()[cur_x][cur_y].type, this.map.getGrid()[cur_x][cur_y].bgColor);
 			_x = new_x;
 			_y = new_y;
 			this.draw();
@@ -78,7 +78,7 @@ function Player(x, y, map) {
 
 	this.afterMove = function (x, y) {
 		var objectName = this.map.getGrid()[x][y].type;
-		var object = this.game.objects[objectName];
+		var object = this.map.objects[objectName];
 		if (object.type == 'item') {
 			this.pickUpItem(objectName, object);
 		} else if (object.onCollision) {

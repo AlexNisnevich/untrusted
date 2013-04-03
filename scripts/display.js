@@ -37,11 +37,11 @@ ROT.Display.prototype.setupEventHandlers = function() {
 
 // drawObject takes care of looking up an object's symbol and color
 // according to name (NOT according to the actual object literal!)
-ROT.Display.prototype.drawObject = function (x, y, object, bgColor) {
-	var symbol = this.game.objects[object].symbol;
+ROT.Display.prototype.drawObject = function (map, x, y, object, bgColor) {
+	var symbol = map.objects[object].symbol;
 	var color;
-	if (this.game.objects[object].color) {
-		color = this.game.objects[object].color;
+	if (map.objects[object].color) {
+		color = map.objects[object].color;
 	} else {
 		color = "#fff";
 	}
@@ -60,7 +60,7 @@ ROT.Display.prototype.drawAll = function(map) {
 	var game = this.game;
 	for (var x = 0; x < game.dimensions.width; x++) {
 		for (var y = 0; y < game.dimensions.height; y++) {
-			this.drawObject(x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
+			this.drawObject(map, x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
 		}
 	}
 	if (map.getPlayer()) { map.getPlayer().draw(); }
@@ -75,7 +75,7 @@ ROT.Display.prototype.drawAround = function(map, xCenter, yCenter) {
 
 	for (var x = xStart; x <= xEnd; x++) {
 		for (var y = yStart; y <= yEnd; y++) {
-			this.drawObject(x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
+			this.drawObject(map, x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
 		}
 	}
 	if (map.getPlayer()) { map.getPlayer().draw(); }

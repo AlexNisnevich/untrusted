@@ -1,3 +1,11 @@
+function clone(obj) {
+    if(obj == null || typeof(obj) != 'object')
+        return obj;
+    var temp = obj.constructor();
+    for(var key in obj)
+        temp[key] = clone(obj[key]);
+    return temp;
+}
 
 function Map(display, game) {
 	// Private variables
@@ -5,6 +13,8 @@ function Map(display, game) {
 	var _grid;
 
 	this.reset = function () {
+		this.objects = clone(this.game.objects);
+
 		this.display.clear();
 		_grid = new Array(game.dimensions.width);
 		for (var x = 0; x < game.dimensions.width; x++) {
@@ -25,7 +35,20 @@ function Map(display, game) {
 		this.display.drawAll(this);
 	}
 
+	this.canMoveTo = function (x, y) {
+		if (x < 0 || x >= game.dimensions.width || y < 0 || y >= game.dimensions.height) {
+			return false;
+		}
+		return !(this.objects[this.getGrid()[x][y].type].impassable);
+	};
+
+	/* Functions called from startLevel */
+
 	this.placeObject = function (x, y, type, bgColor) {
+		if (!this.objects[type]) {
+			throw "There is no type of object named " + type + "!";
+		}
+
         if (typeof(_grid[x]) !== 'undefined' && typeof(_grid[x][y]) !== 'undefined') {
             if (!_player.atLocation(x, y) || type == 'empty') {
                 _grid[x][y].type = type;
@@ -46,17 +69,15 @@ function Map(display, game) {
 	};
 
 	this.createNewObject = function (name, properties) {
-		this.game.objects[name] = properties;
+		if (!this.objects[name]) {
+			this.objects[name] = properties;
+		} else {
+			throw "There is already a type of object named " + name + "!";
+		}
 	}
 
-	this.canMoveTo = function (x, y) {
-		if (x < 0 || x >= game.dimensions.width || y < 0 || y >= game.dimensions.height) {
-			return false;
-		}
-		return !(this.game.objects[this.getGrid()[x][y].type].impassable);
-	};
+	/* Initialization */
 
-	// Initialize with empty grid
 	this.game = game;
 	this.display = display;
 	this.reset();
