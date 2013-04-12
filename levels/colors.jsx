@@ -40,9 +40,9 @@ function startLevel(map) {
 		}
 	});
 
-	map.createNewObject('blueLock', {
+	map.createNewObject('yellowLock', {
 		symbol: '☒',
-		color: "#00f", // blue
+		color: "#ff0", // yellow
 		impassable: function(player, object) {
 			return player.getColor() != object.color;
 		}
@@ -54,10 +54,10 @@ function startLevel(map) {
 	}
 	map.placeObject(9, 6, 'greenLock');
 	map.placeObject(14, 6, 'redLock');
-	map.placeObject(19, 6, 'blueLock');
+	map.placeObject(19, 6, 'yellowLock');
 	map.placeObject(24, 6, 'greenLock');
 	map.placeObject(29, 6, 'redLock');
-	map.placeObject(34, 6, 'blueLock');
+	map.placeObject(34, 6, 'yellowLock');
 	map.placeObject(39, 6, 'exit');
 	map.placeObject(40, 6, 'block');
 }
