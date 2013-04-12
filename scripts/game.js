@@ -17,7 +17,8 @@ function Game() {
 		'multiplicity.jsx',
 		'traps.jsx',
 		'trees.jsx',
-		'river.jsx'
+		'river.jsx',
+		'colors.jsx'
 	];
 
 	this.currentLevel = 1;
@@ -145,7 +146,11 @@ function Game() {
 
 	this.usePhone = function () {
 		if (this.map.getPlayer()._phoneFunc) {
-			this.map.getPlayer()._phoneFunc();
+			try {
+				this.map.getPlayer()._phoneFunc();
+			} catch (err) {
+				this.output.write(err);
+			}
 		} else {
 			this.output.write('RotaryPhoneException: Your function phone is not bound to any function.')
 		}

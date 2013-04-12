@@ -1,10 +1,10 @@
 function Player(x, y, map) {
 	var _x = x;
 	var _y = y;
+	var _color = "green";
 	var _inventory = [];
 
 	this.rep = "@";
-	this.fgColor = "#0f0";
 
 	this.map = map;
 	this.display = map.display;
@@ -14,6 +14,12 @@ function Player(x, y, map) {
 
 	this.getX = function () { return _x; }
 	this.getY = function () { return _y; }
+
+	this.getColor = function () { return _color; }
+	this.setColor = function (c) {
+		_color = c;
+		this.draw();
+	}
 
 	this.init = function () {
 		// inherit global items from game.currentPlayer
@@ -32,7 +38,7 @@ function Player(x, y, map) {
 
 	this.draw = function () {
 		var bgColor = this.map.getGrid()[_x][_y].bgColor
-		this.display.draw(_x, _y, this.rep, this.fgColor, bgColor);
+		this.display.draw(_x, _y, this.rep, _color, bgColor);
 	}
 
 	this.atLocation = function (x, y) {

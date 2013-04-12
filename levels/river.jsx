@@ -11,7 +11,7 @@ function startLevel(map) {
     map.createNewObject('water', {
         'symbol': '░',
         'color': '#44f',
-        'onCollision': function (player, game) {
+        'onCollision': function (player) {
             player.killedBy#{#('drowning in deep dark water')#}#;
         }
     });

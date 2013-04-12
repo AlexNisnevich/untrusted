@@ -39,7 +39,17 @@ function Map(display, game) {
 		if (x < 0 || x >= game.dimensions.width || y < 0 || y >= game.dimensions.height) {
 			return false;
 		}
-		return !(this.objects[this.getGrid()[x][y].type].impassable);
+
+		object = this.objects[this.getGrid()[x][y].type];
+		if (object.impassable) {
+			if (typeof object.impassable == 'function') {
+				return !object.impassable(_player, object);
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
 	};
 
 	/* Functions called from startLevel */
