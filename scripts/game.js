@@ -8,6 +8,7 @@ function Game() {
 	this.dimensions = dimensions;
 
 	_currentPlayer = null;
+	_currentCode = '';
 
 	this.levelFileNames = [
 		'dummyLevel.jsx', // dummy level to display when level not found
@@ -80,9 +81,6 @@ function Game() {
 		})
 	};
 
-	//TODO clean up getLevel and loadLevel to make the code path
-	//more readable and also not re-create the editor every time
-
 	// makes an ajax request to get the level text file and
 	// then loads it into the game
 	this.getLevel = function (levelNumber) {
@@ -120,6 +118,13 @@ function Game() {
 		}
 	}
 
+	// restart level with currently loaded code
+	this.restartLevel = function () {
+		this.editor.setCode(_currentCode);
+		this.evalLevelCode();
+	}
+
+	// reset level
 	this.resetEditor = function () {
 		this.getLevel(this.currentLevel);
 	}
@@ -127,13 +132,14 @@ function Game() {
 	this.evalLevelCode = function (lvlNum) {
 		var allCode = this.editor.getCode();
 		var playerCode = this.editor.getPlayerCode();
-		var validatedStartLevel = this.validate(allCode, playerCode, this.currentLevel);
+		var validatedStartLevel = this.validate(allCode, playerCode);
 		if (validatedStartLevel) {
 			this.map.reset();
 
 			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
 
+			_currentCode = allCode;
 			_currentPlayer = this.map.getPlayer();
 			_currentPlayer.canMove = true;
 
@@ -146,11 +152,7 @@ function Game() {
 
 	this.usePhone = function () {
 		if (this.map.getPlayer()._phoneFunc) {
-			try {
-				this.map.getPlayer()._phoneFunc();
-			} catch (err) {
-				this.output.write(err);
-			}
+			this.validateCallback(this.map.getPlayer()._phoneFunc);
 		} else {
 			this.output.write('RotaryPhoneException: Your function phone is not bound to any function.')
 		}

@@ -14,7 +14,7 @@ function startLevel(map) {
 	map.getPlayer().setPhoneCallback(function () {
 #BEGIN_EDITABLE#
 
-		map.getPlayer().setColor('red');
+		map.getPlayer().setColor('f00');
 
 
 
@@ -26,7 +26,7 @@ function startLevel(map) {
 
 	map.createNewObject('redLock', {
 		symbol: '☒',
-		color: "red",
+		color: "#f00", // red
 		impassable: function(player, object) {
 			return player.getColor() != object.color;
 		}
@@ -34,7 +34,7 @@ function startLevel(map) {
 
 	map.createNewObject('greenLock', {
 		symbol: '☒',
-		color: "green",
+		color: "#0f0", // green
 		impassable: function(player, object) {
 			return player.getColor() != object.color;
 		}
@@ -42,7 +42,7 @@ function startLevel(map) {
 
 	map.createNewObject('blueLock', {
 		symbol: '☒',
-		color: "blue",
+		color: "#00f", // blue
 		impassable: function(player, object) {
 			return player.getColor() != object.color;
 		}
@@ -60,4 +60,8 @@ function startLevel(map) {
 	map.placeObject(34, 6, 'blueLock');
 	map.placeObject(39, 6, 'exit');
 	map.placeObject(40, 6, 'block');
+}
+
+function validateLevel(map) {
+    validateExactlyXManyObjects(map, 1, 'exit');
 }

@@ -1,7 +1,7 @@
 function Player(x, y, map) {
 	var _x = x;
 	var _y = y;
-	var _color = "green";
+	var _color = "#0f0";
 	var _inventory = [];
 
 	this.rep = "@";
@@ -83,28 +83,36 @@ function Player(x, y, map) {
 	};
 
 	this.afterMove = function (x, y) {
+		player = this;
+
 		var objectName = this.map.getGrid()[x][y].type;
 		var object = this.map.objects[objectName];
 		if (object.type == 'item') {
 			this.pickUpItem(objectName, object);
 		} else if (object.onCollision) {
-			object.onCollision(this, this.game);
+			this.game.validateCallback(function () {
+				object.onCollision(player, player.game)
+			});
 		}
 		this.game.display.drawAround(this.map, x, y); // in case there are any artifacts
 	}
 
 	this.killedBy = function (killer) {
-		alert('You have been killed by ' + killer + '!');
-		this.game.getLevel(this.game.currentLevel);
+		alert('You have been killed by ' + killer + '!\n\nRestarting level...');
+		this.game.restartLevel();
 	}
 
 	this.pickUpItem = function (objectName, object) {
+		player = this;
+
 		_inventory.push(objectName);
 		map.placeObject(_x, _y, 'empty');
 		map.refresh();
 
 		if (object.onPickUp) {
-			object.onPickUp(this, this.game);
+			this.game.validateCallback(function () {
+				object.onPickUp(player, player.game)
+			});
 		}
 	}
 
