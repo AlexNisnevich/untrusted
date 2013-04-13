@@ -14,7 +14,7 @@ function startLevel(map) {
 	map.getPlayer().setPhoneCallback(function () {
 #BEGIN_EDITABLE#
 
-		map.getPlayer().setColor('f00');
+		map.getPlayer().setColor('#f00');
 
 
 
