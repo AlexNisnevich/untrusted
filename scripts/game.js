@@ -12,6 +12,7 @@ function Game() {
 
 	this.levelFileNames = [
 		'dummyLevel.jsx', // dummy level to display when level not found
+		'monster.jsx',
 		'blocks.jsx', // levels start here
 		'theReturnOfBlocks.jsx',
 		'levelThree.jsx',

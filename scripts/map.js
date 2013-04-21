@@ -52,6 +52,90 @@ function Map(display, game) {
 		}
 	};
 
+	this.moveAnimateObject = function (x, y, direction) {
+		switch (direction) {
+			case 'up':
+				var destination = {'x': x, 'y': y-1};
+				break;
+			case 'down':
+				var destination = {'x': x, 'y': y+1};
+				break;
+			case 'left':
+				var destination = {'x': x-1, 'y': y};
+				break;
+			case 'right':
+				var destination = {'x': x+1, 'y': y};
+				break;
+		}
+
+		var object = this.getGrid()[x][y];
+		var objectClass = this.objects[object.type];
+
+		if (objectClass.type !== 'animate') {
+			throw 'Only animate objects can move!';
+		}
+
+		if (!object._myTurn) {
+			throw 'Can\'t move when it isn\'t your turn!';
+		}
+
+		// check for collision with player
+		if (this.getPlayer().atLocation(destination.x, destination.y)) {
+			// trigger collision
+			objectClass.onCollision(this.getPlayer());
+		} else {
+			// move the object
+			this.placeObject(destination.x, destination.y, object.type);
+			_grid[x][y] = {type: 'empty'};
+			_grid[destination.x][destination.y]._myTurn = false;
+			this.refresh();
+		}
+	}
+
+	this.moveAllAnimateObjects = function () {
+		// collect all animate objects
+		animateObjects = []; // stores {x, y} positions
+		for (var x = 0; x < this.game.dimensions.width; x++) {
+			for (var y = 0; y < this.game.dimensions.height; y++) {
+				var object = this.getGrid()[x][y];
+				var objectClass = this.objects[object.type];
+
+				if (objectClass.type === 'animate') {
+					animateObjects.push({'x': x, 'y': y});
+				}
+			}
+		}
+
+		// iterate over all animate objects
+		for (var i = 0; i < animateObjects.length; i++) {
+			var coords = animateObjects[i];
+			var object = this.getGrid()[coords.x][coords.y];
+			var objectClass = this.objects[object.type];
+
+			// inject some crap into the object
+			object._map = this;
+			object._x = coords.x;
+			object._y = coords.y;
+			object._myTurn = true;
+			object.getX = function () { return this._x; };
+			object.getY = function () { return this._y; };
+			object.moveUp = function () {
+				this._map.moveAnimateObject(this._x, this._y, 'up');
+			};
+			object.moveDown = function () {
+				this._map.moveAnimateObject(this._x, this._y, 'down');
+			};
+			object.moveLeft = function () {
+				this._map.moveAnimateObject(this._x, this._y, 'left');
+			};
+			object.moveRight = function () {
+				this._map.moveAnimateObject(this._x, this._y, 'right');
+			};
+
+			objectClass.behavior(object, this.getPlayer());
+		}
+	}
+
 	/* Functions called from startLevel */
 
 	this.placeObject = function (x, y, type, bgColor) {

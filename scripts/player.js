@@ -95,6 +95,8 @@ function Player(x, y, map) {
 			});
 		}
 		this.game.display.drawAround(this.map, x, y); // in case there are any artifacts
+
+		this.map.moveAllAnimateObjects();
 	}
 
 	this.killedBy = function (killer) {
