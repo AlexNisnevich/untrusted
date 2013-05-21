@@ -85,6 +85,7 @@ function Player(x, y, map) {
 	this.afterMove = function (x, y) {
 		player = this;
 
+		// check for collision with static object
 		var objectName = this.map.getGrid()[x][y].type;
 		var object = this.map.objects[objectName];
 		if (object.type == 'item') {
@@ -94,7 +95,16 @@ function Player(x, y, map) {
 				object.onCollision(player, player.game)
 			});
 		}
-		this.game.display.drawAround(this.map, x, y); // in case there are any artifacts
+
+		// check for collision with dynamic object
+		for (var i = 0; i < this.map.getDynamicObjects().length; i++) {
+			var object = this.map.getDynamicObjects()[i];
+			if (object.getX() === x && object.getY() === y) {
+				this.map.objects[object.getType()].onCollision(player, player.game);
+			}
+		}
+
+		this.game.display.drawAll(this.map); // in case there are any artifacts
 
 		this.map.moveAllAnimateObjects();
 	}

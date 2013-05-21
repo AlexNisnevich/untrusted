@@ -6,9 +6,9 @@ function DynamicObject(map, type, x, y) {
 	var _definition = map.objects[type];
 	var _myTurn = true;
 
-	this.getX = function () { return _x; }
-	this.getY = function () { return _y; }
-	this.getType = function () { return _type; }
+	this.getX = function () { return _x; };
+	this.getY = function () { return _y; };
+	this.getType = function () { return _type; };
 
 	this.moveUp = function () {
 		this.move('up');
@@ -26,16 +26,16 @@ function DynamicObject(map, type, x, y) {
 	this.move = function (direction) {
 		switch (direction) {
 			case 'up':
-				var destination = {'x': _x, 'y': _y-1};
+				var dest = {'x': _x, 'y': _y-1};
 				break;
 			case 'down':
-				var destination = {'x': _x, 'y': _y+1};
+				var dest = {'x': _x, 'y': _y+1};
 				break;
 			case 'left':
-				var destination = {'x': _x-1, 'y': _y};
+				var dest = {'x': _x-1, 'y': _y};
 				break;
 			case 'right':
-				var destination = {'x': _x+1, 'y': _y};
+				var dest = {'x': _x+1, 'y': _y};
 				break;
 		}
 
@@ -44,20 +44,27 @@ function DynamicObject(map, type, x, y) {
 		}
 
 		// check for collision with player
-		if (map.getPlayer().atLocation(destination.x, destination.y)) {
+		if (map.getPlayer().atLocation(dest.x, dest.y)) {
 			// trigger collision
 			_definition.onCollision(map.getPlayer());
-		} else {
+		} else if (dest.x == this.findNearest(_type).x && dest.y == this.findNearest(_type).y) {
+			// would collide with a copy of itself
+		} else if (map.canMoveTo(dest.x, dest.y)) {
 			// move the object
-			_x = destination.x;
-			_y = destination.y;
+			_x = dest.x;
+			_y = dest.y;
 			map.refresh();
 		}
-	}
+
+		_myTurn = false;
+	};
+
+	this.findNearest = function (type) {
+		return map.findNearestToPoint(type, _x, _y);
+	};
 
 	this.onTurn = function () {
+		_myTurn = true;
 		_definition.behavior(this, map.getPlayer());
-	}
-
-	this.map = map;
+	};
 }

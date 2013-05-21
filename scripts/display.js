@@ -3,7 +3,7 @@ ROT.Display.create = function(game, opts) {
 	var display = new ROT.Display(opts);
 	display.game = game;
 	return display;
-}
+};
 
 // multiplicand is used for fading effects
 // [255, 255, 255]: fully displayed
@@ -33,7 +33,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
 		$(this).addClass('focus');
 		$('.CodeMirror').removeClass('focus');
 	});
-}
+};
 
 // drawObject takes care of looking up an object's symbol and color
 // according to name (NOT according to the actual object literal!)
@@ -74,7 +74,7 @@ ROT.Display.prototype.drawAll = function(map) {
 
 	// draw player
 	if (map.getPlayer()) { map.getPlayer().draw(); }
-}
+};
 
 ROT.Display.prototype.drawAround = function(map, xCenter, yCenter) {
 	var game = this.game;
@@ -89,7 +89,7 @@ ROT.Display.prototype.drawAround = function(map, xCenter, yCenter) {
 		}
 	}
 	if (map.getPlayer()) { map.getPlayer().draw(); }
-}
+};
 
 ROT.Display.prototype.fadeOut = function (map, callback, i) {
 	var display = this;
@@ -126,4 +126,4 @@ ROT.Display.prototype.write = function(text) {
 
 ROT.Display.prototype.focus = function() {
 	$(this.getContainer()).attr('tabindex', '0').click().focus();
-}
+};
