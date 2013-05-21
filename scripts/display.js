@@ -58,11 +58,21 @@ ROT.Display.prototype.drawObject = function (map, x, y, object, bgColor) {
 
 ROT.Display.prototype.drawAll = function(map) {
 	var game = this.game;
+
+	// draw static objects
 	for (var x = 0; x < game.dimensions.width; x++) {
 		for (var y = 0; y < game.dimensions.height; y++) {
 			this.drawObject(map, x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
 		}
 	}
+
+	// draw dynamic objects
+	for (var i = 0; i < map.getDynamicObjects().length; i++) {
+		var obj = map.getDynamicObjects()[i];
+		this.drawObject(map, obj.getX(), obj.getY(), obj.getType(), map.getGrid()[obj.getX()][obj.getY()].bgColor);
+	}
+
+	// draw player
 	if (map.getPlayer()) { map.getPlayer().draw(); }
 }
 

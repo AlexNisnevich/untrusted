@@ -11,9 +11,10 @@ function Map(display, game) {
 	// Private variables
 	var _player;
 	var _grid;
+	var _dynamicObjects;
 
 	this.reset = function () {
-		this.objects = clone(this.game.objects);
+		this.objects = clone(game.objects);
 
 		this.display.clear();
 		_grid = new Array(game.dimensions.width);
@@ -23,11 +24,15 @@ function Map(display, game) {
 				_grid[x][y] = {type: 'empty'};
 			}
 		}
+
+		_dynamicObjects = [];
+
 		_player = null;
 	};
 
 	this.getPlayer = function () { return _player; }
 	this.getGrid = function () { return _grid; }
+	this.getDynamicObjects = function () { return _dynamicObjects; }
 	this.getWidth = function () { return game.dimensions.width; }
 	this.getHeight = function () { return game.dimensions.height; }
 
@@ -52,102 +57,34 @@ function Map(display, game) {
 		}
 	};
 
-	this.moveAnimateObject = function (x, y, direction) {
-		switch (direction) {
-			case 'up':
-				var destination = {'x': x, 'y': y-1};
-				break;
-			case 'down':
-				var destination = {'x': x, 'y': y+1};
-				break;
-			case 'left':
-				var destination = {'x': x-1, 'y': y};
-				break;
-			case 'right':
-				var destination = {'x': x+1, 'y': y};
-				break;
-		}
-
-		var object = this.getGrid()[x][y];
-		var objectClass = this.objects[object.type];
-
-		if (objectClass.type !== 'animate') {
-			throw 'Only animate objects can move!';
-		}
-
-		if (!object._myTurn) {
-			throw 'Can\'t move when it isn\'t your turn!';
-		}
-
-		// check for collision with player
-		if (this.getPlayer().atLocation(destination.x, destination.y)) {
-			// trigger collision
-			objectClass.onCollision(this.getPlayer());
-		} else {
-			// move the object
-			this.placeObject(destination.x, destination.y, object.type);
-			_grid[x][y] = {type: 'empty'};
-			_grid[destination.x][destination.y]._myTurn = false;
-			this.refresh();
-		}
-	}
-
 	this.moveAllAnimateObjects = function () {
-		// collect all animate objects
-		animateObjects = []; // stores {x, y} positions
-		for (var x = 0; x < this.game.dimensions.width; x++) {
-			for (var y = 0; y < this.game.dimensions.height; y++) {
-				var object = this.getGrid()[x][y];
-				var objectClass = this.objects[object.type];
-
-				if (objectClass.type === 'animate') {
-					animateObjects.push({'x': x, 'y': y});
-				}
-			}
-		}
-
 		// iterate over all animate objects
-		for (var i = 0; i < animateObjects.length; i++) {
-			var coords = animateObjects[i];
-			var object = this.getGrid()[coords.x][coords.y];
-			var objectClass = this.objects[object.type];
-
-			// inject some crap into the object
-			object._map = this;
-			object._x = coords.x;
-			object._y = coords.y;
-			object._myTurn = true;
-			object.getX = function () { return this._x; };
-			object.getY = function () { return this._y; };
-			object.moveUp = function () {
-				this._map.moveAnimateObject(this._x, this._y, 'up');
-			};
-			object.moveDown = function () {
-				this._map.moveAnimateObject(this._x, this._y, 'down');
-			};
-			object.moveLeft = function () {
-				this._map.moveAnimateObject(this._x, this._y, 'left');
-			};
-			object.moveRight = function () {
-				this._map.moveAnimateObject(this._x, this._y, 'right');
-			};
-
-			objectClass.behavior(object, this.getPlayer());
+		for (var i = 0; i < _dynamicObjects.length; i++) {
+			var object = _dynamicObjects[i];
+			object.onTurn();
 		}
 	}
 
 	/* Functions called from startLevel */
 
-	this.placeObject = function (x, y, type, bgColor) {
-		if (!this.objects[type]) {
-			throw "There is no type of object named " + type + "!";
+	this.placeObject = function (x, y, klass) {
+		if (!this.objects[klass]) {
+			throw "There is no type of object named " + klass + "!";
 		}
 
-        if (typeof(_grid[x]) !== 'undefined' && typeof(_grid[x][y]) !== 'undefined') {
-            if (!_player.atLocation(x, y) || type == 'empty') {
-                _grid[x][y].type = type;
-            }
-        }
+		if (this.objects[klass].type == 'animate') {
+			// dynamic object
+			if (typeof(_grid[x]) !== 'undefined' && typeof(_grid[x][y]) !== 'undefined') {
+				_dynamicObjects.push(new DynamicObject(this, klass, x, y));
+			}
+		} else {
+			// static object
+	        if (typeof(_grid[x]) !== 'undefined' && typeof(_grid[x][y]) !== 'undefined') {
+	            if (!_player.atLocation(x, y) || klass == 'empty') {
+	                _grid[x][y].type = klass;
+	            }
+	        }
+		}
 	};
 
 	this.placePlayer = function (x, y) {

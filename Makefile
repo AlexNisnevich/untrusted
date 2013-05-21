@@ -8,6 +8,7 @@ js-modules = scripts/game.js \
                  scripts/display.js \
                  scripts/codeEditor.js \
                  scripts/map.js \
+                 scripts/dynamicObject.js \
                  scripts/objects.js \
                  scripts/player.js \
                  scripts/validate.js \
@@ -17,6 +18,7 @@ js-modules-debug = scripts/game.js \
                  scripts/display.js \
                  scripts/codeEditor.js \
                  scripts/map.js \
+                 scripts/dynamicObject.js \
                  scripts/objects.js \
                  scripts/player.js \
                  scripts/validate.js \

@@ -10,7 +10,7 @@ function startLevel(map) {
         'symbol': 'M',
         'color': 'brown',
         'onCollision': function (player) {
-            player.killedBy#{#('a ferocious beast')#}#;
+            player.killedBy('a ferocious beast');
         },
         'behavior': function (me, player) {
             var leftDist = me.getX() - player.getX();
