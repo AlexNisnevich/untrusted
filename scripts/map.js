@@ -98,8 +98,8 @@ function Map(display, game) {
 		return closestTarget;
 	};
 
-	this.moveAllAnimateObjects = function () {
-		// iterate over all animate objects
+	this.moveAllDynamicObjects = function () {
+		// iterate over all dynamic objects
 		for (var i = 0; i < _dynamicObjects.length; i++) {
 			var object = _dynamicObjects[i];
 			object.onTurn();
@@ -113,7 +113,7 @@ function Map(display, game) {
 			throw "There is no type of object named " + klass + "!";
 		}
 
-		if (this.objects[klass].type == 'animate') {
+		if (this.objects[klass].type == 'dynamic') {
 			// dynamic object
 			if (typeof(_grid[x]) !== 'undefined' && typeof(_grid[x][y]) !== 'undefined') {
 				_dynamicObjects.push(new DynamicObject(this, klass, x, y));

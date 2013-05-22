@@ -106,7 +106,7 @@ function Player(x, y, map) {
 
 		this.game.display.drawAll(this.map); // in case there are any artifacts
 
-		this.map.moveAllAnimateObjects();
+		this.map.moveAllDynamicObjects();
 	}
 
 	this.killedBy = function (killer) {

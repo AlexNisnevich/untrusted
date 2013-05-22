@@ -1,12 +1,14 @@
 /*
  * monster.js
+ *
+ * Suddenly, Dr. Eval was besieged by a swarm of angry monsters!
  */
 
 function startLevel(map) {
     map.placePlayer(2, 2);
 
     map.createNewObject('monster', {
-        'type': 'animate',
+        'type': 'dynamic',
         'symbol': 'M',
         'color': 'brown',
         'onCollision': function (player) {
