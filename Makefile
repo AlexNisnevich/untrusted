@@ -10,6 +10,7 @@ js-modules = scripts/game.js \
                  scripts/map.js \
                  scripts/objects.js \
                  scripts/player.js \
+                 scripts/sound.js \
                  scripts/validate.js \
                  scripts/launcher.js
 
@@ -19,6 +20,7 @@ js-modules-debug = scripts/game.js \
                  scripts/map.js \
                  scripts/objects.js \
                  scripts/player.js \
+                 scripts/sound.js \
                  scripts/validate.js \
                  scripts/launcher-debug.js
 

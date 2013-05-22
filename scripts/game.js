@@ -68,23 +68,10 @@ function Game() {
 		$("#resetButton").click( function () { game.resetEditor();} );
 		$("#executeButton").click( function () { game.evalLevelCode();} );
 		$("#phoneButton").click( function () { game.usePhone();} );
+		$("#muteButton").click( function () { game.sound.toggleSound(); } );
 
 		// Start sound
-		$("#jquery_audioPlayer").jPlayer({
-			ready: function() {
-			  $(this).jPlayer("setMedia", {
-			    mp3: "/music/what.mp3"
-			  }).jPlayer("play");
-			  var click = document.ontouchstart === undefined ? 'click' : 'touchstart';
-			  var kickoff = function () {
-			    $("#jquery_audioPlayer").jPlayer("play");
-			    document.documentElement.removeEventListener(click, kickoff, true);
-			  };
-			  document.documentElement.addEventListener(click, kickoff, true);
-			},
-			loop: true,
-			swfPath: "/lib/Jplayer.swf"
-		});
+		this.sound = new Sound();
 	}
 
 	this.moveToNextLevel = function () {
