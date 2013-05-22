@@ -1,4 +1,4 @@
-Untrusted —or— the Continuing Adventures of Dr. Eval is an exciting
+**Untrusted —or— the Continuing Adventures of Dr. Eval** is an exciting
 Javascript Adventure Game wherein you guide the dashing, steadfast
 Dr. Eval through a mysterious MACHINE CONTINUUM, wherein, using only
 his trusty computer and the TURING-COMPLETE power of Javascript, he must
@@ -15,33 +15,25 @@ each level. As loaded, each level is unbeatable, and most of the JavaScript is b
 from editing. The challenge is to open a path to the next level using only the limited
 tools left open to you.
 
-### Building
+### Development
 
 Run
 ```
 make
 ```
-to generate the minified JS.
+to merge the JavaScript files into `scripts/build/untrusted.js` (and enable debug features).
 
-You can also define a pre-commit git hook by creating an executable file `.git/hooks/pre-commit` with the following contents:
 ```
-#!/bin/sh
-#
-
-# Minify JavaScript, add to commit
-make scripts/build/untrusted.js
-git add scripts/build/untrusted.js
+make release
 ```
+merges and minifies the JavaScript files into `scripts/build/untrusted.min.js` (and disables debug features).
 
 To run the game locally, you need to set up a local server to serve index.html. One easy way to do that is with Python's SimpleHTTPServer:
 
-(python2)
 ```
+# (python 2)
 python -m SimpleHTTPServer
-```
 
-(python3)
-
-```
+# (python 3)
 python -m http.server <port number>
 ```
