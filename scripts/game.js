@@ -134,6 +134,8 @@ function Game() {
 		var allCode = this.editor.getCode();
 		var playerCode = this.editor.getPlayerCode();
 		var validatedStartLevel = this.validate(allCode, playerCode);
+
+		$('#static').show();
 		if (validatedStartLevel) {
 			this.map.reset();
 
@@ -148,6 +150,8 @@ function Game() {
 			if (!(lvlNum >= this.levelFileNames.length)) {
 				this.map.refresh();
 			}
+
+			$('#static').hide();
 		}
 	}
 
