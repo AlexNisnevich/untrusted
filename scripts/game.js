@@ -130,7 +130,8 @@ function Game() {
 		this.getLevel(this.currentLevel);
 	}
 
-	this.evalLevelCode = function (lvlNum) {
+	this.evalLevelCode = function () {
+		var game = this;
 		var allCode = this.editor.getCode();
 		var playerCode = this.editor.getPlayerCode();
 		var validatedStartLevel = this.validate(allCode, playerCode);
@@ -138,20 +139,23 @@ function Game() {
 		$('#static').show();
 		if (validatedStartLevel) {
 			this.map.reset();
+			this.editor.markStateAsGood();
 
 			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
+			map.refresh();
 
 			_currentCode = allCode;
 			_currentPlayer = this.map.getPlayer();
 			_currentPlayer.canMove = true;
 
-			// don't refresh display for dummy level
-			if (!(lvlNum >= this.levelFileNames.length)) {
-				this.map.refresh();
-			}
-
 			$('#static').hide();
+		} else {
+			// rerun
+			setTimeout(function () {
+				game.editor.loadLastGoodState();
+				game.evalLevelCode();
+			}, 2000);
 		}
 	}
 

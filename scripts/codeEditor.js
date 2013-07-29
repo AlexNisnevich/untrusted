@@ -10,6 +10,7 @@ function CodeEditor(textAreaDomID, width, height) {
 
     var editableLines = [];
     var editableSections = {};
+    var lastGoodState = {code: null, editableLines: null, editableSections: null};
 
     // preprocesses code and determines the location
     // of editable lines and sections
@@ -224,8 +225,30 @@ function CodeEditor(textAreaDomID, width, height) {
         return code;
     };
 
-    this.setCode = function (code) {
+    this.setCode = function(code) {
         this.internalEditor.setValue(code);
+        this.internalEditor.refresh();
+    }
+
+    this.loadLastGoodState = function () {
+        this.internalEditor.off('beforeChange',enforceRestrictions);
+        this.internalEditor.setValue(lastGoodState.code);
+        this.internalEditor.on('beforeChange', enforceRestrictions);
+
+        editableLines = lastGoodState.editableLines;
+        editableSections = lastGoodState.editableSections;
+        this.markUneditableLines();
+        this.internalEditor.refresh();
+    }
+
+    this.markStateAsGood = function () {
+        lastGoodState.code = this.getCode();
+        lastGoodState.editableLines = editableLines;
+        lastGoodState.editableSections = editableSections;
+    }
+
+    this.getLastGoodState = function () {
+        return lastGoodState;
     }
 
     this.refresh = function () {

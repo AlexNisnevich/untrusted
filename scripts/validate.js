@@ -68,7 +68,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 		return startLevel;
 	} catch (e) {
 		this.output.write(e.toString());
-		return function () {};
+		return null;
 	}
 }
 
