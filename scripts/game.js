@@ -106,11 +106,10 @@ function Game() {
 		this.editor.loadCode(lvlCode);
 
 		// start the level and fade in
-		this.evalLevelCode(lvlNum);
+		this.evalLevelCode();
 		if (lvlNum < this.levelFileNames.length) {
 			// don't fade in for dummy level
-			this.display.fadeIn(this.map, function () {
-			});
+			this.display.fadeIn(this.map, function () {});
 		}
 
 		// on first level, display intro text
@@ -130,32 +129,46 @@ function Game() {
 		this.getLevel(this.currentLevel);
 	}
 
-	this.evalLevelCode = function () {
+	this.evalLevelCode = function (allCode, playerCode) {
 		var game = this;
-		var allCode = this.editor.getCode();
-		var playerCode = this.editor.getPlayerCode();
+
+		// by default, get code from the editor
+		if (!allCode) {
+			allCode = this.editor.getCode();
+		}
+		if (!playerCode) {
+			playerCode = this.editor.getPlayerCode();
+		}
+
+		// validate the code
+		// if it passes validation, return the startLevel function if it pass
+		// if it fails validation, return false
 		var validatedStartLevel = this.validate(allCode, playerCode);
 
-		$('#static').show();
+		console.log(validatedStartLevel);
 		if (validatedStartLevel) {
+			// valid code - reset the map, save editor state, and load the level
+
 			this.map.reset();
-			this.editor.markStateAsGood();
+
+			this.editor.saveGoodState();
+			_currentCode = allCode;
 
 			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
 			map.refresh();
 
-			_currentCode = allCode;
 			_currentPlayer = this.map.getPlayer();
-			_currentPlayer.canMove = true;
+			this.map.getPlayer().canMove = true;
 
 			$('#static').hide();
 		} else {
-			// rerun
+			// show static and reload from last good state
+			$('#static').show();
 			setTimeout(function () {
-				game.editor.loadLastGoodState();
-				game.evalLevelCode();
-			}, 2000);
+				var goodState = game.editor.getGoodState();
+				game.evalLevelCode(goodState.code, goodState.playerCode);
+			}, 1000);
 		}
 	}
 
