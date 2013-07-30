@@ -40,13 +40,16 @@ Game.prototype.validators = {
 	}
 }
 
-Game.prototype.validate = function(allCode, playerCode) {
+Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
 	var validateAtLeastXObjects = this.validators.validateAtLeastXObjects;
 	var validateExactlyXManyObjects = this.validators.validateExactlyXManyObjects;
 
 	validateLevel = function () {};
 
-	this.output.clear();
+	if (!preserveOutput) {
+		this.output.clear();
+	}
+
 	try {
 		for (var i = 0; i < this.VERBOTEN.length; i++) {
 			var badWord = this.VERBOTEN[i];

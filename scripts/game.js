@@ -133,17 +133,17 @@ function Game() {
 		var game = this;
 
 		// by default, get code from the editor
+		var loadedFromEditor = false;
 		if (!allCode) {
 			allCode = this.editor.getCode();
-		}
-		if (!playerCode) {
 			playerCode = this.editor.getPlayerCode();
+			loadedFromEditor = true;
 		}
 
 		// validate the code
 		// if it passes validation, return the startLevel function if it pass
 		// if it fails validation, return false
-		var validatedStartLevel = this.validate(allCode, playerCode);
+		var validatedStartLevel = this.validate(allCode, playerCode, !loadedFromEditor);
 
 		console.log(validatedStartLevel);
 		if (validatedStartLevel) {
@@ -151,8 +151,10 @@ function Game() {
 
 			this.map.reset();
 
-			this.editor.saveGoodState();
 			_currentCode = allCode;
+			if (loadedFromEditor) {
+				this.editor.saveGoodState();
+			}
 
 			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
