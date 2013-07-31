@@ -18,7 +18,8 @@ ROT.Display.prototype.setupEventHandlers = function() {
 		37: 'left',
 		38: 'up',
 		39: 'right',
-		40: 'down'
+		40: 'down',
+		82: 'rest' // R
 	};
 
 	// contentEditable is required for canvas elements to detect keyboard events

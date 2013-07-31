@@ -36,8 +36,4 @@ function startLevel(map) {
     }
 
     map.placeObject(map.getWidth()-2, map.getHeight()-2, 'exit');
-
-    if (!map.getPlayer().hasItem('computer')) {
-        map.placeObject(2, 3, 'computer');
-    }
 }

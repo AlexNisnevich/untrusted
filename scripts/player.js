@@ -60,6 +60,10 @@ function Player(x, y, map) {
 			new_x = cur_x + 1;
 			new_y = cur_y;
 		}
+		else if (direction === 'rest') {
+			new_x = cur_x;
+			new_y = cur_y;
+		}
 
 		if (this.map.canMoveTo(new_x, new_y)) {
 			this.display.drawObject(map, cur_x, cur_y, this.map.getGrid()[cur_x][cur_y].type, this.map.getGrid()[cur_x][cur_y].bgColor);
@@ -88,7 +92,7 @@ function Player(x, y, map) {
 		for (var i = 0; i < this.map.getDynamicObjects().length; i++) {
 			var object = this.map.getDynamicObjects()[i];
 			if (object.getX() === x && object.getY() === y) {
-				this.map.objects[object.getType()].onCollision(player, player.game);
+				this.map.objects[object.getType()].onCollision(player, object);
 			}
 		}
 

@@ -40,20 +40,26 @@ function Map(display, game) {
 		this.display.drawAll(this);
 	};
 
-	this.canMoveTo = function (x, y) {
+	this.canMoveTo = function (x, y, myType) {
 		if (x < 0 || x >= game.dimensions.width || y < 0 || y >= game.dimensions.height) {
 			return false;
 		}
 
-		// look for static objects
+		// look for static objects that can serve as obstacles
 		object = this.objects[this.getGrid()[x][y].type];
 		if (object.impassable) {
-			if (typeof object.impassable == 'function') {
+			if (myType && object.passableFor && object.passableFor.indexOf(myType) > -1) {
+				// this object is of a type that can pass the obstacle
+				return true;
+			} else if (typeof object.impassable == 'function') {
+				// the obstacle is impassable only in certain circumstances
 				return !object.impassable(_player, object);
 			} else {
+				// the obstacle is always impassable
 				return false;
 			}
 		} else {
+			// no obstacle
 			return true;
 		}
 	};

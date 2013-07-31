@@ -16,11 +16,12 @@ function Game() {
 		'theReturnOfBlocks.jsx',
 		'levelThree.jsx',
 		'multiplicity.jsx',
-		'traps.jsx',
+		'traps.jsx', // 5
 		'trees.jsx',
 		'river.jsx',
 		'colors.jsx',
-		'monster.jsx'
+		'monster.jsx',
+		'robot.jsx' // 10
 	];
 
 	this.currentLevel = 1;
