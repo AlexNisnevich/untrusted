@@ -106,11 +106,10 @@ function Game() {
 		this.editor.loadCode(lvlCode);
 
 		// start the level and fade in
-		this.evalLevelCode(lvlNum);
+		this.evalLevelCode();
 		if (lvlNum < this.levelFileNames.length) {
 			// don't fade in for dummy level
-			this.display.fadeIn(this.map, function () {
-			});
+			this.display.fadeIn(this.map, function () {});
 		}
 
 		// on first level, display intro text
@@ -130,24 +129,48 @@ function Game() {
 		this.getLevel(this.currentLevel);
 	}
 
-	this.evalLevelCode = function (lvlNum) {
-		var allCode = this.editor.getCode();
-		var playerCode = this.editor.getPlayerCode();
-		var validatedStartLevel = this.validate(allCode, playerCode);
+	this.evalLevelCode = function (allCode, playerCode) {
+		var game = this;
+
+		// by default, get code from the editor
+		var loadedFromEditor = false;
+		if (!allCode) {
+			allCode = this.editor.getCode();
+			playerCode = this.editor.getPlayerCode();
+			loadedFromEditor = true;
+		}
+
+		// validate the code
+		// if it passes validation, return the startLevel function if it pass
+		// if it fails validation, return false
+		var validatedStartLevel = this.validate(allCode, playerCode, !loadedFromEditor);
+
+		console.log(validatedStartLevel);
 		if (validatedStartLevel) {
+			// valid code - reset the map, save editor state, and load the level
+
 			this.map.reset();
+
+			_currentCode = allCode;
+			if (loadedFromEditor) {
+				this.editor.saveGoodState();
+			}
 
 			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
+			map.refresh();
 
-			_currentCode = allCode;
 			_currentPlayer = this.map.getPlayer();
-			_currentPlayer.canMove = true;
+			this.map.getPlayer().canMove = true;
 
-			// don't refresh display for dummy level
-			if (!(lvlNum >= this.levelFileNames.length)) {
-				this.map.refresh();
-			}
+			$('#static').hide();
+		} else {
+			// show static and reload from last good state
+			$('#static').show();
+			setTimeout(function () {
+				var goodState = game.editor.getGoodState();
+				game.evalLevelCode(goodState.code, goodState.playerCode);
+			}, 1000);
 		}
 	}
 
