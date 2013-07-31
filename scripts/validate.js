@@ -82,7 +82,7 @@ Game.prototype.validateCallback = function(callback) {
 	var validateExactlyXManyObjects = this.validators.validateExactlyXManyObjects;
 
 	this.output.clear();
-	eval(this.editor.getCode()); // get validateLevel method if it exists
+	eval(this.editor.getGoodState()['code']); // get validateLevel method from last good state (if such a method exists)
 	try {
 		// run the callback
 		callback();
