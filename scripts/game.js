@@ -7,8 +7,8 @@ function Game() {
 
 	this.dimensions = dimensions;
 
-	_currentPlayer = null;
 	_currentCode = '';
+	_globalInventory = [];
 
 	this.levelFileNames = [
 		'dummyLevel.jsx', // dummy level to display when level not found
@@ -25,8 +25,8 @@ function Game() {
 
 	this.currentLevel = 1;
 
-	this.setCurrentPlayer = function (p) { _currentPlayer = p; }
-	this.getCurrentPlayer = function () { return _currentPlayer; }
+	this.addToGlobalInventory = function (item) { _globalInventory.push(item); }
+	this.checkGlobalInventory = function (item) { return _globalInventory.indexOf(item) > -1; }
 
 	this.init = function () {
 		var game = this;
@@ -50,7 +50,6 @@ function Game() {
 
 		// Start first level
 		this.map = new Map(this.display, this);
-		_currentPlayer = new Player(-1, -1, this.map);
 		this.editor = new CodeEditor("editor", 600, 500);
 		this.getLevel(this.currentLevel);
 		this.display.focus();
@@ -76,7 +75,7 @@ function Game() {
 
 		this.currentLevel++;
 		this.output.write('Loading level ' + this.currentLevel + ' ...');
-		this.getCurrentPlayer().canMove = false;
+		this.map.getPlayer().canMove = false;
 		this.display.fadeOut(this.map, function () {
 			game.getLevel(game.currentLevel);
 		})
@@ -141,30 +140,31 @@ function Game() {
 		}
 
 		// validate the code
-		// if it passes validation, return the startLevel function if it pass
-		// if it fails validation, return false
+		// if it passes validation, returns the startLevel function if it pass
+		// if it fails validation, returns false
 		var validatedStartLevel = this.validate(allCode, playerCode, !loadedFromEditor);
 
-		console.log(validatedStartLevel);
-		if (validatedStartLevel) {
-			// valid code - reset the map, save editor state, and load the level
-
+		if (validatedStartLevel) { // code is valid
+			// reset the map
 			this.map.reset();
 
+			// save editor state
 			_currentCode = allCode;
 			if (loadedFromEditor) {
 				this.editor.saveGoodState();
 			}
 
+			// start the level
 			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
+
+			// draw the map
 			map.refresh();
-
-			_currentPlayer = this.map.getPlayer();
-			this.map.getPlayer().canMove = true;
-
 			$('#static').hide();
-		} else {
+
+			// finally, allow player movement
+			this.map.getPlayer().canMove = true;
+		} else { // code is invalid
 			// show static and reload from last good state
 			$('#static').show();
 			setTimeout(function () {

@@ -22,18 +22,6 @@ function Player(x, y, map) {
 	}
 
 	this.init = function () {
-		// inherit global items from game.currentPlayer
-		// (Ideally, it would be nice to store global items as
-		//	a class variable, but then we can't make them private.)
-		var currentPlayer = this.game.getCurrentPlayer()
-		if (currentPlayer) {
-			if (currentPlayer.hasItem('computer')) {
-				_inventory.push('computer');
-			}
-			if (currentPlayer.hasItem('phone')) {
-				_inventory.push('phone');
-			}
-		}
 	}
 
 	this.draw = function () {
@@ -117,7 +105,11 @@ function Player(x, y, map) {
 	this.pickUpItem = function (objectName, object) {
 		player = this;
 
-		_inventory.push(objectName);
+		if (object.isGlobal) {
+			this.game.addToGlobalInventory(objectName);
+		} else {
+			_inventory.push(objectName);
+		}
 		map.placeObject(_x, _y, 'empty');
 		map.refresh();
 
@@ -128,8 +120,8 @@ function Player(x, y, map) {
 		}
 	}
 
-	this.hasItem = function (object) {
-		return _inventory.indexOf(object) > -1;
+	this.hasItem = function (item) {
+		return (_inventory.indexOf(item) > -1) || (this.game.checkGlobalInventory(item));
 	}
 
 	this.setPhoneCallback = function(func) {

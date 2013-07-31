@@ -13,10 +13,17 @@ $(document).ready(function() {
 
 function jumpToLevel() {
 	var levelNum = parseInt(prompt(""));
-	if (levelNum > 1)
-		game.getCurrentPlayer().pickUpItem('computer', game.objects['computer']);
-	if (levelNum > 6)
-		game.getCurrentPlayer().pickUpItem('phone', game.objects['phone']);
+
+	// Give the player all necessary objects
+	if (levelNum > 1) {
+		game.addToGlobalInventory('computer');
+		$('#editorPane').fadeIn();
+		game.editor.refresh();
+	}
+	if (levelNum > 6) {
+		game.addToGlobalInventory('phone');
+		$('#phoneButton').show();
+	}
 	game.getLevel(levelNum);
 }
 
