@@ -18,10 +18,10 @@ function startLevel(map) {
         },
         'behavior': function (me) {
 #BEGIN_EDITABLE#
-            if (me.canMoveRight()) {
-                me.moveRight();
+            if (me.canMove('right')) {
+                me.move('right');
             } else {
-                me.moveDown();
+                me.move('down');
             }
 
 

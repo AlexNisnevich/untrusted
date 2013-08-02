@@ -20,13 +20,13 @@ function startLevel(map) {
             var upDist = me.getY() - target.y;
 
             if (upDist > 0 && upDist >= leftDist) {
-                me.moveUp();
+                me.move('up');
             } else if (upDist < 0 && upDist < leftDist) {
-                me.moveDown();
+                me.move('down');
             } else if (leftDist > 0 && leftDist >= upDist) {
-                me.moveLeft();
+                me.move('left');
             } else {
-                me.moveRight();
+                me.move('right');
             }
         }
     });
