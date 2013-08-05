@@ -28,12 +28,8 @@ make release
 ```
 merges and minifies the JavaScript files into `scripts/build/untrusted.min.js` (and disables debug features).
 
-To run the game locally, you need to set up a local server to serve index.html. One easy way to do that is with Python's SimpleHTTPServer:
+To run the game locally, you need to set up a local server to serve `index.html` (this step is necessary due to Access-Control-Allow-Origin restrictions):
 
 ```
-# (python 2)
-python -m SimpleHTTPServer
-
-# (python 3)
-python -m http.server <port number>
+make runlocal
 ```
