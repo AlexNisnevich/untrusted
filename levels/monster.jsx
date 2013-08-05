@@ -1,3 +1,10 @@
+#BEGIN_PROPERTIES#
+{
+    "commandsIntroduced":
+        ["object.type", "object.behavior", "dynamicObject.findNearest",
+         "dynamicObject.getX", "dynamicObject.getY", "dynamicObject.move"]
+}
+#END_PROPERTIES#
 /*
  * monster.js
  *

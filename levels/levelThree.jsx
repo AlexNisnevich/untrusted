@@ -1,3 +1,8 @@
+#BEGIN_PROPERTIES#
+{
+    "commandsIntroduced": ["ROT.Map.DividedMaze", "player.atLocation"]
+}
+#END_PROPERTIES#
 /*
  * levelThree.js
  *

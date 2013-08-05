@@ -246,6 +246,10 @@ function CodeEditor(textAreaDomID, width, height) {
         return code;
     };
 
+    this.getProperties = function () {
+        return properties;
+    }
+
     this.setCode = function(code) {
         this.internalEditor.setValue(code);
         this.internalEditor.refresh();

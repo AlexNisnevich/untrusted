@@ -1,3 +1,10 @@
+#BEGIN_PROPERTIES#
+{
+    "commandsIntroduced":
+        ["map.createNewObject", "player.killedBy", "object.symbol",
+         "object.color", "object.onCollision"]
+}
+#END_PROPERTIES#
 /*
  * river.js
  *

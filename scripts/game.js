@@ -9,6 +9,7 @@ function Game() {
 
 	_currentCode = '';
 	_globalInventory = [];
+	_commands = [];
 
 	this.levelFileNames = [
 		'dummyLevel.jsx', // dummy level to display when level not found
@@ -56,14 +57,15 @@ function Game() {
 		this.display.focus();
 
 		// Enable shortcut keys
-		shortcut.add('ctrl+1', function () { game.display.focus(); return true; });
-		shortcut.add('ctrl+2', function () { game.editor.focus(); return true; });
-		shortcut.add('ctrl+3', function () { return true; });
+		shortcut.add('ctrl+1', function () { game.openHelp(); return true; });
+		shortcut.add('ctrl+2', function () { game.display.focus(); return true; });
+		shortcut.add('ctrl+3', function () { game.editor.focus(); return true; });
 		shortcut.add('ctrl+4', function () { game.resetEditor(); return true; });
 		shortcut.add('ctrl+5', function () { game.evalLevelCode(); return true; });
 		shortcut.add('ctrl+6', function () { game.usePhone(); return true; });
 
 		// Enable buttons
+		$("#helpButton").click( function () { game.openHelp();} );
 		$("#mapButton").click( function () { game.display.focus();} );
 		$("#editorButton").click( function () { game.editor.focus();} );
 		$("#resetButton").click( function () { game.resetEditor();} );
@@ -111,6 +113,9 @@ function Game() {
 			// don't fade in for dummy level
 			this.display.fadeIn(this.map, function () {});
 		}
+
+		// store the commands introduced in this level (for api reference)
+		_commands = _commands.concat(game.editor.getProperties().commandsIntroduced);
 
 		// on first level, display intro text
 		if (this.currentLevel == 1) {
@@ -173,6 +178,10 @@ function Game() {
 				game.evalLevelCode(goodState.code, goodState.playerCode);
 			}, 1000);
 		}
+	}
+
+	this.openHelp = function () {
+		alert(_commands);
 	}
 
 	this.usePhone = function () {

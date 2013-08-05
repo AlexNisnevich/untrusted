@@ -1,3 +1,10 @@
+#BEGIN_PROPERTIES#
+{
+    "commandsIntroduced":
+        ["dynamicObject.giveItemTo", "dynamicObject.canMove",
+         "object.passableFor"]
+}
+#END_PROPERTIES#
 /*
  * robot.js
  *

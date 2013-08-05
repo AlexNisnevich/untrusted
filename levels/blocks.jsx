@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
-    "commands_introduced":
-        ["map.placePlayer", "map.placeObject", "map.getHeight",
+    "commandsIntroduced":
+        ["startLevel", "map.placePlayer", "map.placeObject", "map.getHeight",
          "map.getWidth", "map.getPlayer", "player.hasItem"]
 }
 #END_PROPERTIES#
