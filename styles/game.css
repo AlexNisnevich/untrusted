@@ -78,6 +78,18 @@ body {
 	background: rgba(0, 0, 0, 0.5); /* semi-transparent so we can see selection over it */
 }
 
+#helpPane {
+	position: absolute;
+	height: 400px;
+	width: 1100px;
+	top: 50px;
+	left: 50px;
+	z-index: 9000;
+	background: black;
+	border: 2px solid yellow;
+	color: white;
+}
+
 h1 {
 	display: inline;
     color: white;

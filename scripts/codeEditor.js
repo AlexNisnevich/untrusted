@@ -161,6 +161,8 @@ function CodeEditor(textAreaDomID, width, height) {
             // implements yellow box when changing focus
             $('.CodeMirror').addClass('focus');
             $('#screen canvas').removeClass('focus');
+
+            $('#helpPane').hide();
         });
 
         this.internalEditor.on('cursorActivity',function (instance) {

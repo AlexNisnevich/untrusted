@@ -181,7 +181,7 @@ function Game() {
 	}
 
 	this.openHelp = function () {
-		alert(_commands);
+		$('#helpPane').show().text(_commands);
 	}
 
 	this.usePhone = function () {
