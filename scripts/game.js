@@ -181,14 +181,30 @@ function Game() {
 	}
 
 	this.openHelp = function () {
-		$('#helpPane').show().text(_commands);
+		var game = this;
+
+		var helpText = '';
+		$.each(_commands, function (i, command) {
+			if (game.reference[command]) {
+				helpText += "<div class='command'>"
+					+ "<div class='commandTitle'>"
+					+ game.reference[command].name
+					+ "</div>"
+					+ "<div class='commandDescription'>"
+					+ game.reference[command].description
+					+ "</div>"
+					+ "</div>";
+			}
+		})
+
+		$('#helpPane').show().html(helpText);
 	}
 
 	this.usePhone = function () {
 		if (this.map.getPlayer()._phoneFunc) {
 			this.validateCallback(this.map.getPlayer()._phoneFunc);
 		} else {
-			this.output.write('RotaryPhoneException: Your function phone is not bound to any function.')
+			this.output.write('PhoneException: Your function phone is not bound to any function.')
 		}
 	}
 

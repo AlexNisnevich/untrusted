@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["validateLevel", "game.validateAtLeastXObjects",
+        ["global.validateLevel", "game.validateAtLeastXObjects",
          "game.validateExactlyXManyObjects"]
 }
 #END_PROPERTIES#

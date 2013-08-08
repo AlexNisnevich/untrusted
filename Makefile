@@ -11,6 +11,7 @@ js-modules = scripts/game.js \
                  scripts/dynamicObject.js \
                  scripts/objects.js \
                  scripts/player.js \
+                 scripts/reference.js \
                  scripts/validate.js \
                  scripts/launcher.js
 
@@ -21,6 +22,7 @@ js-modules-debug = scripts/game.js \
                  scripts/dynamicObject.js \
                  scripts/objects.js \
                  scripts/player.js \
+                 scripts/reference.js \
                  scripts/validate.js \
                  scripts/launcher-debug.js
 
@@ -73,4 +75,4 @@ deploy-full: release
 
 runlocal:
 	@echo "Running local instance"
-	/usr/bin/env python2 -m SimpleHTTPServer 9001
+	/usr/bin/env python -m SimpleHTTPServer 9001

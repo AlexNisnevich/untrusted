@@ -80,14 +80,27 @@ body {
 
 #helpPane {
 	position: absolute;
-	height: 400px;
-	width: 1100px;
+	height: 360px;
+	width: 1060px;
 	top: 50px;
 	left: 50px;
 	z-index: 9000;
+	padding: 20px;
 	background: black;
 	border: 2px solid yellow;
 	color: white;
+	font-family: monospace;
+}
+
+#helpPane .command {
+	margin-bottom: 1em;
+}
+
+#helpPane .commandTitle {
+	font-size: 1.2em;
+	font-weight: bold;
+	color: yellow;
+	margin-bottom: 4px;
 }
 
 h1 {
