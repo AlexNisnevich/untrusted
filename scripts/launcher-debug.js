@@ -12,8 +12,11 @@ $(document).ready(function() {
 });
 
 function jumpToLevel() {
-	var levelNum = parseInt(prompt(""));
+    var levelNum = parseInt(prompt("Level: "));
+    jumpToNthLevel(levelNum);
+}
 
+function jumpToNthLevel (levelNum) {
 	// Give the player all necessary objects
 	if (levelNum > 1) {
 		game.addToGlobalInventory('computer');
@@ -27,7 +30,8 @@ function jumpToLevel() {
 	game.getLevel(levelNum);
 }
 
-function createBlankLevel() {
+
+function createBlankLevel () {
 	$.get("levels/blankLevel.jsx", function (codeText) {
 		game.loadLevel(codeText, -1);
 		game.VERBOTEN == [];
