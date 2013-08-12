@@ -183,21 +183,40 @@ function Game() {
 	this.openHelp = function () {
 		var game = this;
 
-		var helpText = '';
+		var categories = [];
+
+		$('#helpPaneSidebar').html('');
+		$('#helpPaneContent').html('');
+
 		$.each(_commands, function (i, command) {
 			if (game.reference[command]) {
-				helpText += "<div class='command'>"
-					+ "<div class='commandTitle'>"
-					+ game.reference[command].name
-					+ "</div>"
-					+ "<div class='commandDescription'>"
-					+ game.reference[command].description
-					+ "</div>"
-					+ "</div>";
+				var reference = game.reference[command];
+
+				if (categories.indexOf(reference.category) == -1) {
+					categories.push(reference.category);
+					$('#helpPaneSidebar').append($('<div class="category">').text(reference.category));
+					$('#helpPaneContent').append($('<div class="category" id="'+ reference.category +'">'));
+				}
+
+				var $command = $('<div class="command">');
+				$command.appendTo($('#helpPaneContent .category#' + reference.category));
+
+				var $commandTitle = $('<div class="commandTitle">');
+				$commandTitle.text(reference.name)
+							 .appendTo($command);
+
+				var $commandDescription = $('<div class="commandDescription">');
+				$commandDescription.text(reference.description)
+								   .appendTo($command);
+
 			}
 		})
 
-		$('#helpPane').show().html(helpText);
+		if (!$('#helpPane').is(':visible')) {
+			$('#helpPane').show();
+		} else {
+			$('#helpPane').hide();
+		}
 	}
 
 	this.usePhone = function () {

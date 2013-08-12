@@ -92,11 +92,21 @@ body {
 	font-family: monospace;
 }
 
-#helpPane .command {
+#helpPaneSidebar {
+	float: left;
+	width: 100px;
+}
+
+#helpPaneContent {
+	float: left;
+	width: 960px;
+}
+
+#helpPaneContent .command {
 	margin-bottom: 1em;
 }
 
-#helpPane .commandTitle {
+#helpPaneContent .commandTitle {
 	font-size: 1.2em;
 	font-weight: bold;
 	color: yellow;
