@@ -75,4 +75,4 @@ deploy-full: release
 
 runlocal:
 	@echo "Running local instance"
-	/usr/bin/env python -m SimpleHTTPServer 9001
+	/usr/bin/env python2 -m SimpleHTTPServer 9001
