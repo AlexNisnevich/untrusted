@@ -147,6 +147,7 @@ body {
 
 #helpPaneContent .commandDescription a {
 	text-decoration: underline;
+	cursor: pointer;
 }
 
 #helpPaneCloseButton {
