@@ -145,6 +145,10 @@ body {
 	margin-bottom: 4px;
 }
 
+#helpPaneContent .commandDescription a {
+	text-decoration: underline;
+}
+
 #helpPaneCloseButton {
 	float: left;
 	width: 10px;

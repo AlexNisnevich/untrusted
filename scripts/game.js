@@ -218,7 +218,7 @@ function Game() {
 					.appendTo($command);
 
 				var $commandDescription = $('<div class="commandDescription">');
-				$commandDescription.text(reference.description)
+				$commandDescription.html(reference.description)
 					.appendTo($command);
 
 			}
