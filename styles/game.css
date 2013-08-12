@@ -93,17 +93,22 @@ body {
 
 #helpPaneSidebar {
 	float: left;
-	width: 100px;
-	height: 320px;
+	width: 140px;
+	height: 360px;
 	background: rgb(27, 90, 158);
-	padding: 20px;
+}
+
+#helpPaneSidebar #helpPaneTitle {
+	margin-top: 15px;
+	text-align: center;
+	color: yellow;
 }
 
 #helpPaneSidebar li {
 	cursor: pointer;
 	width: 130px;
 	list-style: none;
-	margin-left: -60px;
+	margin-left: -40px;
 	border-top: 1px solid white;
 	padding: 5px;
 }
@@ -123,7 +128,7 @@ body {
 
 #helpPaneContent {
 	float: left;
-	width: 880px;
+	width: 864px;
 	height: 320px;
 	padding: 20px;
 	overflow-y: auto;
@@ -138,6 +143,22 @@ body {
 	font-weight: bold;
 	color: yellow;
 	margin-bottom: 4px;
+}
+
+#helpPaneCloseButton {
+	float: left;
+	width: 10px;
+	border-bottom: 2px solid yellow;
+	border-left: 2px solid yellow;
+	padding-left: 3px;
+	padding-right: 1px;
+	padding-bottom: 2px;
+	cursor: pointer;
+}
+
+#helpPaneCloseButton:hover {
+	background: yellow;
+	color: black;
 }
 
 h1 {

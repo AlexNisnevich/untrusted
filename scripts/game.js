@@ -71,6 +71,7 @@ function Game() {
 		$("#resetButton").click( function () { game.resetEditor();} );
 		$("#executeButton").click( function () { game.evalLevelCode();} );
 		$("#phoneButton").click( function () { game.usePhone();} );
+		$("#helpPaneCloseButton").click ( function () {  $('#helpPane').hide();} );
 	}
 
 	this.moveToNextLevel = function () {
@@ -185,7 +186,7 @@ function Game() {
 
 		var categories = [];
 
-		$('#helpPaneSidebar').html('<ul></ul>');
+		$('#helpPaneSidebar ul').html('');
 		$('#helpPaneContent').html('');
 
 		$.each(_commands, function (i, command) {
