@@ -185,7 +185,7 @@ function Game() {
 
 		var categories = [];
 
-		$('#helpPaneSidebar').html('');
+		$('#helpPaneSidebar').html('<ul></ul>');
 		$('#helpPaneContent').html('');
 
 		$.each(_commands, function (i, command) {
@@ -194,7 +194,18 @@ function Game() {
 
 				if (categories.indexOf(reference.category) == -1) {
 					categories.push(reference.category);
-					$('#helpPaneSidebar').append($('<div class="category">').text(reference.category));
+
+					var categoryLink = $('<li class="category" id="'+ reference.category +'">');
+					categoryLink.text(reference.category)
+						.click(function () {
+							$('#helpPaneSidebar .category').removeClass('selected');
+							$(this).addClass('selected');
+
+							$('#helpPaneContent .category').hide();
+							$('#helpPaneContent .category#' + this.id).show();
+					});
+					$('#helpPaneSidebar ul').append(categoryLink);
+
 					$('#helpPaneContent').append($('<div class="category" id="'+ reference.category +'">'));
 				}
 
@@ -203,17 +214,18 @@ function Game() {
 
 				var $commandTitle = $('<div class="commandTitle">');
 				$commandTitle.text(reference.name)
-							 .appendTo($command);
+					.appendTo($command);
 
 				var $commandDescription = $('<div class="commandDescription">');
 				$commandDescription.text(reference.description)
-								   .appendTo($command);
+					.appendTo($command);
 
 			}
 		})
 
 		if (!$('#helpPane').is(':visible')) {
 			$('#helpPane').show();
+			$('#helpPaneSidebar .category#global').click();
 		} else {
 			$('#helpPane').hide();
 		}

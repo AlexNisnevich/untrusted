@@ -85,7 +85,6 @@ body {
 	top: 50px;
 	left: 50px;
 	z-index: 9000;
-	padding: 20px;
 	background: black;
 	border: 2px solid yellow;
 	color: white;
@@ -95,11 +94,39 @@ body {
 #helpPaneSidebar {
 	float: left;
 	width: 100px;
+	height: 320px;
+	background: rgb(27, 90, 158);
+	padding: 20px;
+}
+
+#helpPaneSidebar li {
+	cursor: pointer;
+	width: 130px;
+	list-style: none;
+	margin-left: -60px;
+	border-top: 1px solid white;
+	padding: 5px;
+}
+
+#helpPaneSidebar li.selected {
+	background-color: rgb(22, 62, 105);
+}
+
+#helpPaneSidebar li:hover {
+	background: white;
+	color: rgb(27, 90, 158);
+}
+
+#helpPaneSidebar li:last-child {
+	border-bottom: 1px solid white;
 }
 
 #helpPaneContent {
 	float: left;
-	width: 960px;
+	width: 880px;
+	height: 320px;
+	padding: 20px;
+	overflow-y: auto;
 }
 
 #helpPaneContent .command {
