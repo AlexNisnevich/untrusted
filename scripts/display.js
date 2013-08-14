@@ -33,7 +33,9 @@ ROT.Display.prototype.setupEventHandlers = function() {
 	this.getContainer().addEventListener("click", function(e) {
 		$(this).addClass('focus');
 		$('.CodeMirror').removeClass('focus');
+
 		$('#helpPane').hide();
+        $('#menuPane').hide();
 	});
 };
 

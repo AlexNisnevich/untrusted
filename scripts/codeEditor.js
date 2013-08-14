@@ -163,6 +163,7 @@ function CodeEditor(textAreaDomID, width, height) {
             $('#screen canvas').removeClass('focus');
 
             $('#helpPane').hide();
+            $('#menuPane').hide();
         });
 
         this.internalEditor.on('cursorActivity',function (instance) {

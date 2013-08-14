@@ -125,7 +125,7 @@ function Game() {
 		this.display.fadeIn(this.map, function () {});
 
 		// store the commands introduced in this level (for api reference)
-		_commands = _commands.concat(game.editor.getProperties().commandsIntroduced);
+		_commands = _commands.concat(this.editor.getProperties().commandsIntroduced);
 
 		// on first level, display intro text
 		if (this.currentLevel == 1) {
