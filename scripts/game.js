@@ -12,7 +12,6 @@ function Game() {
 	_commands = [];
 
 	this.levelFileNames = [
-		'dummyLevel.jsx', // dummy level to display when level not found
 		'blocks.jsx', // levels start here
 		'theReturnOfBlocks.jsx',
 		'levelThree.jsx',
@@ -26,6 +25,7 @@ function Game() {
 	];
 
 	this.currentLevel = 1;
+	this.levelReached = 1;
 
 	this.addToGlobalInventory = function (item) { _globalInventory.push(item); }
 	this.checkGlobalInventory = function (item) { return _globalInventory.indexOf(item) > -1; }
@@ -63,6 +63,7 @@ function Game() {
 		shortcut.add('ctrl+4', function () { game.resetEditor(); return true; });
 		shortcut.add('ctrl+5', function () { game.evalLevelCode(); return true; });
 		shortcut.add('ctrl+6', function () { game.usePhone(); return true; });
+		shortcut.add('ctrl+0', function () { game.openMenu(); return true; });
 
 		// Enable buttons
 		$("#helpButton").click( function () { game.openHelp();} );
@@ -71,6 +72,7 @@ function Game() {
 		$("#resetButton").click( function () { game.resetEditor();} );
 		$("#executeButton").click( function () { game.evalLevelCode();} );
 		$("#phoneButton").click( function () { game.usePhone();} );
+		$("#menuButton").click( function () { game.openMenu();} );
 		$("#helpPaneCloseButton").click ( function () {  $('#helpPane').hide();} );
 	}
 
@@ -85,35 +87,42 @@ function Game() {
 		})
 	};
 
+	// jumps to the level of the given number
+	this.jumpToNthLevel = function (levelNum) {
+		// Give the player all necessary objects
+		if (levelNum > 1) {
+			this.addToGlobalInventory('computer');
+			$('#editorPane').fadeIn();
+			this.editor.refresh();
+		}
+		if (levelNum > 6) {
+			this.addToGlobalInventory('phone');
+			$('#phoneButton').show();
+		}
+		this.getLevel(levelNum);
+	}
+
 	// makes an ajax request to get the level text file and
 	// then loads it into the game
 	this.getLevel = function (levelNumber) {
 		var game = this;
 
 		this.currentLevel = levelNumber;
+		this.levelReached = Math.max(levelNumber, this.levelReached);
 
-		var fileName;
-		if (levelNumber < this.levelFileNames.length) {
-			fileName = this.levelFileNames[levelNumber];
-		} else {
-			fileName = this.levelFileNames[0];
-		}
-
+		var fileName = this.levelFileNames[levelNumber - 1];
 		$.get('levels/' + fileName, function (codeText) {
-			game.loadLevel(codeText, levelNumber);
+			game.loadLevel(codeText);
 		});
 	}
 
-	this.loadLevel = function (lvlCode, lvlNum) {
+	this.loadLevel = function (lvlCode) {
 		// load level code in editor
 		this.editor.loadCode(lvlCode);
 
 		// start the level and fade in
 		this.evalLevelCode();
-		if (lvlNum < this.levelFileNames.length) {
-			// don't fade in for dummy level
-			this.display.fadeIn(this.map, function () {});
-		}
+		this.display.fadeIn(this.map, function () {});
 
 		// store the commands introduced in this level (for api reference)
 		_commands = _commands.concat(game.editor.getProperties().commandsIntroduced);
@@ -229,6 +238,33 @@ function Game() {
 			$('#helpPaneSidebar .category#global').click();
 		} else {
 			$('#helpPane').hide();
+		}
+	}
+
+	this.openMenu = function () {
+		var game = this;
+
+		$('#menuPane #levels').html('');
+		$.each(game.levelFileNames, function (levelNum, fileName) {
+			levelNum += 1;
+			var levelName = levelNum + ". " + fileName.split('.')[0];
+
+			var levelButton = $('<button>');
+			if (levelNum <= game.levelReached) {
+				levelButton.text(levelName).click(function () {
+					game.jumpToNthLevel(levelNum);
+					$('#menuPane').hide();
+				});
+			} else {
+				levelButton.text('???').addClass('disabled');
+			}
+			levelButton.appendTo('#menuPane #levels');
+		});
+
+		if (!$('#menuPane').is(':visible')) {
+			$('#menuPane').show();
+		} else {
+			$('#menuPane').hide();
 		}
 	}
 

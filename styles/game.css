@@ -166,6 +166,53 @@ body {
 	color: black;
 }
 
+#menuPane {
+	position: absolute;
+	height: 360px;
+	width: 560px;
+	top: 50px;
+	left: 300px;
+	z-index: 9000;
+	background: black;
+	border: 2px solid yellow;
+	color: white;
+	font-family: monospace;
+}
+
+#menuPane .menuPaneHeading {
+	margin: 10px;
+	color: yellow;
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+#menuPane button {
+	background-color: black;
+	border: 2px solid white;
+	color: white;
+	width: 176px;
+	padding: 4px;
+	margin: 5px;
+	cursor: pointer;
+}
+
+#menuPane button:hover {
+	background-color: white;
+	color: black;
+}
+
+#menuPane button.disabled {
+	background-color: #555;
+	border-color: #ccc;
+	color: #ccc;
+	cursor: auto;
+}
+
+#menuPane button.disabled:hover {
+	background-color: #555;
+	color: #ccc;
+}
+
 h1 {
 	display: inline;
     color: white;
