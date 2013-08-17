@@ -1,5 +1,7 @@
 function Sound() {
 	var tracks = [
+		"/music/DmitryMazin-GameScratch.mp3",
+		"/music/Jackson_D_Zero_One.mp3",
 		"/music/what.mp3"
 	]
 	var soundPlayerElt = $("#jquery_audioPlayer");
@@ -8,18 +10,16 @@ function Sound() {
 	this.init = function() {
 		soundPlayerElt.jPlayer({
 			ready: function() {
-			  $(this).jPlayer("setMedia", {
-			    mp3: tracks[0]
-			  }).jPlayer("play");
-			  var click = document.ontouchstart === undefined ? 'click' : 'touchstart';
-			  var kickoff = function () {
-			    soundPlayerElt.jPlayer("play");
-			    document.documentElement.removeEventListener(click, kickoff, true);
-			  };
-			  document.documentElement.addEventListener(click, kickoff, true);
+				$(this).jPlayer("setMedia", {
+					mp3: tracks[0]
+				});
 			},
+			wmode: "window",
 			loop: true,
-			swfPath: "/lib/Jplayer.swf"
+			swfPath: "/lib/Jplayer.swf",
+		    canplay: function() {
+		       soundPlayerElt.jPlayer("play");
+		    }
 		});
 	}
 
