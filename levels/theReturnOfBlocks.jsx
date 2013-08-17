@@ -1,3 +1,10 @@
+#BEGIN_PROPERTIES#
+{
+    "commandsIntroduced":
+        ["global.validateLevel", "game.validateAtLeastXObjects",
+         "game.validateExactlyXManyObjects"]
+}
+#END_PROPERTIES#
 /*
  * theReturnOfBlocks.js
  *

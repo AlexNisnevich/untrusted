@@ -22,18 +22,6 @@ function Player(x, y, map) {
 	}
 
 	this.init = function () {
-		// inherit global items from game.currentPlayer
-		// (Ideally, it would be nice to store global items as
-		//	a class variable, but then we can't make them private.)
-		var currentPlayer = this.game.getCurrentPlayer()
-		if (currentPlayer) {
-			if (currentPlayer.hasItem('computer')) {
-				_inventory.push('computer');
-			}
-			if (currentPlayer.hasItem('phone')) {
-				_inventory.push('phone');
-			}
-		}
 	}
 
 	this.draw = function () {
@@ -72,6 +60,10 @@ function Player(x, y, map) {
 			new_x = cur_x + 1;
 			new_y = cur_y;
 		}
+		else if (direction === 'rest') {
+			new_x = cur_x;
+			new_y = cur_y;
+		}
 
 		if (this.map.canMoveTo(new_x, new_y)) {
 			this.display.drawObject(map, cur_x, cur_y, this.map.getGrid()[cur_x][cur_y].type, this.map.getGrid()[cur_x][cur_y].bgColor);
@@ -85,6 +77,7 @@ function Player(x, y, map) {
 	this.afterMove = function (x, y) {
 		player = this;
 
+		// check for collision with static object
 		var objectName = this.map.getGrid()[x][y].type;
 		var object = this.map.objects[objectName];
 		if (object.type == 'item') {
@@ -94,7 +87,18 @@ function Player(x, y, map) {
 				object.onCollision(player, player.game)
 			});
 		}
-		this.game.display.drawAround(this.map, x, y); // in case there are any artifacts
+
+		// check for collision with dynamic object
+		for (var i = 0; i < this.map.getDynamicObjects().length; i++) {
+			var object = this.map.getDynamicObjects()[i];
+			if (object.getX() === x && object.getY() === y) {
+				this.map.objects[object.getType()].onCollision(player, object);
+			}
+		}
+
+		this.game.display.drawAll(this.map); // in case there are any artifacts
+
+		this.map.moveAllDynamicObjects();
 	}
 
 	this.killedBy = function (killer) {
@@ -105,7 +109,11 @@ function Player(x, y, map) {
 	this.pickUpItem = function (objectName, object) {
 		player = this;
 
-		_inventory.push(objectName);
+		if (object.isGlobal) {
+			this.game.addToGlobalInventory(objectName);
+		} else {
+			_inventory.push(objectName);
+		}
 		map.placeObject(_x, _y, 'empty');
 		map.refresh();
 
@@ -116,8 +124,8 @@ function Player(x, y, map) {
 		}
 	}
 
-	this.hasItem = function (object) {
-		return _inventory.indexOf(object) > -1;
+	this.hasItem = function (item) {
+		return (_inventory.indexOf(item) > -1) || (this.game.checkGlobalInventory(item));
 	}
 
 	this.setPhoneCallback = function(func) {

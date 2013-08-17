@@ -3,36 +3,56 @@ function CodeEditor(textAreaDomID, width, height) {
         'begin_line':'#BEGIN_EDITABLE#',
         'end_line':'#END_EDITABLE#',
         'begin_char':"#{#",
-        'end_char': "#}#"
+        'end_char': "#}#",
+        'begin_properties':'#BEGIN_PROPERTIES#',
+        'end_properties':'#END_PROPERTIES#'
     };
 
     var charLimit = 80;
 
+    var properties = {}
     var editableLines = [];
     var editableSections = {};
+    var lastGoodState = {};
 
-    // preprocesses code and determines the location
-    // of editable lines and sections
-    function setEditableLinesAndSections(codeString) {
+    // preprocesses code,determines the location
+    // of editable lines and sections, loads properties
+    function preprocess(codeString) {
         editableLines = [];
         editableSections = {};
+        var propertiesString = '';
 
         var lineArray = codeString.split("\n");
         var inEditableBlock = false;
+        var inPropertiesBlock = false;
 
         for (var i = 0; i < lineArray.length; i++) {
             var currentLine = lineArray[i];
-            if (currentLine.indexOf(symbols.begin_line) === 0) {
+
+            // process properties
+            if (currentLine.indexOf(symbols.begin_properties) === 0) {
                 lineArray.splice(i,1); // be aware that this *mutates* the list
                 i--;
-                inEditableBlock = true;
+                inPropertiesBlock = true;
+            } else if (currentLine.indexOf(symbols.end_properties) === 0) {
+                lineArray.splice(i,1);
+                i--;
+                inPropertiesBlock = false;
+            } else if (inPropertiesBlock) {
+                lineArray.splice(i,1);
+                i--;
+                propertiesString += currentLine;
             }
-            else if (currentLine.indexOf(symbols.end_line) === 0) {
+            // process editable lines and sections
+              else if (currentLine.indexOf(symbols.begin_line) === 0) {
+                lineArray.splice(i,1);
+                i--;
+                inEditableBlock = true;
+            } else if (currentLine.indexOf(symbols.end_line) === 0) {
                 lineArray.splice(i,1);
                 i--;
                 inEditableBlock = false;
-            }
-            else {
+            } else {
                 if (inEditableBlock) {
                     editableLines.push(i);
                 } else {
@@ -55,6 +75,8 @@ function CodeEditor(textAreaDomID, width, height) {
                 }
             }
         }
+
+        properties = JSON.parse(propertiesString);
 
         return lineArray.join("\n");
     }
@@ -139,6 +161,9 @@ function CodeEditor(textAreaDomID, width, height) {
             // implements yellow box when changing focus
             $('.CodeMirror').addClass('focus');
             $('#screen canvas').removeClass('focus');
+
+            $('#helpPane').hide();
+            $('#menuPane').hide();
         });
 
         this.internalEditor.on('cursorActivity',function (instance) {
@@ -166,7 +191,7 @@ function CodeEditor(textAreaDomID, width, height) {
          */
 
         this.internalEditor.off('beforeChange',enforceRestrictions);
-        codeString = setEditableLinesAndSections(codeString);
+        codeString = preprocess(codeString);
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);
         this.markUneditableLines();
@@ -224,8 +249,24 @@ function CodeEditor(textAreaDomID, width, height) {
         return code;
     };
 
-    this.setCode = function (code) {
+    this.getProperties = function () {
+        return properties;
+    }
+
+    this.setCode = function(code) {
         this.internalEditor.setValue(code);
+        this.internalEditor.refresh();
+    }
+
+    this.saveGoodState = function () {
+        lastGoodState.code = this.getCode();
+        lastGoodState.playerCode = this.getPlayerCode();
+        lastGoodState.editableLines = editableLines;
+        lastGoodState.editableSections = editableSections;
+    }
+
+    this.getGoodState = function () {
+        return lastGoodState;
     }
 
     this.refresh = function () {

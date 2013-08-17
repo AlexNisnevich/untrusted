@@ -1,10 +1,15 @@
+#BEGIN_PROPERTIES#
+{
+    "commandsIntroduced": ["map.setSquareColor"]
+}
+#END_PROPERTIES#
 /*
  * traps.js
  *
  * Look out! There are traps scattered all about this level, but
  * you don't know where they are. Tread carefully.
  */
-function getRandomInt (min, max) {
+function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 

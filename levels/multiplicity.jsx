@@ -1,3 +1,8 @@
+#BEGIN_PROPERTIES#
+{
+    "commandsIntroduced": []
+}
+#END_PROPERTIES#
 /*
  * multiplicity.js
  *

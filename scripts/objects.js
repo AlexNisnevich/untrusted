@@ -53,6 +53,7 @@ Game.prototype.objects = {
 
 	'computer': {
 		'type': 'item',
+		'isGlobal': true,
 		'symbol': String.fromCharCode(0x2318), // ⌘
 		'color': '#ccc',
 		'onPickUp': function (player, game) {
@@ -64,10 +65,19 @@ Game.prototype.objects = {
 
 	'phone': {
 		'type': 'item',
+		'isGlobal': true,
 		'symbol': String.fromCharCode(0x260E), // ☎
 		'onPickUp': function (player, game) {
 			game.output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
 			$('#phoneButton').show();
+		}
+	},
+
+	'key': {
+		'type': 'item',
+		'symbol': 'k',
+		'onPickUp': function (player, game) {
+			game.output.write('You have received a key!');
 		}
 	}
 };

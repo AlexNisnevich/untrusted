@@ -1,3 +1,10 @@
+#BEGIN_PROPERTIES#
+{
+    "commandsIntroduced":
+        ["map.getGrid", "player.getX", "player.getY",
+         "player.setPhoneCallback", "output.write"]
+}
+#END_PROPERTIES#
 /*
  * trees.js - the obligatory forest level
  *

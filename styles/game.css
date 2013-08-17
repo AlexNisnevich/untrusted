@@ -78,6 +78,141 @@ body {
 	background: rgba(0, 0, 0, 0.5); /* semi-transparent so we can see selection over it */
 }
 
+#helpPane {
+	position: absolute;
+	height: 360px;
+	width: 1060px;
+	top: 50px;
+	left: 50px;
+	z-index: 9000;
+	background: black;
+	border: 2px solid yellow;
+	color: white;
+	font-family: monospace;
+}
+
+#helpPaneSidebar {
+	float: left;
+	width: 140px;
+	height: 360px;
+	background: rgb(27, 90, 158);
+}
+
+#helpPaneSidebar #helpPaneTitle {
+	margin-top: 15px;
+	text-align: center;
+	color: yellow;
+}
+
+#helpPaneSidebar li {
+	cursor: pointer;
+	width: 130px;
+	list-style: none;
+	margin-left: -40px;
+	border-top: 1px solid white;
+	padding: 5px;
+}
+
+#helpPaneSidebar li.selected {
+	background-color: rgb(22, 62, 105);
+}
+
+#helpPaneSidebar li:hover {
+	background: white;
+	color: rgb(27, 90, 158);
+}
+
+#helpPaneSidebar li:last-child {
+	border-bottom: 1px solid white;
+}
+
+#helpPaneContent {
+	float: left;
+	width: 864px;
+	height: 320px;
+	padding: 20px;
+	overflow-y: auto;
+}
+
+#helpPaneContent .command {
+	margin-bottom: 1em;
+}
+
+#helpPaneContent .commandTitle {
+	font-size: 1.2em;
+	font-weight: bold;
+	color: yellow;
+	margin-bottom: 4px;
+}
+
+#helpPaneContent .commandDescription a {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#helpPaneCloseButton {
+	float: left;
+	width: 10px;
+	border-bottom: 2px solid yellow;
+	border-left: 2px solid yellow;
+	padding-left: 3px;
+	padding-right: 1px;
+	padding-bottom: 2px;
+	cursor: pointer;
+}
+
+#helpPaneCloseButton:hover {
+	background: yellow;
+	color: black;
+}
+
+#menuPane {
+	position: absolute;
+	height: 360px;
+	width: 560px;
+	top: 50px;
+	left: 300px;
+	z-index: 9000;
+	background: black;
+	border: 2px solid yellow;
+	color: white;
+	font-family: monospace;
+}
+
+#menuPane .menuPaneHeading {
+	margin: 10px;
+	color: yellow;
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+#menuPane button {
+	background-color: black;
+	border: 2px solid white;
+	color: white;
+	width: 176px;
+	padding: 4px;
+	margin: 5px;
+	cursor: pointer;
+}
+
+#menuPane button:hover {
+	background-color: white;
+	color: black;
+}
+
+#menuPane button.disabled {
+	background-color: #555;
+	border-color: #ccc;
+	color: #ccc;
+	cursor: auto;
+}
+
+#menuPane button.disabled:hover {
+	background-color: #555;
+	color: #ccc;
+}
+
 h1 {
 	display: inline;
     color: white;

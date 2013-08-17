@@ -3,7 +3,7 @@ ROT.Display.create = function(game, opts) {
 	var display = new ROT.Display(opts);
 	display.game = game;
 	return display;
-}
+};
 
 // multiplicand is used for fading effects
 // [255, 255, 255]: fully displayed
@@ -18,7 +18,8 @@ ROT.Display.prototype.setupEventHandlers = function() {
 		37: 'left',
 		38: 'up',
 		39: 'right',
-		40: 'down'
+		40: 'down',
+		82: 'rest' // R
 	};
 
 	// contentEditable is required for canvas elements to detect keyboard events
@@ -32,8 +33,11 @@ ROT.Display.prototype.setupEventHandlers = function() {
 	this.getContainer().addEventListener("click", function(e) {
 		$(this).addClass('focus');
 		$('.CodeMirror').removeClass('focus');
+
+		$('#helpPane').hide();
+        $('#menuPane').hide();
 	});
-}
+};
 
 // drawObject takes care of looking up an object's symbol and color
 // according to name (NOT according to the actual object literal!)
@@ -58,13 +62,23 @@ ROT.Display.prototype.drawObject = function (map, x, y, object, bgColor) {
 
 ROT.Display.prototype.drawAll = function(map) {
 	var game = this.game;
+
+	// draw static objects
 	for (var x = 0; x < game.dimensions.width; x++) {
 		for (var y = 0; y < game.dimensions.height; y++) {
 			this.drawObject(map, x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
 		}
 	}
+
+	// draw dynamic objects
+	for (var i = 0; i < map.getDynamicObjects().length; i++) {
+		var obj = map.getDynamicObjects()[i];
+		this.drawObject(map, obj.getX(), obj.getY(), obj.getType(), map.getGrid()[obj.getX()][obj.getY()].bgColor);
+	}
+
+	// draw player
 	if (map.getPlayer()) { map.getPlayer().draw(); }
-}
+};
 
 ROT.Display.prototype.drawAround = function(map, xCenter, yCenter) {
 	var game = this.game;
@@ -79,7 +93,7 @@ ROT.Display.prototype.drawAround = function(map, xCenter, yCenter) {
 		}
 	}
 	if (map.getPlayer()) { map.getPlayer().draw(); }
-}
+};
 
 ROT.Display.prototype.fadeOut = function (map, callback, i) {
 	var display = this;
@@ -116,4 +130,4 @@ ROT.Display.prototype.write = function(text) {
 
 ROT.Display.prototype.focus = function() {
 	$(this.getContainer()).attr('tabindex', '0').click().focus();
-}
+};

@@ -1,4 +1,8 @@
-
+#BEGIN_PROPERTIES#
+{
+    "commandsIntroduced": ["player.getColor, player.setColor, object.impassable"]
+}
+#END_PROPERTIES#
 /*
  * colors.js
  *
