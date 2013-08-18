@@ -45,6 +45,29 @@ function startLevel(map) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #END_EDITABLE#
         }
     });

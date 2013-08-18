@@ -21,8 +21,7 @@ function startLevel(map) {
         function genRandomValue(direction) {
             if (direction === "height") {
                 return Math.floor(Math.random() * (map.getHeight() +1));
-            }
-            else if (direction === "width") {
+            } else if (direction === "width") {
                 return Math.floor(Math.random() * (map.getWidth() +1));
             }
         }

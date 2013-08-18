@@ -61,8 +61,20 @@ Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
 		var display = this.display; var output = this.output;
 		var dummyMap = new Map(new DummyDisplay, this);
 
-		eval(allCode); // get startLevel and (opt) validateLevel methods
+		// modify the code to always check time to prevent infinite loops
+		allCode = allCode.replace(/((for|while).*){/g,
+			"$1{ if (new Date().getTime() - startTime > allowedTime)" +
+				"{throw 'TimeOutException: Maximum execution time of ' + allowedTime + ' ms exceeded.';} ");
 
+		console.log(allCode);
+
+		var allowedTime = 2000;
+		var startTime = new Date().getTime();
+
+		// evaluate the code to get startLevel() and (opt) validateLevel() methods
+		eval(allCode);
+
+		// start the level on a dummy map to validate
 		startLevel(dummyMap);
 		if (typeof(validateLevel) != 'undefined') {
 			validateLevel(dummyMap);
@@ -70,7 +82,13 @@ Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
 
 		return startLevel;
 	} catch (e) {
-		this.output.write(e.toString());
+		var exceptionText = e.toString();
+		if (e instanceof SyntaxError) {
+			if (lineNum = this.findSyntaxError(allCode, e.message)) {
+				exceptionText = "[Line " + lineNum + "] " + exceptionText;
+			}
+		}
+		this.output.write(exceptionText);
 		return null;
 	}
 }
@@ -103,4 +121,22 @@ Game.prototype.validateCallback = function(callback) {
 	} catch (e) {
 		this.output.write(e.toString());
 	}
+}
+
+// awful awful awful method that tries to find the line
+// of code where a given error occurs
+Game.prototype.findSyntaxError = function(code, errorMsg) {
+	var lines = code.split('\n');
+	for (var i = 1; i <= lines.length; i++) {
+		var testCode = lines.slice(0, i).join('\n');
+
+		try {
+			eval(testCode);
+		} catch (e) {
+			if (e.message == errorMsg) {
+				return i;
+			}
+		}
+	}
+	return null;
 }
