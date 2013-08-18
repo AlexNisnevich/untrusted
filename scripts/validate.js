@@ -76,8 +76,6 @@ Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
 					"}\n");
 		}).join('\n');
 
-		console.log(allCode);
-
 		// evaluate the code to get startLevel() and (opt) validateLevel() methods
 		eval(allCode);
 

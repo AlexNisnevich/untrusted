@@ -146,8 +146,37 @@ function CodeEditor(textAreaDomID, width, height) {
             lineNumbers: true,
             dragDrop: false,
             extraKeys: {'Enter': function (instance) {
-                //increments the line by one without inserting anything
-                var cursorPos = instance.getCursor();
+                cursorPos = instance.getCursor();
+
+                // is this line in an editable block?
+                if (editableLines.indexOf(cursorPos.line) > -1) {
+                    // search for a blank line within the editable block
+                    var currentLine = cursorPos.line + 1;
+                    while (true) {
+                        if (editableLines.indexOf(currentLine) == -1) {
+                            // out of editable block
+                            break;
+                        } else if (instance.getLine(currentLine).trim() == '') {
+                            // blank line found - shift lines up to it
+                            for (var i = currentLine; i > cursorPos.line; i--) {
+                                instance.setLine(i, '');
+                                instance.setLine(i, instance.getLine(i - 1));
+                            }
+
+                            // split first line at cursor position
+                            var firstLine = instance.getLine(cursorPos.line).slice(0, cursorPos.ch);
+                            var secondLine = Array(cursorPos.ch + 1).join(" ")
+                                + instance.getLine(cursorPos.line).slice(cursorPos.ch);
+                            instance.setLine(cursorPos.line, firstLine);
+                            instance.setLine(cursorPos.line + 1, '');
+                            instance.setLine(cursorPos.line + 1, secondLine);
+                            break;
+                        }
+                        currentLine++;
+                    }
+                }
+
+                // move the cursor
                 cursorPos.line++;
                 instance.setCursor(cursorPos);
             }}
