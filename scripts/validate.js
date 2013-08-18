@@ -102,6 +102,9 @@ Game.prototype.validateCallback = function(callback) {
 	this.output.clear();
 	eval(this.editor.getGoodState()['code']); // get validateLevel method from last good state (if such a method exists)
 	try {
+		// reset timeout timer
+		var startTime = new Date().getTime();
+
 		// run the callback
 		callback();
 
