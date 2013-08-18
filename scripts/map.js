@@ -112,6 +112,12 @@ function Map(display, game) {
 		}
 	};
 
+	this.itemPickedUp = function (x, y, klass) {
+		if (_grid[x][y].type == klass) {
+			_grid[x][y].type = 'empty';
+		}
+	}
+
 	/* Functions called from startLevel */
 
 	this.placeObject = function (x, y, klass) {
@@ -119,18 +125,20 @@ function Map(display, game) {
 			throw "There is no type of object named " + klass + "!";
 		}
 
+		if (typeof(_grid[x]) === 'undefined' || typeof(_grid[x][y]) === 'undefined') {
+			throw "Not a valid location to place an object!";
+		}
+
 		if (this.objects[klass].type == 'dynamic') {
 			// dynamic object
-			if (typeof(_grid[x]) !== 'undefined' && typeof(_grid[x][y]) !== 'undefined') {
-				_dynamicObjects.push(new DynamicObject(this, klass, x, y));
-			}
+			_dynamicObjects.push(new DynamicObject(this, klass, x, y));
 		} else {
 			// static object
-	        if (typeof(_grid[x]) !== 'undefined' && typeof(_grid[x][y]) !== 'undefined') {
-	            if (!_player.atLocation(x, y) || klass == 'empty') {
-	                _grid[x][y].type = klass;
-	            }
-	        }
+	        if (_grid[x][y].type == 'empty' || _grid[x][y].type == klass) {
+			    _grid[x][y].type = klass;
+			} else {
+				throw "There is already an object at (" + x + ", " + y + ")!";
+			}
 		}
 	};
 

@@ -114,7 +114,7 @@ function Player(x, y, map) {
 		} else {
 			_inventory.push(objectName);
 		}
-		map.placeObject(_x, _y, 'empty');
+		map.itemPickedUp(_x, _y, objectName);
 		map.refresh();
 
 		if (object.onPickUp) {
