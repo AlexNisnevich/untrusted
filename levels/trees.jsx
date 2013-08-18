@@ -2,7 +2,10 @@
 {
     "commandsIntroduced":
         ["map.getGrid", "player.getX", "player.getY",
-         "player.setPhoneCallback", "output.write"]
+         "player.setPhoneCallback", "output.write"],
+    "mapProperties": {
+        "allowOverride": true
+    }
 }
 #END_PROPERTIES#
 /*
@@ -11,6 +14,8 @@
  * Dr. Eval was in a pickle. He needed to move through the shifting
  * forest without resetting his own position every time the forest
  * changed. Fortunately, he had another tool at his disposal ...
+ *
+ * NOTE: In this level, map.placeObject is allowed to overwrite existing objects.
  */
 function startLevel(map) {
     map.placePlayer(2, map.getHeight() - 1);

@@ -12,6 +12,7 @@ function Map(display, game) {
 	var _player;
 	var _grid;
 	var _dynamicObjects;
+	var _allowOverride;
 
 	this.reset = function () {
 		this.objects = clone(game.objects);
@@ -26,9 +27,17 @@ function Map(display, game) {
 		}
 
 		_dynamicObjects = [];
-
 		_player = null;
+		_allowOverride = false;
 	};
+
+	this.setProperties = function (mapProperties) {
+		if (!mapProperties) { return; }
+
+		if (mapProperties['allowOverride'] == true) {
+			_allowOverride = true;
+		}
+	}
 
 	this.getPlayer = function () { return _player; };
 	this.getGrid = function () { return _grid; };
@@ -126,7 +135,8 @@ function Map(display, game) {
 		}
 
 		if (typeof(_grid[x]) === 'undefined' || typeof(_grid[x][y]) === 'undefined') {
-			throw "Not a valid location to place an object!";
+			return;
+			// throw "Not a valid location to place an object!";
 		}
 
 		if (this.objects[klass].type == 'dynamic') {
@@ -134,7 +144,7 @@ function Map(display, game) {
 			_dynamicObjects.push(new DynamicObject(this, klass, x, y));
 		} else {
 			// static object
-	        if (_grid[x][y].type == 'empty' || _grid[x][y].type == klass) {
+	        if (_grid[x][y].type == 'empty' || _grid[x][y].type == klass || _allowOverride) {
 			    _grid[x][y].type = klass;
 			} else {
 				throw "There is already an object at (" + x + ", " + y + ")!";

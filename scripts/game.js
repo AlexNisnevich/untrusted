@@ -163,6 +163,7 @@ function Game() {
 		if (validatedStartLevel) { // code is valid
 			// reset the map
 			this.map.reset();
+			this.map.setProperties(this.editor.getProperties()['mapProperties']);
 
 			// save editor state
 			_currentCode = allCode;

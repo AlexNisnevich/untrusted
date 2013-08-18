@@ -1,5 +1,6 @@
 
 Game.prototype.VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel'];
+Game.prototype.allowedTime = 2000;
 
 // We may want to have level-specific hidden validation rules in the future.
 // var validationRulesByLevel = [ null ];
@@ -41,6 +42,8 @@ Game.prototype.validators = {
 }
 
 Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
+	var game = this;
+
 	var validateAtLeastXObjects = this.validators.validateAtLeastXObjects;
 	var validateExactlyXManyObjects = this.validators.validateExactlyXManyObjects;
 
@@ -59,17 +62,21 @@ Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
 		}
 
 		var display = this.display; var output = this.output;
+
 		var dummyMap = new Map(new DummyDisplay, this);
+		dummyMap.setProperties(this.editor.getProperties()['mapProperties']);
 
 		// modify the code to always check time to prevent infinite loops
 		allCode = $.map(allCode.split('\n'), function (line, i) {
-			return line.replace(/((for|while).*){/g,
-				"$1{ if (new Date().getTime() - startTime > allowedTime)" +
-					"{throw '[Line " + (i+1) + "] TimeOutException: Maximum execution time of ' + allowedTime + ' ms exceeded.';} ");
+			return line.replace(/((for|while) .*){/g,
+				"startTime = new Date().getTime();\n" +
+				"$1{\n" +
+					"if (new Date().getTime() - startTime > " + game.allowedTime + ") {\n" +
+						"throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + game.allowedTime + " ms exceeded.';\n" +
+					"}\n");
 		}).join('\n');
 
-		var allowedTime = 2000;
-		var startTime = new Date().getTime();
+		console.log(allCode);
 
 		// evaluate the code to get startLevel() and (opt) validateLevel() methods
 		eval(allCode);
@@ -102,9 +109,6 @@ Game.prototype.validateCallback = function(callback) {
 	this.output.clear();
 	eval(this.editor.getGoodState()['code']); // get validateLevel method from last good state (if such a method exists)
 	try {
-		// reset timeout timer
-		var startTime = new Date().getTime();
-
 		// run the callback
 		callback();
 
