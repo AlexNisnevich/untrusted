@@ -9,6 +9,7 @@ function Sound() {
 	var sounds = {
 		'blip': 'sound/blip.wav',
 		'complete': 'sound/complete.wav',
+		'hurt': 'sound/hurt.wav',
 		'select': 'sound/select.wav',
 		'static': 'sound/static.wav'
 	}
