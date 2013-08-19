@@ -111,6 +111,10 @@ function DynamicObject(map, type, x, y) {
 
 	this.onTurn = function () {
 		_myTurn = true;
-		_definition.behavior(this, map.getPlayer());
+		try {
+			_definition.behavior(this, map.getPlayer());
+		} catch (e) {
+			map.game.output.write(e.toString());
+		}
 	};
 }
