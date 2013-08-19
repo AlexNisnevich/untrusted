@@ -14,6 +14,7 @@ function CodeEditor(textAreaDomID, width, height) {
     var editableLines = [];
     var editableSections = {};
     var lastGoodState = {};
+    var lastChange = {};
 
     // preprocesses code,determines the location
     // of editable lines and sections, loads properties
@@ -84,6 +85,8 @@ function CodeEditor(textAreaDomID, width, height) {
     // enforces editing restrictions when set as the handler
     // for the 'beforeChange' event
     function enforceRestrictions(instance, change) {
+        lastChange = change;
+
         function inEditableArea(c) {
             var lineNum = c.to.line;
             if (editableLines.indexOf(lineNum) > -1) {
@@ -203,6 +206,7 @@ function CodeEditor(textAreaDomID, width, height) {
                             var firstLine = instance.getLine(cursorPos.line).slice(0, cursorPos.ch);
                             var secondLine = Array(cursorPos.ch + 1).join(" ")
                                 + instance.getLine(cursorPos.line).slice(cursorPos.ch);
+                            instance.setLine(cursorPos.line, '');
                             instance.setLine(cursorPos.line, firstLine);
                             instance.setLine(cursorPos.line + 1, '');
                             instance.setLine(cursorPos.line + 1, secondLine);
@@ -212,9 +216,12 @@ function CodeEditor(textAreaDomID, width, height) {
                     }
                 }
 
-                // move the cursor
+                // move the cursor and smart-indent
                 cursorPos.line++;
                 instance.setCursor(cursorPos);
+                if (instance.getLine(cursorPos.line).trim() == "") {
+                    instance.indentLine(cursorPos.line, "prev");
+                }
             }}
         });
 
@@ -236,10 +243,12 @@ function CodeEditor(textAreaDomID, width, height) {
             instance.refresh();
 
             // automatically smart-indent if the cursor is at position 0
-            // and the line is empty
-            var loc = instance.getCursor();
-            if (loc.ch === 0 && instance.getLine(loc.line).trim() == "") {
-                instance.indentLine(loc.line, "prev");
+            // and the line is empty (ignore if backspacing)
+            if (lastChange.origin != '+delete') {
+                var loc = instance.getCursor();
+                if (loc.ch === 0 && instance.getLine(loc.line).trim() == "") {
+                    instance.indentLine(loc.line, "prev");
+                }
             }
         });
 
