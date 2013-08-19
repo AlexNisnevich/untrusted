@@ -12,7 +12,7 @@ function Map(display, game) {
 	var _player;
 	var _grid;
 	var _dynamicObjects;
-	var _allowOverride;
+	var _allowOverwrite;
 
 	this.reset = function () {
 		this.objects = clone(game.objects);
@@ -28,14 +28,14 @@ function Map(display, game) {
 
 		_dynamicObjects = [];
 		_player = null;
-		_allowOverride = false;
+		_allowOverwrite = false;
 	};
 
 	this.setProperties = function (mapProperties) {
 		if (!mapProperties) { return; }
 
-		if (mapProperties['allowOverride'] == true) {
-			_allowOverride = true;
+		if (mapProperties['allowOverwrite'] == true) {
+			_allowOverwrite = true;
 		}
 	}
 
@@ -144,7 +144,7 @@ function Map(display, game) {
 			_dynamicObjects.push(new DynamicObject(this, klass, x, y));
 		} else {
 			// static object
-	        if (_grid[x][y].type == 'empty' || _grid[x][y].type == klass || _allowOverride) {
+	        if (_grid[x][y].type == 'empty' || _grid[x][y].type == klass || _allowOverwrite) {
 			    _grid[x][y].type = klass;
 			} else {
 				throw "There is already an object at (" + x + ", " + y + ")!";

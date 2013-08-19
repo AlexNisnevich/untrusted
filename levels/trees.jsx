@@ -4,7 +4,7 @@
         ["map.getGrid", "player.getX", "player.getY",
          "player.setPhoneCallback", "output.write"],
     "mapProperties": {
-        "allowOverride": true
+        "allowOverwrite": true
     }
 }
 #END_PROPERTIES#
