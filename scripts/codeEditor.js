@@ -111,10 +111,12 @@ function CodeEditor(textAreaDomID, width, height) {
             change.cancel();
 
             // unless it's pressing backspace at the start of a line
-            // and the line can fit on the line above it
+            // and the line above it is editable
+            // and the current line text can fit on the line above it
             if (change.to.ch == 0
                     && change.from.line == (change.to.line - 1)
                     && change.from.ch == instance.getLine(change.from.line).length
+                    && editableLines.indexOf(change.from.line) > -1
                     && instance.getLine(change.from.line).length
                         + instance.getLine(change.to.line).length < charLimit) {
 
