@@ -2,17 +2,8 @@ function Sound() {
 	var tracks = [
 		"/music/DmitryMazin-GameScratch.mp3",
 		"/music/Jackson_D_Zero_One.mp3",
-		"/music/what.mp3",
-		"/music/(((stereofect)))_Winter_Solstice_2012.mp3"
+		"/music/intricate_intricate_-_cloudy_sin.mp3"
 	];
-
-	var sounds = {
-		'blip': 'sound/blip.wav',
-		'complete': 'sound/complete.wav',
-		'hurt': 'sound/hurt.wav',
-		'select': 'sound/select.wav',
-		'static': 'sound/static.wav'
-	}
 
 	var bgPlayerElt = $("#jquery_bgPlayer");
 	var soundPlayerElt = $("#jquery_soundPlayer");
@@ -33,7 +24,18 @@ function Sound() {
 		});
 	}
 
-	this.playTrack = function (num) {
+	this.playTrackByName = function (num, name) {
+		if (num != this.currentLevelNum) {
+			$(bgPlayerElt).jPlayer('stop');
+			$(bgPlayerElt).jPlayer("setMedia", {
+				'mp3': '/music/' + name + '.mp3'
+			});
+			$(bgPlayerElt).jPlayer('play');
+			this.currentLevelNum = num;
+		}
+	}
+
+	this.playTrackByNum = function (num) {
 		if (num != this.currentLevelNum) {
 			$(bgPlayerElt).jPlayer('stop');
 			$(bgPlayerElt).jPlayer("setMedia", {
@@ -47,7 +49,7 @@ function Sound() {
 	this.playSound = function (name) {
 		$(soundPlayerElt).jPlayer('stop');
 		$(soundPlayerElt).jPlayer("setMedia", {
-			'wav': sounds[name]
+			'wav': 'sound/' + name + '.wav'
 		});
 		$(soundPlayerElt).jPlayer('play');
 	}

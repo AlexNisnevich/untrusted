@@ -2,7 +2,8 @@
 {
     "commandsIntroduced":
         ["map.createNewObject", "player.killedBy", "object.symbol",
-         "object.color", "object.onCollision"]
+         "object.color", "object.onCollision"],
+    "music": "Spectrofuzz_Sunset_84"
 }
 #END_PROPERTIES#
 /*

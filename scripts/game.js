@@ -12,16 +12,17 @@ function Game() {
 	_commands = [];
 
 	this.levelFileNames = [
-		'blocks.jsx', // levels start here
-		'theReturnOfBlocks.jsx',
+		'blocks.jsx',
 		'levelThree.jsx',
+		'theReturnOfBlocks.jsx',
 		'multiplicity.jsx',
-		'traps.jsx', // 5
+		'traps.jsx',
 		'trees.jsx',
-		'river.jsx',
 		'colors.jsx',
 		'monster.jsx',
-		'robot.jsx' // 10
+		'robot.jsx',
+		'river.jsx',
+		'credits.jsx'
 	];
 
 	this.currentLevel = 1;
@@ -227,7 +228,11 @@ function Game() {
 			$('#static').hide();
 
 			// start bg music for this level
-			this.sound.playTrack(this.currentLevel);
+			if (this.editor.getProperties()['music']) {
+				this.sound.playTrackByName(this.currentLevel, this.editor.getProperties()['music']);
+			} else {
+				this.sound.playTrackByNum(this.currentLevel);
+			}
 
 			// finally, allow player movement
 			this.map.getPlayer().canMove = true;
