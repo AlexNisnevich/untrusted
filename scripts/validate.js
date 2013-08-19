@@ -69,11 +69,11 @@ Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
 		// modify the code to always check time to prevent infinite loops
 		allCode = $.map(allCode.split('\n'), function (line, i) {
 			return line.replace(/((for|while) .*){/g,
-				"startTime = new Date().getTime();\n" +
-				"$1{\n" +
-					"if (new Date().getTime() - startTime > " + game.allowedTime + ") {\n" +
-						"throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + game.allowedTime + " ms exceeded.';\n" +
-					"}\n");
+				"startTime = new Date().getTime();" +
+				"$1{" +
+					"if (new Date().getTime() - startTime > " + game.allowedTime + ") {" +
+						"throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + game.allowedTime + " ms exceeded.';" +
+					"}");
 		}).join('\n');
 
 		// evaluate the code to get startLevel() and (opt) validateLevel() methods

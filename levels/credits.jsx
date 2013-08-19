@@ -4,10 +4,6 @@
 }
 #END_PROPERTIES#
 function startLevel(map) {
-    map.placePlayer(map.getWidth()-1, map.getHeight()-1);
-    map.placeObject(map.getWidth()-2, map.getHeight()-1, 'block');
-    map.placeObject(map.getWidth()-1, map.getHeight()-2, 'block');
-
     var credits = [
     	[15, 1, "U N T R U S T E D"],
     	[20, 2, "- or -"],

@@ -1,8 +1,8 @@
 function Sound() {
 	var tracks = [
-		"/music/DmitryMazin-GameScratch.mp3",
-		"/music/Jackson_D_Zero_One.mp3",
-		"/music/intricate_intricate_-_cloudy_sin.mp3"
+		"music/DmitryMazin-GameScratch.mp3",
+		"music/Jackson_D_Zero_One.mp3",
+		"music/intricate_intricate_-_cloudy_sin.mp3"
 	];
 
 	var bgPlayerElt = $("#jquery_bgPlayer");
@@ -14,13 +14,13 @@ function Sound() {
 		bgPlayerElt.jPlayer({
 			wmode: "window",
 			loop: true,
-			swfPath: "/lib/Jplayer.swf"
+			swfPath: "lib/Jplayer.swf"
 		});
 		soundPlayerElt.jPlayer({
 			wmode: "window",
 			loop: false,
 			supplied: 'wav',
-			swfPath: "/lib/Jplayer.swf"
+			swfPath: "lib/Jplayer.swf"
 		});
 	}
 
@@ -28,7 +28,7 @@ function Sound() {
 		if (num != this.currentLevelNum) {
 			$(bgPlayerElt).jPlayer('stop');
 			$(bgPlayerElt).jPlayer("setMedia", {
-				'mp3': '/music/' + name + '.mp3'
+				'mp3': 'music/' + name + '.mp3'
 			});
 			$(bgPlayerElt).jPlayer('play');
 			this.currentLevelNum = num;

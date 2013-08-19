@@ -56,17 +56,17 @@ deploy: release
 	@echo "Deploying to server…\t\t\t\c"
 	@rm -rf _site
 	@mkdir _site
-	@cp -R levels scripts styles index.html _site
+	@cp -R levels scripts styles images sound index.html _site
 	@./deploy.sh _site
 	@rm -rf _site
 	@echo "[ Done ]"
 
-# `make deploy-full` also deploys libs
+# `make deploy-full` also deploys music and libs
 deploy-full: release
 	@echo "Deploying to server…\t\t\t\c"
 	@rm -rf _site
 	@mkdir _site
-	@cp -R levels scripts styles lib index.html _site
+	@cp -R levels scripts styles images sound music lib index.html _site
 	@./deploy.sh _site
 	@rm -rf _site
 	@echo "[ Done ]"
