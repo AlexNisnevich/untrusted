@@ -176,6 +176,32 @@ function Map(display, game) {
 		return this.getGrid()[x][y].type;
 	}
 
+	this.getAdjacentEmptyCells = function (x, y) {
+		var map = this;
+		var actions = ['right', 'down', 'left', 'up'];
+		var adjacentEmptyCells = [];
+		$.each(actions, function (i, action) {
+			switch (actions[i]) {
+				case 'right':
+					var child = [x+1, y];
+					break;
+				case 'left':
+					var child = [x-1, y];
+					break;
+				case 'down':
+					var child = [x, y+1];
+					break;
+				case 'up':
+					var child = [x, y-1];
+					break;
+			}
+			if (map.getObjectTypeAt(child[0], child[1]) == 'empty') {
+				adjacentEmptyCells.push([child, action]);
+			}
+		});
+		return adjacentEmptyCells;
+	}
+
 	/* Initialization */
 
 	this.game = game;

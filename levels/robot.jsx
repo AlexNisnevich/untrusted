@@ -2,7 +2,7 @@
 {
     "commandsIntroduced":
         ["dynamicObject.giveItemTo", "dynamicObject.canMove",
-         "object.passableFor"]
+         "object.passableFor", "map.getAdjacentEmptyCells"]
 }
 #END_PROPERTIES#
 /*
@@ -13,6 +13,10 @@
  * just in the nick of time with the key that he needed.
  */
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function startLevel(map) {
     map.placePlayer(map.getWidth()-2, map.getHeight()-2);
 
@@ -20,16 +24,23 @@ function startLevel(map) {
         'type': 'dynamic',
         'symbol': 'R',
         'color': 'gray',
+        'inventory': ['key'],
         'onCollision': function (player, me) {
             me.giveItemTo(player, 'key');
         },
         'behavior': function (me) {
 #BEGIN_EDITABLE#
-            if (me.canMove('right')) {
-                me.move('right');
-            } else {
-                me.move('down');
-            }
+            // move randomly
+            var moves = map.getAdjacentEmptyCells(me.getX(), me.getY());
+            // getAdjacentEmptyCells gives array of ((x, y), direction) pairs
+            me.move(moves[getRandomInt(0, moves.length - 1)][1]);
+
+
+
+
+
+
+
 
 
 
