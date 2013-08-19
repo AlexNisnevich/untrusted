@@ -139,9 +139,10 @@ function CodeEditor(textAreaDomID, width, height) {
                 while (editableLines.indexOf(currentLine) > -1) {
                     currentLine++;
                 }
-                for (var i = startLine; i < currentLine; i++) {
+                for (var i = startLine; i < currentLine - 1; i++) {
                     instance.setLine(i, '');
                     instance.setLine(i, instance.getLine(i + 1));
+                    instance.setLine(i + 1, '');
                 }
             }
         }
