@@ -109,6 +109,39 @@ function CodeEditor(textAreaDomID, width, height) {
         else if (change.to.line !== change.from.line) {
             // don't allow multi-line deletion
             change.cancel();
+
+            // unless it's pressing backspace at the start of a line
+            // and the line can fit on the line above it
+            if (change.to.ch == 0
+                    && change.from.line == (change.to.line - 1)
+                    && change.from.ch == instance.getLine(change.from.line).length
+                    && instance.getLine(change.from.line).length
+                        + instance.getLine(change.to.line).length < charLimit) {
+
+                // move line up
+                var lineContents = instance.getLine(change.from.line)
+                    + instance.getLine(change.to.line);
+                instance.setLine(change.from.line, '');
+                instance.setLine(change.from.line, lineContents);
+                instance.setLine(change.to.line, '');
+
+                // move the cursor
+                cursorPos = instance.getCursor();
+                cursorPos.line--;
+                cursorPos.ch += change.from.ch;
+                instance.setCursor(cursorPos);
+
+                // shift up all remaining lines in block
+                var startLine = change.to.line;
+                var currentLine = startLine;
+                while (editableLines.indexOf(currentLine) > -1) {
+                    currentLine++;
+                }
+                for (var i = startLine; i < currentLine; i++) {
+                    instance.setLine(i, '');
+                    instance.setLine(i, instance.getLine(i + 1));
+                }
+            }
         }
         else {
             // don't allow multi-line paste - only paste first line
@@ -157,7 +190,7 @@ function CodeEditor(textAreaDomID, width, height) {
                             // out of editable block
                             break;
                         } else if (instance.getLine(currentLine).trim() == '') {
-                            // blank line found - shift lines up to it
+                            // blank line found - shift lines down to it
                             for (var i = currentLine; i > cursorPos.line; i--) {
                                 instance.setLine(i, '');
                                 instance.setLine(i, instance.getLine(i - 1));
