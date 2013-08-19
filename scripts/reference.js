@@ -37,17 +37,17 @@ Game.prototype.reference = {
 		'type': 'method',
 		'description': 'Creates a new type of <a onclick="$(\'#helpPaneSidebar .category#object\').click();">object</a> with the given properties.'
 	},
-	'map.getGrid': {
-		'name': 'map.getGrid()',
-		'category': 'map',
-		'type': 'method',
-		'description': 'Returns the map\'s internal grid representation.'
-	},
 	'map.getHeight': {
 		'name': 'map.getHeight()',
 		'category': 'map',
 		'type': 'method',
 		'description': 'Returns the height of the map, in pixels.'
+	},
+	'map.getObjectTypeAt': {
+		'name': 'map.getObjectTypeAt(x, y)',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Returns the type of the object at the given coordinates (or "empty" if there is no object there).'
 	},
 	'map.getPlayer': {
 		'name': 'map.getPlayer()',

@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["map.getGrid", "player.getX", "player.getY",
+        ["map.getObjectTypeAt", "player.getX", "player.getY",
          "player.setPhoneCallback", "output.write"],
     "mapProperties": {
         "allowOverwrite": true
@@ -55,13 +55,13 @@ function startLevel(map) {
             for (var j = 0; j < map.getHeight(); j++) {
 
                 // initialize to empty if the square contains a forest already
-                if (map.getGrid()[i][j].type === 'tree') {
+                if (map.getObjectTypeAt(i, j) === 'tree') {
                     // remove existing forest
                     map.placeObject(i,j, 'empty');
                 }
 
                 if (map.getPlayer().atLocation(i,j) ||
-                        map.getGrid()[i][j].type === 'exit') {
+                        map.getObjectTypeAt(i, j) === 'exit') {
                     continue;
                 }
 

@@ -172,6 +172,10 @@ function Map(display, game) {
 		}
 	};
 
+	this.getObjectTypeAt = function (x, y) {
+		return this.getGrid()[x][y].type;
+	}
+
 	/* Initialization */
 
 	this.game = game;
