@@ -11,6 +11,7 @@ js-modules = scripts/game.js \
                  scripts/dynamicObject.js \
                  scripts/objects.js \
                  scripts/player.js \
+                 scripts/sound.js \
                  scripts/reference.js \
                  scripts/validate.js \
                  scripts/launcher.js
@@ -22,6 +23,7 @@ js-modules-debug = scripts/game.js \
                  scripts/dynamicObject.js \
                  scripts/objects.js \
                  scripts/player.js \
+                 scripts/sound.js \
                  scripts/reference.js \
                  scripts/validate.js \
                  scripts/launcher-debug.js

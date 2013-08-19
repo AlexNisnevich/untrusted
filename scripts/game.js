@@ -12,16 +12,17 @@ function Game() {
 	_commands = [];
 
 	this.levelFileNames = [
-		'blocks.jsx', // levels start here
-		'theReturnOfBlocks.jsx',
+		'blocks.jsx',
 		'levelThree.jsx',
+		'theReturnOfBlocks.jsx',
 		'multiplicity.jsx',
-		'traps.jsx', // 5
+		'traps.jsx',
 		'trees.jsx',
-		'river.jsx',
 		'colors.jsx',
 		'monster.jsx',
-		'robot.jsx' // 10
+		'robot.jsx',
+		'river.jsx',
+		'credits.jsx'
 	];
 
 	this.currentLevel = 1;
@@ -57,29 +58,77 @@ function Game() {
 		this.display.focus();
 
 		// Enable shortcut keys
-		shortcut.add('ctrl+1', function () { game.openHelp(); return true; });
-		shortcut.add('ctrl+2', function () { game.display.focus(); return true; });
-		shortcut.add('ctrl+3', function () { game.editor.focus(); return true; });
-		shortcut.add('ctrl+4', function () { game.resetEditor(); return true; });
-		shortcut.add('ctrl+5', function () { game.evalLevelCode(); return true; });
-		shortcut.add('ctrl+6', function () { game.usePhone(); return true; });
-		shortcut.add('ctrl+0', function () { game.openMenu(); return true; });
+		shortcut.add('ctrl+1', function () {
+			game.sound.playSound('select');
+			game.openHelp(); return true;
+		});
+		shortcut.add('ctrl+2', function () {
+			game.sound.playSound('select');
+			game.display.focus(); return true;
+		});
+		shortcut.add('ctrl+3', function () {
+			game.sound.playSound('select');
+			game.editor.focus(); return true;
+		});
+		shortcut.add('ctrl+4', function () {
+			game.sound.playSound('select');
+			game.resetEditor(); return true;
+		});
+		shortcut.add('ctrl+5', function () {
+			game.sound.playSound('blip');
+			game.evalLevelCode();
+			return true;
+		});
+		shortcut.add('ctrl+6', function () {
+			game.sound.playSound('select');
+			game.usePhone(); return true;
+		});
+		shortcut.add('ctrl+0', function () {
+			game.sound.playSound('select');
+			game.openMenu(); return true;
+		});
 
 		// Enable buttons
-		$("#helpButton").click( function () { game.openHelp();} );
-		$("#mapButton").click( function () { game.display.focus();} );
-		$("#editorButton").click( function () { game.editor.focus();} );
-		$("#resetButton").click( function () { game.resetEditor();} );
-		$("#executeButton").click( function () { game.evalLevelCode();} );
-		$("#phoneButton").click( function () { game.usePhone();} );
-		$("#menuButton").click( function () { game.openMenu();} );
-		$("#helpPaneCloseButton").click ( function () {  $('#helpPane').hide();} );
+		$("#helpButton").click( function () {
+			game.sound.playSound('select');
+			game.openHelp();} );
+		$("#mapButton").click( function () {
+			game.sound.playSound('select');
+			game.display.focus();} );
+		$("#editorButton").click( function () {
+			game.sound.playSound('select');
+			game.editor.focus();} );
+		$("#resetButton").click( function () {
+			game.sound.playSound('select');
+			game.resetEditor();} );
+		$("#executeButton").click( function () {
+			game.sound.playSound('blip');
+			game.evalLevelCode();
+		});
+		$("#phoneButton").click( function () {
+			game.sound.playSound('select');
+			game.usePhone();} );
+		$("#menuButton").click( function () {
+			game.sound.playSound('select');
+			game.openMenu();} );
+
+		$("#helpPaneCloseButton").click ( function () {
+			game.sound.playSound('select');
+			$('#helpPane').hide();}
+		);
+		$("#muteButton").click( function () {
+			game.sound.toggleSound();
+		} );
+
+		// Start sound
+		this.sound = new Sound();
 	}
 
 	this.moveToNextLevel = function () {
 		var game = this;
 
 		this.currentLevel++;
+		game.sound.playSound('complete');
 		this.output.write('Loading level ' + this.currentLevel + ' ...');
 		this.map.getPlayer().canMove = false;
 		this.display.fadeOut(this.map, function () {
@@ -179,11 +228,19 @@ function Game() {
 			map.refresh();
 			$('#static').hide();
 
+			// start bg music for this level
+			if (this.editor.getProperties()['music']) {
+				this.sound.playTrackByName(this.currentLevel, this.editor.getProperties()['music']);
+			} else {
+				this.sound.playTrackByNum(this.currentLevel);
+			}
+
 			// finally, allow player movement
 			this.map.getPlayer().canMove = true;
 		} else { // code is invalid
 			// show static and reload from last good state
 			$('#static').show();
+			this.sound.playSound('static');
 			setTimeout(function () {
 				var goodState = game.editor.getGoodState();
 				game.evalLevelCode(goodState.code, goodState.playerCode);

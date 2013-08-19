@@ -227,3 +227,10 @@ h2 {
     color: yellow;
     font-style: italic;
 }
+
+#muteButton {
+	float: right;
+	position: relative;
+	top: 1em;
+	cursor: pointer;
+}

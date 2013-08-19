@@ -1,6 +1,7 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": ["map.setSquareColor"]
+    "commandsIntroduced": ["map.setSquareColor"],
+    "music": "Skizofonik_System"
 }
 #END_PROPERTIES#
 /*

@@ -8,9 +8,10 @@
 	<link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="styles/game.css">
 
-	<script src="lib/jquery-1.9.1.min.js"></script>
-	<script src="lib/shortcut.js"></script>
-	<script src="lib/rotjs-library/rot.js"></script>
+	<script type="text/javascript" src="lib/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="lib/shortcut.js"></script>
+	<script type="text/javascript" src="lib/rotjs-library/rot.js"></script>
+	<script type="text/javascript" src="lib/jquery.jplayer.min.js"></script>
 
 
 	<link rel="stylesheet" href="lib/codemirror-3.1/lib/codemirror.css">
@@ -26,6 +27,7 @@
 		<div>
 			<h1>Untrusted</h1>
 			<h2>&mdash;or&mdash; the Continuing Adventures of Dr. Eval</h2>
+			<a id="muteButton"><img src="images/mute-off.gif" /></a>
 		</div>
 		<div id="panes">
 			<div id="screenPane">
@@ -64,6 +66,8 @@
 			</div>
 		</div>
 	</div>
+	<div id="jquery_bgPlayer" class="jp-jplayer"></div>
+	<div id="jquery_soundPlayer" class="jp-jplayer"></div>
 	<script type="text/javascript">
 	  var _gaq = _gaq || [];
 	  _gaq.push(['_setAccount', 'UA-345959-12']);
