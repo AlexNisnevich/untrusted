@@ -18,7 +18,7 @@ function getRandomInt(min, max) {
 }
 
 function startLevel(map) {
-    map.placePlayer(map.getWidth()-2, map.getHeight()-2);
+    map.placePlayer(0, map.getHeight() - 1);
 
     map.createNewObject('robot', {
         'type': 'dynamic',
@@ -30,6 +30,17 @@ function startLevel(map) {
         },
         'behavior': function (me) {
 #BEGIN_EDITABLE#
+            if (me.canMove('right')) {
+                me.move('right');
+            } else {
+                me.move('down');
+            }
+
+
+
+
+
+
 
 
 
@@ -54,9 +65,9 @@ function startLevel(map) {
         }
     });
 
-    map.placeObject(0, map.getHeight() - 1, 'exit');
-    map.placeObject(0, map.getHeight() - 2, 'lock');
-    map.placeObject(1, map.getHeight() - 1, 'lock');
+    map.placeObject(map.getWidth() - 1, map.getHeight() - 1, 'exit');
+    map.placeObject(map.getWidth() - 1, map.getHeight() - 2, 'lock');
+    map.placeObject(map.getWidth() - 2, map.getHeight() - 1, 'lock');
     map.placeObject(1, 1, 'robot');
     map.placeObject(map.getWidth() - 2, 9, 'barrier');
 
@@ -70,5 +81,10 @@ function startLevel(map) {
     for (var y = 1; y < 9; y++) {
         map.placeObject(0, y, 'block');
         map.placeObject(map.getWidth() - 1, y, 'block');
+    }
+
+    for (var i = 0; i < 4; i++) {
+        map.placeObject(20 - i, i + 1, 'block');
+        map.placeObject(35 - i, 8 - i, 'block');
     }
 }
