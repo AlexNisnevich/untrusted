@@ -164,7 +164,7 @@ function Map(display, game) {
 		_grid[x][y].bgColor = bgColor;
 	};
 
-	this.createNewObject = function (name, properties) {
+	this.defineObject = function (name, properties) {
 		if (!this.objects[name]) {
 			this.objects[name] = properties;
 		} else {

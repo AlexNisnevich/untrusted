@@ -1,8 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced":
-        ["dynamicObject.giveItemTo", "dynamicObject.canMove",
-         "object.passableFor", "map.getAdjacentEmptyCells"]
+    "commandsIntroduced": []
 }
 #END_PROPERTIES#
 /*
@@ -20,7 +18,7 @@ function getRandomInt(min, max) {
 function startLevel(map) {
     map.placePlayer(0, map.getHeight() - 1);
 
-    map.createNewObject('robot', {
+    map.defineObject('robot', {
         'type': 'dynamic',
         'symbol': 'R',
         'color': 'gray',
@@ -50,14 +48,14 @@ function startLevel(map) {
         }
     });
 
-    map.createNewObject('barrier', {
+    map.defineObject('barrier', {
         'symbol': '░',
         'color': 'purple',
         'impassable': true,
         'passableFor': ['robot']
     });
 
-    map.createNewObject('lock', {
+    map.defineObject('lock', {
         'symbol': String.fromCharCode(0x13cc),
         'color': 'gray',
         'impassable': function (player) {

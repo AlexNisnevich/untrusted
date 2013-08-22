@@ -4,7 +4,8 @@
 js-target = scripts/build/untrusted.js
 js-target-min = scripts/build/untrusted.min.js
 
-js-modules = scripts/game.js \
+js-modules = scripts/helpers.js \
+                 scripts/game.js \
                  scripts/display.js \
                  scripts/codeEditor.js \
                  scripts/map.js \
@@ -16,7 +17,8 @@ js-modules = scripts/game.js \
                  scripts/validate.js \
                  scripts/launcher.js
 
-js-modules-debug = scripts/game.js \
+js-modules-debug = scripts/helpers.js \
+                 scripts/game.js \
                  scripts/display.js \
                  scripts/codeEditor.js \
                  scripts/map.js \

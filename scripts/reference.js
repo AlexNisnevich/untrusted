@@ -31,11 +31,17 @@ Game.prototype.reference = {
 		'description': 'Raises an exception if there are not exactly num objects of type objectType on the map.'
 	},
 
-	'map.createNewObject': {
-		'name': 'map.createNewObject(type, properties)',
+	'map.defineObject': {
+		'name': 'map.defineObject(type, properties)',
 		'category': 'map',
 		'type': 'method',
-		'description': 'Creates a new type of <a onclick="$(\'#helpPaneSidebar .category#object\').click();">object</a> with the given properties.'
+		'description': 'Defines a new type of <a onclick="$(\'#helpPaneSidebar .category#object\').click();">object</a> with the given properties. Note that type definitions created with map.defineObject only persist in the scope of the level.'
+	},
+	'map.getAdjacentEmptyCells': {
+		'name': 'map.getAdjacentEmptyCells(x, y)',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Returns the empty cells adjacent to the cell at the given coordinates (if any), as an array of items of the form <i>[[x, y], direction]</i>, where (x, y) are the coordinates of each empty cell, and <i>direction</i> is the direction from the given cell to each empty cell ("left", "right", "up", or "down").'
 	},
 	'map.getHeight': {
 		'name': 'map.getHeight()',
@@ -80,11 +86,65 @@ Game.prototype.reference = {
 		'description': 'Places the player at the given coordinates.'
 	},
 
+	'object.behavior': {
+		'name': 'object.behavior = function (object)',
+		'category': 'object',
+		'type': 'property',
+		'description': '(For dynamic objects only.) The function that is executed each time it is this object\'s turn.'
+	},
+	'object.canMove': {
+		'name': 'object.canMove(direction)',
+		'category': 'object',
+		'type': 'method',
+		'description': '(For dynamic objects only.) Returns true iff the object is able to move one square in the given direction, which can be "left", "right", "up", or "down".'
+	},
 	'object.color': {
 		'name': 'object.color',
 		'category': 'object',
 		'type': 'property',
 		'description': 'The color of the object\'s symbol on the map.'
+	},
+	'object.findNearest': {
+		'name': 'object.findNearest(type)',
+		'category': 'object',
+		'type': 'method',
+		'description': '(For dynamic objects only.) Returns the x and y coordinates of the nearest object of the given type to this object, as a hash.'
+	},
+	'object.getX': {
+		'name': 'object.getX()',
+		'category': 'object',
+		'type': 'method',
+		'description': '(For dynamic objects only.) Returns the x-coordinate of the object.'
+	},
+	'object.getY': {
+		'name': 'object.getY()',
+		'category': 'object',
+		'type': 'method',
+		'description': '(For dynamic objects only.) Returns the y-coordinate of the object.'
+	},
+	'object.giveItemTo': {
+		'name': 'object.giveItemTo(target, item)',
+		'category': 'object',
+		'type': 'method',
+		'description': '(For dynamic objects only.) Gives the given item to the target (generally, the player). Can only be done if the object and the player have just collided.'
+	},
+	'object.impassable': {
+		'name': 'object.impassable = function (player, object)',
+		'category': 'object',
+		'type': 'property',
+		'description': 'The function that is determines whether or not the player can pass through this object.'
+	},
+	'object.inventory': {
+		'name': 'object.inventory',
+		'category': 'object',
+		'type': 'property',
+		'description': '(For dynamic objects only.) The list of items that every object of this type starts with.'
+	},
+	'object.move': {
+		'name': 'object.move(direction)',
+		'category': 'object',
+		'type': 'method',
+		'description': '(For dynamic objects only.) Moves the object one square in the given direction, which can be "left", "right", "up", or "down". An object can only move once per turn.'
 	},
 	'object.onCollision': {
 		'name': 'object.onCollision = function (player)',
@@ -97,6 +157,12 @@ Game.prototype.reference = {
 		'category': 'object',
 		'type': 'property',
 		'description': 'The object\'s symbol on the map.'
+	},
+	'object.type': {
+		'name': 'object.type',
+		'category': 'object',
+		'type': 'property',
+		'description': 'Can be "item", "dynamic", or none. If "dynamic", then this object can move on turns that run each time that the player moves. If "item", then this object can be picked up.'
 	},
 
 	'output.write': {
@@ -111,6 +177,12 @@ Game.prototype.reference = {
 		'category': 'player',
 		'type': 'method',
 		'description': 'Returns true if and only if the player is at the given location.'
+	},
+	'player.getColor': {
+		'name': 'player.getColor()',
+		'category': 'player',
+		'type': 'method',
+		'description': 'Returns the color of the player.'
 	},
 	'player.getX': {
 		'name': 'player.getX()',
@@ -135,6 +207,12 @@ Game.prototype.reference = {
 		'category': 'player',
 		'type': 'method',
 		'description': 'Kills the player and displays the given text as the cause of death.'
+	},
+	'player.setColor': {
+		'name': 'player.setColor(color)',
+		'category': 'player',
+		'type': 'method',
+		'description': 'Sets the color of the player.'
 	},
 	'player.setPhoneCallback': {
 		'name': 'player.setPhoneCallback(callback)',

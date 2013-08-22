@@ -117,6 +117,7 @@ function Player(x, y, map) {
 		}
 		map.itemPickedUp(_x, _y, objectName);
 		map.refresh();
+		game.sound.playSound('pickup');
 
 		if (object.onPickUp) {
 			this.game.validateCallback(function () {

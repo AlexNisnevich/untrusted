@@ -1,6 +1,8 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": ["player.getColor, player.setColor, object.impassable"]
+    "commandsIntroduced":
+    	["map.defineObject", "player.getColor", "player.setColor",
+    	 "object.color", "object.impassable", "object.symbol"]
 }
 #END_PROPERTIES#
 /*
@@ -28,7 +30,7 @@ function startLevel(map) {
 	});
 
 
-	map.createNewObject('redLock', {
+	map.defineObject('redLock', {
 		symbol: '☒',
 		color: "#f00", // red
 		impassable: function(player, object) {
@@ -36,7 +38,7 @@ function startLevel(map) {
 		}
 	});
 
-	map.createNewObject('greenLock', {
+	map.defineObject('greenLock', {
 		symbol: '☒',
 		color: "#0f0", // green
 		impassable: function(player, object) {
@@ -44,7 +46,7 @@ function startLevel(map) {
 		}
 	});
 
-	map.createNewObject('yellowLock', {
+	map.defineObject('yellowLock', {
 		symbol: '☒',
 		color: "#ff0", // yellow
 		impassable: function(player, object) {

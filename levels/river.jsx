@@ -1,8 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["map.createNewObject", "player.killedBy", "object.symbol",
-         "object.color", "object.onCollision"],
+        ["player.killedBy", "object.onCollision"],
     "music": "Spectrofuzz_Sunset_84"
 }
 #END_PROPERTIES#
@@ -16,7 +15,7 @@
 function startLevel(map) {
     map.placePlayer(map.getWidth()-1, map.getHeight()-1);
 
-    map.createNewObject('water', {
+    map.defineObject('water', {
         'symbol': '░',
         'color': '#44f',
         'onCollision': function (player) {

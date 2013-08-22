@@ -258,6 +258,7 @@ function Game() {
 		$('#helpPaneSidebar ul').html('');
 		$('#helpPaneContent').html('');
 
+		// build help
 		$.each(_commands, function (i, command) {
 			if (game.reference[command]) {
 				var reference = game.reference[command];
@@ -291,7 +292,14 @@ function Game() {
 					.appendTo($command);
 
 			}
-		})
+		});
+
+		// sort help commands
+		$('#helpPaneContent .category .command').sortElements(function (a, b) {
+			var contentA = $(a).find('.commandTitle').text();
+			var contentB = $(b).find('.commandTitle').text();
+			return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+		});
 
 		if (!$('#helpPane').is(':visible')) {
 			$('#helpPane').show();

@@ -1,8 +1,8 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["object.type", "object.behavior", "dynamicObject.findNearest",
-         "dynamicObject.getX", "dynamicObject.getY", "dynamicObject.move"]
+        ["object.type", "object.behavior", "object.findNearest",
+         "object.getX", "object.getY", "object.canMove", "object.move"]
 }
 #END_PROPERTIES#
 /*
@@ -14,7 +14,7 @@
 function startLevel(map) {
     map.placePlayer(2, 2);
 
-    map.createNewObject('monster', {
+    map.defineObject('monster', {
         'type': 'dynamic',
         'symbol': 'M',
         'color': 'brown',
@@ -26,14 +26,19 @@ function startLevel(map) {
             var leftDist = me.getX() - target.x;
             var upDist = me.getY() - target.y;
 
+            var direction;
             if (upDist > 0 && upDist >= leftDist) {
-                me.move('up');
+                direction = 'up';
             } else if (upDist < 0 && upDist < leftDist) {
-                me.move('down');
+                direction = 'down';
             } else if (leftDist > 0 && leftDist >= upDist) {
-                me.move('left');
+                direction = 'left';
             } else {
-                me.move('right');
+                direction = 'right';
+            }
+
+            if (me.canMove(direction)) {
+                me.move(direction);
             }
         }
     });
