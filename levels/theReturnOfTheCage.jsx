@@ -6,7 +6,7 @@
 }
 #END_PROPERTIES#
 /*
- * theReturnOfBlocks.js
+ * theReturnOfTheCage.js
  *
  * Of course, you mustn't think that we'd let you
  * get away with just anything! The validateLevel

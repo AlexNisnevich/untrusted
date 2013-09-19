@@ -4,7 +4,7 @@
 }
 #END_PROPERTIES#
 /*
- * levelThree.js
+ * maze.js
  *
  * This is the third level of this game! Are
  * you having fun so far? I sure hope so!
