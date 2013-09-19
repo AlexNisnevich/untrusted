@@ -1,18 +1,11 @@
-function clone(obj) {
-    if(obj == null || typeof(obj) != 'object')
-        return obj;
-    var temp = obj.constructor();
-    for(var key in obj)
-        temp[key] = clone(obj[key]);
-    return temp;
-}
-
 function Map(display, game) {
 	// Private variables
 	var _player;
 	var _grid;
 	var _dynamicObjects;
+
 	var _allowOverwrite;
+    var _keyDelay;
     var _interval;
 
 	this.reset = function () {
@@ -29,16 +22,24 @@ function Map(display, game) {
 
 		_dynamicObjects = [];
 		_player = null;
-		_allowOverwrite = false;
 
+		_allowOverwrite = false;
         clearInterval(_interval);
 	};
 
 	this.setProperties = function (mapProperties) {
+		// set defaults
+		_keyDelay = 0;
+
+		// now set any properties that were passed in
 		if (!mapProperties) { return; }
 
 		if (mapProperties['allowOverwrite'] == true) {
 			_allowOverwrite = true;
+		}
+
+		if (mapProperties['keyDelay']) {
+			_keyDelay = mapProperties['keyDelay'];
 		}
 	}
 
@@ -214,6 +215,13 @@ function Map(display, game) {
 
     this.startTimer = function(timer, delay) {
         _interval = setInterval(timer, delay);
+    };
+
+    this.reenableMovementForPlayer = function(player) {
+    	console.log(_keyDelay);
+    	setTimeout(function () {
+    		player.canMove = true;
+    	}, _keyDelay);
     };
 
 	/* Initialization */

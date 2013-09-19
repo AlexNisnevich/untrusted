@@ -15,7 +15,8 @@ function startLevel(map) {
     	[1, 12, "intricate - cloudy sin (CC-BY-NC-ND)"],
     	[1, 13, "System - Skizofonik (CC-BY-NC-ND)"],
     	[1, 14, "Sunset 84 - Spectrofuzz (CC-BY-ND)"],
-    	[1, 15, "The Green - Yonnie (CC-BY-ND)"],
+        [1, 15, "Beach Wedding Dance - Rolemusic (CC-BY-NC-SA)"],
+    	[1, 16, "The Green - Yonnie (CC-BY-ND)"],
     	[15, map.getHeight() - 2, "Thank you for playing!"]
     ];
 

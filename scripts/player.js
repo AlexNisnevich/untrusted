@@ -34,7 +34,7 @@ function Player(x, y, map) {
 	}
 
 	this.move = function (direction, fromKeyboard) {
-		// are we allowing keyboard input right now?
+        // are we allowing keyboard input right now?
 		if (!this.canMove && fromKeyboard) {
 			return false;
 		}
@@ -71,8 +71,6 @@ function Player(x, y, map) {
 			_y = new_y;
 			this.draw();
 
-            var _p = this;
-
             if (fromKeyboard) {
                 this.canMove = false;
             }
@@ -80,8 +78,15 @@ function Player(x, y, map) {
 			this.afterMove(_x, _y);
 
             if (fromKeyboard) {
-                setTimeout(function () { _p.canMove = true; }, 25);
+            	// called from map to take into account key delay
+            	map.reenableMovementForPlayer(this);
             }
+		}
+	};
+
+	this.moveMulti = function (direction, times) {
+		for (var i = 0; i < times; i++) {
+			this.move(direction)
 		}
 	};
 
@@ -109,6 +114,7 @@ function Player(x, y, map) {
 
 		this.game.display.drawAll(this.map); // in case there are any artifacts
 		this.map.moveAllDynamicObjects();
+
         if (this.map.afterMoveCallback) {
             this.map.afterMoveCallback();
         }

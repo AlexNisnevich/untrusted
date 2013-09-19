@@ -21,10 +21,10 @@ function Game() {
 		'colors.jsx',
 		'monster.jsx',
 		'robot.jsx',
-        'platformer.jsx',
 		'robotNav.jsx',
 		'robotMaze.jsx',
 		'river.jsx',
+        'platformer.jsx',
 		'credits.jsx'
 	];
 
@@ -152,6 +152,7 @@ function Game() {
 			$('#phoneButton').show();
 		}
 		this.getLevel(levelNum);
+		this.display.focus();
 	}
 
 	// makes an ajax request to get the level text file and

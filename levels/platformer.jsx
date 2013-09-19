@@ -1,7 +1,11 @@
 #BEGIN_PROPERTIES#
-{ }
+{
+    "music": "Rolemusic_-_07_-_Beach_Wedding_Dance",
+    "mapProperties": {
+        "keyDelay": 25
+    }
+}
 #END_PROPERTIES#
-
 function startLevel(map) {
 
     var fl = Math.floor;
@@ -40,11 +44,11 @@ function startLevel(map) {
 
     }
     map.startTimer(gravity, 50);
+
+    function jump() {
+        map.getPlayer().moveMulti('up', 10);
+    }
+    #BEGIN_EDITABLE#
+
+    #END_EDITABLE#
 }
-
-#BEGIN_EDITABLE#
-
-
-#END_EDITABLE#
-
-
