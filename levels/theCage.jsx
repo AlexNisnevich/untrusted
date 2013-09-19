@@ -6,7 +6,7 @@
 }
 #END_PROPERTIES#
 /*
- * blocks.js
+ * theCage.js
  *
  * This is the first level, so we'll give you a hint.
  * In fact, a really obvious hint (hey, it's level 0).

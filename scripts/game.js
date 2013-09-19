@@ -12,9 +12,9 @@ function Game() {
 	_commands = [];
 
 	this.levelFileNames = [
-		'blocks.jsx',
-		'levelThree.jsx',
-		'theReturnOfBlocks.jsx',
+		'theCage.jsx',
+		'maze.jsx',
+		'theReturnOfTheCage.jsx',
 		'multiplicity.jsx',
 		'traps.jsx',
 		'trees.jsx',
