@@ -229,8 +229,6 @@ h2 {
 }
 
 #muteButton {
-	float: right;
-	position: relative;
 	top: 1em;
 	cursor: pointer;
 }
