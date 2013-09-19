@@ -58,11 +58,11 @@ function Sound() {
 		if (muted) {
 			bgPlayerElt.jPlayer('unmute');
 			soundPlayerElt.jPlayer('unmute');
-			$("#muteButton img").attr('src', 'images/mute-off.gif');
+			$("#muteButton img").attr('src', 'images/mute-off.png');
 		} else {
 			bgPlayerElt.jPlayer('mute');
 			soundPlayerElt.jPlayer('mute');
-			$("#muteButton img").attr('src', 'images/mute-on.gif');
+			$("#muteButton img").attr('src', 'images/mute-on.png');
 		}
 		muted = !muted;
 	}
