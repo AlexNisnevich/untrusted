@@ -5,8 +5,9 @@ function Map(display, game) {
 	var _dynamicObjects;
 
 	var _allowOverwrite;
-    var _keyDelay;
-    var _interval;
+	var _allowMultiMove;
+	var _keyDelay;
+	var _intervals = [];
 
 	this.reset = function () {
 		this.objects = clone(game.objects);
@@ -23,12 +24,16 @@ function Map(display, game) {
 		_dynamicObjects = [];
 		_player = null;
 
-		_allowOverwrite = false;
-        clearInterval(_interval);
+		for (var i = 0; i < _intervals.length; i++) {
+			clearInterval(_intervals[i]);
+		}
+		_intervals = [];
 	};
 
 	this.setProperties = function (mapProperties) {
 		// set defaults
+		_allowOverwrite = false;
+		_allowMultiMove = false;
 		_keyDelay = 0;
 
 		// now set any properties that were passed in
@@ -36,6 +41,10 @@ function Map(display, game) {
 
 		if (mapProperties['allowOverwrite'] == true) {
 			_allowOverwrite = true;
+		}
+
+		if (mapProperties['allowMultiMove'] == true) {
+			_allowMultiMove = true;
 		}
 
 		if (mapProperties['keyDelay']) {
@@ -48,6 +57,7 @@ function Map(display, game) {
 	this.getDynamicObjects = function () { return _dynamicObjects; };
 	this.getWidth = function () { return game.dimensions.width; };
 	this.getHeight = function () { return game.dimensions.height; };
+	this.isMultiMoveAllowed = function () { return _allowMultiMove; }
 
 	this.refresh = function () {
 		this.display.drawAll(this);
@@ -129,7 +139,13 @@ function Map(display, game) {
 		if (_grid[x][y].type == klass) {
 			_grid[x][y].type = 'empty';
 		}
-	}
+	};
+
+	this.reenableMovementForPlayer = function(player) {
+		setTimeout(function () {
+			player.canMove = true;
+		}, _keyDelay);
+	};
 
 	/* Functions called from startLevel */
 
@@ -148,8 +164,8 @@ function Map(display, game) {
 			_dynamicObjects.push(new DynamicObject(this, klass, x, y));
 		} else {
 			// static object
-	        if (_grid[x][y].type == 'empty' || _grid[x][y].type == klass || _allowOverwrite) {
-			    _grid[x][y].type = klass;
+			if (_grid[x][y].type == 'empty' || _grid[x][y].type == klass || _allowOverwrite) {
+				_grid[x][y].type = klass;
 			} else {
 				throw "There is already an object at (" + x + ", " + y + ")!";
 			}
@@ -206,23 +222,16 @@ function Map(display, game) {
 		return adjacentEmptyCells;
 	}
 
-    this.setAfterMoveCallback = function(callback) {
-        if (typeof this.afterMoveCallback !== 'undefined') {
-            throw "Cannot set afterMoveCallback more than once";
-        }
-        this.afterMoveCallback = callback;
-    };
+	this.setAfterMoveCallback = function(callback) {
+		if (typeof this.afterMoveCallback !== 'undefined') {
+			throw "Cannot set afterMoveCallback more than once";
+		}
+		this.afterMoveCallback = callback;
+	};
 
-    this.startTimer = function(timer, delay) {
-        _interval = setInterval(timer, delay);
-    };
-
-    this.reenableMovementForPlayer = function(player) {
-    	console.log(_keyDelay);
-    	setTimeout(function () {
-    		player.canMove = true;
-    	}, _keyDelay);
-    };
+	this.startTimer = function(timer, delay) {
+		_intervals.push(setInterval(timer, delay));
+	};
 
 	/* Initialization */
 

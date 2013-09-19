@@ -2,7 +2,8 @@
 {
     "music": "Rolemusic_-_07_-_Beach_Wedding_Dance",
     "mapProperties": {
-        "keyDelay": 25
+        "keyDelay": 25,
+        "allowMultiMove": true
     }
 }
 #END_PROPERTIES#
@@ -21,7 +22,6 @@ function startLevel(map) {
             map.placeObject(x, y, 'block');
         }
     }
-    console.log("H " + h + " W " + w);
 
     for (var x = fl(w/2)+3; x <= w; x++) {
         for (var y = fl(h/2); y < h; y++) {
@@ -46,9 +46,21 @@ function startLevel(map) {
     map.startTimer(gravity, 50);
 
     function jump() {
-        map.getPlayer().moveMulti('up', 10);
-    }
-    #BEGIN_EDITABLE#
+        var player = map.getPlayer();
+        var x = player.getX();
+        var y = player.getY() + 1;
 
-    #END_EDITABLE#
+        if (map.getObjectTypeAt(x,y) !== "empty") {
+            var framesLeft = 18;
+            map.startTimer(function () {
+                if (framesLeft > 0) {
+                    map.getPlayer().moveMulti('up', 1);
+                    framesLeft--;
+                }
+            }, 25);
+        }
+    }
+#BEGIN_EDITABLE#
+
+#END_EDITABLE#
 }
