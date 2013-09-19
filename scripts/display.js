@@ -26,7 +26,8 @@ ROT.Display.prototype.setupEventHandlers = function() {
 	$(this.getContainer()).attr("contentEditable", "true");
 	this.getContainer().addEventListener("keydown", function(e) {
 		if (keys[e.keyCode]) {
-			game.map.getPlayer().move(keys[e.keyCode]);
+			game.map.getPlayer().move(keys[e.keyCode], true);
+            console.log("Called move");
 		}
 	});
 

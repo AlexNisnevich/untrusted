@@ -13,6 +13,7 @@ function Map(display, game) {
 	var _grid;
 	var _dynamicObjects;
 	var _allowOverwrite;
+    var _interval;
 
 	this.reset = function () {
 		this.objects = clone(game.objects);
@@ -29,6 +30,8 @@ function Map(display, game) {
 		_dynamicObjects = [];
 		_player = null;
 		_allowOverwrite = false;
+
+        clearInterval(_interval);
 	};
 
 	this.setProperties = function (mapProperties) {
@@ -201,6 +204,17 @@ function Map(display, game) {
 		});
 		return adjacentEmptyCells;
 	}
+
+    this.setAfterMoveCallback = function(callback) {
+        if (typeof this.afterMoveCallback !== 'undefined') {
+            throw "Cannot set afterMoveCallback more than once";
+        }
+        this.afterMoveCallback = callback;
+    };
+
+    this.startTimer = function(timer, delay) {
+        _interval = setInterval(timer, delay);
+    };
 
 	/* Initialization */
 

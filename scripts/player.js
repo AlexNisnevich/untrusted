@@ -33,9 +33,9 @@ function Player(x, y, map) {
 		return (_x === x && _y === y);
 	}
 
-	this.move = function (direction) {
+	this.move = function (direction, fromKeyboard) {
 		// are we allowing keyboard input right now?
-		if (!this.canMove) {
+		if (!this.canMove && fromKeyboard) {
 			return false;
 		}
 
@@ -70,7 +70,18 @@ function Player(x, y, map) {
 			_x = new_x;
 			_y = new_y;
 			this.draw();
+
+            var _p = this;
+
+            if (fromKeyboard) {
+                this.canMove = false;
+            }
+
 			this.afterMove(_x, _y);
+
+            if (fromKeyboard) {
+                setTimeout(function () { _p.canMove = true; }, 25);
+            }
 		}
 	};
 
@@ -97,8 +108,10 @@ function Player(x, y, map) {
 		}
 
 		this.game.display.drawAll(this.map); // in case there are any artifacts
-
 		this.map.moveAllDynamicObjects();
+        if (this.map.afterMoveCallback) {
+            this.map.afterMoveCallback();
+        }
 	}
 
 	this.killedBy = function (killer) {
@@ -133,6 +146,8 @@ function Player(x, y, map) {
 	this.setPhoneCallback = function(func) {
 	    this._phoneFunc = func;
 	}
+
+    this.falling = false;
 
 	// Constructor
 	this.init();

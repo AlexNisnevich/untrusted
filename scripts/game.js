@@ -21,6 +21,7 @@ function Game() {
 		'colors.jsx',
 		'monster.jsx',
 		'robot.jsx',
+        'platformer.jsx',
 		'robotNav.jsx',
 		'robotMaze.jsx',
 		'river.jsx',
