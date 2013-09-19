@@ -69,9 +69,9 @@ Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
 		// modify the code to always check time to prevent infinite loops
 		allCode = $.map(allCode.split('\n'), function (line, i) {
 			return line.replace(/((for|while) .*){/g,
-				"startTime = new Date().getTime();" +
+				"startTime = Date.now();" +
 				"$1{" +
-					"if (new Date().getTime() - startTime > " + game.allowedTime + ") {" +
+					"if (Date.now() - startTime > " + game.allowedTime + ") {" +
 						"throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + game.allowedTime + " ms exceeded.';" +
 					"}");
 		}).join('\n');
