@@ -15,6 +15,7 @@ js-modules = scripts/helpers.js \
                  scripts/sound.js \
                  scripts/reference.js \
                  scripts/validate.js \
+                 scripts/ui.js \
                  scripts/launcher.js
 
 js-modules-debug = scripts/helpers.js \
@@ -28,6 +29,7 @@ js-modules-debug = scripts/helpers.js \
                  scripts/sound.js \
                  scripts/reference.js \
                  scripts/validate.js \
+                 scripts/ui.js \
                  scripts/launcher-debug.js
 
 yui-jar = tools/yuicompressor-2.4.8pre.jar
