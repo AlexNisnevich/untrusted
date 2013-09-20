@@ -2,8 +2,7 @@
 {
     "music": "Rolemusic_-_07_-_Beach_Wedding_Dance",
     "mapProperties": {
-        "keyDelay": 25,
-        "allowMultiMove": true
+        "keyDelay": 25
     }
 }
 #END_PROPERTIES#

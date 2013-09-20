@@ -43,10 +43,6 @@ function Map(display, game) {
 			_allowOverwrite = true;
 		}
 
-		if (mapProperties['allowMultiMove'] == true) {
-			_allowMultiMove = true;
-		}
-
 		if (mapProperties['keyDelay']) {
 			_keyDelay = mapProperties['keyDelay'];
 		}
@@ -57,7 +53,6 @@ function Map(display, game) {
 	this.getDynamicObjects = function () { return _dynamicObjects; };
 	this.getWidth = function () { return game.dimensions.width; };
 	this.getHeight = function () { return game.dimensions.height; };
-	this.isMultiMoveAllowed = function () { return _allowMultiMove; }
 
 	this.refresh = function () {
 		this.display.drawAll(this);

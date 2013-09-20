@@ -84,16 +84,6 @@ function Player(x, y, map) {
 		}
 	};
 
-	this.moveMulti = function (direction, times) {
-		if (!map.isMultiMoveAllowed()) {
-			throw 'player.moveMulti() is not allowed in this level!';
-		}
-
-		for (var i = 0; i < times; i++) {
-			this.move(direction)
-		}
-	};
-
 	this.afterMove = function (x, y) {
 		player = this;
 
