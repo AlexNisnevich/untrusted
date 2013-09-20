@@ -80,21 +80,6 @@ ROT.Display.prototype.drawAll = function(map) {
 	if (map.getPlayer()) { map.getPlayer().draw(); }
 };
 
-ROT.Display.prototype.drawAround = function(map, xCenter, yCenter) {
-	var game = this.game;
-	var xStart = Math.max(0, xCenter - 2);
-	var xEnd = Math.min(game.dimensions.width - 1, xCenter + 2);
-	var yStart = Math.max(0, yCenter - 2);
-	var yEnd = Math.min(game.dimensions.height - 1, yCenter + 2);
-
-	for (var x = xStart; x <= xEnd; x++) {
-		for (var y = yStart; y <= yEnd; y++) {
-			this.drawObject(map, x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
-		}
-	}
-	if (map.getPlayer()) { map.getPlayer().draw(); }
-};
-
 ROT.Display.prototype.fadeOut = function (map, callback, i) {
 	var display = this;
 	if (i <= 0) {
@@ -122,11 +107,6 @@ ROT.Display.prototype.fadeIn = function (map, callback, i) {
 		}, 10);
 	}
 };
-
-ROT.Display.prototype.write = function(text) {
-	this.clear();
-	this.drawText(0, 0, text);
-}
 
 ROT.Display.prototype.focus = function() {
 	$(this.getContainer()).attr('tabindex', '0').click().focus();

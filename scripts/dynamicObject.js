@@ -12,41 +12,15 @@ function DynamicObject(map, type, x, y) {
 	this.getY = function () { return _y; };
 	this.getType = function () { return _type; };
 
-	this.moveUp = function () {
-		this.move('up');
-	};
-	this.moveDown = function () {
-		this.move('down');
-	};
-	this.moveLeft = function () {
-		this.move('left');
-	};
-	this.moveRight = function () {
-		this.move('right');
-	};
-
-	this.canMoveUp = function () {
-		return this.canMove('up');
-	};
-	this.canMoveDown = function () {
-		return this.canMove('down');
-	};
-	this.canMoveLeft = function () {
-		return this.canMove('left');
-	};
-	this.canMoveRight = function () {
-		return this.canMove('right');
-	};
-
 	this.giveItemTo = function (player, itemType) {
-		if (!player.atLocation(_x, _y)) {
+		var pl_at = player.atLocation;
+		if (!(pl_at(_x, _y) || pl_at(_x+1, _y) || pl_at(_x-1, _y)
+				|| pl_at(_x, _y+1) || pl_at(_x, _y-1))) {
 			throw 'Can\'t give an item unless I\'m touching the player!';
 		}
 
 		player.pickUpItem(itemType, game.objects[itemType]);
 	}
-
-	// methods not exposed to player
 
 	this.move = function (direction) {
 		switch (direction) {
@@ -108,6 +82,8 @@ function DynamicObject(map, type, x, y) {
 	this.findNearest = function (type) {
 		return map.findNearestToPoint(type, _x, _y);
 	};
+
+	// methods not exposed to player
 
 	this.onTurn = function () {
 		_myTurn = true;
