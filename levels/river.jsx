@@ -29,3 +29,7 @@ function startLevel(map) {
 
     map.placeObject(0, 0, 'exit');
 }
+
+function validateLevel(map) {
+    validateExactlyXManyObjects(map, 1, 'exit');
+}

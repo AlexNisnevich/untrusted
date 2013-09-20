@@ -14,7 +14,7 @@ function startLevel(map) {
 
     map.placePlayer(1, fl(h/2)-1);
 
-    map.placeObject(w, fl(h/2), 'exit');
+    map.placeObject(w-1, fl(h/2)-1, 'exit');
 
     for (var x = 0; x < fl(w/2) - 3; x++) {
         for (var y = fl(h/2); y < h; y++) {
@@ -53,7 +53,7 @@ function startLevel(map) {
             var framesLeft = 18;
             map.startTimer(function () {
                 if (framesLeft > 0) {
-                    map.getPlayer().moveMulti('up', 1);
+                    map.getPlayer().move('up');
                     framesLeft--;
                 }
             }, 25);
@@ -62,4 +62,8 @@ function startLevel(map) {
 #BEGIN_EDITABLE#
 
 #END_EDITABLE#
+}
+
+function validateLevel(map) {
+    validateExactlyXManyObjects(map, 1, 'exit');
 }

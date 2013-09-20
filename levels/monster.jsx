@@ -49,3 +49,7 @@ function startLevel(map) {
 
     map.placeObject(map.getWidth()-2, map.getHeight()-2, 'exit');
 }
+
+function validateLevel(map) {
+    validateExactlyXManyObjects(map, 1, 'exit');
+}

@@ -114,3 +114,7 @@ function startLevel(map) {
         }
     });
 }
+
+function validateLevel(map) {
+    validateExactlyXManyObjects(map, 1, 'exit');
+}

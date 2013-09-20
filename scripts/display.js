@@ -108,6 +108,11 @@ ROT.Display.prototype.fadeIn = function (map, callback, i) {
 	}
 };
 
+ROT.Display.prototype.write = function(text) {
+	this.clear();
+	this.drawText(0, 0, text);
+}
+
 ROT.Display.prototype.focus = function() {
 	$(this.getContainer()).attr('tabindex', '0').click().focus();
 };

@@ -86,3 +86,7 @@ function startLevel(map) {
         map.placeObject(35 - i, 8 - i, 'block');
     }
 }
+
+function validateLevel(map) {
+    validateExactlyXManyObjects(map, 1, 'exit');
+}
