@@ -225,6 +225,10 @@ function Map(display, game) {
 	};
 
 	this.startTimer = function(timer, delay) {
+		if (delay < 25) {
+			throw "Minimum timer delay is 25 milliseconds"
+		}
+
 		_intervals.push(setInterval(timer, delay));
 	};
 

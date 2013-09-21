@@ -1,5 +1,5 @@
 
-Game.prototype.VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel'];
+Game.prototype.VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel', 'setTimer'];
 Game.prototype.allowedTime = 2000;
 
 // We may want to have level-specific hidden validation rules in the future.
