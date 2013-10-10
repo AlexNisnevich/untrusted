@@ -16,7 +16,6 @@ function Map(display, game) {
 	this.getWidth = function () { return game.dimensions.width; };
 	this.getHeight = function () { return game.dimensions.height; };
 
-
 	this.reset = function () {
 		_objectDefinitions = clone(game.objects);
 		this.display.clear();
@@ -83,6 +82,7 @@ function Map(display, game) {
 		}
 	};
 
+    //returns the object of the given type closest to target coordinates
 	this.findNearestToPoint = function (type, targetX, targetY) {
 		var foundObjects = [];
 
@@ -131,7 +131,7 @@ function Map(display, game) {
 		}
 	};
 
-	this.itemPickedUp = function (x, y, klass) {
+	this.removeItemFromMap = function (x, y, klass) {
 		if (_grid[x][y].type == klass) {
 			_grid[x][y].type = 'empty';
 		}
@@ -143,7 +143,7 @@ function Map(display, game) {
 		}, _keyDelay);
 	};
 
-	/* Functions called from startLevel */
+	/* functions explicitly exposed to player */
 
 	this.placeObject = function (x, y, klass) {
 		if (!_objectDefinitions[klass]) {
@@ -218,6 +218,8 @@ function Map(display, game) {
 		return adjacentEmptyCells;
 	}
 
+    //we thought we'd use this for gravity in the platformer level and 
+    //maybe we'll still do that later but right now we're not using it
 	this.setAfterMoveCallback = function(callback) {
 		if (typeof this.afterMoveCallback !== 'undefined') {
 			throw "Cannot set afterMoveCallback more than once";
