@@ -89,7 +89,7 @@ function Player(x, y, map) {
 
 		// check for collision with static object
 		var objectName = this.map.getGrid()[x][y].type;
-		var object = this.map.objects[objectName];
+		var object = this.map.getObjectDefinition(objectName);
 		if (object.type == 'item') {
 			this.pickUpItem(objectName, object);
 		} else if (object.onCollision) {
@@ -102,7 +102,7 @@ function Player(x, y, map) {
 		for (var i = 0; i < this.map.getDynamicObjects().length; i++) {
 			var object = this.map.getDynamicObjects()[i];
 			if (object.getX() === x && object.getY() === y) {
-				this.map.objects[object.getType()].onCollision(player, object);
+				this.map.getObjectDefinition(object.getType()).onCollision(player, object);
 			}
 		}
 

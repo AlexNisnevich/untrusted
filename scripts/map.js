@@ -1,17 +1,20 @@
 function Map(display, game) {
-	// Private variables
 	var _player;
 	var _grid;
 	var _dynamicObjects;
+    var _objectDefinitions;
 
 	var _allowOverwrite;
 	var _allowMultiMove;
 	var _keyDelay;
 	var _intervals = [];
 
-	this.reset = function () {
-		this.objects = clone(game.objects);
+    this.getObjectDefinition = function(objName) {
+        return _objectDefinitions[objName];
+    }
 
+	this.reset = function () {
+		_objectDefinitions = clone(game.objects);
 		this.display.clear();
 		_grid = new Array(game.dimensions.width);
 		for (var x = 0; x < game.dimensions.width; x++) {
@@ -64,7 +67,7 @@ function Map(display, game) {
 		}
 
 		// look for static objects that can serve as obstacles
-		object = this.objects[this.getGrid()[x][y].type];
+		object = _objectDefinitions[this.getGrid()[x][y].type];
 		if (object.impassable) {
 			if (myType && object.passableFor && object.passableFor.indexOf(myType) > -1) {
 				// this object is of a type that can pass the obstacle
@@ -145,7 +148,7 @@ function Map(display, game) {
 	/* Functions called from startLevel */
 
 	this.placeObject = function (x, y, klass) {
-		if (!this.objects[klass]) {
+		if (!_objectDefinitions[klass]) {
 			throw "There is no type of object named " + klass + "!";
 		}
 
@@ -154,7 +157,7 @@ function Map(display, game) {
 			// throw "Not a valid location to place an object!";
 		}
 
-		if (this.objects[klass].type == 'dynamic') {
+		if (_objectDefinitions[klass].type == 'dynamic') {
 			// dynamic object
 			_dynamicObjects.push(new DynamicObject(this, klass, x, y));
 		} else {
@@ -180,8 +183,8 @@ function Map(display, game) {
 	};
 
 	this.defineObject = function (name, properties) {
-		if (!this.objects[name]) {
-			this.objects[name] = properties;
+		if (!_objectDefinitions[name]) {
+			_objectDefinitions[name] = properties;
 		} else {
 			throw "There is already a type of object named " + name + "!";
 		}

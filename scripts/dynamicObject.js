@@ -3,7 +3,7 @@ function DynamicObject(map, type, x, y) {
 	var _x = x;
 	var _y = y;
 	var _type = type;
-	var _definition = map.objects[type];
+	var _definition = map.getObjectDefinition(type);
 	var _myTurn = true;
 
 	// methods exposed to player

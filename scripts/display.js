@@ -42,13 +42,8 @@ ROT.Display.prototype.setupEventHandlers = function() {
 // drawObject takes care of looking up an object's symbol and color
 // according to name (NOT according to the actual object literal!)
 ROT.Display.prototype.drawObject = function (map, x, y, object, bgColor) {
-	var symbol = map.objects[object].symbol;
-	var color;
-	if (map.objects[object].color) {
-		color = map.objects[object].color;
-	} else {
-		color = "#fff";
-	}
+	var symbol = map.getObjectDefinition(object).symbol;
+	var color = map.getObjectDefinition(object).color || "#fff";
 
 	if (!bgColor) {
 		bgColor = "#000";
