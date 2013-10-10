@@ -77,17 +77,17 @@ function Game(debugMode) {
 
 	this.moveToNextLevel = function () {
 		var game = this;
-
-		this.currentLevel++;
+		game.currentLevel++;
 		game.sound.playSound('complete');
-		this.output.write('Loading level ' + this.currentLevel + ' ...');
-		this.map.getPlayer().canMove = false;
-		this.display.fadeOut(this.map, function () {
+		game.output.write('Loading level ' + this.currentLevel + ' ...');
+
+        //we disable moving so the player can't move during the fadeout
+		game.map.getPlayer().canMove = false;
+		game.display.fadeOut(this.map, function () {
 			game.getLevel(game.currentLevel);
 		})
 	};
 
-	// jumps to the level of the given number
 	this.jumpToNthLevel = function (levelNum) {
 		// Give the player all necessary objects
 		if (levelNum > 1) {
@@ -108,41 +108,32 @@ function Game(debugMode) {
 	this.getLevel = function (levelNumber) {
 		var game = this;
 
-		this.currentLevel = levelNumber;
-		this.levelReached = Math.max(levelNumber, this.levelReached);
+		game.currentLevel = levelNumber;
+		game.levelReached = Math.max(levelNumber, game.levelReached);
 
-		var fileName = this.levelFileNames[levelNumber - 1];
-		$.get('levels/' + fileName, function (codeText) {
-			game.loadLevel(codeText);
+		var fileName = game.levelFileNames[levelNumber - 1];
+		$.get('levels/' + fileName, function (lvlCode) {
+            // load level code in editor
+            game.editor.loadCode(lvlCode);
+
+            // start the level and fade in
+            game.evalLevelCode();
+            game.display.fadeIn(game.map, function () {});
+
+            // store the commands introduced in this level (for api reference)
+            _commands = _commands.concat(game.editor.getProperties().commandsIntroduced);
+
+            // on first level, display intro text
+            if (game.currentLevel == 1) {
+                game.output.write('Dr. Eval awoke in a strange dungeon, with no apparent way out. He spied his trusty computer ...');
+            }
 		});
-	}
-
-	this.loadLevel = function (lvlCode) {
-		// load level code in editor
-		this.editor.loadCode(lvlCode);
-
-		// start the level and fade in
-		this.evalLevelCode();
-		this.display.fadeIn(this.map, function () {});
-
-		// store the commands introduced in this level (for api reference)
-		_commands = _commands.concat(this.editor.getProperties().commandsIntroduced);
-
-		// on first level, display intro text
-		if (this.currentLevel == 1) {
-			this.output.write('Dr. Eval awoke in a strange dungeon, with no apparent way out. He spied his trusty computer ...');
-		}
 	}
 
 	// restart level with currently loaded code
 	this.restartLevel = function () {
 		this.editor.setCode(_currentCode);
 		this.evalLevelCode();
-	}
-
-	// reset level
-	this.resetEditor = function () {
-		this.getLevel(this.currentLevel);
 	}
 
 	this.evalLevelCode = function (allCode, playerCode) {
@@ -202,4 +193,4 @@ function Game(debugMode) {
 
 	// Constructor
 	this.init();
-}
+};
