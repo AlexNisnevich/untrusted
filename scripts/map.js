@@ -9,9 +9,13 @@ function Map(display, game) {
 	var _keyDelay;
 	var _intervals = [];
 
-    this.getObjectDefinition = function(objName) {
-        return _objectDefinitions[objName];
-    }
+    this.getObjectDefinition = function(objName) { return _objectDefinitions[objName]; }
+	this.getPlayer = function () { return _player; };
+	this.getGrid = function () { return _grid; };
+	this.getDynamicObjects = function () { return _dynamicObjects; };
+	this.getWidth = function () { return game.dimensions.width; };
+	this.getHeight = function () { return game.dimensions.height; };
+
 
 	this.reset = function () {
 		_objectDefinitions = clone(game.objects);
@@ -50,12 +54,6 @@ function Map(display, game) {
 			_keyDelay = mapProperties['keyDelay'];
 		}
 	}
-
-	this.getPlayer = function () { return _player; };
-	this.getGrid = function () { return _grid; };
-	this.getDynamicObjects = function () { return _dynamicObjects; };
-	this.getWidth = function () { return game.dimensions.width; };
-	this.getHeight = function () { return game.dimensions.height; };
 
 	this.refresh = function () {
 		this.display.drawAll(this);
