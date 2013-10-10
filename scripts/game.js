@@ -35,7 +35,7 @@ function Game(debugMode) {
 	this.checkGlobalInventory = function (item) { return _globalInventory.indexOf(item) > -1; }
 	this.getHelpCommands = function () { return _commands; };
 
-	this.init = function (debugMode) {
+	this.init = function () {
 		var game = this;
 
 		// Initialize map display
@@ -201,5 +201,5 @@ function Game(debugMode) {
 	}
 
 	// Constructor
-	this.init(debugMode);
+	this.init();
 }
