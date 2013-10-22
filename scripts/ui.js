@@ -177,7 +177,7 @@ Game.prototype.openHelp = function () {
 	});
 
 	// sort help commands
-	$('#helpPaneContent .category').each(function (category) {
+	$('#helpPaneContent .category').each(function (i, category) {
 		$(category).find('.command').sortElements(function (a, b) {
 			var contentA = $(a).find('.commandTitle').text();
 			var contentB = $(b).find('.commandTitle').text();
