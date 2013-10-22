@@ -109,5 +109,6 @@ ROT.Display.prototype.write = function(text) {
 }
 
 ROT.Display.prototype.focus = function() {
+	$('#screen').show();
 	$(this.getContainer()).attr('tabindex', '0').click().focus();
 };

@@ -36,7 +36,8 @@ function Game(debugMode) {
 	this.getHelpCommands = function () { return _commands; };
 
 	this.init = function () {
-		var game = this;
+		// Initialize sound
+		this.sound = new Sound();
 
 		// Initialize map display
 		this.display = ROT.Display.create(this, {
@@ -54,29 +55,29 @@ function Game(debugMode) {
 			fontSize: 15
 		});
 		$('#output').append(this.output.getContainer());
+		this.output.write('Welcome to Untrusted -or- the Continuing Adventures of Dr. Eval. Please select a level.')
 
-		// Start first level
-		this.map = new Map(this.display, this);
+		// Initialize map and editor
 		this.editor = new CodeEditor("editor", 600, 500);
-		this.getLevel(this.currentLevel);
-		this.display.focus();
+		this.map = new Map(this.display, this);
 
 		// Enable controls
 		this.enableShortcutKeys();
 		this.enableButtons();
-
-		// Start sound
-		this.sound = new Sound();
 
 		// Enable debug features
 		if (debugMode) {
 			this.levelReached = 999; // make all levels accessible
 			_commands = Object.keys(this.reference); // display all help
 		}
+
+		$('#screen').hide();
+		this.openMenu();
 	}
 
 	this.moveToNextLevel = function () {
 		var game = this;
+
 		game.currentLevel++;
 		game.sound.playSound('complete');
 		game.output.write('Loading level ' + this.currentLevel + ' ...');

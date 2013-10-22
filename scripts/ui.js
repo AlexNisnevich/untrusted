@@ -173,15 +173,16 @@ Game.prototype.openHelp = function () {
 			var $commandDescription = $('<div class="commandDescription">');
 			$commandDescription.html(reference.description)
 				.appendTo($command);
-
 		}
 	});
 
 	// sort help commands
-	$('#helpPaneContent .category .command').sortElements(function (a, b) {
-		var contentA = $(a).find('.commandTitle').text();
-		var contentB = $(b).find('.commandTitle').text();
-		return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+	$('#helpPaneContent .category').each(function (category) {
+		$(category).find('.command').sortElements(function (a, b) {
+			var contentA = $(a).find('.commandTitle').text();
+			var contentB = $(b).find('.commandTitle').text();
+			return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+		});
 	});
 
 	if (!$('#helpPane').is(':visible')) {

@@ -130,7 +130,7 @@ function Player(x, y, map) {
 		}
 		map.removeItemFromMap(_x, _y, objectName);
 		map.refresh();
-		game.sound.playSound('pickup');
+		this.game.sound.playSound('pickup');
 
 		if (object.onPickUp) {
 			this.game.validateCallback(function () {
