@@ -9,7 +9,7 @@ function Game(debugMode) {
 
 	_currentCode = '';
 	_globalInventory = [];
-	_commands = [];
+	_commands = localStorage.getItem('helpCommands').split(';') || [];
 
 	this.levelFileNames = [
 		'theCage.jsx',
@@ -29,7 +29,7 @@ function Game(debugMode) {
 	];
 
 	this.currentLevel = 1;
-	this.levelReached = 1;
+	this.levelReached = localStorage.getItem('levelReached') || 1;
 
 	this.addToGlobalInventory = function (item) { _globalInventory.push(item); }
 	this.checkGlobalInventory = function (item) { return _globalInventory.indexOf(item) > -1; }
@@ -111,6 +111,9 @@ function Game(debugMode) {
 
 		game.currentLevel = levelNumber;
 		game.levelReached = Math.max(levelNumber, game.levelReached);
+		if (!debugMode) {
+			localStorage.setItem('levelReached', game.levelReached);
+		}
 
 		var fileName = game.levelFileNames[levelNumber - 1];
 		$.get('levels/' + fileName, function (lvlCode) {
@@ -122,7 +125,8 @@ function Game(debugMode) {
             game.display.fadeIn(game.map, function () {});
 
             // store the commands introduced in this level (for api reference)
-            _commands = _commands.concat(game.editor.getProperties().commandsIntroduced);
+            _commands = _commands.concat(game.editor.getProperties().commandsIntroduced).unique();
+            localStorage.setItem('helpCommands', _commands.join(';'));
 
             // on first level, display intro text
             if (game.currentLevel == 1) {
