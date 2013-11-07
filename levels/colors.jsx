@@ -2,21 +2,34 @@
 {
     "commandsIntroduced":
     	["map.defineObject", "player.getColor", "player.setColor",
-    	 "object.color", "object.impassable", "object.symbol"]
+    	 "object.color", "object.impassable", "object.symbol",
+    	 "player.setPhoneCallback"]
 }
 #END_PROPERTIES#
-/*
- * colors.js
+/*************
+ * colors.js *
+ *************
  *
- * As he observed the obstacles before him,
- * Dr. Eval realized that changing the world
- * around him wasn't enough. Now he needed to
- * change himself.
+ * You're almost at the exit. You just need to get past this
+ * color lock.
+ *
+ * Changing your environment is no longer enough. You must
+ * learn to change yourself.
+ *
+ * I've sent a little package that should come in handy.
+ * Try it and see!
  */
 
 function startLevel(map) {
 	map.placePlayer(0, 0);
 
+	if (!map.getPlayer().hasItem('phone')) {
+        map.placeObject(1, 1, 'phone');
+    }
+
+    // The function phone lets you call arbitrary functions,
+    // as defined by player.setPhoneCallback() below.
+    // The function phone callback is bound to Ctrl-6.
 	map.getPlayer().setPhoneCallback(function () {
 #BEGIN_EDITABLE#
 

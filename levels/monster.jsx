@@ -8,7 +8,7 @@
 /*
  * monster.js
  *
- * Suddenly, Dr. Eval was besieged by a swarm of angry monsters!
+ * [This one's still in progress.]
  */
 
 function startLevel(map) {

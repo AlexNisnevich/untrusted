@@ -10,8 +10,8 @@
  *
  * So much for Asimov's Laws. They're actually trying to kill
  * you now. Not to be alarmist, but the floor is littered
- * with mines. Rushing for the exist blindly may be unwise.
- * And I need you alive.
+ * with mines. Rushing for the exit blindly may be unwise.
+ * I need you alive, after all.
  *
  * If only there was some way you could track the positions
  * of the mines ...

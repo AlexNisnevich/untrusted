@@ -2,20 +2,21 @@
 {
     "commandsIntroduced":
         ["map.getObjectTypeAt", "player.getX", "player.getY",
-         "player.setPhoneCallback", "output.write"],
+         "output.write"],
     "mapProperties": {
         "allowOverwrite": true
     }
 }
 #END_PROPERTIES#
-/*
- * trees.js - the obligatory forest level
+/************
+ * trees.js *
+ ************
  *
- * Dr. Eval was in a pickle. He needed to move through the shifting
- * forest without resetting his own position every time the forest
- * changed. Fortunately, he had another tool at his disposal ...
+ * Ah, you're out of the woods now. Or into the woods, as the
+ * case may be. Your function phone may serve you well here.
  *
- * NOTE: In this level, map.placeObject is allowed to overwrite existing objects.
+ * NOTE: In this level alone, map.placeObject is allowed to
+ * overwrite existing objects.
  */
 function startLevel(map) {
     map.placePlayer(2, map.getHeight() - 1);
@@ -74,21 +75,16 @@ function startLevel(map) {
         display.drawAll(map);
     };
 
-    functionList['placePhone'] = function () {
-        map.placeObject(map.getPlayer().getX() + 1,
-                        map.getPlayer().getY(), 'phone');
-    }
-
     functionList['movePlayerToExit'] = function () {
-        output.write("So, how 'bout them <LOCAL SPORTS TEAM>?");
+        output.write("Permission denied.");
     }
 
-    functionList['movePlayerToExitForRealz'] = function () {
-        output.write("Did you know that penguins have nuclear weapons? I sure didn't!");
+    functionList['pleaseMovePlayerToExit'] = function () {
+        output.write("I don't think so.");
     }
 
     functionList['movePlayerToExitDamnit'] = function () {
-        output.write("lol no I'm not moving you to the exit, player! Suck it!");
+        output.write("So, how 'bout them <LOCAL SPORTS TEAM>?");
     }
 
     // generate forest
@@ -99,11 +95,6 @@ function startLevel(map) {
     functionList['fortresses']();
     functionList['fortresses']();
     functionList['fortresses']();
-
-    // so you can call functions
-    if (!map.getPlayer().hasItem('phone')) {
-        functionList['placePhone']();
-    }
 
     map.getPlayer().setPhoneCallback(functionList[#{#"movePlayerToExit"#}#]);
 
