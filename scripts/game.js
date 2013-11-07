@@ -9,7 +9,7 @@ function Game(debugMode) {
 
 	_currentCode = '';
 	_globalInventory = [];
-	_commands = localStorage.getItem('helpCommands').split(';') || [];
+	_commands = (commands = localStorage.getItem('helpCommands')) ? commands.split(';') : [];
 
 	this.levelFileNames = [
 		'theCage.jsx',
@@ -19,11 +19,12 @@ function Game(debugMode) {
 		'traps.jsx',
 		'trees.jsx',
 		'colors.jsx',
+		'river.jsx',
 		'monster.jsx',
 		'robot.jsx',
 		'robotNav.jsx',
 		'robotMaze.jsx',
-		'river.jsx',
+		'backToTheRiver.jsx',
         'platformer.jsx',
 		'credits.jsx'
 	];

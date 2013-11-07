@@ -12,7 +12,8 @@ Game.prototype.objects = {
 	// special
 
 	'empty' : {
-		'symbol': ' '
+		'symbol': ' ',
+        'impassableFor': ['raft']
 	},
 
 	'player' : {

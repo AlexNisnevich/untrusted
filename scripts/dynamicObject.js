@@ -43,7 +43,7 @@ function DynamicObject(map, type, x, y) {
 		}
 
 		// check for collision with player
-		if (map.getPlayer().atLocation(dest.x, dest.y)) {
+		if (map.getPlayer().atLocation(dest.x, dest.y) && _definition.onCollision) {
 			// trigger collision
 			_definition.onCollision(map.getPlayer(), this);
 		} else if (dest.x == this.findNearest(_type).x && dest.y == this.findNearest(_type).y) {

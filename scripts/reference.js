@@ -74,16 +74,16 @@ Game.prototype.reference = {
 		'description': 'Places an object of the given type at the given coordinates.'
 	},
 	'map.placePlayer': {
-		'name': 'map.placePlayer(x, y, color)',
+		'name': 'map.placePlayer(x, y)',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Places the player at the given coordinates..'
+	},
+	'map.setSquareColor': {
+		'name': 'map.setSquareColor(x, y, color)',
 		'category': 'map',
 		'type': 'method',
 		'description': 'Sets the background color of the given square.'
-	},
-	'map.setSquareColor': {
-		'name': 'map.setSquareColor(x, y)',
-		'category': 'map',
-		'type': 'method',
-		'description': 'Places the player at the given coordinates.'
 	},
 
 	'object.behavior': {

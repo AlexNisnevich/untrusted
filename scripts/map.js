@@ -76,6 +76,9 @@ function Map(display, game) {
 				// the obstacle is always impassable
 				return false;
 			}
+		} else if (myType && object.impassableFor && object.impassableFor.indexOf(myType) > -1) {
+			// this object is of a type that cannot pass the obstacle
+			return false;
 		} else {
 			// no obstacle
 			return true;
@@ -218,7 +221,7 @@ function Map(display, game) {
 		return adjacentEmptyCells;
 	}
 
-    //we thought we'd use this for gravity in the platformer level and 
+    //we thought we'd use this for gravity in the platformer level and
     //maybe we'll still do that later but right now we're not using it
 	this.setAfterMoveCallback = function(callback) {
 		if (typeof this.afterMoveCallback !== 'undefined') {

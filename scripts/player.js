@@ -87,27 +87,40 @@ function Player(x, y, map) {
 	this.afterMove = function (x, y) {
 		player = this;
 
-		// check for collision with static object
-		var objectName = this.map.getGrid()[x][y].type;
-		var object = this.map.getObjectDefinition(objectName);
-		if (object.type == 'item') {
-			this.pickUpItem(objectName, object);
-		} else if (object.onCollision) {
-			this.game.validateCallback(function () {
-				object.onCollision(player, player.game)
-			});
-		}
+		this.map.moveAllDynamicObjects();
+
+		var onTransport = false;
 
 		// check for collision with dynamic object
 		for (var i = 0; i < this.map.getDynamicObjects().length; i++) {
 			var object = this.map.getDynamicObjects()[i];
 			if (object.getX() === x && object.getY() === y) {
-				this.map.getObjectDefinition(object.getType()).onCollision(player, object);
+				var objDef = this.map.getObjectDefinition(object.getType());
+				if (objDef.onCollision) {
+					objDef.onCollision(player, object);
+				}
+				if (objDef.transport) {
+					onTransport = true;
+				}
+			}
+		}
+
+		console.log([x, y, this.map.getDynamicObjects()[0].getY(), onTransport] + "");
+
+		if (!onTransport) {
+			// check for collision with static object
+			var objectName = this.map.getGrid()[x][y].type;
+			var object = this.map.getObjectDefinition(objectName);
+			if (object.type == 'item') {
+				this.pickUpItem(objectName, object);
+			} else if (object.onCollision) {
+				this.game.validateCallback(function () {
+					object.onCollision(player, player.game)
+				});
 			}
 		}
 
 		this.game.display.drawAll(this.map); // in case there are any artifacts
-		this.map.moveAllDynamicObjects();
 
         if (this.map.afterMoveCallback) {
             this.map.afterMoveCallback();
