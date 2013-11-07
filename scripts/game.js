@@ -10,13 +10,14 @@ function Game(debugMode) {
 	_currentCode = '';
 	_globalInventory = [];
 	_commands = (commands = localStorage.getItem('helpCommands')) ? commands.split(';') : [];
+	_introText = 'Dr. Eval awoke in a strange cell, with no apparent way out. He spied his trusty computer ...'
 
 	this.levelFileNames = [
-		'theCage.jsx',
-		'maze.jsx',
-		'theReturnOfTheCage.jsx',
+		'cellBlockA.jsx',
+		'theLongWayOut.jsx',
+		'validationEngaged.jsx',
 		'multiplicity.jsx',
-		'traps.jsx',
+		'minesweeper.jsx',
 		'trees.jsx',
 		'colors.jsx',
 		'river.jsx',
@@ -131,7 +132,7 @@ function Game(debugMode) {
 
             // on first level, display intro text
             if (game.currentLevel == 1) {
-                game.output.write('Dr. Eval awoke in a strange dungeon, with no apparent way out. He spied his trusty computer ...');
+                game.output.write(_introText);
             }
 		});
 	}

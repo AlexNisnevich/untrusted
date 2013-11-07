@@ -5,16 +5,23 @@
          "map.getWidth", "map.getPlayer", "player.hasItem"]
 }
 #END_PROPERTIES#
-/*
- * theCage.js
+/*****************
+ * cellBlockA.js *
+ *****************
  *
- * This is the first level, so we'll give you a hint.
- * In fact, a really obvious hint (hey, it's level 0).
- * The code currently places blocks in a rectangle
- * surrounding you. All you need to do is make a gap.
- * You don't even need to do anything extra. In fact,
- * you should be doing less...
+ * Good morning, Dr. Eval.
+ *
+ * It wasn't easy, but I've managed to get your computer down
+ * to you. This system might be unfamiliar, but the underlying
+ * code is still JavaScript. Just like we predicted.
+ *
+ * Now, let's get you out of here. Easy peasy.
+ *
+ * The code currently places blocks in a rectangle surrounding
+ * you. All you need to do is make a gap. You don't even need
+ * to do anything extra. In fact, you should be doing less.
  */
+
 function startLevel(map) {
     map.placePlayer(7, 5);
 #BEGIN_EDITABLE#

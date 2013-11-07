@@ -3,17 +3,17 @@
     "commandsIntroduced": []
 }
 #END_PROPERTIES#
-/*
- * multiplicity.js
+/*******************
+ * multiplicity.js *
+ *******************
  *
- * N.B. level filenames can be hints!
- * I mean, lots of games do that, why
- * shouldn't this one?
+ * Out of one cell and into another. They're not giving you
+ * very much to work with here, either. Ah, well.
  *
- * This level also looks an awful lot like the first
- * couple, but with fewer lines of code that
- * you can edit. That is also a hint! Aren't
- * you happy that I am giving you hints? :)
+ * Level filenames can be hints, by the way. Have I
+ * mentioned that before?
+ *
+ * No more cells after this one. I promise.
  */
 
 function startLevel(map) {

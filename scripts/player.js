@@ -105,8 +105,6 @@ function Player(x, y, map) {
 			}
 		}
 
-		console.log([x, y, this.map.getDynamicObjects()[0].getY(), onTransport] + "");
-
 		if (!onTransport) {
 			// check for collision with static object
 			var objectName = this.map.getGrid()[x][y].type;

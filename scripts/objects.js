@@ -43,10 +43,10 @@ Game.prototype.objects = {
 		'impassable': true
 	},
 
-	'trap': {
+	'mine': {
 		'symbol': ' ',
 		'onCollision': function (player, game) {
-			player.killedBy('an invisible trap');
+			player.killedBy('a hidden mine');
 		}
 	},
 
@@ -58,7 +58,7 @@ Game.prototype.objects = {
 		'symbol': String.fromCharCode(0x2318), // ⌘
 		'color': '#ccc',
 		'onPickUp': function (player, game) {
-			game.output.write('You have picked up the computer! You can use it to get past the walls to the exit.');
+			game.output.write('You have picked up the computer! You can use it to edit and rerun the level code.');
 			$('#editorPane').fadeIn();
 			game.editor.refresh();
 		}

@@ -5,7 +5,7 @@
 }
 #END_PROPERTIES#
 /*
- * river.js
+ * backToTheRiver.js
  *
  * Exceptional deeds can be performed in
  * exceptional circumstances.

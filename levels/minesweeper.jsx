@@ -4,12 +4,19 @@
     "music": "Skizofonik_System"
 }
 #END_PROPERTIES#
-/*
- * traps.js
+/******************
+ * minesweeper.js *
+ ******************
  *
- * Look out! There are traps scattered all about this level, but
- * you don't know where they are. Tread carefully.
+ * So much for Asimov's Laws. They're actually trying to kill
+ * you now. Not to be alarmist, but the floor is littered
+ * with mines. Rushing for the exist blindly may be unwise.
+ * And I need you alive.
+ *
+ * If only there was some way you could track the positions
+ * of the mines ...
  */
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -27,8 +34,8 @@ function startLevel(map) {
         var x = getRandomInt(0, map.getWidth() - 1);
         var y = getRandomInt(0, map.getHeight() - 1);
         if (x != 2 || y != map.getHeight() - 1) {
-            // don't place trap over exit!
-            map.placeObject(x, y, 'trap', '#f00');
+            // don't place mine over exit!
+            map.placeObject(x, y, 'mine', '#f00');
 #BEGIN_EDITABLE#
 
 #END_EDITABLE#
@@ -39,6 +46,6 @@ function startLevel(map) {
 }
 
 function validateLevel(map) {
-    validateAtLeastXObjects(map, 40, 'trap');
+    validateAtLeastXObjects(map, 40, 'mine');
     validateExactlyXManyObjects(map, 1, 'exit');
 }
