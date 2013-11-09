@@ -21,7 +21,7 @@ function Game(debugMode) {
 		'colors.jsx',
 		'trees.jsx',
 		'river.jsx',
-	  //'monster.jsx',
+	    'ambush.jsx',
 		'robot.jsx',
 		'robotNav.jsx',
 		'robotMaze.jsx',
@@ -71,6 +71,7 @@ function Game(debugMode) {
 		if (debugMode) {
 			this.levelReached = 999; // make all levels accessible
 			_commands = Object.keys(this.reference); // display all help
+			this.sound.toggleSound(); // mute sound by default in debug mode
 		}
 
 		$('#screen').hide();

@@ -15,10 +15,13 @@
  * Ah, you're out of the woods now. Or into the woods, as the
  * case may be. Your function phone may serve you well here.
  *
- * NOTE: In this level alone, map.placeObject is allowed to
- * overwrite existing objects.
  */
+
 function startLevel(map) {
+    // NOTE: In this level alone, map.placeObject is allowed to
+    //overwrite existing objects.
+
+
     map.placePlayer(2, map.getHeight() - 1);
 
     var functionList = {};

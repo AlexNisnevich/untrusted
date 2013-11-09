@@ -14,10 +14,8 @@
  * color lock.
  *
  * Changing your environment is no longer enough. You must
- * learn to change yourself.
- *
- * I've sent a little package that should come in handy.
- * Try it and see!
+ * learn to change yourself. I've sent you a little something
+ * that should help with that.
  */
 
 function startLevel(map) {
@@ -67,18 +65,25 @@ function startLevel(map) {
 		}
 	});
 
-	for (var x = 6; x <= 40; x++) {
-		map.placeObject(x, 5, 'block');
-		map.placeObject(x, 7, 'block');
+	for (var x = 20; x <= 40; x++) {
+		map.placeObject(x, 11, 'block');
+		map.placeObject(x, 13, 'block');
 	}
-	map.placeObject(9, 6, 'greenLock');
-	map.placeObject(14, 6, 'redLock');
-	map.placeObject(19, 6, 'yellowLock');
-	map.placeObject(24, 6, 'greenLock');
-	map.placeObject(29, 6, 'redLock');
-	map.placeObject(34, 6, 'yellowLock');
-	map.placeObject(39, 6, 'exit');
-	map.placeObject(40, 6, 'block');
+	map.placeObject(22, 12, 'greenLock');
+	map.placeObject(25, 12, 'redLock');
+	map.placeObject(28, 12, 'yellowLock');
+	map.placeObject(31, 12, 'greenLock');
+	map.placeObject(34, 12, 'redLock');
+	map.placeObject(37, 12, 'yellowLock');
+	map.placeObject(40, 12, 'exit');
+	for (var y = 0; y < map.getHeight(); y++) {
+		if (y != 12) {
+			map.placeObject(40, y, 'block');
+		}
+		for (var x = 41; x < map.getWidth(); x++) {
+			map.setSquareColor(x, y, '#080');
+		}
+	}
 }
 
 function validateLevel(map) {
