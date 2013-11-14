@@ -79,6 +79,6 @@ deploy-full: release
 # run-local will start a mini python webserver and host a local
 # instance of the game on port 9001
 
-runlocal:
+runlocal: debug
 	@echo "Running local instance"
 	/usr/bin/env python2 -m SimpleHTTPServer 9001
