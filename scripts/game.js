@@ -26,7 +26,8 @@ function Game(debugMode) {
         '11_robot.jsx',
         '12_robotNav.jsx',
         '13_robotMaze.jsx',
-        '14_backToTheRiver.jsx',
+        '14_crispsContest.jsx',
+        '15_exceptionalCrossing.jsx',
         '20_platformer.jsx',
         '99_credits.jsx'
 	];
