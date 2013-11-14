@@ -37,7 +37,7 @@ Game.prototype.enableShortcutKeys = function () {
 		return true;
 	});
 
-    shortcut.add('z', function () {
+    shortcut.add('q', function () {
 		game.sound.playSound('select');
 		game.usePhone();
 		return true;
