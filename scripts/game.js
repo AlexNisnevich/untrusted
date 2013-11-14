@@ -28,7 +28,11 @@ function Game(debugMode) {
         '13_robotMaze.jsx',
         '14_crispsContest.jsx',
         '15_exceptionalCrossing.jsx',
-        '20_platformer.jsx',
+        '16_teleporterCanvasLevel.jsx',
+        '17_platformer.jsx',
+        '18_domManipulation.jsx',
+        '19_boss_fight.jsx',
+        '20_ULTIMA_BOSS_FIGHT.jsx',
         '99_credits.jsx'
 	];
 
