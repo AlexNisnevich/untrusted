@@ -81,4 +81,4 @@ deploy-full: release
 
 runlocal: debug
 	@echo "Running local instance"
-	/usr/bin/env python2 -m SimpleHTTPServer 9001
+	~/node_modules/http-server/bin/http-server
