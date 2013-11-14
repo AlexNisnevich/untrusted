@@ -13,21 +13,22 @@ function Game(debugMode) {
 	_introText = 'Dr. Eval awoke in a strange cell, with no apparent way out. He spied his trusty computer ...'
 
 	this.levelFileNames = [
-		'cellBlockA.jsx',
-		'theLongWayOut.jsx',
-		'validationEngaged.jsx',
-		'multiplicity.jsx',
-		'minesweeper.jsx',
-		'colors.jsx',
-		'trees.jsx',
-		'river.jsx',
-	    'ambush.jsx',
-		'robot.jsx',
-		'robotNav.jsx',
-		'robotMaze.jsx',
-		'backToTheRiver.jsx',
-        'platformer.jsx',
-		'credits.jsx'
+        '01_cellBlockA.jsx',
+        '02_theLongWayOut.jsx',
+        '03_validationEngaged.jsx',
+        '04_multiplicity.jsx',
+        '05_minesweeper.jsx',
+        '06_drones101.jsx',
+        '07_colors.jsx',
+        '08_trees.jsx',
+        '09_river.jsx',
+        '10_ambush.jsx',
+        '11_robot.jsx',
+        '12_robotNav.jsx',
+        '13_robotMaze.jsx',
+        '14_backToTheRiver.jsx',
+        '20_platformer.jsx',
+        '99_credits.jsx'
 	];
 
 	this.currentLevel = 1;
