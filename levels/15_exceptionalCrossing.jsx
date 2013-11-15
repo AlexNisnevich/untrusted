@@ -4,11 +4,11 @@
     "music": "Spectrofuzz_Sunset_84"
 }
 #END_PROPERTIES#
-/*
- * backToTheRiver.js
+/**************************
+ * exceptionalCrossing.js *
+ **************************
  *
- * Exceptional deeds can be performed in
- * exceptional circumstances.
+ * [Insert betrayal here]
  */
 
 function startLevel(map) {

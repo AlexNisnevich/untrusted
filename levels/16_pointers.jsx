@@ -4,9 +4,9 @@
 }
 #END_PROPERTIES#
 
-/****************
- * drones101.js *
- ****************
+/***************
+ * pointers.js *
+ ***************
  *
  * Do you remember, dear Professor, a certain introductary class you taught long ago?
  * Perhaps some 'reeducation' is apropos.
@@ -20,4 +20,3 @@ function startLevel(map) {
 
 #BEGIN_EDITABLE#
 #END_EDITABLE#
-

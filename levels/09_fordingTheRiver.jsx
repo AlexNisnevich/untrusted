@@ -5,8 +5,9 @@
     "music": "Spectrofuzz_Sunset_84"
 }
 #END_PROPERTIES#
-/*
- * river.js
+/**********************
+ * fordingTheRiver.js *
+ **********************
  *
  * And there's the river. Fortunately, I was prepared for this.
  * See the raft on the other side?

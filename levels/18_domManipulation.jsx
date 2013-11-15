@@ -4,12 +4,11 @@
 }
 #END_PROPERTIES#
 
-/****************
- * drones101.js *
- ****************
+/**********************
+ * domManipulation.js *
+ **********************
  *
- * Do you remember, dear Professor, a certain introductary class you taught long ago?
- * Perhaps some 'reeducation' is apropos.
+ *
  */
 
 function startLevel(map) {
@@ -20,4 +19,3 @@ function startLevel(map) {
 
 #BEGIN_EDITABLE#
 #END_EDITABLE#
-

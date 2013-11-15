@@ -33,7 +33,7 @@ Game.prototype.objects = {
 
 	'block': {
 		'symbol': '#',
-		'color': '#f00',
+		'color': '#999',
 		'impassable': true
 	},
 

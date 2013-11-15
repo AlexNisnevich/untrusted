@@ -8,9 +8,9 @@
     }
 }
 #END_PROPERTIES#
-/************
- * trees.js *
- ************
+/*******************
+ * intoTheWoods.js *
+ *******************
  *
  * Ah, you're out of the woods now. Or into the woods, as the
  * case may be. Your function phone may serve you well here.
