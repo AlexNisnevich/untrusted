@@ -85,7 +85,7 @@ function Map(display, game) {
 		}
 	};
 
-    //returns the object of the given type closest to target coordinates
+    // returns the object of the given type closest to target coordinates
 	this.findNearestToPoint = function (type, targetX, targetY) {
 		var foundObjects = [];
 
@@ -125,6 +125,28 @@ function Map(display, game) {
 
 		return closestTarget;
 	};
+
+	// returns the dynamic object closest to the target coordinates
+	// (simplified version of this.findNearestToPoint() )
+	this.findNearestDynamicObj = function(targetX, targetY) {
+		var foundObjects = [];
+
+		for (var i = 0; i < _dynamicObjects.length; i++) {
+			var object = _dynamicObjects[i];
+			foundObjects.push({x: object.getX(), y: object.getY()});
+		}
+
+		var dists = [];
+		for (var i = 0; i < foundObjects.length; i++) {
+			var obj = foundObjects[i];
+			dists[i] = Math.sqrt(Math.pow(targetX - obj.x, 2) + Math.pow(targetY - obj.y, 2));
+		}
+
+		var minDist = Math.min.apply(Math, dists);
+		var closestTarget = foundObjects[dists.indexOf(minDist)];
+
+		return closestTarget;
+	}
 
 	this.moveAllDynamicObjects = function () {
 		// iterate over all dynamic objects

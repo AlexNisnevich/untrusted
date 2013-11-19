@@ -42,12 +42,16 @@ function DynamicObject(map, type, x, y) {
 			throw 'Can\'t move when it isn\'t your turn!';
 		}
 
+		var nearestObj = map.findNearestDynamicObj(dest.x, dest.y);
+		console.log("dest: " + dest.x + ", " + dest.y);
+		console.log("nearest: " + nearestObj.x + ", " + nearestObj.y);
+
 		// check for collision with player
 		if (map.getPlayer().atLocation(dest.x, dest.y) && _definition.onCollision) {
 			// trigger collision
 			_definition.onCollision(map.getPlayer(), this);
-		} else if (dest.x == this.findNearest(_type).x && dest.y == this.findNearest(_type).y) {
-			// would collide with a copy of itself
+		} else if (dest.x == nearestObj.x && dest.y == nearestObj.y) {
+			// would collide with another dynamic object
 		} else if (map.canMoveTo(dest.x, dest.y, _type)) {
 			// move the object
 			_x = dest.x;

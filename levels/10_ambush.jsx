@@ -3,10 +3,14 @@
     "commandsIntroduced": []
 }
 #END_PROPERTIES#
-/*
- * ambush.js
+/*************
+ * ambush.js *
+ *************
  *
- * [This one's still in progress.]
+ * It looks like they won't let you take the Algorithm
+ * without a fight. You'll need to carefully weave your
+ * way through this drone army. Let's mess with the drones'
+ * programming a little.
  */
 
 function startLevel(map) {
@@ -33,8 +37,6 @@ function startLevel(map) {
         }
     }
 
-    map.placePlayer(2, 2);
-
     map.defineObject('attackDrone', {
         'type': 'dynamic',
         'symbol': 'd',
@@ -45,6 +47,34 @@ function startLevel(map) {
         'behavior': function (me) {
 #BEGIN_EDITABLE#
             moveToward(me, 'player');
+#END_EDITABLE#
+        }
+    });
+
+    map.defineObject('upDrone', {
+        'type': 'dynamic',
+        'symbol': 'd',
+        'color': 'blue',
+        'onCollision': function (player) {
+            player.killedBy('an upward-facing drone');
+        },
+        'behavior': function (me) {
+#BEGIN_EDITABLE#
+            me.move('left');
+#END_EDITABLE#
+        }
+    });
+
+    map.defineObject('downDrone', {
+        'type': 'dynamic',
+        'symbol': 'd',
+        'color': 'yellow',
+        'onCollision': function (player) {
+            player.killedBy('a downward-facing drone');
+        },
+        'behavior': function (me) {
+#BEGIN_EDITABLE#
+            me.move('left');
 #END_EDITABLE#
         }
     });
@@ -63,15 +93,40 @@ function startLevel(map) {
         }
     });
 
-    for (var x = 0; x <= 20; x++) {
-        map.placeObject(x, 20 - x, 'attackDrone');
+    // just for decoration
+    map.defineObject('water', {
+        'symbol': '░',
+        'color': '#44f'
+    });
+
+    map.placePlayer(0, 12);
+
+    for (var x = 0; x < map.getWidth(); x++) {
+        map.placeObject(x, 10, 'block');
+        map.placeObject(x, 14, 'block');
+
+        for (var y = 20; y < map.getHeight(); y++) {
+            map.placeObject(x, y, 'water');
+        }
     }
 
-    for (var x = 30; x < 50; x++) {
-        map.placeObject(x, 55 - x, 'defenseDrone');
-    }
+    map.placeObject(23, 11, 'attackDrone');
+    map.placeObject(23, 12, 'attackDrone');
+    map.placeObject(23, 13, 'attackDrone');
 
-    map.placeObject(map.getWidth()-2, map.getHeight()-2, 'exit');
+    map.placeObject(27, 11, 'defenseDrone');
+    map.placeObject(27, 12, 'defenseDrone');
+    map.placeObject(27, 13, 'defenseDrone');
+
+    map.placeObject(24, 11, 'upDrone');
+    map.placeObject(25, 11, 'upDrone');
+    map.placeObject(26, 11, 'upDrone');
+
+    map.placeObject(24, 13, 'downDrone');
+    map.placeObject(25, 13, 'downDrone');
+    map.placeObject(26, 13, 'downDrone');
+
+    map.placeObject(map.getWidth()-1, 12, 'exit');
 }
 
 function validateLevel(map) {
