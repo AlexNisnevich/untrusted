@@ -21,14 +21,16 @@ Run
 ```
 make
 ```
-to merge the JavaScript files into `scripts/build/untrusted.js` (and enable debug features).
+to merge the JavaScript files into `scripts/build/untrusted.js` (and enables debug features).
 
 ```
 make release
 ```
 merges and minifies the JavaScript files into `scripts/build/untrusted.min.js` (and disables debug features).
 
-To run the game locally, you need to set up a local server to serve `index.html` (this step is necessary due to Access-Control-Allow-Origin restrictions):
+To run the game locally, you need to set up a local server to serve `index.html` (this step is necessary due to Access-Control-Allow-Origin restrictions).
+
+First [install npm and http-server globally](https://github.com/nodeapps/http-server/#installing-globally) if you haven't already. Then run:
 
 ```
 make runlocal
