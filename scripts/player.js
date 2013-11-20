@@ -88,6 +88,7 @@ function Player(x, y, map) {
 		player = this;
 
 		this.map.moveAllDynamicObjects();
+		this.map.hideChapter();
 
 		var onTransport = false;
 

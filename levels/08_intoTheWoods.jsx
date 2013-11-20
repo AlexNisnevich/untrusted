@@ -21,6 +21,7 @@ function startLevel(map) {
     // NOTE: In this level alone, map.placeObject is allowed to
     //overwrite existing objects.
 
+    map.displayChapter('Chapter 2\nRaiders of the Lost Algorithm');
 
     map.placePlayer(2, map.getHeight() - 1);
 

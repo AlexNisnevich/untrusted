@@ -25,6 +25,18 @@ body {
 	border: 2px solid yellow;
 }
 
+#chapter {
+	display: none;
+	position: relative;
+	top: -330px;
+	padding: 10px;
+	background-color: white;
+	text-align: center;
+	font-family: 'Share Tech Mono', monospace;
+	font-variant: small-caps;
+	font-size: 28px;
+}
+
 #editorPane {
 	position: absolute;
 	top: 0;

@@ -23,6 +23,8 @@
  */
 
 function startLevel(map) {
+    map.displayChapter('Chapter 1\nBreakout');
+
     map.placePlayer(7, 5);
 #BEGIN_EDITABLE#
 

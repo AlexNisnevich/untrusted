@@ -12,6 +12,8 @@
  */
 
 function startLevel(map) {
+    map.displayChapter('Chapter 3\nBetrayal');
+
     map.placePlayer(map.getWidth()-1, map.getHeight()-1);
 
     map.defineObject('water', {

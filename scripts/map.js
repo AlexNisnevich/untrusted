@@ -260,6 +260,18 @@ function Map(display, game) {
 		_intervals.push(setInterval(timer, delay));
 	};
 
+	this.displayChapter = function(chapterName) {
+		$('#chapter').html(chapterName.replace("\n","<br>")).show();
+		setTimeout(function () {
+			$('#chapter').fadeOut();
+		}, 5 * 1000);
+	};
+
+	this.hideChapter = function() {
+		$('#chapter').hide();
+	}
+
+
 	/* Initialization */
 
 	this.game = game;
