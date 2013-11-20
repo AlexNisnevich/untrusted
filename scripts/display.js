@@ -15,11 +15,20 @@ ROT.Display.prototype.setupEventHandlers = function() {
 
 	// directions for moving entities
 	var keys = {
-		37: 'left',
-		38: 'up',
-		39: 'right',
-		40: 'down',
-		82: 'rest' // R
+		37: 'left', // left arrow
+		38: 'up', // up arrow
+		39: 'right', // right arrow
+		40: 'down', // down arrow
+		65: 'left', // A
+		68: 'right', // D
+		72: 'left', // H
+		74: 'down', // J
+		75: 'up', // K
+		76: 'right', // L
+		81: 'funcPhone', // Q
+		82: 'rest', // R
+		83: 'down', // S
+		87: 'up' // W
 	};
 
 	// contentEditable is required for canvas elements to detect keyboard events

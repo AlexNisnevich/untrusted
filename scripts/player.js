@@ -64,6 +64,11 @@ function Player(x, y, map) {
 			new_x = cur_x;
 			new_y = cur_y;
 		}
+		else if (direction === 'funcPhone') {
+			game.sound.playSound('select');
+			game.usePhone();
+			return;
+		}
 
 		if (this.map.canMoveTo(new_x, new_y)) {
 			this.display.drawObject(map, cur_x, cur_y, this.map.getGrid()[cur_x][cur_y].type, this.map.getGrid()[cur_x][cur_y].bgColor);
