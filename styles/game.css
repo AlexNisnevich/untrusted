@@ -27,8 +27,9 @@ body {
 
 #chapter {
 	display: none;
-	position: relative;
-	top: -330px;
+	position: absolute;
+	top: 220px;
+	width: 584px;
 	padding: 10px;
 	background-color: white;
 	text-align: center;

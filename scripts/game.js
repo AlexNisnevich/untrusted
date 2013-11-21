@@ -136,6 +136,7 @@ function Game(debugMode) {
             // start the level and fade in
             game.evalLevelCode();
             game.display.fadeIn(game.map, function () {});
+            game.display.focus();
 
             // store the commands introduced in this level (for api reference)
             _commands = _commands.concat(game.editor.getProperties().commandsIntroduced).unique();
