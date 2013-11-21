@@ -1,11 +1,20 @@
 
+html {
+	height: 100%;
+}
+
 body {
 	background: #111;
+	display: table;
+	width: 99%;
+	height: 99%;
 }
 
 #container {
 	width: 1210px;
 	margin: 0 auto;
+	display: table-cell;
+	vertical-align: middle;
 }
 
 #panes {
@@ -242,6 +251,7 @@ h2 {
 }
 
 #muteButton {
-	top: 1em;
+	position: absolute;
+	top: -20px;
 	cursor: pointer;
 }
