@@ -5,11 +5,6 @@ ROT.Display.create = function(game, opts) {
 	return display;
 };
 
-// multiplicand is used for fading effects
-// [255, 255, 255]: fully displayed
-// [0, 0, 0]: completely hidden
-ROT.Display.prototype.multiplicand = [255, 255, 255];
-
 ROT.Display.prototype.setupEventHandlers = function() {
 	var game = this.game;
 
@@ -58,9 +53,6 @@ ROT.Display.prototype.drawObject = function (map, x, y, object, bgColor) {
 		bgColor = "#000";
 	}
 
-	color = ROT.Color.toHex(ROT.Color.multiply(this.multiplicand, ROT.Color.fromString(color)));
-	bgColor = ROT.Color.toHex(ROT.Color.multiply(this.multiplicand, ROT.Color.fromString(bgColor)));
-
 	this.draw(x, y, symbol, color, bgColor);
 };
 
@@ -70,45 +62,55 @@ ROT.Display.prototype.drawAll = function(map) {
 	// draw static objects
 	for (var x = 0; x < game.dimensions.width; x++) {
 		for (var y = 0; y < game.dimensions.height; y++) {
-			this.drawObject(map, x, y, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
+			this.drawObject(map, x, y + this.offset, map.getGrid()[x][y].type, map.getGrid()[x][y].bgColor);
 		}
 	}
 
 	// draw dynamic objects
 	for (var i = 0; i < map.getDynamicObjects().length; i++) {
 		var obj = map.getDynamicObjects()[i];
-		this.drawObject(map, obj.getX(), obj.getY(), obj.getType(), map.getGrid()[obj.getX()][obj.getY()].bgColor);
+		this.drawObject(map, obj.getX(), obj.getY() + this.offset, obj.getType(), map.getGrid()[obj.getX()][obj.getY()].bgColor);
 	}
 
 	// draw player
-	if (map.getPlayer()) { map.getPlayer().draw(); }
+	if (map.getPlayer()) { map.getPlayer().draw(this.offset); }
 };
 
 ROT.Display.prototype.fadeOut = function (map, callback, i) {
 	var display = this;
-	if (i <= 0) {
+	var game = map.game;
+	var command = "> load " + game.levelFileNames[game.currentLevel - 1];
+
+	if (i <= - map.getHeight()) {
 		if (callback) { callback(); }
 	} else {
-		if (!i) { i = 255; }
-		this.multiplicand = [i, i, i];
+		if (typeof i === 'undefined') { i = 0; }
+		this.offset = i;
+		this.clear();
 		this.drawAll(map);
+		this.drawText(0, i + map.getHeight() + 1, command);
 		setTimeout(function () {
-			display.fadeOut(map, callback, i-10);
-		}, 10);
+			display.fadeOut(map, callback, i-1);
+		}, 100);
 	}
 };
 
 ROT.Display.prototype.fadeIn = function (map, callback, i) {
 	var display = this;
-	if (i > 255) {
+	var game = map.game;
+	var command = "> run " + game.levelFileNames[game.currentLevel - 1];
+
+	if (i < 0) {
 		if (callback) { callback(); }
 	} else {
-		if (!i) { i = 0; }
-		this.multiplicand = [i, i, i];
+		if (typeof i === 'undefined') { i = map.getHeight(); }
+		this.offset = i;
+		this.clear();
 		this.drawAll(map);
+		this.drawText(0, i - 2, command);
 		setTimeout(function () {
-			display.fadeIn(map, callback, i+5);
-		}, 10);
+			display.fadeIn(map, callback, i-1);
+		}, 100);
 	}
 };
 

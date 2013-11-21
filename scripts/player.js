@@ -24,9 +24,9 @@ function Player(x, y, map) {
 	this.init = function () {
 	}
 
-	this.draw = function () {
-		var bgColor = this.map.getGrid()[_x][_y].bgColor
-		this.display.draw(_x, _y, this.rep, _color, bgColor);
+	this.draw = function (yOffset) {
+		var bgColor = this.map.getGrid()[_x][_y].bgColor;
+		this.display.draw(_x, _y + yOffset, this.rep, _color, bgColor);
 	}
 
 	this.atLocation = function (x, y) {

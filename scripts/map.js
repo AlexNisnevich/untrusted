@@ -260,11 +260,15 @@ function Map(display, game) {
 		_intervals.push(setInterval(timer, delay));
 	};
 
+	this.displayedChapters = [];
 	this.displayChapter = function(chapterName) {
-		$('#chapter').html(chapterName.replace("\n","<br>")).show();
-		setTimeout(function () {
-			$('#chapter').fadeOut();
-		}, 5 * 1000);
+		if (this.displayedChapters.indexOf(chapterName) == -1) {
+			$('#chapter').html(chapterName.replace("\n","<br>")).show();
+			this.displayedChapters.push(chapterName);
+			setTimeout(function () {
+				$('#chapter').fadeOut();
+			}, 5 * 1000);
+		}
 	};
 
 	this.hideChapter = function() {

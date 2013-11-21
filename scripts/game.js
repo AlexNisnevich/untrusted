@@ -80,8 +80,7 @@ function Game(debugMode) {
 			this.sound.toggleSound(); // mute sound by default in debug mode
 		}
 
-		$('#screen').hide();
-		this.openMenu();
+		this.getLevel(1);
 	}
 
 	this.moveToNextLevel = function () {
@@ -99,18 +98,23 @@ function Game(debugMode) {
 	};
 
 	this.jumpToNthLevel = function (levelNum) {
-		// Give the player all necessary objects
-		if (levelNum > 1) {
-			this.addToGlobalInventory('computer');
-			$('#editorPane').fadeIn();
-			this.editor.refresh();
-		}
-		if (levelNum > 6) {
-			this.addToGlobalInventory('phone');
-			$('#phoneButton').show();
-		}
-		this.getLevel(levelNum);
-		this.display.focus();
+		var game = this;
+		game.currentLevel = levelNum;
+		game.display.fadeOut(this.map, function () {
+			// Give the player all necessary objects
+			if (levelNum > 1) {
+				game.addToGlobalInventory('computer');
+				$('#editorPane').fadeIn();
+				game.editor.refresh();
+			}
+			if (levelNum > 6) {
+				game.addToGlobalInventory('phone');
+				$('#phoneButton').show();
+			}
+
+			game.getLevel(levelNum);
+		});
+		game.display.focus();
 	}
 
 	// makes an ajax request to get the level text file and
