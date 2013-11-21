@@ -260,11 +260,10 @@ function Map(display, game) {
 		_intervals.push(setInterval(timer, delay));
 	};
 
-	this.displayedChapters = [];
 	this.displayChapter = function(chapterName) {
-		if (this.displayedChapters.indexOf(chapterName) == -1) {
+		if (this.game.displayedChapters.indexOf(chapterName) == -1) {
 			$('#chapter').html(chapterName.replace("\n","<br>")).show();
-			this.displayedChapters.push(chapterName);
+			this.game.displayedChapters.push(chapterName);
 			setTimeout(function () {
 				$('#chapter').fadeOut();
 			}, 5 * 1000);

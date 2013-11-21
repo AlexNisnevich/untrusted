@@ -10,7 +10,6 @@ function Game(debugMode) {
 	_currentCode = '';
 	_globalInventory = [];
 	_commands = (commands = localStorage.getItem('helpCommands')) ? commands.split(';') : [];
-	_introText = 'Dr. Eval awoke in a strange cell, with no apparent way out. He spied his trusty computer ...'
 
 	this.levelFileNames = [
         '01_cellBlockA.jsx',
@@ -38,6 +37,7 @@ function Game(debugMode) {
 
 	this.currentLevel = 1;
 	this.levelReached = localStorage.getItem('levelReached') || 1;
+	this.displayedChapters = [];
 
 	this.addToGlobalInventory = function (item) { _globalInventory.push(item); }
 	this.checkGlobalInventory = function (item) { return _globalInventory.indexOf(item) > -1; }
@@ -135,17 +135,11 @@ function Game(debugMode) {
 
             // start the level and fade in
             game.evalLevelCode();
-            game.display.fadeIn(game.map, function () {});
             game.display.focus();
 
             // store the commands introduced in this level (for api reference)
             _commands = _commands.concat(game.editor.getProperties().commandsIntroduced).unique();
             localStorage.setItem('helpCommands', _commands.join(';'));
-
-            // on first level, display intro text
-            if (game.currentLevel == 1) {
-                game.output.write(_introText);
-            }
 		});
 	}
 
@@ -187,7 +181,7 @@ function Game(debugMode) {
 			validatedStartLevel(map);
 
 			// draw the map
-			map.refresh();
+			game.display.fadeIn(this.map, function () {});
 			$('#static').hide();
 
 			// start bg music for this level
@@ -199,6 +193,7 @@ function Game(debugMode) {
 
 			// finally, allow player movement
 			this.map.getPlayer().canMove = true;
+			game.display.focus();
 		} else { // code is invalid
 			// show static and reload from last good state
 			$('#static').show();
