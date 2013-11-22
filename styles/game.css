@@ -12,6 +12,7 @@ body {
 
 #container {
 	width: 1210px;
+	min-width: 1210px;
 	margin: 0 auto;
 	display: table-cell;
 	vertical-align: middle;
