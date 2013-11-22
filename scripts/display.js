@@ -6,6 +6,7 @@ ROT.Display.create = function(game, opts) {
 };
 
 ROT.Display.prototype.setupEventHandlers = function() {
+	var display = this;
 	var game = this.game;
 
 	// directions for moving entities
@@ -29,7 +30,10 @@ ROT.Display.prototype.setupEventHandlers = function() {
 	// contentEditable is required for canvas elements to detect keyboard events
 	$(this.getContainer()).attr("contentEditable", "true");
 	this.getContainer().addEventListener("keydown", function(e) {
-		if (keys[e.keyCode]) {
+		if (display.intro == true) {
+			game.start();
+			display.intro = false;
+		} else if (keys[e.keyCode]) {
 			game.map.getPlayer().move(keys[e.keyCode], true);
 		}
 	});
@@ -76,10 +80,30 @@ ROT.Display.prototype.drawAll = function(map) {
 	if (map.getPlayer()) { map.getPlayer().draw(this.offset); }
 };
 
+ROT.Display.prototype.playIntro = function (map, i) {
+	display = this;
+
+	if (i < 0) {
+		return;
+	} else {
+		if (typeof i === 'undefined') { i = map.getHeight(); }
+		this.offset = i;
+		this.clear();
+		this.drawText(0, i - 2, "%c{green}> initialize")
+		this.drawText(15, i + 3, "U N T R U S T E D");
+		this.drawText(20, i + 5, "- or - ");
+		this.drawText(5, i + 7, "THE CONTINUING ADVENTURES OF DR. EVAL");
+		this.drawText(10, i + 20, "Press any key to begin ...")
+		setTimeout(function () {
+			display.playIntro(map, i - 1);
+		}, 100);
+	}
+};
+
 ROT.Display.prototype.fadeOut = function (map, callback, i) {
 	var display = this;
-	var game = map.game;
-	var command = "> load " + game.levelFileNames[game.currentLevel - 1];
+	var game = this.game;
+	var command = "%c{green}> load " + game.levelFileNames[game.currentLevel - 1];
 
 	if (i <= - map.getHeight()) {
 		if (callback) { callback(); }
@@ -97,8 +121,8 @@ ROT.Display.prototype.fadeOut = function (map, callback, i) {
 
 ROT.Display.prototype.fadeIn = function (map, callback, i) {
 	var display = this;
-	var game = map.game;
-	var command = "> run " + game.levelFileNames[game.currentLevel - 1];
+	var game = this.game;
+	var command = "%c{green}> run " + game.levelFileNames[game.currentLevel - 1];
 
 	if (i < 0) {
 		if (callback) { callback(); }

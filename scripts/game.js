@@ -63,7 +63,6 @@ function Game(debugMode) {
 			fontSize: 15
 		});
 		$('#output').append(this.output.getContainer());
-		this.output.write('Welcome to Untrusted -or- the Continuing Adventures of Dr. Eval. Please select a level.')
 
 		// Initialize map and editor
 		this.editor = new CodeEditor("editor", 600, 500);
@@ -80,8 +79,18 @@ function Game(debugMode) {
 			this.sound.toggleSound(); // mute sound by default in debug mode
 		}
 
+		this.intro();
+	};
+
+	this.intro = function () {
+		this.display.focus();
+		this.display.intro = true;
+		this.display.playIntro(this.map);
+	};
+
+	this.start = function () {
 		this.getLevel(1);
-	}
+	};
 
 	this.moveToNextLevel = function () {
 		var game = this;
