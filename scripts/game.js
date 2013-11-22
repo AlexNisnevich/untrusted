@@ -84,7 +84,6 @@ function Game(debugMode) {
 
 	this.intro = function () {
 		this.display.focus();
-		this.display.intro = true;
 		this.display.playIntro(this.map);
 	};
 
@@ -116,7 +115,7 @@ function Game(debugMode) {
 				$('#editorPane').fadeIn();
 				game.editor.refresh();
 			}
-			if (levelNum > 6) {
+			if (levelNum > 7) {
 				game.addToGlobalInventory('phone');
 				$('#phoneButton').show();
 			}

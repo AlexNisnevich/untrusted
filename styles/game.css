@@ -31,7 +31,7 @@ body {
 }
 
 #screen canvas.focus {
-	border: 2px solid yellow;
+	border: 2px solid #888;
 }
 
 #chapter {
@@ -87,8 +87,8 @@ body {
 }
 
 .CodeMirror.focus {
-	border: 2px solid yellow;
-	border-left: 2px solid yellow;
+	border: 2px solid #888;
+	border-left: 2px solid #888;
 	margin-left: 0;
 }
 

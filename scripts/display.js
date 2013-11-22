@@ -33,7 +33,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
 		if (display.intro == true) {
 			game.start();
 			display.intro = false;
-		} else if (keys[e.keyCode]) {
+		} else if (keys[e.keyCode] && game.map.getPlayer()) {
 			game.map.getPlayer().move(keys[e.keyCode], true);
 		}
 	});
@@ -84,7 +84,7 @@ ROT.Display.prototype.playIntro = function (map, i) {
 	display = this;
 
 	if (i < 0) {
-		return;
+		this.intro = true;
 	} else {
 		if (typeof i === 'undefined') { i = map.getHeight(); }
 		this.offset = i;
@@ -141,6 +141,13 @@ ROT.Display.prototype.fadeIn = function (map, callback, i) {
 ROT.Display.prototype.write = function(text) {
 	this.clear();
 	this.drawText(0, 0, text);
+}
+
+ROT.Display.prototype.writeStatus = function(text) {
+	var map = this.game.map;
+	var x = Math.floor((map.getWidth() - text.length) / 2);
+	var y = map.getHeight() - 2;
+	this.drawText(x, y, text);
 }
 
 ROT.Display.prototype.focus = function() {

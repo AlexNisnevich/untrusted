@@ -151,7 +151,12 @@ function Player(x, y, map) {
 
 		if (object.onPickUp) {
 			this.game.validateCallback(function () {
-				object.onPickUp(player, player.game)
+				setTimeout(function () {
+					object.onPickUp(player, player.game);
+				}, 100);
+				// timeout is so that written text is not immediately overwritten
+				// TODO: play around with Display.writeStatus so that this is
+				// not necessary
 			});
 		}
 	}
