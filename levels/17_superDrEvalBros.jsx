@@ -53,23 +53,26 @@ function startLevel(map) {
     map.startTimer(gravity, 50);
 
     function jump() {
+#BEGIN_EDITABLE#
+
+
+
+
+
+
+
+#END_EDITABLE#
+    }
+
+    map.getPlayer().setPhoneCallback(function () {
         var player = map.getPlayer();
         var x = player.getX();
         var y = player.getY() + 1;
 
         if (map.getObjectTypeAt(x,y) !== "empty") {
-            var framesLeft = 18;
-            map.startTimer(function () {
-                if (framesLeft > 0) {
-                    map.getPlayer().move('up');
-                    framesLeft--;
-                }
-            }, 25);
+            jump();
         }
-    }
-#BEGIN_EDITABLE#
-
-#END_EDITABLE#
+    });
 }
 
 function validateLevel(map) {
