@@ -266,6 +266,17 @@ function Map(display, game) {
 		$('#chapter').hide();
 	};
 
+	this.getCanvasContext = function() {
+		return $('#drawingCanvas')[0].getContext('2d');
+	};
+
+	this.getCanvasCoords = function(x, y) {
+		return {
+			x: (x + .5) * 600 / game.dimensions.width,
+			y: (y + .5) * 500 / game.dimensions.height
+		}
+	}
+
 	/* Initialization */
 
 	this.game = game;

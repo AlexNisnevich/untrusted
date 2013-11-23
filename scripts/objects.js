@@ -50,6 +50,16 @@ Game.prototype.objects = {
 		}
 	},
 
+	'teleporter': {
+		'type': 'dynamic',
+		'symbol' : String.fromCharCode(0x2395), // ⎕
+		'color': '#f0f',
+		'onCollision': function (player, me) {
+			player.moveTo(me.target);
+		},
+		'behavior': function (me) {}
+	},
+
 	// items
 
 	'computer': {

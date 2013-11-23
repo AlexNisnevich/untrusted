@@ -83,6 +83,13 @@ function Player(x, y, map) {
 		}
 	};
 
+	// NOT exposed to player, used for teleporters
+	this.moveTo = function (dynamicObject) {
+		_x = dynamicObject.getX();
+		_y = dynamicObject.getY();
+		this.display.drawAll(this.map);
+	}
+
 	this.afterMove = function (x, y) {
 		player = this;
 

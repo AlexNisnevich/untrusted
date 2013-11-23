@@ -54,7 +54,11 @@ function Game(debugMode) {
 			fontSize: 20
 		});
 		this.display.setupEventHandlers();
+		display = this.display;
 		$('#screen').append(this.display.getContainer());
+		$('#drawingCanvas').click(function () {
+			display.focus();
+		});
 
 		// Initialize output display
 		this.output = ROT.Display.create(this, {
@@ -182,6 +186,9 @@ function Game(debugMode) {
 			if (loadedFromEditor) {
 				this.editor.saveGoodState();
 			}
+
+			// clear drawing canvas
+			$('#drawingCanvas')[0].width = $('#drawingCanvas')[0].width;
 
 			// start the level
 			var map = this.map; var display = this.display; var output = this.output;
