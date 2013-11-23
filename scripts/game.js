@@ -26,13 +26,13 @@ function Game(debugMode) {
         '11_robot.jsx',
         '12_robotNav.jsx',
         '13_robotMaze.jsx',
-        '14_crispsContest.jsx',
+        //'14_crispsContest.jsx',
         '15_exceptionalCrossing.jsx',
         '16_pointers.jsx',
         '17_superDrEvalBros.jsx',
-        '18_domManipulation.jsx',
-        '19_bossFight.jsx',
-        '20_ULTIMA_BOSS_FIGHT.jsx',
+        //'18_domManipulation.jsx',
+        //'19_bossFight.jsx',
+        //'20_ULTIMA_BOSS_FIGHT.jsx',
         '99_credits.jsx'
 	];
 
