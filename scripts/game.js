@@ -164,6 +164,9 @@ function Game(debugMode) {
 			loadedFromEditor = true;
 		}
 
+		// save current display state (for scrolling up later)
+		this.display.saveGrid(this.map);
+
 		// validate the code
 		// if it passes validation, returns the startLevel function if it pass
 		// if it fails validation, returns false
@@ -171,7 +174,6 @@ function Game(debugMode) {
 
 		if (validatedStartLevel) { // code is valid
 			// reset the map
-			this.display.saveGrid(this.map);
 			this.map.reset();
 			this.map.setProperties(this.editor.getProperties()['mapProperties']);
 
