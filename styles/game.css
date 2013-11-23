@@ -244,3 +244,7 @@ h2 {
 	top: 1em;
 	cursor: pointer;
 }
+
+#drawingCanvas {
+	position: absolute;
+}
