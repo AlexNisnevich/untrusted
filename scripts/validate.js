@@ -6,7 +6,7 @@ Game.prototype.allowedTime = 2000;
 
 var DummyDisplay = function () {
 	this.clear = function () {};
-	this.draw = function () {};
+	this.drawAll = function () {};
 	this.drawObject = function () {};
 };
 

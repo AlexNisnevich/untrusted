@@ -10,6 +10,7 @@ function Map(display, game) {
 	var _intervals = [];
 
     this.getObjectDefinition = function(objName) { return _objectDefinitions[objName]; }
+	this.getObjectDefinitions = function() { return _objectDefinitions; }
 	this.getPlayer = function () { return _player; };
 	this.getGrid = function () { return _grid; };
 	this.getDynamicObjects = function () { return _dynamicObjects; };
@@ -198,7 +199,7 @@ function Map(display, game) {
 			throw "Can't place player twice!";
 		}
 		_player = new Player(x, y, this);
-		_player.draw();
+		display.drawAll(this);
 	};
 
 	this.setSquareColor = function (x, y, bgColor) {
@@ -241,15 +242,6 @@ function Map(display, game) {
 			}
 		});
 		return adjacentEmptyCells;
-	}
-
-    //we thought we'd use this for gravity in the platformer level and
-    //maybe we'll still do that later but right now we're not using it
-	this.setAfterMoveCallback = function(callback) {
-		if (typeof this.afterMoveCallback !== 'undefined') {
-			throw "Cannot set afterMoveCallback more than once";
-		}
-		this.afterMoveCallback = callback;
 	};
 
 	this.startTimer = function(timer, delay) {
@@ -272,8 +264,7 @@ function Map(display, game) {
 
 	this.hideChapter = function() {
 		$('#chapter').hide();
-	}
-
+	};
 
 	/* Initialization */
 

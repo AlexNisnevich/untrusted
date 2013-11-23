@@ -96,32 +96,28 @@ function Game(debugMode) {
 
 		game.currentLevel++;
 		game.sound.playSound('complete');
-		game.output.write('Loading level ' + this.currentLevel + ' ...');
 
         //we disable moving so the player can't move during the fadeout
 		game.map.getPlayer().canMove = false;
-		game.display.fadeOut(this.map, function () {
-			game.getLevel(game.currentLevel);
-		})
+		game.getLevel(game.currentLevel);
 	};
 
 	this.jumpToNthLevel = function (levelNum) {
 		var game = this;
 		game.currentLevel = levelNum;
-		game.display.fadeOut(this.map, function () {
-			// Give the player all necessary objects
-			if (levelNum > 1) {
-				game.addToGlobalInventory('computer');
-				$('#editorPane').fadeIn();
-				game.editor.refresh();
-			}
-			if (levelNum > 7) {
-				game.addToGlobalInventory('phone');
-				$('#phoneButton').show();
-			}
 
-			game.getLevel(levelNum);
-		});
+		// Give the player all necessary objects
+		if (levelNum > 1) {
+			game.addToGlobalInventory('computer');
+			$('#editorPane').fadeIn();
+			game.editor.refresh();
+		}
+		if (levelNum > 7) {
+			game.addToGlobalInventory('phone');
+			$('#phoneButton').show();
+		}
+
+		game.getLevel(levelNum);
 		game.display.focus();
 	}
 
@@ -142,7 +138,7 @@ function Game(debugMode) {
             game.editor.loadCode(lvlCode);
 
             // start the level and fade in
-            game.evalLevelCode();
+            game.evalLevelCode(null, null, true);
             game.display.focus();
 
             // store the commands introduced in this level (for api reference)
@@ -157,7 +153,7 @@ function Game(debugMode) {
 		this.evalLevelCode();
 	}
 
-	this.evalLevelCode = function (allCode, playerCode) {
+	this.evalLevelCode = function (allCode, playerCode, isNewLevel) {
 		var game = this;
 
 		// by default, get code from the editor
@@ -175,6 +171,7 @@ function Game(debugMode) {
 
 		if (validatedStartLevel) { // code is valid
 			// reset the map
+			this.display.saveGrid(this.map);
 			this.map.reset();
 			this.map.setProperties(this.editor.getProperties()['mapProperties']);
 
@@ -189,7 +186,7 @@ function Game(debugMode) {
 			validatedStartLevel(map);
 
 			// draw the map
-			game.display.fadeIn(this.map, function () {});
+			game.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {});
 			$('#static').hide();
 
 			// start bg music for this level
