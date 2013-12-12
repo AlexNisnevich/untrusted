@@ -187,14 +187,15 @@ function Game(debugMode) {
 				this.editor.saveGoodState();
 			}
 
-			// clear drawing canvas
+			// clear drawing canvas and hide it until level loads
 			$('#drawingCanvas')[0].width = $('#drawingCanvas')[0].width;
+			$('#drawingCanvas').hide();
 
 			// start the level
 			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
 
-			// remove inventory items granted by this level (if any)
+			// remove inventory items introduced in this level (if any)
 			if (this.map.getPlayer() && this.editor.getProperties()['itemsIntroduced']) {
 				this.editor.getProperties()['itemsIntroduced'].forEach(function (item) {
 					game.map.getPlayer().removeItem(item);
@@ -202,8 +203,10 @@ function Game(debugMode) {
 			}
 
 			// draw the map
-			game.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {});
-			$('#static').hide();
+			game.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
+				// when done, show the drawing canvas again
+				$('#drawingCanvas').show();
+			});
 
 			// start bg music for this level
 			if (this.editor.getProperties()['music']) {

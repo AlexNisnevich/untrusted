@@ -53,7 +53,6 @@ function startLevel(map) {
     canvas.beginPath();
     canvas.arc(exitCoords.x, exitCoords.y, 20, 0, 2*Math.PI);
     canvas.strokeStyle = "white";
-    canvas.lineWidth = 1.25;
     canvas.stroke();
     
     // N.B. If you use w3schools to look up these canvas methods,

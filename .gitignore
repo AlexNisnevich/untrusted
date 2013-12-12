@@ -2,3 +2,4 @@
 deploy.sh
 
 scripts/build/*js
+_site/*
