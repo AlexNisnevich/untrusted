@@ -2,7 +2,8 @@
 {
     "commandsIntroduced":
         ["global.startLevel", "map.placePlayer", "map.placeObject", "map.getHeight",
-         "map.getWidth", "map.getPlayer", "player.hasItem"]
+         "map.getWidth", "map.getPlayer", "player.hasItem"],
+    "itemsIntroduced": ["computer"]
 }
 #END_PROPERTIES#
 /*****************
@@ -39,9 +40,7 @@ function startLevel(map) {
     }
 #END_EDITABLE#
 
-    if (!map.getPlayer().hasItem('computer')) {
-        map.placeObject(15, 12, 'computer');
-    }
+    map.placeObject(15, 12, 'computer');
 
     map.placeObject(map.getWidth()-7, map.getHeight()-5, 'exit');
 }

@@ -7,6 +7,14 @@ function clone(obj) {
     return temp;
 }
 
+Array.prototype.remove = function(item) {
+    for(var i = this.length; i--;) {
+        if(this[i] === item) {
+            this.splice(i, 1);
+        }
+    }
+}
+
 Array.prototype.unique = function() {
     var a = this.concat();
     for(var i=0; i<a.length; ++i) {

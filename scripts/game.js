@@ -194,6 +194,13 @@ function Game(debugMode) {
 			var map = this.map; var display = this.display; var output = this.output;
 			validatedStartLevel(map);
 
+			// remove inventory items granted by this level (if any)
+			if (this.map.getPlayer() && this.editor.getProperties()['itemsIntroduced']) {
+				this.editor.getProperties()['itemsIntroduced'].forEach(function (item) {
+					game.map.getPlayer().removeItem(item);
+				});
+			}
+
 			// draw the map
 			game.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {});
 			$('#static').hide();

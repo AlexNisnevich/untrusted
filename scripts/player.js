@@ -133,15 +133,15 @@ function Player(x, y, map) {
 		this.map.displayChapter('You have been killed by \n' + killer + '!', 'death');
 	}
 
-	this.pickUpItem = function (objectName, object) {
+	this.pickUpItem = function (itemName, object) {
 		player = this;
 
 		if (object.isGlobal) {
-			this.game.addToGlobalInventory(objectName);
+			this.game.addToGlobalInventory(itemName);
 		} else {
-			_inventory.push(objectName);
+			_inventory.push(itemName);
 		}
-		map.removeItemFromMap(_x, _y, objectName);
+		map.removeItemFromMap(_x, _y, itemName);
 		map.refresh();
 		this.game.sound.playSound('pickup');
 
@@ -157,8 +157,15 @@ function Player(x, y, map) {
 		}
 	}
 
-	this.hasItem = function (item) {
-		return (_inventory.indexOf(item) > -1) || (this.game.checkGlobalInventory(item));
+	this.hasItem = function (itemName) {
+		return (_inventory.indexOf(itemName) > -1) || (this.game.checkGlobalInventory(itemName));
+	}
+
+	this.removeItem = function (itemName) {
+		var object = this.game.objects[itemName];
+
+		_inventory.remove(itemName);
+		object.onDrop(this, this.game);
 	}
 
 	this.setPhoneCallback = function(func) {

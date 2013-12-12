@@ -71,6 +71,9 @@ Game.prototype.objects = {
 			$('#editorPane').fadeIn();
 			game.editor.refresh();
 			game.display.writeStatus('You have picked up the computer!');
+		},
+		'onDrop': function (player, game) {
+			$('#editorPane').hide();
 		}
 	},
 
@@ -81,6 +84,9 @@ Game.prototype.objects = {
 		'onPickUp': function (player, game) {
 			game.display.writeStatus('You have picked up the function phone!');
 			$('#phoneButton').show();
+		},
+		'onDrop': function (player, game) {
+			$('#phoneButton').hide();
 		}
 	},
 

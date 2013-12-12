@@ -3,7 +3,8 @@
     "commandsIntroduced":
         ["map.defineObject", "player.getColor", "player.setColor",
          "object.color", "object.impassable", "object.symbol",
-         "player.setPhoneCallback"]
+         "player.setPhoneCallback"],
+    "itemsIntroduced": ["phone"]
 }
 #END_PROPERTIES#
 /*************
@@ -21,9 +22,7 @@
 function startLevel(map) {
     map.placePlayer(0, 12);
 
-    if (!map.getPlayer().hasItem('phone')) {
-        map.placeObject(5, 12, 'phone');
-    }
+    map.placeObject(5, 12, 'phone');
 
     // The function phone lets you call arbitrary functions,
     // as defined by player.setPhoneCallback() below.
