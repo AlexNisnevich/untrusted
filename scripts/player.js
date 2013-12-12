@@ -18,7 +18,7 @@ function Player(x, y, map) {
 	this.getColor = function () { return _color; }
 	this.setColor = function (c) {
 		_color = c;
-		display.drawAll();
+		this.display.drawAll(this.map);
 	}
 
 	this.init = function () {

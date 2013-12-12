@@ -126,7 +126,7 @@ Game.prototype.validateCallback = function(callback) {
 		// refresh the map, just in case
 		this.map.refresh();
 	} catch (e) {
-		this.display.appendError(e.toString());
+		this.output.write(e.toString());
 	}
 }
 
