@@ -93,6 +93,8 @@ function Player(x, y, map) {
 	this.afterMove = function (x, y) {
 		player = this;
 
+        this.hasTeleported = false; //necessary to prevent bugs with teleportation
+
 		this.map.hideChapter();
 		this.map.moveAllDynamicObjects();
 

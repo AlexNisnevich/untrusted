@@ -55,7 +55,10 @@ Game.prototype.objects = {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#f0f',
 		'onCollision': function (player, me) {
-			player.moveTo(me.target);
+            if (!player.hasTeleported) {
+                player.moveTo(me.target);
+            }
+            player.hasTeleported = true;
 		},
 		'behavior': function (me) {}
 	},
