@@ -209,13 +209,11 @@ function Game(debugMode) {
 			this.map.getPlayer().canMove = true;
 			game.display.focus();
 		} else { // code is invalid
-			// show static and reload from last good state
-			$('#static').show();
+			// play error sound
 			this.sound.playSound('static');
-			setTimeout(function () {
-				var goodState = game.editor.getGoodState();
-				game.evalLevelCode(goodState.code, goodState.playerCode);
-			}, 1000);
+
+			// disable player movement
+			this.map.getPlayer().canMove = false;
 		}
 	}
 

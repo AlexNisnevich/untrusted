@@ -113,6 +113,14 @@ ROT.Display.prototype.drawAll = function(map) {
 		}
 	}
 
+	// write error messages, if any
+	if (this.errors && this.errors.length > 0) {
+		for (var i = 0; i < this.errors.length; i++) {
+			var y = this.game.dimensions.height - this.errors.length + i;
+			this.drawText(0, y, this.errors[i]);
+		}
+	}
+
 	// store for potential later use
 	this.grid = grid;
 };
@@ -166,6 +174,7 @@ ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
 	} else {
 		if (typeof i === 'undefined') { i = map.getHeight(); }
 		this.clear();
+		this.errors = [];
 		this.drawPreviousLevel(map, i - map.getHeight());
 
 		this.offset = i + 3;
@@ -182,14 +191,24 @@ ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
 ROT.Display.prototype.write = function(text) {
 	this.clear();
 	this.drawText(0, 0, text);
-}
+};
 
 ROT.Display.prototype.writeStatus = function(text) {
 	var map = this.game.map;
 	var x = Math.floor((map.getWidth() - text.length) / 2);
 	var y = map.getHeight() - 2;
 	this.drawText(x, y, text);
-}
+};
+
+ROT.Display.prototype.appendError = function(errorText) {
+	var map = this.game.map;
+	var command = "%c{#0f0}> run " + game.levelFileNames[game.currentLevel - 1];
+
+	this.offset -= 3;
+	this.errors = this.errors.concat([command, errorText, ""]);
+	this.clear();
+	this.drawAll(map);
+};
 
 ROT.Display.prototype.focus = function() {
 	$('#screen').show();
