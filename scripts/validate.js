@@ -1,4 +1,7 @@
-Game.prototype.VERBOTEN = ['eval', 'prototype', 'delete', 'return', 'moveToNextLevel', 'removeItemFromMap'];
+Game.prototype.VERBOTEN = [
+	'eval', 'prototype', 'delete', 'return', 'console', 'debugger',
+	'setTimeout', 'setInterval', 'level', 'Level', 'removeItemFromMap'
+];
 Game.prototype.allowedTime = 2000;
 
 // We may want to have level-specific hidden validation rules in the future.

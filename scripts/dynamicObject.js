@@ -43,8 +43,8 @@ function DynamicObject(map, type, x, y) {
 		}
 
 		var nearestObj = map.findNearestDynamicObj(dest.x, dest.y);
-		console.log("dest: " + dest.x + ", " + dest.y);
-		console.log("nearest: " + nearestObj.x + ", " + nearestObj.y);
+		//console.log("dest: " + dest.x + ", " + dest.y);
+		//console.log("nearest: " + nearestObj.x + ", " + nearestObj.y);
 
 		// check for collision with player
 		if (map.getPlayer().atLocation(dest.x, dest.y) && _definition.onCollision) {

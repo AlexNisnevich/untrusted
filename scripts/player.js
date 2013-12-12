@@ -93,8 +93,8 @@ function Player(x, y, map) {
 	this.afterMove = function (x, y) {
 		player = this;
 
-		this.map.moveAllDynamicObjects();
 		this.map.hideChapter();
+		this.map.moveAllDynamicObjects();
 
 		var onTransport = false;
 
