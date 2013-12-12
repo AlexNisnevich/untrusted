@@ -45,19 +45,26 @@ function startLevel(map) {
             }
         }
     }
-
+    
+    // Ooh, canvas is so shiny
+    // I wonder what else it could do?
     var canvas = map.getCanvasContext();
     var exitCoords = map.getCanvasCoords(35, 21);
     canvas.beginPath();
     canvas.arc(exitCoords.x, exitCoords.y, 20, 0, 2*Math.PI);
-    canvas.strokeStyle = "red";
+    canvas.strokeStyle = "white";
+    canvas.lineWidth = 1.25;
     canvas.stroke();
+    
+    // N.B. If you use w3schools to look up these canvas methods,
+    // you're a bad person.
 
     var teleporters = map.getDynamicObjects();
     teleporters = shuffle(teleporters);
 
     for (i = 0; i < teleporters.length; i+=2) {
 #BEGIN_EDITABLE#
+
 
 
 
