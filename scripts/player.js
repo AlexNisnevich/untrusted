@@ -98,22 +98,20 @@ function Player(x, y, map) {
 
 		var onTransport = false;
 
-		// check for collision with dynamic object
+		// check for collision with transport object
 		for (var i = 0; i < this.map.getDynamicObjects().length; i++) {
 			var object = this.map.getDynamicObjects()[i];
 			if (object.getX() === x && object.getY() === y) {
 				var objDef = this.map.getObjectDefinition(object.getType());
-				if (objDef.onCollision) {
-					objDef.onCollision(player, object);
-				}
 				if (objDef.transport) {
 					onTransport = true;
 				}
 			}
 		}
 
+        // check for collision with static object UNLESS
+        // we are on a transport
 		if (!onTransport) {
-			// check for collision with static object
 			var objectName = this.map.getGrid()[x][y].type;
 			var object = this.map.getObjectDefinition(objectName);
 			if (object.type == 'item') {

@@ -150,11 +150,9 @@ function Map(display, game) {
 	}
 
 	this.moveAllDynamicObjects = function () {
-		// iterate over all dynamic objects
-		for (var i = 0; i < _dynamicObjects.length; i++) {
-			var object = _dynamicObjects[i];
-			object.onTurn();
-		}
+        _dynamicObjects.forEach(function(object) {
+            object.onTurn();
+        });
 	};
 
 	this.removeItemFromMap = function (x, y, klass) {
