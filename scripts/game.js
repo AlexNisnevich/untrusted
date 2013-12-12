@@ -10,7 +10,6 @@ function Game(debugMode) {
 	_currentCode = '';
 	_globalInventory = [];
 	_commands = (commands = localStorage.getItem('helpCommands')) ? commands.split(';') : [];
-	_introText = 'Dr. Eval awoke in a strange cell, with no apparent way out. He spied his trusty computer ...'
 
 	this.levelFileNames = [
         '01_cellBlockA.jsx',
@@ -38,6 +37,7 @@ function Game(debugMode) {
 
 	this.currentLevel = 1;
 	this.levelReached = localStorage.getItem('levelReached') || 1;
+	this.displayedChapters = [];
 
 	this.addToGlobalInventory = function (item) { _globalInventory.push(item); }
 	this.checkGlobalInventory = function (item) { return _globalInventory.indexOf(item) > -1; }
@@ -67,7 +67,6 @@ function Game(debugMode) {
 			fontSize: 15
 		});
 		$('#output').append(this.output.getContainer());
-		this.output.write('Welcome to Untrusted -or- the Continuing Adventures of Dr. Eval. Please select a level.')
 
 		// Initialize map and editor
 		this.editor = new CodeEditor("editor", 600, 500);
@@ -84,40 +83,45 @@ function Game(debugMode) {
 			this.sound.toggleSound(); // mute sound by default in debug mode
 		}
 
+		this.intro();
+	};
+
+	this.intro = function () {
+		this.display.focus();
+		this.display.playIntro(this.map);
+	};
+
+	this.start = function () {
 		this.getLevel(1);
-	}
+	};
 
 	this.moveToNextLevel = function () {
 		var game = this;
 
 		game.currentLevel++;
 		game.sound.playSound('complete');
-		game.output.write('Loading level ' + this.currentLevel + ' ...');
 
         //we disable moving so the player can't move during the fadeout
 		game.map.getPlayer().canMove = false;
-		game.display.fadeOut(this.map, function () {
-			game.getLevel(game.currentLevel);
-		})
+		game.getLevel(game.currentLevel);
 	};
 
 	this.jumpToNthLevel = function (levelNum) {
 		var game = this;
 		game.currentLevel = levelNum;
-		game.display.fadeOut(this.map, function () {
-			// Give the player all necessary objects
-			if (levelNum > 1) {
-				game.addToGlobalInventory('computer');
-				$('#editorPane').fadeIn();
-				game.editor.refresh();
-			}
-			if (levelNum > 6) {
-				game.addToGlobalInventory('phone');
-				$('#phoneButton').show();
-			}
 
-			game.getLevel(levelNum);
-		});
+		// Give the player all necessary objects
+		if (levelNum > 1) {
+			game.addToGlobalInventory('computer');
+			$('#editorPane').fadeIn();
+			game.editor.refresh();
+		}
+		if (levelNum > 7) {
+			game.addToGlobalInventory('phone');
+			$('#phoneButton').show();
+		}
+
+		game.getLevel(levelNum);
 		game.display.focus();
 	}
 
@@ -138,17 +142,12 @@ function Game(debugMode) {
             game.editor.loadCode(lvlCode);
 
             // start the level and fade in
-            game.evalLevelCode();
-            game.display.fadeIn(game.map, function () {});
+            game.evalLevelCode(null, null, true);
+            game.display.focus();
 
             // store the commands introduced in this level (for api reference)
             _commands = _commands.concat(game.editor.getProperties().commandsIntroduced).unique();
             localStorage.setItem('helpCommands', _commands.join(';'));
-
-            // on first level, display intro text
-            if (game.currentLevel == 1) {
-                game.output.write(_introText);
-            }
 		});
 	}
 
@@ -158,7 +157,7 @@ function Game(debugMode) {
 		this.evalLevelCode();
 	}
 
-	this.evalLevelCode = function (allCode, playerCode) {
+	this.evalLevelCode = function (allCode, playerCode, isNewLevel) {
 		var game = this;
 
 		// by default, get code from the editor
@@ -168,6 +167,9 @@ function Game(debugMode) {
 			playerCode = this.editor.getPlayerCode();
 			loadedFromEditor = true;
 		}
+
+		// save current display state (for scrolling up later)
+		this.display.saveGrid(this.map);
 
 		// validate the code
 		// if it passes validation, returns the startLevel function if it pass
@@ -193,7 +195,7 @@ function Game(debugMode) {
 			validatedStartLevel(map);
 
 			// draw the map
-			map.refresh();
+			game.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {});
 			$('#static').hide();
 
 			// start bg music for this level
@@ -205,14 +207,13 @@ function Game(debugMode) {
 
 			// finally, allow player movement
 			this.map.getPlayer().canMove = true;
+			game.display.focus();
 		} else { // code is invalid
-			// show static and reload from last good state
-			$('#static').show();
+			// play error sound
 			this.sound.playSound('static');
-			setTimeout(function () {
-				var goodState = game.editor.getGoodState();
-				game.evalLevelCode(goodState.code, goodState.playerCode);
-			}, 1000);
+
+			// disable player movement
+			this.map.getPlayer().canMove = false;
 		}
 	}
 

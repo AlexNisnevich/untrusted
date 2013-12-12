@@ -22,7 +22,7 @@ function startLevel(map) {
     map.placePlayer(0, 12);
 
     if (!map.getPlayer().hasItem('phone')) {
-        map.placeObject(1, 1, 'phone');
+        map.placeObject(5, 12, 'phone');
     }
 
     // The function phone lets you call arbitrary functions,

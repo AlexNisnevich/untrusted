@@ -1,11 +1,21 @@
 
+html {
+	height: 100%;
+}
+
 body {
-	background: #111;
+	background: #000;
+	display: table;
+	width: 99%;
+	height: 99%;
 }
 
 #container {
 	width: 1210px;
+	min-width: 1210px;
 	margin: 0 auto;
+	display: table-cell;
+	vertical-align: middle;
 }
 
 #panes {
@@ -22,19 +32,24 @@ body {
 }
 
 #screen canvas.focus {
-	border: 2px solid yellow;
+	border: 2px solid #888;
 }
 
 #chapter {
 	display: none;
-	position: relative;
-	top: -330px;
+	position: absolute;
+	top: 220px;
+	width: 584px;
 	padding: 10px;
 	background-color: white;
 	text-align: center;
 	font-family: 'Share Tech Mono', monospace;
 	font-variant: small-caps;
 	font-size: 28px;
+}
+
+#chapter.death {
+	background-color: red;
 }
 
 #editorPane {
@@ -77,8 +92,8 @@ body {
 }
 
 .CodeMirror.focus {
-	border: 2px solid yellow;
-	border-left: 2px solid yellow;
+	border: 2px solid #888;
+	border-left: 2px solid #888;
 	margin-left: 0;
 }
 
@@ -241,7 +256,8 @@ h2 {
 }
 
 #muteButton {
-	top: 1em;
+	position: absolute;
+	top: -20px;
 	cursor: pointer;
 }
 

@@ -18,15 +18,10 @@ function Player(x, y, map) {
 	this.getColor = function () { return _color; }
 	this.setColor = function (c) {
 		_color = c;
-		this.draw();
+		display.drawAll();
 	}
 
 	this.init = function () {
-	}
-
-	this.draw = function (yOffset) {
-		var bgColor = this.map.getGrid()[_x][_y].bgColor;
-		this.display.draw(_x, _y + yOffset, this.rep, _color, bgColor);
 	}
 
 	this.atLocation = function (x, y) {
@@ -71,10 +66,9 @@ function Player(x, y, map) {
 		}
 
 		if (this.map.canMoveTo(new_x, new_y)) {
-			this.display.drawObject(map, cur_x, cur_y, this.map.getGrid()[cur_x][cur_y].type, this.map.getGrid()[cur_x][cur_y].bgColor);
 			_x = new_x;
 			_y = new_y;
-			this.draw();
+			this.display.drawAll(this.map);
 
             if (fromKeyboard) {
                 this.canMove = false;
@@ -130,18 +124,13 @@ function Player(x, y, map) {
 				});
 			}
 		}
-
-		this.game.display.drawAll(this.map); // in case there are any artifacts
-
-        if (this.map.afterMoveCallback) {
-            this.map.afterMoveCallback();
-        }
 	}
 
 	this.killedBy = function (killer) {
 		this.game.sound.playSound('hurt');
 		this.game.restartLevel();
-		this.game.output.write('You have been killed by ' + killer + '!');
+
+		this.map.displayChapter('You have been killed by \n' + killer + '!', 'death');
 	}
 
 	this.pickUpItem = function (objectName, object) {
@@ -158,7 +147,12 @@ function Player(x, y, map) {
 
 		if (object.onPickUp) {
 			this.game.validateCallback(function () {
-				object.onPickUp(player, player.game)
+				setTimeout(function () {
+					object.onPickUp(player, player.game);
+				}, 100);
+				// timeout is so that written text is not immediately overwritten
+				// TODO: play around with Display.writeStatus so that this is
+				// not necessary
 			});
 		}
 	}

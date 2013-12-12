@@ -6,7 +6,7 @@ Game.prototype.allowedTime = 2000;
 
 var DummyDisplay = function () {
 	this.clear = function () {};
-	this.draw = function () {};
+	this.drawAll = function () {};
 	this.drawObject = function () {};
 };
 
@@ -92,7 +92,7 @@ Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
 				exceptionText = "[Line " + lineNum + "] " + exceptionText;
 			}
 		}
-		this.output.write(exceptionText);
+		this.display.appendError(exceptionText);
 		return null;
 	}
 }
@@ -123,7 +123,7 @@ Game.prototype.validateCallback = function(callback) {
 		// refresh the map, just in case
 		this.map.refresh();
 	} catch (e) {
-		this.output.write(e.toString());
+		this.display.appendError(e.toString());
 	}
 }
 

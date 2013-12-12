@@ -68,9 +68,9 @@ Game.prototype.objects = {
 		'symbol': String.fromCharCode(0x2318), // ⌘
 		'color': '#ccc',
 		'onPickUp': function (player, game) {
-			game.output.write('You have picked up the computer! You can use it to edit and rerun the level code.');
 			$('#editorPane').fadeIn();
 			game.editor.refresh();
+			game.display.writeStatus('You have picked up the computer!');
 		}
 	},
 
@@ -79,7 +79,7 @@ Game.prototype.objects = {
 		'isGlobal': true,
 		'symbol': String.fromCharCode(0x260E), // ☎
 		'onPickUp': function (player, game) {
-			game.output.write('You have picked up the function phone! You can use it to call functions, as defined by setPhoneCallback in the level code.');
+			game.display.writeStatus('You have picked up the function phone!');
 			$('#phoneButton').show();
 		}
 	},
@@ -88,7 +88,7 @@ Game.prototype.objects = {
 		'type': 'item',
 		'symbol': 'k',
 		'onPickUp': function (player, game) {
-			game.output.write('You have received a key!');
+			game.display.writeStatus('You have received a key!');
 		}
 	}
 };
