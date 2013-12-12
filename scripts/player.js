@@ -129,7 +129,8 @@ function Player(x, y, map) {
 	this.killedBy = function (killer) {
 		this.game.sound.playSound('hurt');
 		this.game.restartLevel();
-		this.game.output.write('You have been killed by ' + killer + '!');
+
+		this.map.displayChapter('You have been killed by \n' + killer + '!', 'death');
 	}
 
 	this.pickUpItem = function (objectName, object) {

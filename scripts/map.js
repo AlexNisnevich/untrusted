@@ -252,10 +252,17 @@ function Map(display, game) {
 		_intervals.push(setInterval(timer, delay));
 	};
 
-	this.displayChapter = function(chapterName) {
+	this.displayChapter = function(chapterName, cssClass) {
 		if (this.game.displayedChapters.indexOf(chapterName) == -1) {
-			$('#chapter').html(chapterName.replace("\n","<br>")).show();
-			this.game.displayedChapters.push(chapterName);
+			$('#chapter').html(chapterName.replace("\n","<br>"))
+			$('#chapter').removeClass().show();
+
+			if (cssClass) {
+				$('#chapter').addClass(cssClass);
+			} else {
+				this.game.displayedChapters.push(chapterName);
+			}
+
 			setTimeout(function () {
 				$('#chapter').fadeOut();
 			}, 5 * 1000);
@@ -263,7 +270,7 @@ function Map(display, game) {
 	};
 
 	this.hideChapter = function() {
-		$('#chapter').hide();
+		$('#chapter').removeClass().hide();
 	};
 
 	this.getCanvasContext = function() {

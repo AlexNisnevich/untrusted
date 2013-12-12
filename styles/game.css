@@ -48,6 +48,10 @@ body {
 	font-size: 28px;
 }
 
+#chapter.death {
+	background-color: red;
+}
+
 #editorPane {
 	position: absolute;
 	top: 0;
