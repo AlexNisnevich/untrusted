@@ -5,32 +5,34 @@ js-target = scripts/build/untrusted.js
 js-target-min = scripts/build/untrusted.min.js
 
 js-modules = scripts/helpers.js \
-                 scripts/game.js \
-                 scripts/display.js \
-                 scripts/codeEditor.js \
-                 scripts/map.js \
-                 scripts/dynamicObject.js \
-                 scripts/objects.js \
-                 scripts/player.js \
-                 scripts/sound.js \
-                 scripts/reference.js \
-                 scripts/validate.js \
-                 scripts/ui.js \
-                 scripts/launcher.js
+             scripts/game.js \
+             scripts/codeEditor.js \
+             scripts/display.js \
+             scripts/dynamicObject.js \
+             scripts/inventory.js \
+             scripts/map.js \
+             scripts/objects.js \
+             scripts/player.js \
+             scripts/reference.js \
+             scripts/sound.js \
+             scripts/validate.js \
+             scripts/ui.js \
+             scripts/launcher.js
 
 js-modules-debug = scripts/helpers.js \
-                 scripts/game.js \
-                 scripts/display.js \
-                 scripts/codeEditor.js \
-                 scripts/map.js \
-                 scripts/dynamicObject.js \
-                 scripts/objects.js \
-                 scripts/player.js \
-                 scripts/sound.js \
-                 scripts/reference.js \
-                 scripts/validate.js \
-                 scripts/ui.js \
-                 scripts/launcher-debug.js
+	               scripts/game.js \
+	               scripts/codeEditor.js \
+	               scripts/display.js \
+	               scripts/dynamicObject.js \
+	               scripts/inventory.js \
+	               scripts/map.js \
+	               scripts/objects.js \
+	               scripts/player.js \
+	               scripts/reference.js \
+	               scripts/sound.js \
+	               scripts/validate.js \
+	               scripts/ui.js \
+	               scripts/launcher-debug.js
 
 yui-jar = tools/yuicompressor-2.4.8pre.jar
 

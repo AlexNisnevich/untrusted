@@ -8,7 +8,6 @@ function Game(debugMode) {
 	this.dimensions = dimensions;
 
 	_currentCode = '';
-	_inventory = [];
 	_commands = (commands = localStorage.getItem('helpCommands')) ? commands.split(';') : [];
 
 	this.levelFileNames = [
@@ -112,30 +111,10 @@ function Game(debugMode) {
 
 	this.jumpToNthLevel = function (levelNum) {
 		var game = this;
-		game.currentLevel = levelNum;
-
-		// Give the player all necessary objects
-		if (levelNum > 1) {
-			game.addToInventory('computer');
-			$('#editorPane').fadeIn();
-			game.editor.refresh();
-		}
-		if (levelNum > 7) {
-			game.addToInventory('phone');
-			$('#phoneButton').show();
-		}
-		if (levelNum > 11) {
-			game.addToInventory('redKey');
-		}
-		if (levelNum > 12) {
-			game.addToInventory('greenKey');
-		}
-		if (levelNum > 13) {
-			game.addToInventory('blueKey');
-		}
-
-		game.getLevel(levelNum);
-		game.display.focus();
+		this.currentLevel = levelNum;
+		this.setInventoryStateByLevel(levelNum);
+		this.getLevel(levelNum);
+		this.display.focus();
 	}
 
 	// makes an ajax request to get the level text file and
@@ -239,30 +218,6 @@ function Game(debugMode) {
 			this.map.getPlayer().canMove = false;
 		}
 	}
-
-	// Inventory commands
-
-	this.addToInventory = function (itemName) {
-		if (_inventory.indexOf(itemName) == -1) {
-			_inventory.push(itemName);
-		}
-	};
-
-	this.getInventory = function () {
-		return _inventory;
-	}
-
-	this.checkInventory = function (itemName) {
-		return _inventory.indexOf(itemName) > -1;
-	};
-
-	this.removeFromInventory = function (itemName) {
-		var object = this.objects[itemName];
-		_inventory.remove(itemName);
-		if (object.onDrop) {
-			object.onDrop(this);
-		}
-	};
 
 	// Constructor
 	this.init();

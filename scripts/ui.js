@@ -42,7 +42,7 @@ Game.prototype.enableShortcutKeys = function () {
 		game.openMenu();
 		return true;
 	});
-}
+};
 
 Game.prototype.enableButtons = function () {
 	var game = this;
@@ -90,15 +90,7 @@ Game.prototype.enableButtons = function () {
 	$("#muteButton").click( function () {
 		game.sound.toggleSound();
 	});
-}
-
-Game.prototype.usePhone = function () {
-	if (this.map.getPlayer()._phoneFunc) {
-		this.validateCallback(this.map.getPlayer()._phoneFunc);
-	} else {
-		this.output.write('PhoneException: Your function phone is not bound to any function.')
-	}
-}
+};
 
 Game.prototype.openMenu = function () {
 	var game = this;
@@ -126,7 +118,7 @@ Game.prototype.openMenu = function () {
 	} else {
 		$('#menuPane').hide();
 	}
-}
+};
 
 Game.prototype.openHelp = function () {
 	var game = this;
@@ -185,26 +177,5 @@ Game.prototype.openHelp = function () {
 		$('#helpPaneSidebar .category#global').click();
 	} else {
 		$('#helpPane').hide();
-	}
-}
-
-Game.prototype.drawInventory = function () {
-	var game = this;
-	var inventory = this.getInventory();
-
-	if (inventory.length > 0) {
-		$('#inventory').text('INVENTORY: ');
-
-		inventory.forEach(function (item) {
-			var object = game.objects[item];
-
-			$('<span class="item">')
-				.attr('title', item)
-				.css('color', object.color ? object.color : '#fff')
-				.text(object.symbol)
-				.appendTo($('#inventory'));
-		});
-	} else {
-		$('#inventory').html('');
 	}
 };
