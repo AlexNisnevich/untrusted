@@ -184,6 +184,7 @@ function CodeEditor(textAreaDomID, width, height) {
             theme: 'vibrant-ink',
             lineNumbers: true,
             dragDrop: false,
+            smartIndent: false,
             extraKeys: {'Enter': function (instance) {
                 cursorPos = instance.getCursor();
 

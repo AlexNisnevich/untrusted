@@ -15,7 +15,8 @@ function Sound() {
 		bgPlayerElt.jPlayer({
 			wmode: "window",
 			loop: true,
-			swfPath: "lib/Jplayer.swf"
+			swfPath: "lib/Jplayer.swf",
+			volume: 0.6
 		});
 		soundPlayerElt.jPlayer({
 			wmode: "window",
