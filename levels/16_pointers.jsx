@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-
+    "music": "Various_Artists_-_15_-_Slimeball_vomit"
 }
 #END_PROPERTIES#
 
