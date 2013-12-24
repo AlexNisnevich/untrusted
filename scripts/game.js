@@ -41,16 +41,6 @@ function Game(debugMode) {
 
 	this.getHelpCommands = function () { return _commands; };
 
-	this.addToInventory = function (itemName) { _inventory.push(itemName); };
-	this.checkInventory = function (itemName) { return _inventory.indexOf(itemName) > -1; };
-	this.removeFromInventory = function (itemName) {
-		var object = this.objects[itemName];
-		_inventory.remove(itemName);
-		if (object.onDrop) {
-			object.onDrop(this);
-		}
-	};
-
 	this.init = function () {
 		// Initialize sound
 		this.sound = new Sound();
@@ -67,6 +57,14 @@ function Game(debugMode) {
 		$('#drawingCanvas').click(function () {
 			display.focus();
 		});
+
+		// Initialize inventory display
+		this.inventoryDisplay = ROT.Display.create(this, {
+			width: dimensions.width * 1.33,
+			height: 1,
+			fontSize: 15
+		});
+		$('#inventory').append(this.inventoryDisplay.getContainer());
 
 		// Initialize output display
 		this.output = ROT.Display.create(this, {
@@ -132,6 +130,15 @@ function Game(debugMode) {
 		if (levelNum > 7) {
 			game.addToInventory('phone');
 			$('#phoneButton').show();
+		}
+		if (levelNum > 11) {
+			game.addToInventory('redKey');
+		}
+		if (levelNum > 12) {
+			game.addToInventory('greenKey');
+		}
+		if (levelNum > 13) {
+			game.addToInventory('blueKey');
 		}
 
 		game.getLevel(levelNum);
@@ -216,9 +223,9 @@ function Game(debugMode) {
 			}
 
 			// draw the map
-			game.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
-				// when done, show the drawing canvas again
-				$('#drawingCanvas').show();
+			this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
+				game.drawInventory(); // refresh inventory display
+				$('#drawingCanvas').show(); // show the drawing canvas again
 			});
 
 			// start bg music for this level
@@ -239,6 +246,39 @@ function Game(debugMode) {
 			this.map.getPlayer().canMove = false;
 		}
 	}
+
+	// Inventory commands
+
+	this.addToInventory = function (itemName) {
+		if (_inventory.indexOf(itemName) == -1) {
+			_inventory.push(itemName);
+		}
+	};
+
+	this.checkInventory = function (itemName) {
+		return _inventory.indexOf(itemName) > -1;
+	};
+
+	this.removeFromInventory = function (itemName) {
+		var object = this.objects[itemName];
+		_inventory.remove(itemName);
+		if (object.onDrop) {
+			object.onDrop(this);
+		}
+	};
+
+	this.drawInventory = function () {
+		var game = this;
+		var inventoryStr = '';
+		if (_inventory.length > 0) {
+			inventoryStr = 'INVENTORY: ' + _inventory.map(function (item) {
+				var object = game.objects[item];
+				var color = object.color ? object.color : '#fff';
+				return ('%c{' + color + '}' + object.symbol);
+			}).join(' ');
+		}
+		this.inventoryDisplay.write(inventoryStr);
+	};
 
 	// Constructor
 	this.init();

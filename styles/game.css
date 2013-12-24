@@ -35,6 +35,10 @@ body {
 	border: 2px solid #888;
 }
 
+#inventory {
+	margin-top: 5px;
+}
+
 #chapter {
 	display: none;
 	position: absolute;

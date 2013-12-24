@@ -57,6 +57,7 @@ function Map(display, game) {
 
 	this.refresh = function () {
 		this.display.drawAll(this);
+		game.drawInventory();
 	};
 
 	this.canMoveTo = function (x, y, myType) {
