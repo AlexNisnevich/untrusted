@@ -2,7 +2,6 @@ function Player(x, y, map) {
 	var _x = x;
 	var _y = y;
 	var _color = "#0f0";
-	var _inventory = [];
 
 	this.rep = "@";
 
@@ -136,11 +135,7 @@ function Player(x, y, map) {
 	this.pickUpItem = function (itemName, object) {
 		player = this;
 
-		if (object.isGlobal) {
-			this.game.addToGlobalInventory(itemName);
-		} else {
-			_inventory.push(itemName);
-		}
+		this.game.addToInventory(itemName);
 		map.removeItemFromMap(_x, _y, itemName);
 		map.refresh();
 		this.game.sound.playSound('pickup');
@@ -158,13 +153,13 @@ function Player(x, y, map) {
 	}
 
 	this.hasItem = function (itemName) {
-		return (_inventory.indexOf(itemName) > -1) || (this.game.checkGlobalInventory(itemName));
+		return this.game.checkInventory(itemName);
 	}
 
 	this.removeItem = function (itemName) {
 		var object = this.game.objects[itemName];
 
-		_inventory.remove(itemName);
+		this.game.removeFromInventory(itemName);
 		object.onDrop(this, this.game);
 	}
 

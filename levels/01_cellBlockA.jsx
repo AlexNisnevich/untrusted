@@ -1,8 +1,8 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["global.startLevel", "map.placePlayer", "map.placeObject", "map.getHeight",
-         "map.getWidth", "map.getPlayer", "player.hasItem"],
+        ["global.startLevel", "global.onExit","map.placePlayer", "map.placeObject",
+         "map.getHeight", "map.getWidth", "map.getPlayer", "player.hasItem"],
     "itemsIntroduced": ["computer"]
 }
 #END_PROPERTIES#
@@ -43,4 +43,13 @@ function startLevel(map) {
     map.placeObject(15, 12, 'computer');
 
     map.placeObject(map.getWidth()-7, map.getHeight()-5, 'exit');
+}
+
+function onExit(map) {
+    if (!map.getPlayer().hasItem('computer')) {
+        map.writeStatus("Don't forget to pick up the computer!");
+        return false;
+    } else {
+        return true;
+    }
 }

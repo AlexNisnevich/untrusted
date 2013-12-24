@@ -67,7 +67,6 @@ Game.prototype.objects = {
 
 	'computer': {
 		'type': 'item',
-		'isGlobal': true,
 		'symbol': String.fromCharCode(0x2318), // ⌘
 		'color': '#ccc',
 		'onPickUp': function (player, game) {
@@ -75,29 +74,44 @@ Game.prototype.objects = {
 			game.editor.refresh();
 			game.display.writeStatus('You have picked up the computer!');
 		},
-		'onDrop': function (player, game) {
+		'onDrop': function (game) {
 			$('#editorPane').hide();
 		}
 	},
 
 	'phone': {
 		'type': 'item',
-		'isGlobal': true,
 		'symbol': String.fromCharCode(0x260E), // ☎
 		'onPickUp': function (player, game) {
 			game.display.writeStatus('You have picked up the function phone!');
 			$('#phoneButton').show();
 		},
-		'onDrop': function (player, game) {
+		'onDrop': function (game) {
 			$('#phoneButton').hide();
 		}
 	},
 
-	'key': {
+	'redKey': {
 		'type': 'item',
 		'symbol': 'k',
 		'onPickUp': function (player, game) {
-			game.display.writeStatus('You have received a key!');
+			game.display.writeStatus('You have received a red key!');
+		}
+	},
+
+	'greenKey': {
+		'type': 'item',
+		'symbol': 'k',
+		'onPickUp': function (player, game) {
+			game.display.writeStatus('You have received a green key!');
+		}
+	},
+
+	'blueKey': {
+		'type': 'item',
+		'symbol': 'k',
+		'onPickUp': function (player, game) {
+			game.display.writeStatus('You have received a blue key!');
 		}
 	}
 };

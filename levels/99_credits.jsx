@@ -24,6 +24,6 @@ function startLevel(map) {
     for (var i = 0; i < credits.length; i++) {
     	setTimeout(function (i) {
     		display.drawText(credits[i][0], credits[i][1], credits[i][2]);
-    	}, (i + 1) * 2000, i);
+    	}, (i + 2) * 2000, i);
     }
 }

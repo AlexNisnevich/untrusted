@@ -87,6 +87,11 @@ Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
 			validateLevel(dummyMap);
 		}
 
+		this.onExit = function () { return true; };
+		if (typeof onExit !== "undefined") {
+			this.onExit = onExit;
+		}
+
 		return startLevel;
 	} catch (e) {
 		var exceptionText = e.toString();

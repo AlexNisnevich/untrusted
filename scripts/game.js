@@ -8,7 +8,7 @@ function Game(debugMode) {
 	this.dimensions = dimensions;
 
 	_currentCode = '';
-	_globalInventory = [];
+	_inventory = [];
 	_commands = (commands = localStorage.getItem('helpCommands')) ? commands.split(';') : [];
 
 	this.levelFileNames = [
@@ -39,8 +39,13 @@ function Game(debugMode) {
 	this.levelReached = localStorage.getItem('levelReached') || 1;
 	this.displayedChapters = [];
 
-	this.addToGlobalInventory = function (item) { _globalInventory.push(item); }
-	this.checkGlobalInventory = function (item) { return _globalInventory.indexOf(item) > -1; }
+	this.addToInventory = function (item) { _inventory.push(item); };
+	this.checkInventory = function (item) { return _inventory.indexOf(item) > -1; };
+	this.removeFromInventory = function (item) {
+		_inventory.remove(item);
+		this.objects[item].onDrop(this);
+	};
+
 	this.getHelpCommands = function () { return _commands; };
 
 	this.init = function () {
@@ -98,6 +103,11 @@ function Game(debugMode) {
 	this.moveToNextLevel = function () {
 		var game = this;
 
+		// is the player permitted to exit?
+		if (!this.onExit(this.map)) {
+			return;
+		}
+
 		game.currentLevel++;
 		game.sound.playSound('complete');
 
@@ -112,12 +122,12 @@ function Game(debugMode) {
 
 		// Give the player all necessary objects
 		if (levelNum > 1) {
-			game.addToGlobalInventory('computer');
+			game.addToInventory('computer');
 			$('#editorPane').fadeIn();
 			game.editor.refresh();
 		}
 		if (levelNum > 7) {
-			game.addToGlobalInventory('phone');
+			game.addToInventory('phone');
 			$('#phoneButton').show();
 		}
 
@@ -196,9 +206,9 @@ function Game(debugMode) {
 			validatedStartLevel(map);
 
 			// remove inventory items introduced in this level (if any)
-			if (this.map.getPlayer() && this.editor.getProperties()['itemsIntroduced']) {
+			if (this.editor.getProperties()['itemsIntroduced']) {
 				this.editor.getProperties()['itemsIntroduced'].forEach(function (item) {
-					game.map.getPlayer().removeItem(item);
+					game.removeFromInventory(item);
 				});
 			}
 

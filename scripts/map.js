@@ -271,6 +271,12 @@ function Map(display, game) {
 		$('#chapter').removeClass().hide();
 	};
 
+	this.writeStatus = function(status) {
+		setTimeout(function () {
+			display.writeStatus(status);
+		}, 100);
+	};
+
 	this.getCanvasContext = function() {
 		return $('#drawingCanvas')[0].getContext('2d');
 	};
@@ -280,7 +286,7 @@ function Map(display, game) {
 			x: (x + .5) * 600 / game.dimensions.width,
 			y: (y + .5) * 500 / game.dimensions.height
 		}
-	}
+	};
 
 	/* Initialization */
 

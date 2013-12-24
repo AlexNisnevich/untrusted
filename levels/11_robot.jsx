@@ -1,7 +1,8 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["object.inventory", "object.giveItemTo", "object.passableFor"]
+        ["object.inventory", "object.giveItemTo", "object.passableFor"],
+    "itemsIntroduced": ["redKey"]
 }
 #END_PROPERTIES#
 /*
@@ -23,9 +24,9 @@ function startLevel(map) {
         'type': 'dynamic',
         'symbol': 'R',
         'color': 'gray',
-        'inventory': ['key'],
+        'inventory': ['redKey'],
         'onCollision': function (player, me) {
-            me.giveItemTo(player, 'key');
+            me.giveItemTo(player, 'redKey');
         },
         'behavior': function (me) {
 #BEGIN_EDITABLE#
@@ -45,17 +46,17 @@ function startLevel(map) {
         'passableFor': ['robot']
     });
 
-    map.defineObject('lock', {
+    map.defineObject('redLock', {
         'symbol': String.fromCharCode(0x13cc),
-        'color': 'gray',
+        'color': 'red',
         'impassable': function (player) {
-            return !player.hasItem('key');
+            return !player.hasItem('redKey');
         }
     });
 
     map.placeObject(0, map.getHeight() - 1, 'exit');
-    map.placeObject(0, map.getHeight() - 2, 'lock');
-    map.placeObject(1, map.getHeight() - 1, 'lock');
+    map.placeObject(0, map.getHeight() - 2, 'redLock');
+    map.placeObject(1, map.getHeight() - 1, 'redLock');
     map.placeObject(1, 1, 'robot');
     map.placeObject(map.getWidth() - 2, 9, 'barrier');
 
