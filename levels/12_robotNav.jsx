@@ -23,7 +23,6 @@ function startLevel(map) {
         'type': 'dynamic',
         'symbol': 'R',
         'color': 'gray',
-        'inventory': ['greenKey'],
         'onCollision': function (player, me) {
             me.giveItemTo(player, 'greenKey');
         },
@@ -56,18 +55,9 @@ function startLevel(map) {
         'passableFor': ['robot']
     });
 
-    map.defineObject('greenLock', {
-        'symbol': String.fromCharCode(0x13cc),
-        'color': '#0f0',
-        'impassable': function (player) {
-            return !player.hasItem('greenKey');
-        }
-    });
-
     map.placeObject(map.getWidth() - 1, map.getHeight() - 1, 'exit');
-    map.placeObject(map.getWidth() - 1, map.getHeight() - 2, 'greenLock');
-    map.placeObject(map.getWidth() - 2, map.getHeight() - 1, 'greenLock');
     map.placeObject(1, 1, 'robot');
+    map.placeObject(map.getWidth() - 2, 8, 'greenKey');
     map.placeObject(map.getWidth() - 2, 9, 'barrier');
 
     for (var x = 0; x < map.getWidth(); x++) {
@@ -90,4 +80,13 @@ function startLevel(map) {
 
 function validateLevel(map) {
     validateExactlyXManyObjects(map, 1, 'exit');
+}
+
+function onExit(map) {
+    if (!map.getPlayer().hasItem('greenKey')) {
+        map.writeStatus("We need to get that key!");
+        return false;
+    } else {
+        return true;
+    }
 }

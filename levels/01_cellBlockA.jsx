@@ -3,7 +3,8 @@
     "commandsIntroduced":
         ["global.startLevel", "global.onExit","map.placePlayer", "map.placeObject",
          "map.getHeight", "map.getWidth", "map.getPlayer", "player.hasItem"],
-    "itemsIntroduced": ["computer"]
+    "itemsIntroduced": ["computer"],
+    "music": "Yonnie_The_Green"
 }
 #END_PROPERTIES#
 /*****************

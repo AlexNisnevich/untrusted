@@ -94,6 +94,7 @@ Game.prototype.objects = {
 	'redKey': {
 		'type': 'item',
 		'symbol': 'k',
+		'color': 'red',
 		'onPickUp': function (player, game) {
 			game.display.writeStatus('You have received a red key!');
 		}
@@ -102,6 +103,7 @@ Game.prototype.objects = {
 	'greenKey': {
 		'type': 'item',
 		'symbol': 'k',
+		'color': '#0f0',
 		'onPickUp': function (player, game) {
 			game.display.writeStatus('You have received a green key!');
 		}
@@ -110,6 +112,7 @@ Game.prototype.objects = {
 	'blueKey': {
 		'type': 'item',
 		'symbol': 'k',
+		'color': '#06f',
 		'onPickUp': function (player, game) {
 			game.display.writeStatus('You have received a blue key!');
 		}

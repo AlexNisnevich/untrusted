@@ -4,6 +4,7 @@ function DynamicObject(map, type, x, y) {
 	var _y = y;
 	var _type = type;
 	var _definition = map.getObjectDefinition(type);
+	var _inventory = [];
 	var _myTurn = true;
 
 	// methods exposed to player
@@ -14,9 +15,13 @@ function DynamicObject(map, type, x, y) {
 
 	this.giveItemTo = function (player, itemType) {
 		var pl_at = player.atLocation;
+
 		if (!(pl_at(_x, _y) || pl_at(_x+1, _y) || pl_at(_x-1, _y)
 				|| pl_at(_x, _y+1) || pl_at(_x, _y-1))) {
-			throw 'Can\'t give an item unless I\'m touching the player!';
+			throw (type + ' says: Can\'t give an item unless I\'m touching the player!');
+		}
+		if (_inventory.indexOf(itemType) < 0) {
+			throw (type + ' says: I don\'t have that item!');
 		}
 
 		player.pickUpItem(itemType, game.objects[itemType]);
@@ -56,6 +61,7 @@ function DynamicObject(map, type, x, y) {
 			// move the object
 			_x = dest.x;
 			_y = dest.y;
+			this.afterMove(_x, _y);
 			map.refresh();
 		}
 
@@ -105,6 +111,16 @@ function DynamicObject(map, type, x, y) {
 			_definition.behavior(this, player);
 		} catch (e) {
 			map.game.output.write(e.toString());
+		}
+	};
+
+	this.afterMove = function () {
+		// try to pick up items
+		var objectName = map.getGrid()[_x][_y].type;
+		if (map.getObjectDefinition(objectName).type == 'item') {
+			_inventory.push(objectName);
+			map.removeItemFromMap(_x, _y, objectName);
+			map.game.sound.playSound('pickup');
 		}
 	};
 }

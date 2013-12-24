@@ -39,14 +39,17 @@ function Game(debugMode) {
 	this.levelReached = localStorage.getItem('levelReached') || 1;
 	this.displayedChapters = [];
 
-	this.addToInventory = function (item) { _inventory.push(item); };
-	this.checkInventory = function (item) { return _inventory.indexOf(item) > -1; };
-	this.removeFromInventory = function (item) {
-		_inventory.remove(item);
-		this.objects[item].onDrop(this);
-	};
-
 	this.getHelpCommands = function () { return _commands; };
+
+	this.addToInventory = function (itemName) { _inventory.push(itemName); };
+	this.checkInventory = function (itemName) { return _inventory.indexOf(itemName) > -1; };
+	this.removeFromInventory = function (itemName) {
+		var object = this.objects[itemName];
+		_inventory.remove(itemName);
+		if (object.onDrop) {
+			object.onDrop(this);
+		}
+	};
 
 	this.init = function () {
 		// Initialize sound
