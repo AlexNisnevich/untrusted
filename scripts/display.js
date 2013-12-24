@@ -202,7 +202,7 @@ ROT.Display.prototype.writeStatus = function(text) {
 
 ROT.Display.prototype.appendError = function(errorText) {
 	var map = this.game.map;
-	var command = "%c{#0f0}> run " + game.levelFileNames[game.currentLevel - 1];
+	var command = "%c{#0f0}> run " + this.game.levelFileNames[this.game.currentLevel - 1];
 
 	this.offset -= 3;
 	this.errors = this.errors.concat([command, errorText, ""]);
