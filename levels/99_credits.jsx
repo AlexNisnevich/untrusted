@@ -1,9 +1,10 @@
 #BEGIN_PROPERTIES#
 {
-    "music": "Yonnie_The_Green"
+    "music": "Vernon_Lenoir_-_Brazilicon_alley"
 }
 #END_PROPERTIES#
 function startLevel(map) {
+    // TODO: music not up-to-date
     var credits = [
     	[15, 1, "U N T R U S T E D"],
     	[20, 2, "- or -"],

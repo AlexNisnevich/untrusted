@@ -2,7 +2,7 @@
 {
     "commandsIntroduced":
         ["player.killedBy", "object.onCollision"],
-    "music": "Spectrofuzz_Sunset_84"
+    "music": "Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name"
 }
 #END_PROPERTIES#
 /**********************

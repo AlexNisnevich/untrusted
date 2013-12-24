@@ -1,8 +1,9 @@
 function Sound() {
 	var tracks = [
 		"music/DmitryMazin-GameScratch.mp3",
-		"music/Jackson_D_Zero_One.mp3",
-		"music/intricate_intricate_-_cloudy_sin.mp3"
+		"music/Tortue_Super_Sonic_-_11_-_Y.mp3",
+		"music/Eric_Skiff_-_06_-_Searching.mp3",
+		"music/Eric_Skiff_-_09_-_Come_and_Find_Me_-_B_mix.mp3"
 	];
 
 	var bgPlayerElt = $("#jquery_bgPlayer");

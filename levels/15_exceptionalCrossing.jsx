@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced": [],
-    "music": "Spectrofuzz_Sunset_84"
+    "music": "Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name"
 }
 #END_PROPERTIES#
 /**************************
