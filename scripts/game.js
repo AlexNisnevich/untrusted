@@ -58,14 +58,6 @@ function Game(debugMode) {
 			display.focus();
 		});
 
-		// Initialize inventory display
-		this.inventoryDisplay = ROT.Display.create(this, {
-			width: dimensions.width * 1.33,
-			height: 1,
-			fontSize: 15
-		});
-		$('#inventory').append(this.inventoryDisplay.getContainer());
-
 		// Initialize output display
 		this.output = ROT.Display.create(this, {
 			width: dimensions.width * 1.33,
@@ -106,6 +98,7 @@ function Game(debugMode) {
 
 		// is the player permitted to exit?
 		if (!this.onExit(this.map)) {
+			this.sound.playSound('blip');
 			return;
 		}
 
@@ -255,6 +248,10 @@ function Game(debugMode) {
 		}
 	};
 
+	this.getInventory = function () {
+		return _inventory;
+	}
+
 	this.checkInventory = function (itemName) {
 		return _inventory.indexOf(itemName) > -1;
 	};
@@ -265,19 +262,6 @@ function Game(debugMode) {
 		if (object.onDrop) {
 			object.onDrop(this);
 		}
-	};
-
-	this.drawInventory = function () {
-		var game = this;
-		var inventoryStr = '';
-		if (_inventory.length > 0) {
-			inventoryStr = 'INVENTORY: ' + _inventory.map(function (item) {
-				var object = game.objects[item];
-				var color = object.color ? object.color : '#fff';
-				return ('%c{' + color + '}' + object.symbol);
-			}).join(' ');
-		}
-		this.inventoryDisplay.write(inventoryStr);
 	};
 
 	// Constructor

@@ -187,3 +187,24 @@ Game.prototype.openHelp = function () {
 		$('#helpPane').hide();
 	}
 }
+
+Game.prototype.drawInventory = function () {
+	var game = this;
+	var inventory = this.getInventory();
+
+	if (inventory.length > 0) {
+		$('#inventory').text('INVENTORY: ');
+
+		inventory.forEach(function (item) {
+			var object = game.objects[item];
+
+			$('<span class="item">')
+				.attr('title', item)
+				.css('color', object.color ? object.color : '#fff')
+				.text(object.symbol)
+				.appendTo($('#inventory'));
+		});
+	} else {
+		$('#inventory').html('');
+	}
+};

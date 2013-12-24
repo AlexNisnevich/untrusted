@@ -6,6 +6,8 @@ html {
 body {
 	background: #000;
 	display: table;
+	font-family: monospace;
+	color: white;
 	width: 99%;
 	height: 99%;
 }
@@ -36,7 +38,17 @@ body {
 }
 
 #inventory {
-	margin-top: 5px;
+	position: absolute;
+	top: 505px;
+	font-size: 13px;
+	cursor: default;
+}
+
+#inventory .item {
+	position: relative;
+	top: 3px;
+	margin-right: 5px;
+	font-size: 20px;
 }
 
 #chapter {
@@ -70,8 +82,6 @@ body {
 	margin-top: 5px;
 	padding: 7px;
 	background: #000;
-	font-family: monospace;
-	color: #fff;
 	cursor: pointer;
 }
 
@@ -118,8 +128,6 @@ body {
 	z-index: 9000;
 	background: black;
 	border: 2px solid yellow;
-	color: white;
-	font-family: monospace;
 }
 
 #helpPaneSidebar {
@@ -206,8 +214,6 @@ body {
 	z-index: 9000;
 	background: black;
 	border: 2px solid yellow;
-	color: white;
-	font-family: monospace;
 }
 
 #menuPane .menuPaneHeading {
