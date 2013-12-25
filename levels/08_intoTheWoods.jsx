@@ -13,8 +13,18 @@
  *******************
  *
  * Ah, you're out of the woods now. Or into the woods, as the
- * case may be. Your function phone may serve you well here.
+ * case may be.
  *
+ * So take a deep breath, relax, and remember what you're here
+ * for in the first place.
+ *
+ * I've traced its signal and the Algorithm is nearby. You'll
+ * need to go through the forest and across the river, and
+ * you'll reach the fortress where it's kept. Their defences
+ * are light, and we should be able to catch them off-guard.
+ *
+ * Oh, and just a note: your function phone may serve you
+ * well here.
  */
 
 function startLevel(map) {
@@ -30,9 +40,9 @@ function startLevel(map) {
     functionList['fortresses'] = function () {
         function genRandomValue(direction) {
             if (direction === "height") {
-                return Math.floor(Math.random() * (map.getHeight() +1));
+                return Math.floor(Math.random() * (map.getHeight()+1));
             } else if (direction === "width") {
-                return Math.floor(Math.random() * (map.getWidth() +1));
+                return Math.floor(Math.random() * (map.getWidth()+1));
             }
         }
 
@@ -80,15 +90,15 @@ function startLevel(map) {
     };
 
     functionList['movePlayerToExit'] = function () {
-        output.write("Permission denied.");
+        map.writeStatus("Permission denied.");
     }
 
     functionList['pleaseMovePlayerToExit'] = function () {
-        output.write("I don't think so.");
+        map.writeStatus("I don't think so.");
     }
 
     functionList['movePlayerToExitDamnit'] = function () {
-        output.write("So, how 'bout them <LOCAL SPORTS TEAM>?");
+        map.writeStatus("So, how 'bout them <LOCAL SPORTS TEAM>?");
     }
 
     // generate forest

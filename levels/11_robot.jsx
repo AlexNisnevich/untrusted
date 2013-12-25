@@ -8,9 +8,7 @@
 /*
  * robot.js
  *
- * Dr. Eval had nowhere to go. The door was locked.
- * Fortunately, his trusty robot companion showed up
- * just in the nick of time with the key that he needed.
+ *
  */
 
 function getRandomInt(min, max) {

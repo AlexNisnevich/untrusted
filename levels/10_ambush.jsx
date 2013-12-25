@@ -7,10 +7,14 @@
  * ambush.js *
  *************
  *
- * It looks like they won't let you take the Algorithm
+ * Oh. Oh, I see. This wasn't quite part of the plan.
+ *
+ * Looks like they won't let you take the Algorithm
  * without a fight. You'll need to carefully weave your
- * way through this drone army. Let's mess with the drones'
- * programming a little.
+ * way through the guard drones.
+ *
+ * Well, time to improvise. Let's mess with their programming
+ * a little, shall we?
  */
 
 function startLevel(map) {

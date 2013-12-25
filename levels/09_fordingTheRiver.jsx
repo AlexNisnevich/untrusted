@@ -11,6 +11,8 @@
  *
  * And there's the river. Fortunately, I was prepared for this.
  * See the raft on the other side?
+ *
+ * Everything is going according to plan.
  */
 
 function startLevel(map) {
@@ -43,9 +45,15 @@ function startLevel(map) {
     }
 
     map.placeObject(20, 5, 'raft');
-    map.placeObject(0, 0, 'exit');
+    map.placeObject(0, 2, 'exit');
+    map.placeObject(0, 1, 'block');
+    map.placeObject(1, 1, 'block');
+    map.placeObject(0, 3, 'block');
+    map.placeObject(1, 3, 'block');
 
 #BEGIN_EDITABLE#
+
+
 
 #END_EDITABLE#
 }
