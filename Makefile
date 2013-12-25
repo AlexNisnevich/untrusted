@@ -4,7 +4,7 @@
 js-target = scripts/build/untrusted.js
 js-target-min = scripts/build/untrusted.min.js
 
-js-modules = scripts/helpers.js \
+js-modules = scripts/util.js \
              scripts/game.js \
              scripts/codeEditor.js \
              scripts/display.js \
@@ -19,7 +19,7 @@ js-modules = scripts/helpers.js \
              scripts/ui.js \
              scripts/launcher.js
 
-js-modules-debug = scripts/helpers.js \
+js-modules-debug = scripts/util.js \
 	               scripts/game.js \
 	               scripts/codeEditor.js \
 	               scripts/display.js \
