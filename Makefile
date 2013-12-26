@@ -79,8 +79,8 @@ deploy-full: release
 
 
 # run-local will start a mini python webserver and host a local
-# instance of the game on port 9001
+# instance of the game on port 9001 (-c-1 disables caching)
 
 runlocal: debug
 	@echo "Running local instance"
-	~/node_modules/http-server/bin/http-server
+	~/node_modules/http-server/bin/http-server -p 9001 -c-1
