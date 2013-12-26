@@ -40,7 +40,7 @@ function Game(debugMode) {
 
 	this.getHelpCommands = function () { return _commands; };
 
-	this.start = function () {
+	this.initialize = function () {
 		// Initialize sound
 		this.sound = new Sound();
 
@@ -107,7 +107,7 @@ function Game(debugMode) {
 		this.setInventoryStateByLevel(levelNum);
 		this.getLevel(levelNum);
 		this.display.focus();
-	}
+	};
 
 	// makes an ajax request to get the level text file and
 	// then loads it into the game
@@ -133,13 +133,13 @@ function Game(debugMode) {
             _commands = _commands.concat(game.editor.getProperties().commandsIntroduced).unique();
             localStorage.setItem('helpCommands', _commands.join(';'));
 		});
-	}
+	};
 
 	// restart level with currently loaded code
 	this.restartLevel = function () {
 		this.editor.setCode(_currentCode);
 		this.evalLevelCode();
-	}
+	};
 
 	this.evalLevelCode = function (allCode, playerCode, isNewLevel) {
 		var game = this;
@@ -209,8 +209,5 @@ function Game(debugMode) {
 			// disable player movement
 			this.map.getPlayer().canMove = false;
 		}
-	}
-
-	// Constructor
-	this.start();
+	};
 };

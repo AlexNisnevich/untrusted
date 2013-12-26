@@ -18,15 +18,15 @@ Game.prototype.reference = {
 		'description': 'Instantiates a Maze object of given width and height. The Maze object can create a maze by calling maze.create(callback), where the callback is a function that accepts (x, y, mapValue) and performs some action for each point in a grid, where mapValue is a boolean that is true if and only if the given point is part of the maze.'
 	},
 
-	'game.validateAtLeastXObjects': {
-		'name': 'game.validateAtLeastXObjects(map, num, objectType)',
-		'category': 'game',
+	'validators.validateAtLeastXObjects': {
+		'name': 'validators.validateAtLeastXObjects(map, num, objectType)',
+		'category': 'validators',
 		'type': 'method',
 		'description': 'Raises an exception if there are not at least num objects of type objectType on the map.'
 	},
-	'game.validateExactlyXManyObjects': {
-		'name': 'game.validateExactlyXManyObjects(map, num, objectType)',
-		'category': 'game',
+	'validators.validateExactlyXManyObjects': {
+		'name': 'validators.validateExactlyXManyObjects(map, num, objectType)',
+		'category': 'validators',
 		'type': 'method',
 		'description': 'Raises an exception if there are not exactly num objects of type objectType on the map.'
 	},
@@ -213,4 +213,4 @@ Game.prototype.reference = {
 		'type': 'method',
 		'description': 'Sets the function that is executed when the player uses the function phone.'
 	}
-}
+};

@@ -1,4 +1,4 @@
-Game.prototype.VERBOTEN = [
+Game.prototype.verbotenWords = [
 	'eval', 'prototype', 'delete', 'return', 'console', 'debugger',
 	'setTimeout', 'setInterval', 'level', 'Level', 'removeItemFromMap'
 ];
@@ -15,51 +15,30 @@ var DummyDisplay = function () {
 
 Game.prototype.validators = {
 	validateAtLeastXObjects: function(map, num, type) {
-		var count = 0;
-		for (var x = 0; x < map.getWidth(); x++) {
-			for (var y = 0; y < map.getHeight(); y++) {
-				if (map.getGrid()[x][y].type === type) {
-					count++;
-				}
-			}
-		}
+		var count = map.countObjects(type);
 		if (count < num) {
 			throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
 		}
 	},
 
 	validateExactlyXManyObjects: function(map, num, type) {
-		var count = 0;
-		for (var x = 0; x < map.getWidth(); x++) {
-			for (var y = 0; y < map.getHeight(); y++) {
-				if (map.getGrid()[x][y].type === type) {
-					count++;
-				}
-			}
-		}
+		var count = map.countObjects(type);
 		if (count != num) {
 			throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
 		}
 	}
-}
+};
 
 Game.prototype.validate = function(allCode, playerCode) {
 	var game = this;
 
-	var validateAtLeastXObjects = this.validators.validateAtLeastXObjects;
-	var validateExactlyXManyObjects = this.validators.validateExactlyXManyObjects;
-
-	validateLevel = function () {};
-
 	try {
-		for (var i = 0; i < this.VERBOTEN.length; i++) {
-			var badWord = this.VERBOTEN[i];
+		for (var i = 0; i < this.verbotenWords.length; i++) {
+			var badWord = this.verbotenWords[i];
 			if (playerCode.indexOf(badWord) > -1) {
 				throw 'You are not allowed to use ' + badWord + '!';
 			}
 		}
-
-		var display = this.display;
 
 		var dummyMap = new Map(new DummyDisplay, this);
 		dummyMap.setProperties(this.editor.getProperties()['mapProperties']);
@@ -75,12 +54,13 @@ Game.prototype.validate = function(allCode, playerCode) {
 		}).join('\n');
 
 		// evaluate the code to get startLevel() and (opt) validateLevel() methods
+		validateLevel = function () {}; // in case validateLevel isn't defined
 		eval(allCode);
 
 		// start the level on a dummy map to validate
 		startLevel(dummyMap);
 		if (typeof(validateLevel) != 'undefined') {
-			validateLevel(dummyMap);
+			validateLevel(dummyMap, this.validators);
 		}
 
 		this.onExit = function () { return true; };
@@ -99,14 +79,11 @@ Game.prototype.validate = function(allCode, playerCode) {
 		this.display.appendError(exceptionText);
 		return null;
 	}
-}
+};
 
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback) {
-	var validateAtLeastXObjects = this.validators.validateAtLeastXObjects;
-	var validateExactlyXManyObjects = this.validators.validateExactlyXManyObjects;
-
 	eval(this.editor.getGoodState()['code']); // get validateLevel method from last good state (if such a method exists)
 	try {
 		// run the callback
@@ -115,7 +92,7 @@ Game.prototype.validateCallback = function(callback) {
 		// check if validator still passes
 		try {
 			if (typeof(validateLevel) != 'undefined') {
-				validateLevel(this.map);
+				validateLevel(this.map, this.validators);
 			}
 		} catch (e) {
 			// validation failed - not much to do here but restart the level, unfortunately
@@ -133,7 +110,7 @@ Game.prototype.validateCallback = function(callback) {
 	} catch (e) {
 		this.display.writeStatus(e.toString());
 	}
-}
+};
 
 // awful awful awful method that tries to find the line
 // of code where a given error occurs
@@ -151,4 +128,4 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
 		}
 	}
 	return null;
-}
+};

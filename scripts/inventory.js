@@ -1,7 +1,7 @@
 Game.prototype.inventory = [];
 
 Game.prototype.addToInventory = function (itemName) {
-	if (this.inventory.indexOf(itemName) == -1) {
+	if (this.inventory.indexOf(itemName) === -1) {
 		this.inventory.push(itemName);
 	}
 };

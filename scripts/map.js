@@ -53,11 +53,24 @@ function Map(display, game) {
 		if (mapProperties['keyDelay']) {
 			_keyDelay = mapProperties['keyDelay'];
 		}
-	}
+	};
 
 	this.refresh = function () {
 		this.display.drawAll(this);
 		game.drawInventory();
+	};
+
+	// used by validators
+	this.countObjects = function (type) {
+		var count = 0;
+		for (var x = 0; x < this.getWidth(); x++) {
+			for (var y = 0; y < this.getHeight(); y++) {
+				if (this.getGrid()[x][y].type === type) {
+					count++;
+				}
+			}
+		}
+		return count;
 	};
 
 	this.canMoveTo = function (x, y, myType) {

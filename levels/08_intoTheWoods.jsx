@@ -86,7 +86,7 @@ function startLevel(map) {
                 }
             }
         }
-        display.drawAll(map);
+        map.refresh();
     };
 
     functionList['movePlayerToExit'] = function () {

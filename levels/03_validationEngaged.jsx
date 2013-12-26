@@ -1,8 +1,8 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["global.validateLevel", "game.validateAtLeastXObjects",
-         "game.validateExactlyXManyObjects"]
+        ["global.validateLevel", "validators.validateAtLeastXObjects",
+         "validators.validateExactlyXManyObjects"]
 }
 #END_PROPERTIES#
 /************************
@@ -35,9 +35,9 @@ function startLevel(map) {
     map.placeObject(7, 5, 'exit');
 }
 
-function validateLevel(map) {
+function validateLevel(map, validators) {
     numBlocks = 2 * (map.getHeight()-13) + 2 * (map.getWidth()-10);
 
-    validateAtLeastXObjects(map, numBlocks, 'block');
-    validateExactlyXManyObjects(map, 1, 'exit');
+    validators.validateAtLeastXObjects(map, numBlocks, 'block');
+    validators.validateExactlyXManyObjects(map, 1, 'exit');
 }
