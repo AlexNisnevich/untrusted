@@ -16,32 +16,19 @@ function DynamicObject(map, type, x, y) {
 	this.giveItemTo = function (player, itemType) {
 		var pl_at = player.atLocation;
 
-		if (!(pl_at(_x, _y) || pl_at(_x+1, _y) || pl_at(_x-1, _y)
-				|| pl_at(_x, _y+1) || pl_at(_x, _y-1))) {
+		if (!(pl_at(_x, _y) || pl_at(_x+1, _y) || pl_at(_x-1, _y) ||
+				pl_at(_x, _y+1) || pl_at(_x, _y-1))) {
 			throw (type + ' says: Can\'t give an item unless I\'m touching the player!');
 		}
 		if (_inventory.indexOf(itemType) < 0) {
 			throw (type + ' says: I don\'t have that item!');
 		}
 
-		player.pickUpItem(itemType, game.objects[itemType]);
-	}
+		player.pickUpItem(itemType, map.game.objects[itemType]);
+	};
 
 	this.move = function (direction) {
-		switch (direction) {
-			case 'up':
-				var dest = {'x': _x, 'y': _y-1};
-				break;
-			case 'down':
-				var dest = {'x': _x, 'y': _y+1};
-				break;
-			case 'left':
-				var dest = {'x': _x-1, 'y': _y};
-				break;
-			case 'right':
-				var dest = {'x': _x+1, 'y': _y};
-				break;
-		}
+		var dest = computeDestination(_x, _y, direction);
 
 		if (!_myTurn) {
 			throw 'Can\'t move when it isn\'t your turn!';
@@ -51,12 +38,15 @@ function DynamicObject(map, type, x, y) {
 		//console.log("dest: " + dest.x + ", " + dest.y);
 		//console.log("nearest: " + nearestObj.x + ", " + nearestObj.y);
 
+		_myTurn = false;
+
 		// check for collision with player
 		if (map.getPlayer().atLocation(dest.x, dest.y) && _definition.onCollision) {
 			// trigger collision
 			_definition.onCollision(map.getPlayer(), this);
-		} else if (dest.x == nearestObj.x && dest.y == nearestObj.y) {
+		} else if (dest.x === nearestObj.x && dest.y === nearestObj.y) {
 			// would collide with another dynamic object
+			return;
 		} else if (map.canMoveTo(dest.x, dest.y, _type)) {
 			// move the object
 			_x = dest.x;
@@ -64,29 +54,14 @@ function DynamicObject(map, type, x, y) {
 			this.afterMove(_x, _y);
 			map.refresh();
 		}
-
-		_myTurn = false;
 	};
 
 	this.canMove = function (direction) {
-		switch (direction) {
-			case 'up':
-				var dest = {'x': _x, 'y': _y-1};
-				break;
-			case 'down':
-				var dest = {'x': _x, 'y': _y+1};
-				break;
-			case 'left':
-				var dest = {'x': _x-1, 'y': _y};
-				break;
-			case 'right':
-				var dest = {'x': _x+1, 'y': _y};
-				break;
-		}
+		var dest = computeDestination(_x, _y, direction);
 
 		// check if the object can move there and will not collide with a copy of itself
 		return (map.canMoveTo(dest.x, dest.y, _type) &&
-			!(dest.x == this.findNearest(_type).x && dest.y == this.findNearest(_type).y));
+			!(dest.x === this.findNearest(_type).x && dest.y === this.findNearest(_type).y));
 	};
 
 	this.findNearest = function (type) {
@@ -94,6 +69,23 @@ function DynamicObject(map, type, x, y) {
 	};
 
 	// methods not exposed to player
+
+	this.computeDestination = function (startX, startY, direction) {
+		switch (direction) {
+			case 'up':
+				var dest = {'x': startX, 'y': startY-1};
+				break;
+			case 'down':
+				var dest = {'x': startX, 'y': startY+1};
+				break;
+			case 'left':
+				var dest = {'x': startX-1, 'y': startY};
+				break;
+			case 'right':
+				var dest = {'x': startX+1, 'y': startY};
+				break;
+		}
+	};
 
 	this.onTurn = function () {
 		_myTurn = true;
@@ -117,7 +109,7 @@ function DynamicObject(map, type, x, y) {
 	this.afterMove = function () {
 		// try to pick up items
 		var objectName = map.getGrid()[_x][_y].type;
-		if (map.getObjectDefinition(objectName).type == 'item') {
+		if (map.getObjectDefinition(objectName).type === 'item') {
 			_inventory.push(objectName);
 			map.removeItemFromMap(_x, _y, objectName);
 			map.game.sound.playSound('pickup');

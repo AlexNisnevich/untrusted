@@ -40,7 +40,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 			}
 		}
 
-		var dummyMap = new Map(new DummyDisplay, this);
+		var dummyMap = new Map(new DummyDisplay(), this);
 		dummyMap.setProperties(this.editor.getProperties().mapProperties);
 
 		// modify the code to always check time to prevent infinite loops
