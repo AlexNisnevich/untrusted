@@ -2,14 +2,14 @@ function Map(display, game) {
 	var _player;
 	var _grid;
 	var _dynamicObjects;
-    var _objectDefinitions;
+	var _objectDefinitions;
 
 	var _allowOverwrite;
 	var _allowMultiMove;
 	var _keyDelay;
 	var _intervals = [];
 
-    this.getObjectDefinition = function(objName) { return _objectDefinitions[objName]; }
+	this.getObjectDefinition = function(objName) { return _objectDefinitions[objName]; }
 	this.getObjectDefinitions = function() { return _objectDefinitions; }
 	this.getPlayer = function () { return _player; };
 	this.getGrid = function () { return _grid; };
@@ -100,7 +100,7 @@ function Map(display, game) {
 		}
 	};
 
-    // returns the object of the given type closest to target coordinates
+	// returns the object of the given type closest to target coordinates
 	this.findNearestToPoint = function (type, targetX, targetY) {
 		var foundObjects = [];
 
@@ -164,9 +164,9 @@ function Map(display, game) {
 	}
 
 	this.moveAllDynamicObjects = function () {
-        _dynamicObjects.forEach(function(object) {
-            object.onTurn();
-        });
+		_dynamicObjects.forEach(function(object) {
+			object.onTurn();
+		});
 	};
 
 	this.removeItemFromMap = function (x, y, klass) {

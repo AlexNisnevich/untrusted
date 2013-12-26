@@ -89,17 +89,17 @@ function DynamicObject(map, type, x, y) {
 
 	this.onTurn = function () {
 		_myTurn = true;
-        var player = map.getPlayer();
+		var player = map.getPlayer();
 		try {
-            //we need to check for a collision with the player *after*
-            //the player has moved but *before* the object itself moves
-            //this prevents a bug where players and objects can 'pass through'
-            //each other
-            if (_x === player.getX() && _y === player.getY()) {
-                if (_definition.onCollision) {
-                    _definition.onCollision(player, this);
-                }
-            }
+			//we need to check for a collision with the player *after*
+			//the player has moved but *before* the object itself moves
+			//this prevents a bug where players and objects can 'pass through'
+			//each other
+			if (_x === player.getX() && _y === player.getY()) {
+				if (_definition.onCollision) {
+					_definition.onCollision(player, this);
+				}
+			}
 			_definition.behavior(this, player);
 		} catch (e) {
 			map.game.display.writeStatus(e.toString());
