@@ -3,32 +3,31 @@ function Player(x, y, map) {
 	var _y = y;
 	var _color = "#0f0";
 
-	this.rep = "@";
+	this.getX = function () { return _x; };
+	this.getY = function () { return _y; };
 
-	this.map = map;
-	this.display = map.display;
-	this.game = map.game;
-
-	this.canMove = false;
-
-	this.getX = function () { return _x; }
-	this.getY = function () { return _y; }
-
-	this.getColor = function () { return _color; }
+	this.getColor = function () { return _color; };
 	this.setColor = function (c) {
 		_color = c;
 		this.display.drawAll(this.map);
-	}
+	};
 
 	this.init = function () {
-	}
+		this.rep = "@";
+
+		this.map = map;
+		this.display = map.display;
+		this.game = map.game;
+
+		this.canMove = false;
+	};
 
 	this.atLocation = function (x, y) {
 		return (_x === x && _y === y);
-	}
+	};
 
 	this.move = function (direction, fromKeyboard) {
-        // are we allowing keyboard input right now?
+		// are we allowing keyboard input right now?
 		if (!this.canMove && fromKeyboard) {
 			return false;
 		}
@@ -59,26 +58,25 @@ function Player(x, y, map) {
 			new_y = cur_y;
 		}
 		else if (direction === 'funcPhone') {
-			game.sound.playSound('select');
-			game.usePhone();
+			this.game.sound.playSound('select');
+			this.game.usePhone();
 			return;
 		}
 
 		if (this.map.canMoveTo(new_x, new_y)) {
 			_x = new_x;
 			_y = new_y;
-			this.display.drawAll(this.map);
+			this.map.refresh();
 
-            if (fromKeyboard) {
-                this.canMove = false;
-            }
-
-			this.afterMove(_x, _y);
-
-            if (fromKeyboard) {
-            	// called from map to take into account key delay
-            	map.reenableMovementForPlayer(this);
-            }
+			if (fromKeyboard) {
+				// key delay
+				this.canMove = false;
+				this.afterMove(_x, _y);
+				map.reenableMovementForPlayer(this); // key delay can vary by map
+			} else {
+				// no key delay
+				this.afterMove(_x, _y);
+			}
 		}
 	};
 
@@ -92,7 +90,7 @@ function Player(x, y, map) {
 	this.afterMove = function (x, y) {
 		player = this;
 
-        this.hasTeleported = false; //necessary to prevent bugs with teleportation
+		this.hasTeleported = false; // necessary to prevent bugs with teleportation
 
 		this.map.hideChapter();
 		this.map.moveAllDynamicObjects();
@@ -103,34 +101,34 @@ function Player(x, y, map) {
 		for (var i = 0; i < this.map.getDynamicObjects().length; i++) {
 			var object = this.map.getDynamicObjects()[i];
 			if (object.getX() === x && object.getY() === y) {
-				var objDef = this.map.getObjectDefinition(object.getType());
-				if (objDef.transport) {
+				var objectDef = this.map.getObjectDefinition(object.getType());
+				if (objectDef.transport) {
 					onTransport = true;
 				}
 			}
 		}
 
-        // check for collision with static object UNLESS
-        // we are on a transport
+		// check for collision with static object UNLESS
+		// we are on a transport
 		if (!onTransport) {
 			var objectName = this.map.getGrid()[x][y].type;
-			var object = this.map.getObjectDefinition(objectName);
-			if (object.type == 'item') {
-				this.pickUpItem(objectName, object);
-			} else if (object.onCollision) {
+			var objectDef = this.map.getObjectDefinition(objectName);
+			if (objectDef.type === 'item') {
+				this.pickUpItem(objectName, objectDef);
+			} else if (objectDef.onCollision) {
 				this.game.validateCallback(function () {
-					object.onCollision(player, player.game)
+					objectDef.onCollision(player, player.game)
 				});
 			}
 		}
-	}
+	};
 
 	this.killedBy = function (killer) {
 		this.game.sound.playSound('hurt');
 		this.game.restartLevel();
 
 		this.map.displayChapter('You have been killed by \n' + killer + '!', 'death');
-	}
+	};
 
 	this.pickUpItem = function (itemName, object) {
 		player = this;
@@ -150,24 +148,22 @@ function Player(x, y, map) {
 				// not necessary
 			});
 		}
-	}
+	};
 
 	this.hasItem = function (itemName) {
 		return this.game.checkInventory(itemName);
-	}
+	};
 
 	this.removeItem = function (itemName) {
 		var object = this.game.objects[itemName];
 
 		this.game.removeFromInventory(itemName);
 		object.onDrop(this, this.game);
-	}
+	};
 
 	this.setPhoneCallback = function(func) {
-	    this._phoneFunc = func;
-	}
-
-    this.falling = false;
+		this._phoneFunc = func;
+	};
 
 	// Constructor
 	this.init();
