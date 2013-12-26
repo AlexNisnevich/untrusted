@@ -119,8 +119,13 @@ Game.prototype.validateCallback = function(callback) {
 			}
 		} catch (e) {
 			// validation failed - not much to do here but restart the level, unfortunately
-			alert('validateLevel failed!\n\n' + e.toString() + '\n\nRestarting level ...');
-			this.evalLevelCode();
+			this.display.appendError(e.toString(), "%c{red}Validation failed! Please reload the level.");
+
+			// play error sound
+			this.sound.playSound('static');
+
+			// disable player movement
+			this.map.getPlayer().canMove = false;
 		}
 
 		// refresh the map, just in case

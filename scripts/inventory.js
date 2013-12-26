@@ -62,9 +62,10 @@ Game.prototype.drawInventory = function () {
 /* methods relating to specific inventory items go here */
 
 Game.prototype.usePhone = function () {
-	if (this.checkInventory('phone')) {
-		if (this.map.getPlayer()._phoneFunc) {
-			this.validateCallback(this.map.getPlayer()._phoneFunc);
+	var player = this.map.getPlayer();
+	if (player && player.canMove && player.hasItem('phone')) {
+		if (player._phoneFunc) {
+			this.validateCallback(player._phoneFunc);
 		} else {
 			this.display.writeStatus("Your function phone isn't bound to any function!");
 		}
