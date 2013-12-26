@@ -32,33 +32,29 @@ function Player(x, y, map) {
 			return false;
 		}
 
-		var cur_x = _x;
-		var cur_y = _y;
 		var new_x;
 		var new_y;
-
 		if (direction === 'up') {
-			new_x = cur_x;
-			new_y = cur_y - 1;
+			new_x = _x;
+			new_y = _y - 1;
 		}
 		else if (direction === 'down') {
-			new_x = cur_x;
-			new_y = cur_y + 1;
+			new_x = _x;
+			new_y = _y + 1;
 		}
 		else if (direction === 'left') {
-			new_x = cur_x - 1;
-			new_y = cur_y;
+			new_x = _x - 1;
+			new_y = _y;
 		}
 		else if (direction === 'right') {
-			new_x = cur_x + 1;
-			new_y = cur_y;
+			new_x = _x + 1;
+			new_y = _y;
 		}
 		else if (direction === 'rest') {
-			new_x = cur_x;
-			new_y = cur_y;
+			new_x = _x;
+			new_y = _y;
 		}
 		else if (direction === 'funcPhone') {
-			this.game.sound.playSound('select');
 			this.game.usePhone();
 			return;
 		}
@@ -82,13 +78,15 @@ function Player(x, y, map) {
 
 	// NOT exposed to player, used for teleporters
 	this.moveTo = function (dynamicObject) {
+		// no safety checks or anything
+		// this method is about as safe as a war zone
 		_x = dynamicObject.getX();
 		_y = dynamicObject.getY();
 		this.display.drawAll(this.map);
-	}
+	};
 
 	this.afterMove = function (x, y) {
-		player = this;
+		var player = this;
 
 		this.hasTeleported = false; // necessary to prevent bugs with teleportation
 
@@ -117,7 +115,7 @@ function Player(x, y, map) {
 				this.pickUpItem(objectName, objectDef);
 			} else if (objectDef.onCollision) {
 				this.game.validateCallback(function () {
-					objectDef.onCollision(player, player.game)
+					objectDef.onCollision(player, player.game);
 				});
 			}
 		}
@@ -131,7 +129,7 @@ function Player(x, y, map) {
 	};
 
 	this.pickUpItem = function (itemName, object) {
-		player = this;
+		var player = this;
 
 		this.game.addToInventory(itemName);
 		map.removeItemFromMap(_x, _y, itemName);
