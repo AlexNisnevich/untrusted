@@ -110,7 +110,7 @@ function DynamicObject(map, type, x, y) {
             }
 			_definition.behavior(this, player);
 		} catch (e) {
-			map.game.output.write(e.toString());
+			map.game.display.writeStatus(e.toString());
 		}
 	};
 

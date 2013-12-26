@@ -188,16 +188,23 @@ ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
 	}
 };
 
-ROT.Display.prototype.write = function(text) {
-	this.clear();
-	this.drawText(0, 0, text);
-};
-
 ROT.Display.prototype.writeStatus = function(text) {
 	var map = this.game.map;
-	var x = Math.floor((map.getWidth() - text.length) / 2);
-	var y = map.getHeight() - 2;
-	this.drawText(x, y, text);
+
+	var strings = [text];
+	if (text.length > map.getWidth()) {
+		// split into two lines
+		var minCutoff = map.getWidth() - 10;
+		var cutoff = minCutoff + text.slice(minCutoff).indexOf(" ");
+		strings = [text.slice(0, cutoff), text.slice(cutoff + 1)];
+	}
+
+	for (var i = 0; i < strings.length; i++) {
+		var str = strings[i];
+		var x = Math.floor((map.getWidth() - str.length) / 2);
+		var y = map.getHeight() + i - strings.length - 1;
+		this.drawText(x, y, str);
+	}
 };
 
 ROT.Display.prototype.appendError = function(errorText) {

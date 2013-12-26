@@ -165,13 +165,6 @@ Game.prototype.reference = {
 		'description': 'Can be "item", "dynamic", or none. If "dynamic", then this object can move on turns that run each time that the player moves. If "item", then this object can be picked up.'
 	},
 
-	'output.write': {
-		'name': 'output.write(text)',
-		'category': 'output',
-		'type': 'method',
-		'description': 'Writes the given text in the output area underneath the map.'
-	},
-
 	'player.atLocation': {
 		'name': 'player.atLocation(x, y)',
 		'category': 'player',

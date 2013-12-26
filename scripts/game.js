@@ -57,14 +57,6 @@ function Game(debugMode) {
 			display.focus();
 		});
 
-		// Initialize output display
-		this.output = ROT.Display.create(this, {
-			width: dimensions.width * 1.33,
-			height: 2,
-			fontSize: 15
-		});
-		$('#output').append(this.output.getContainer());
-
 		// Initialize map and editor
 		this.editor = new CodeEditor("editor", 600, 500);
 		this.map = new Map(this.display, this);
@@ -166,7 +158,7 @@ function Game(debugMode) {
 		// validate the code
 		// if it passes validation, returns the startLevel function if it pass
 		// if it fails validation, returns false
-		var validatedStartLevel = this.validate(allCode, playerCode, !loadedFromEditor);
+		var validatedStartLevel = this.validate(allCode, playerCode);
 
 		if (validatedStartLevel) { // code is valid
 			// reset the map
@@ -184,7 +176,7 @@ function Game(debugMode) {
 			$('#drawingCanvas').hide();
 
 			// start the level
-			var map = this.map; var display = this.display; var output = this.output;
+			var map = this.map; var display = this.display;
 			validatedStartLevel(map);
 
 			// remove inventory items introduced in this level (if any)

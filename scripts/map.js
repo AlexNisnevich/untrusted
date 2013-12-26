@@ -269,7 +269,7 @@ function Map(display, game) {
 	};
 
 	this.hideChapter = function() {
-		$('#chapter').removeClass().hide();
+		$('#chapter').fadeOut();
 	};
 
 	this.writeStatus = function(status) {

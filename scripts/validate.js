@@ -43,17 +43,13 @@ Game.prototype.validators = {
 	}
 }
 
-Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
+Game.prototype.validate = function(allCode, playerCode) {
 	var game = this;
 
 	var validateAtLeastXObjects = this.validators.validateAtLeastXObjects;
 	var validateExactlyXManyObjects = this.validators.validateExactlyXManyObjects;
 
 	validateLevel = function () {};
-
-	if (!preserveOutput) {
-		this.output.clear();
-	}
 
 	try {
 		for (var i = 0; i < this.VERBOTEN.length; i++) {
@@ -63,7 +59,7 @@ Game.prototype.validate = function(allCode, playerCode, preserveOutput) {
 			}
 		}
 
-		var display = this.display; var output = this.output;
+		var display = this.display;
 
 		var dummyMap = new Map(new DummyDisplay, this);
 		dummyMap.setProperties(this.editor.getProperties()['mapProperties']);
@@ -111,7 +107,6 @@ Game.prototype.validateCallback = function(callback) {
 	var validateAtLeastXObjects = this.validators.validateAtLeastXObjects;
 	var validateExactlyXManyObjects = this.validators.validateExactlyXManyObjects;
 
-	this.output.clear();
 	eval(this.editor.getGoodState()['code']); // get validateLevel method from last good state (if such a method exists)
 	try {
 		// run the callback
@@ -131,7 +126,7 @@ Game.prototype.validateCallback = function(callback) {
 		// refresh the map, just in case
 		this.map.refresh();
 	} catch (e) {
-		this.output.write(e.toString());
+		this.display.writeStatus(e.toString());
 	}
 }
 
