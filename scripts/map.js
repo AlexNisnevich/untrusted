@@ -9,8 +9,8 @@ function Map(display, game) {
 	var _keyDelay;
 	var _intervals = [];
 
-	this.getObjectDefinition = function(objName) { return _objectDefinitions[objName]; }
-	this.getObjectDefinitions = function() { return _objectDefinitions; }
+	this.getObjectDefinition = function(objName) { return _objectDefinitions[objName]; };
+	this.getObjectDefinitions = function() { return _objectDefinitions; };
 	this.getPlayer = function () { return _player; };
 	this.getGrid = function () { return _grid; };
 	this.getDynamicObjects = function () { return _dynamicObjects; };
@@ -46,12 +46,12 @@ function Map(display, game) {
 		// now set any properties that were passed in
 		if (!mapProperties) { return; }
 
-		if (mapProperties['allowOverwrite'] == true) {
+		if (mapProperties.allowOverwrite === true) {
 			_allowOverwrite = true;
 		}
 
-		if (mapProperties['keyDelay']) {
-			_keyDelay = mapProperties['keyDelay'];
+		if (mapProperties.keyDelay) {
+			_keyDelay = mapProperties.keyDelay;
 		}
 	};
 
@@ -84,7 +84,7 @@ function Map(display, game) {
 			if (myType && object.passableFor && object.passableFor.indexOf(myType) > -1) {
 				// this object is of a type that can pass the obstacle
 				return true;
-			} else if (typeof object.impassable == 'function') {
+			} else if (typeof object.impassable === 'function') {
 				// the obstacle is impassable only in certain circumstances
 				return !object.impassable(_player, object);
 			} else {
@@ -100,7 +100,8 @@ function Map(display, game) {
 		}
 	};
 
-	// returns the object of the given type closest to target coordinates
+	// Returns the object of the given type closest to target coordinates.
+	// (Or call with type = "anyDynamic" to look for any dynamic object.)
 	this.findNearestToPoint = function (type, targetX, targetY) {
 		var foundObjects = [];
 
@@ -116,13 +117,13 @@ function Map(display, game) {
 		// look for dynamic objects
 		for (var i = 0; i < _dynamicObjects.length; i++) {
 			var object = _dynamicObjects[i];
-			if (object.getType() === type) {
+			if (object.getType() === type || object.getType() === "anyDynamic") {
 				foundObjects.push({x: object.getX(), y: object.getY()});
 			}
 		}
 
 		// look for player
-		if (type == 'player') {
+		if (type === 'player') {
 			foundObjects.push({x: _player.getX(), y: _player.getY()});
 		}
 
@@ -130,8 +131,11 @@ function Map(display, game) {
 		for (var i = 0; i < foundObjects.length; i++) {
 			var obj = foundObjects[i];
 			dists[i] = Math.sqrt(Math.pow(targetX - obj.x, 2) + Math.pow(targetY - obj.y, 2));
-			if (dists[i] == 0) {
-				dists[i] = 999; // we want to find objects distinct from ourselves
+
+			// we want to find objects distinct from ourselves
+			// unless we're specifically looking for "any dynamic object"
+			if (dists[i] === 0 && !object.getType() === "anyDynamic") {
+				dists[i] = 999;
 			}
 		}
 
@@ -140,28 +144,6 @@ function Map(display, game) {
 
 		return closestTarget;
 	};
-
-	// returns the dynamic object closest to the target coordinates
-	// (simplified version of this.findNearestToPoint() )
-	this.findNearestDynamicObj = function(targetX, targetY) {
-		var foundObjects = [];
-
-		for (var i = 0; i < _dynamicObjects.length; i++) {
-			var object = _dynamicObjects[i];
-			foundObjects.push({x: object.getX(), y: object.getY()});
-		}
-
-		var dists = [];
-		for (var i = 0; i < foundObjects.length; i++) {
-			var obj = foundObjects[i];
-			dists[i] = Math.sqrt(Math.pow(targetX - obj.x, 2) + Math.pow(targetY - obj.y, 2));
-		}
-
-		var minDist = Math.min.apply(Math, dists);
-		var closestTarget = foundObjects[dists.indexOf(minDist)];
-
-		return closestTarget;
-	}
 
 	this.moveAllDynamicObjects = function () {
 		_dynamicObjects.forEach(function(object) {
@@ -170,7 +152,7 @@ function Map(display, game) {
 	};
 
 	this.removeItemFromMap = function (x, y, klass) {
-		if (_grid[x][y].type == klass) {
+		if (_grid[x][y].type === klass) {
 			_grid[x][y].type = 'empty';
 		}
 	};
@@ -193,12 +175,12 @@ function Map(display, game) {
 			// throw "Not a valid location to place an object!";
 		}
 
-		if (_objectDefinitions[klass].type == 'dynamic') {
+		if (_objectDefinitions[klass].type === 'dynamic') {
 			// dynamic object
 			_dynamicObjects.push(new DynamicObject(this, klass, x, y));
 		} else {
 			// static object
-			if (_grid[x][y].type == 'empty' || _grid[x][y].type == klass || _allowOverwrite) {
+			if (_grid[x][y].type === 'empty' || _grid[x][y].type === klass || _allowOverwrite) {
 				_grid[x][y].type = klass;
 			} else {
 				throw "There is already an object at (" + x + ", " + y + ")!";
@@ -249,7 +231,7 @@ function Map(display, game) {
 					var child = [x, y-1];
 					break;
 			}
-			if (map.getObjectTypeAt(child[0], child[1]) == 'empty') {
+			if (map.getObjectTypeAt(child[0], child[1]) === 'empty') {
 				adjacentEmptyCells.push([child, action]);
 			}
 		});
@@ -265,7 +247,7 @@ function Map(display, game) {
 	};
 
 	this.displayChapter = function(chapterName, cssClass) {
-		if (this.game.displayedChapters.indexOf(chapterName) == -1) {
+		if (this.game.displayedChapters.indexOf(chapterName) === -1) {
 			$('#chapter').html(chapterName.replace("\n","<br>"))
 			$('#chapter').removeClass().show();
 
@@ -299,7 +281,7 @@ function Map(display, game) {
 		return {
 			x: (x + .5) * 600 / game.dimensions.width,
 			y: (y + .5) * 500 / game.dimensions.height
-		}
+		};
 	};
 
 	/* Initialization */
@@ -307,4 +289,4 @@ function Map(display, game) {
 	this.game = game;
 	this.display = display;
 	this.reset();
-};
+}

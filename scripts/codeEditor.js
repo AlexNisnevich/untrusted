@@ -116,9 +116,9 @@ function CodeEditor(textAreaDomID, width, height) {
 			// unless it's pressing backspace at the start of a line
 			// and the line above it is editable
 			// and the current line text can fit on the line above it
-			if (change.to.ch == 0
-					&& change.from.line == (change.to.line - 1)
-					&& change.from.ch == instance.getLine(change.from.line).length
+			if (change.to.ch === 0
+					&& change.from.line === (change.to.line - 1)
+					&& change.from.ch === instance.getLine(change.from.line).length
 					&& editableLines.indexOf(change.from.line) > -1
 					&& instance.getLine(change.from.line).length
 						+ instance.getLine(change.to.line).length < charLimit) {
@@ -193,10 +193,10 @@ function CodeEditor(textAreaDomID, width, height) {
 					// search for a blank line within the editable block
 					var currentLine = cursorPos.line + 1;
 					while (true) {
-						if (editableLines.indexOf(currentLine) == -1) {
+						if (editableLines.indexOf(currentLine) === -1) {
 							// out of editable block
 							break;
-						} else if (instance.getLine(currentLine).trim() == '') {
+						} else if (instance.getLine(currentLine).trim() === '') {
 							// blank line found - shift lines down to it
 							for (var i = currentLine; i > cursorPos.line; i--) {
 								instance.setLine(i, '');
@@ -220,7 +220,7 @@ function CodeEditor(textAreaDomID, width, height) {
 				// move the cursor and smart-indent
 				cursorPos.line++;
 				instance.setCursor(cursorPos);
-				if (instance.getLine(cursorPos.line).trim() == "") {
+				if (instance.getLine(cursorPos.line).trim() === "") {
 					instance.indentLine(cursorPos.line, "prev");
 				}
 			}}
@@ -245,9 +245,9 @@ function CodeEditor(textAreaDomID, width, height) {
 
 			// automatically smart-indent if the cursor is at position 0
 			// and the line is empty (ignore if backspacing)
-			if (lastChange.origin != '+delete') {
+			if (lastChange.origin !== '+delete') {
 				var loc = instance.getCursor();
-				if (loc.ch === 0 && instance.getLine(loc.line).trim() == "") {
+				if (loc.ch === 0 && instance.getLine(loc.line).trim() === "") {
 					instance.indentLine(loc.line, "prev");
 				}
 			}
@@ -277,7 +277,7 @@ function CodeEditor(textAreaDomID, width, height) {
 	this.markUneditableLines = function() {
 		var instance = this.internalEditor;
 		for (var i = 0; i < instance.lineCount(); i++) {
-			if (editableLines.indexOf(i) == -1) {
+			if (editableLines.indexOf(i) === -1) {
 				instance.addLineClass(i, 'wrap', 'disabled');
 			}
 		}

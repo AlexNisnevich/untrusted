@@ -34,9 +34,7 @@ function DynamicObject(map, type, x, y) {
 			throw 'Can\'t move when it isn\'t your turn!';
 		}
 
-		var nearestObj = map.findNearestDynamicObj(dest.x, dest.y);
-		//console.log("dest: " + dest.x + ", " + dest.y);
-		//console.log("nearest: " + nearestObj.x + ", " + nearestObj.y);
+		var nearestObj = map.findNearestToPoint("anyDynamic", dest.x, dest.y);
 
 		_myTurn = false;
 

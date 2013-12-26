@@ -211,4 +211,4 @@ function Game(debugMode) {
 			this.map.getPlayer().canMove = false;
 		}
 	};
-};
+}
