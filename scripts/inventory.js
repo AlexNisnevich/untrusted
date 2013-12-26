@@ -65,10 +65,10 @@ Game.prototype.usePhone = function () {
 	var player = this.map.getPlayer();
 	if (player && player.canMove && player.hasItem('phone')) {
 		if (player._phoneFunc) {
-			this.game.sound.playSound('select');
+			this.sound.playSound('select');
 			this.validateCallback(player._phoneFunc);
 		} else {
-			this.game.sound.playSound('static');
+			this.sound.playSound('static');
 			this.display.writeStatus("Your function phone isn't bound to any function!");
 		}
 	}

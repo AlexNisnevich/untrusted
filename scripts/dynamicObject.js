@@ -28,7 +28,7 @@ function DynamicObject(map, type, x, y) {
 	};
 
 	this.move = function (direction) {
-		var dest = computeDestination(_x, _y, direction);
+		var dest = this.computeDestination(_x, _y, direction);
 
 		if (!_myTurn) {
 			throw 'Can\'t move when it isn\'t your turn!';
@@ -36,26 +36,24 @@ function DynamicObject(map, type, x, y) {
 
 		var nearestObj = map.findNearestToPoint("anyDynamic", dest.x, dest.y);
 
-		_myTurn = false;
-
 		// check for collision with player
 		if (map.getPlayer().atLocation(dest.x, dest.y) && _definition.onCollision) {
 			// trigger collision
 			_definition.onCollision(map.getPlayer(), this);
-		} else if (dest.x === nearestObj.x && dest.y === nearestObj.y) {
-			// would collide with another dynamic object
-			return;
-		} else if (map.canMoveTo(dest.x, dest.y, _type)) {
+		} else if (map.canMoveTo(dest.x, dest.y, _type) &&
+				!map.isPointOccupiedByDynamicObject(dest.x, dest.y)) {
 			// move the object
 			_x = dest.x;
 			_y = dest.y;
 			this.afterMove(_x, _y);
 			map.refresh();
 		}
+
+		_myTurn = false;
 	};
 
 	this.canMove = function (direction) {
-		var dest = computeDestination(_x, _y, direction);
+		var dest = this.computeDestination(_x, _y, direction);
 
 		// check if the object can move there and will not collide with a copy of itself
 		return (map.canMoveTo(dest.x, dest.y, _type) &&
@@ -71,17 +69,13 @@ function DynamicObject(map, type, x, y) {
 	this.computeDestination = function (startX, startY, direction) {
 		switch (direction) {
 			case 'up':
-				var dest = {'x': startX, 'y': startY-1};
-				break;
+				return {'x': startX, 'y': startY - 1};
 			case 'down':
-				var dest = {'x': startX, 'y': startY+1};
-				break;
+				return {'x': startX, 'y': startY + 1};
 			case 'left':
-				var dest = {'x': startX-1, 'y': startY};
-				break;
+				return {'x': startX - 1, 'y': startY};
 			case 'right':
-				var dest = {'x': startX+1, 'y': startY};
-				break;
+				return {'x': startX + 1, 'y': startY};
 		}
 	};
 

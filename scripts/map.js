@@ -100,8 +100,7 @@ function Map(display, game) {
 		}
 	};
 
-	// Returns the object of the given type closest to target coordinates.
-	// (Or call with type = "anyDynamic" to look for any dynamic object.)
+	// Returns the object of the given type closest to target coordinates
 	this.findNearestToPoint = function (type, targetX, targetY) {
 		var foundObjects = [];
 
@@ -117,7 +116,7 @@ function Map(display, game) {
 		// look for dynamic objects
 		for (var i = 0; i < _dynamicObjects.length; i++) {
 			var object = _dynamicObjects[i];
-			if (object.getType() === type || object.getType() === "anyDynamic") {
+			if (object.getType() === type) {
 				foundObjects.push({x: object.getX(), y: object.getY()});
 			}
 		}
@@ -132,9 +131,8 @@ function Map(display, game) {
 			var obj = foundObjects[i];
 			dists[i] = Math.sqrt(Math.pow(targetX - obj.x, 2) + Math.pow(targetY - obj.y, 2));
 
-			// we want to find objects distinct from ourselves
-			// unless we're specifically looking for "any dynamic object"
-			if (dists[i] === 0 && type !== "anyDynamic") {
+			// We want to find objects distinct from ourselves
+			if (dists[i] === 0) {
 				dists[i] = 999;
 			}
 		}
@@ -144,6 +142,16 @@ function Map(display, game) {
 
 		return closestTarget;
 	};
+
+	this.isPointOccupiedByDynamicObject = function (targetX, targetY) {
+		for (var i = 0; i < _dynamicObjects.length; i++) {
+			var object = _dynamicObjects[i];
+			if (object.getX() === x && object.getY() === y) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	this.moveAllDynamicObjects = function () {
 		_dynamicObjects.forEach(function(object) {
