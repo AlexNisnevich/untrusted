@@ -41,7 +41,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 		}
 
 		var dummyMap = new Map(new DummyDisplay, this);
-		dummyMap.setProperties(this.editor.getProperties()['mapProperties']);
+		dummyMap.setProperties(this.editor.getProperties().mapProperties);
 
 		// modify the code to always check time to prevent infinite loops
 		allCode = $.map(allCode.split('\n'), function (line, i) {
@@ -59,7 +59,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 
 		// start the level on a dummy map to validate
 		startLevel(dummyMap);
-		if (typeof(validateLevel) != 'undefined') {
+		if (typeof(validateLevel) !== 'undefined') {
 			validateLevel(dummyMap, this.validators);
 		}
 
@@ -72,7 +72,8 @@ Game.prototype.validate = function(allCode, playerCode) {
 	} catch (e) {
 		var exceptionText = e.toString();
 		if (e instanceof SyntaxError) {
-			if (lineNum = this.findSyntaxError(allCode, e.message)) {
+			var lineNum = this.findSyntaxError(allCode, e.message);
+			if (lineNum) {
 				exceptionText = "[Line " + lineNum + "] " + exceptionText;
 			}
 		}
@@ -84,14 +85,14 @@ Game.prototype.validate = function(allCode, playerCode) {
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback) {
-	eval(this.editor.getGoodState()['code']); // get validateLevel method from last good state (if such a method exists)
+	eval(this.editor.getGoodState().code); // get validateLevel method from last good state (if such a method exists)
 	try {
 		// run the callback
 		callback();
 
 		// check if validator still passes
 		try {
-			if (typeof(validateLevel) != 'undefined') {
+			if (typeof(validateLevel) !== 'undefined') {
 				validateLevel(this.map, this.validators);
 			}
 		} catch (e) {
@@ -122,7 +123,7 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
 		try {
 			eval(testCode);
 		} catch (e) {
-			if (e.message == errorMsg) {
+			if (e.message === errorMsg) {
 				return i;
 			}
 		}

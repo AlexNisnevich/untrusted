@@ -1,37 +1,34 @@
 function Game(debugMode) {
+	var _currentCode = '';
+	var _commands = [];
 
-	var dimensions = {
+	this.dimensions = {
 		width: 50,
 		height: 25
 	};
 
-	this.dimensions = dimensions;
-
-	_currentCode = '';
-	_commands = (commands = localStorage.getItem('helpCommands')) ? commands.split(';') : [];
-
 	this.levelFileNames = [
-        '01_cellBlockA.jsx',
-        '02_theLongWayOut.jsx',
-        '03_validationEngaged.jsx',
-        '04_multiplicity.jsx',
-        '05_minesweeper.jsx',
-        '06_drones101.jsx',
-        '07_colors.jsx',
-        '08_intoTheWoods.jsx',
-        '09_fordingTheRiver.jsx',
-        '10_ambush.jsx',
-        '11_robot.jsx',
-        '12_robotNav.jsx',
-        '13_robotMaze.jsx',
-        //'14_crispsContest.jsx',
-        '15_exceptionalCrossing.jsx',
-        '16_pointers.jsx',
-        '17_superDrEvalBros.jsx',
-        //'18_domManipulation.jsx',
-        //'19_bossFight.jsx',
-        //'20_ULTIMA_BOSS_FIGHT.jsx',
-        '99_credits.jsx'
+		'01_cellBlockA.jsx',
+		'02_theLongWayOut.jsx',
+		'03_validationEngaged.jsx',
+		'04_multiplicity.jsx',
+		'05_minesweeper.jsx',
+		'06_drones101.jsx',
+		'07_colors.jsx',
+		'08_intoTheWoods.jsx',
+		'09_fordingTheRiver.jsx',
+		'10_ambush.jsx',
+		'11_robot.jsx',
+		'12_robotNav.jsx',
+		'13_robotMaze.jsx',
+		//'14_crispsContest.jsx',
+		'15_exceptionalCrossing.jsx',
+		'16_pointers.jsx',
+		'17_superDrEvalBros.jsx',
+		//'18_domManipulation.jsx',
+		//'19_bossFight.jsx',
+		//'20_ULTIMA_BOSS_FIGHT.jsx',
+		'99_credits.jsx'
 	];
 
 	this.currentLevel = 1;
@@ -46,8 +43,8 @@ function Game(debugMode) {
 
 		// Initialize map display
 		this.display = ROT.Display.create(this, {
-			width: dimensions.width,
-			height: dimensions.height,
+			width: this.dimensions.width,
+			height: this.dimensions.height,
 			fontSize: 20
 		});
 		this.display.setupEventHandlers();
@@ -64,6 +61,11 @@ function Game(debugMode) {
 		// Enable controls
 		this.enableShortcutKeys();
 		this.enableButtons();
+
+		// Load help commands from local storage (if possible)
+		if (localStorage.getItem('helpCommands')) {
+			_commands = localStorage.getItem('helpCommands').split(';');
+		}
 
 		// Enable debug features
 		if (debugMode) {
@@ -96,7 +98,7 @@ function Game(debugMode) {
 		game.currentLevel++;
 		game.sound.playSound('complete');
 
-        //we disable moving so the player can't move during the fadeout
+		//we disable moving so the player can't move during the fadeout
 		game.map.getPlayer().canMove = false;
 		game.getLevel(game.currentLevel);
 	};
@@ -122,16 +124,16 @@ function Game(debugMode) {
 
 		var fileName = game.levelFileNames[levelNumber - 1];
 		$.get('levels/' + fileName, function (lvlCode) {
-            // load level code in editor
-            game.editor.loadCode(lvlCode);
+			// load level code in editor
+			game.editor.loadCode(lvlCode);
 
-            // start the level and fade in
-            game.evalLevelCode(null, null, true);
-            game.display.focus();
+			// start the level and fade in
+			game.evalLevelCode(null, null, true);
+			game.display.focus();
 
-            // store the commands introduced in this level (for api reference)
-            _commands = _commands.concat(game.editor.getProperties().commandsIntroduced).unique();
-            localStorage.setItem('helpCommands', _commands.join(';'));
+			// store the commands introduced in this level (for api reference)
+			_commands = _commands.concat(game.editor.getProperties().commandsIntroduced).unique();
+			localStorage.setItem('helpCommands', _commands.join(';'));
 		});
 	};
 
@@ -176,12 +178,11 @@ function Game(debugMode) {
 			$('#drawingCanvas').hide();
 
 			// start the level
-			var map = this.map; var display = this.display;
-			validatedStartLevel(map);
+			validatedStartLevel(this.map);
 
 			// remove inventory items introduced in this level (if any)
-			if (this.editor.getProperties()['itemsIntroduced']) {
-				this.editor.getProperties()['itemsIntroduced'].forEach(function (item) {
+			if (this.editor.getProperties().itemsIntroduced) {
+				this.editor.getProperties().itemsIntroduced.forEach(function (item) {
 					game.removeFromInventory(item);
 				});
 			}
@@ -193,8 +194,8 @@ function Game(debugMode) {
 			});
 
 			// start bg music for this level
-			if (this.editor.getProperties()['music']) {
-				this.sound.playTrackByName(this.currentLevel, this.editor.getProperties()['music']);
+			if (this.editor.getProperties().music) {
+				this.sound.playTrackByName(this.currentLevel, this.editor.getProperties().music);
 			} else {
 				this.sound.playTrackByNum(this.currentLevel);
 			}
