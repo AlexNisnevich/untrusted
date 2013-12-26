@@ -40,7 +40,7 @@ function Game(debugMode) {
 
 	this.getHelpCommands = function () { return _commands; };
 
-	this.init = function () {
+	this.start = function () {
 		// Initialize sound
 		this.sound = new Sound();
 
@@ -212,5 +212,5 @@ function Game(debugMode) {
 	}
 
 	// Constructor
-	this.init();
+	this.start();
 };

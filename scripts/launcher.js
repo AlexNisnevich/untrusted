@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
-	new Game();
+	new Game().start();
 });
