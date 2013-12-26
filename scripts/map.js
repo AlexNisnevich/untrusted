@@ -79,7 +79,7 @@ function Map(display, game) {
 		}
 
 		// look for static objects that can serve as obstacles
-		object = _objectDefinitions[this.getGrid()[x][y].type];
+		var object = _objectDefinitions[this.getGrid()[x][y].type];
 		if (object.impassable) {
 			if (myType && object.passableFor && object.passableFor.indexOf(myType) > -1) {
 				// this object is of a type that can pass the obstacle
@@ -134,7 +134,7 @@ function Map(display, game) {
 
 			// we want to find objects distinct from ourselves
 			// unless we're specifically looking for "any dynamic object"
-			if (dists[i] === 0 && !object.getType() === "anyDynamic") {
+			if (dists[i] === 0 && type !== "anyDynamic") {
 				dists[i] = 999;
 			}
 		}
@@ -240,7 +240,7 @@ function Map(display, game) {
 
 	this.startTimer = function(timer, delay) {
 		if (delay < 25) {
-			throw "Minimum timer delay is 25 milliseconds"
+			throw "Minimum timer delay is 25 milliseconds";
 		}
 
 		_intervals.push(setInterval(timer, delay));
@@ -248,7 +248,7 @@ function Map(display, game) {
 
 	this.displayChapter = function(chapterName, cssClass) {
 		if (this.game.displayedChapters.indexOf(chapterName) === -1) {
-			$('#chapter').html(chapterName.replace("\n","<br>"))
+			$('#chapter').html(chapterName.replace("\n","<br>"));
 			$('#chapter').removeClass().show();
 
 			if (cssClass) {
