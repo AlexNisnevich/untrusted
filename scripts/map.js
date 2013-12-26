@@ -143,7 +143,7 @@ function Map(display, game) {
 		return closestTarget;
 	};
 
-	this.isPointOccupiedByDynamicObject = function (targetX, targetY) {
+	this.isPointOccupiedByDynamicObject = function (x, y) {
 		for (var i = 0; i < _dynamicObjects.length; i++) {
 			var object = _dynamicObjects[i];
 			if (object.getX() === x && object.getY() === y) {
