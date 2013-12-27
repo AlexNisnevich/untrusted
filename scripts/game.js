@@ -21,7 +21,7 @@ function Game(debugMode) {
 		'11_robot.jsx',
 		'12_robotNav.jsx',
 		'13_robotMaze.jsx',
-		//'14_crispsContest.jsx',
+		'14_crispsContest.jsx',
 		'15_exceptionalCrossing.jsx',
 		'16_pointers.jsx',
 		'17_superDrEvalBros.jsx',
@@ -106,7 +106,6 @@ function Game(debugMode) {
 	this.jumpToNthLevel = function (levelNum) {
 		var game = this;
 		this.currentLevel = levelNum;
-		this.setInventoryStateByLevel(levelNum);
 		this.getLevel(levelNum);
 		this.display.focus();
 	};
@@ -186,6 +185,7 @@ function Game(debugMode) {
 					game.removeFromInventory(item);
 				});
 			}
+			this.setInventoryStateByLevel(this.currentLevel);
 
 			// draw the map
 			this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {

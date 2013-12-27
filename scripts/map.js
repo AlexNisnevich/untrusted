@@ -79,14 +79,22 @@ function Map(display, game) {
 		}
 
 		// look for static objects that can serve as obstacles
-		var object = _objectDefinitions[this.getGrid()[x][y].type];
+		var objType = this.getGrid()[x][y].type;
+		var object = _objectDefinitions[objType];
 		if (object.impassable) {
 			if (myType && object.passableFor && object.passableFor.indexOf(myType) > -1) {
 				// this object is of a type that can pass the obstacle
 				return true;
 			} else if (typeof object.impassable === 'function') {
 				// the obstacle is impassable only in certain circumstances
-				return !object.impassable(_player, object);
+				if (object.impassable(_player, object)) {
+					return false;
+				} else {
+					if (object.selfDestructsWhenPassedThrough) {
+						this.removeItemFromMap(x, y, objType);
+					}
+					return true;
+				}
 			} else {
 				// the obstacle is always impassable
 				return false;

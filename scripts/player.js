@@ -152,7 +152,11 @@ function Player(x, y, map) {
 		var object = this.game.objects[itemName];
 
 		this.game.removeFromInventory(itemName);
-		object.onDrop(this, this.game);
+		this.game.sound.playSound('blip');
+
+		if (object.onDrop) {
+			object.onDrop(this, this.game);
+		}
 	};
 
 	this.setPhoneCallback = function(func) {
