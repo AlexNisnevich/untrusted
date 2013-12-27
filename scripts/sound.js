@@ -12,6 +12,8 @@ function Sound() {
 	this.currentLevelNum = -1;
 
 	this.init = function() {
+		var sound = this;
+
 		this.bgPlayerElt.jPlayer({
 			wmode: "window",
 			loop: true,
@@ -23,6 +25,12 @@ function Sound() {
 			loop: false,
 			supplied: 'wav',
 			swfPath: "lib/Jplayer.swf"
+		});
+
+		$(window).focus(function () {
+			$(sound.bgPlayerElt).jPlayer('play');
+		}).blur(function () {
+			$(sound.bgPlayerElt).jPlayer('pause');
 		});
 	};
 

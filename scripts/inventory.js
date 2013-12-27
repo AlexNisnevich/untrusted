@@ -19,6 +19,7 @@ Game.prototype.removeFromInventory = function (itemName) {
 };
 
 Game.prototype.setInventoryStateByLevel = function (levelNum) {
+	this.inventory = [];
 	if (levelNum > 1) {
 		this.addToInventory('computer');
 		$('#editorPane').fadeIn();
@@ -36,6 +37,11 @@ Game.prototype.setInventoryStateByLevel = function (levelNum) {
 	}
 	if (levelNum > 13) {
 		this.addToInventory('blueKey');
+	}
+	if (levelNum > 14) {
+		this.removeFromInventory('redKey');
+		this.removeFromInventory('greenKey');
+		this.removeFromInventory('blueKey');
 	}
 };
 
