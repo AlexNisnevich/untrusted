@@ -27,8 +27,7 @@ function Player(x, y, map) {
 	};
 
 	this.move = function (direction, fromKeyboard) {
-		// are we allowing keyboard input right now?
-		if (!this.canMove && fromKeyboard) {
+		if (!this.canMove) { // mainly for key delay
 			return false;
 		}
 
@@ -62,17 +61,14 @@ function Player(x, y, map) {
 		if (this.map.canMoveTo(new_x, new_y)) {
 			_x = new_x;
 			_y = new_y;
+
 			this.map.refresh();
 
-			if (fromKeyboard) {
-				// key delay
-				this.canMove = false;
-				this.afterMove(_x, _y);
-				map.reenableMovementForPlayer(this); // key delay can vary by map
-			} else {
-				// no key delay
-				this.afterMove(_x, _y);
-			}
+			this.canMove = false;
+
+			this.afterMove(_x, _y);
+
+			map.reenableMovementForPlayer(this); // (key delay can vary by map)
 		}
 	};
 
