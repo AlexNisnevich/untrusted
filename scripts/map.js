@@ -44,14 +44,14 @@ function Map(display, game) {
 		_keyDelay = 0;
 
 		// now set any properties that were passed in
-		if (!mapProperties) { return; }
+		if (mapProperties) {
+			if (mapProperties.allowOverwrite === true) {
+				_allowOverwrite = true;
+			}
 
-		if (mapProperties.allowOverwrite === true) {
-			_allowOverwrite = true;
-		}
-
-		if (mapProperties.keyDelay) {
-			_keyDelay = mapProperties.keyDelay;
+			if (mapProperties.keyDelay) {
+				_keyDelay = mapProperties.keyDelay;
+			}
 		}
 	};
 

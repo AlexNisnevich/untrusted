@@ -201,8 +201,10 @@ function Game(debugMode) {
 			}
 
 			// finally, allow player movement
-			this.map.getPlayer().canMove = true;
-			game.display.focus();
+			if (this.map.getPlayer()) {
+				this.map.getPlayer().canMove = true;
+				game.display.focus();
+			}
 		} else { // code is invalid
 			// play error sound
 			this.sound.playSound('static');

@@ -11,6 +11,7 @@ var DummyDisplay = function () {
 	this.clear = function () {};
 	this.drawAll = function () {};
 	this.drawObject = function () {};
+	this.drawText = function () {};
 };
 
 Game.prototype.validators = {

@@ -6,7 +6,6 @@
 function startLevel(map) {
     var credits = [
         [15, 1, "U N T R U S T E D"],
-        [15, 1, "U N T R U S T E D"], // duplication intentional
         [20, 2, "- or -"],
         [5, 3, "THE CONTINUING ADVENTURES OF DR. EVAL"],
         [1, 5, "a game by Alex Nisnevich and Greg Shuflin"],
@@ -27,6 +26,6 @@ function startLevel(map) {
     for (var i = 0; i < credits.length; i++) {
         setTimeout(function (i) {
             map.display.drawText(credits[i][0], credits[i][1], credits[i][2]);
-        }, (i + 1) * 2000, i);
+        }, (i + 2) * 2000, i);
     }
 }
