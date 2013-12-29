@@ -115,7 +115,7 @@ function startLevel(map) {
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
 }
 
-function validateLevel(map, validators) {
-    validators.validateAtLeastXObjects(map, 100, 'tree');
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateAtLeastXObjects(100, 'tree');
+    map.validateExactlyXManyObjects(1, 'exit');
 }

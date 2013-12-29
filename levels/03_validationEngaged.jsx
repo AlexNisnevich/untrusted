@@ -1,8 +1,8 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["global.validateLevel", "validators.validateAtLeastXObjects",
-         "validators.validateExactlyXManyObjects"]
+        ["global.validateLevel", "map.validateAtLeastXObjects",
+         "map.validateExactlyXManyObjects"]
 }
 #END_PROPERTIES#
 /************************
@@ -35,9 +35,9 @@ function startLevel(map) {
     map.placeObject(7, 5, 'exit');
 }
 
-function validateLevel(map, validators) {
+function validateLevel(map) {
     numBlocks = 2 * (map.getHeight()-13) + 2 * (map.getWidth()-10);
 
-    validators.validateAtLeastXObjects(map, numBlocks, 'block');
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+    map.validateAtLeastXObjects(numBlocks, 'block');
+    map.validateExactlyXManyObjects(1, 'exit');
 }

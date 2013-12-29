@@ -76,8 +76,8 @@ function startLevel(map) {
     }
 }
 
-function validateLevel(map, validators) {
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateExactlyXManyObjects(1, 'exit');
 }
 
 function onExit(map) {

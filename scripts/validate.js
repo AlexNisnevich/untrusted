@@ -14,22 +14,6 @@ var DummyDisplay = function () {
 	this.drawText = function () {};
 };
 
-Game.prototype.validators = {
-	validateAtLeastXObjects: function(map, num, type) {
-		var count = map.countObjects(type);
-		if (count < num) {
-			throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-		}
-	},
-
-	validateExactlyXManyObjects: function(map, num, type) {
-		var count = map.countObjects(type);
-		if (count != num) {
-			throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-		}
-	}
-};
-
 Game.prototype.validate = function(allCode, playerCode) {
 	var game = this;
 
@@ -61,7 +45,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 		// start the level on a dummy map to validate
 		startLevel(dummyMap);
 		if (typeof(validateLevel) !== 'undefined') {
-			validateLevel(dummyMap, this.validators);
+			validateLevel(dummyMap);
 		}
 
 		this.onExit = function () { return true; };
@@ -94,7 +78,7 @@ Game.prototype.validateCallback = function(callback) {
 		// check if validator still passes
 		try {
 			if (typeof(validateLevel) !== 'undefined') {
-				validateLevel(this.map, this.validators);
+				validateLevel(this.map);
 			}
 		} catch (e) {
 			// validation failed - not much to do here but restart the level, unfortunately
@@ -130,4 +114,20 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
 		}
 	}
 	return null;
+};
+
+// Specific validators go here
+
+Map.prototype.validateAtLeastXObjects = function(num, type) {
+	var count = this.countObjects(type);
+	if (count < num) {
+		throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+	}
+};
+
+Map.prototype.validateExactlyXManyObjects = function(num, type) {
+	var count = this.countObjects(type);
+	if (count != num) {
+		throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+	}
 };
