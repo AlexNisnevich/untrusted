@@ -1,15 +1,12 @@
 #BEGIN_PROPERTIES#
 {
-
+    "music": "ThatAndyGuy-Chip"
 }
 #END_PROPERTIES#
-
 /********************
  * crispsContest.js *
  ********************
  *
- * Do you remember, dear Professor, a certain introductary class you taught long ago?
- * Perhaps some 'reeducation' is apropos.
  */
 
 function startLevel(map) {
