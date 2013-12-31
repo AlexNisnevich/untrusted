@@ -7,6 +7,13 @@ function clone(obj) {
     return temp;
 }
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 Array.prototype.remove = function(item) {
     for(var i = this.length; i--;) {
         if(this[i] === item) {

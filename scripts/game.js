@@ -1,4 +1,4 @@
-function Game(debugMode) {
+function Game(debugMode, startLevel) {
 	var _currentCode = '';
 	var _commands = [];
 
@@ -74,7 +74,12 @@ function Game(debugMode) {
 			this.sound.toggleSound(); // mute sound by default in debug mode
 		}
 
-		this.intro();
+		// Lights, camera, action
+		if (startLevel) {
+			this.start(startLevel);
+		} else {
+			this.intro();
+		}
 	};
 
 	this.intro = function () {
@@ -82,8 +87,8 @@ function Game(debugMode) {
 		this.display.playIntro(this.map);
 	};
 
-	this.start = function () {
-		this.getLevel(1);
+	this.start = function (lvl) {
+		this.getLevel(lvl ? lvl : 1);
 	};
 
 	this.moveToNextLevel = function () {

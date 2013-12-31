@@ -1,5 +1,6 @@
 var game;
 $(document).ready(function() {
-	game = new Game(true);
+	var startLevel = getParameterByName('lvl') ? parseInt(getParameterByName('lvl')) : null;
+	game = new Game(true, startLevel);
 	game.initialize();
 });
