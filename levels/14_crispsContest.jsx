@@ -100,7 +100,7 @@ function validateLevel(map) {
 }
 
 function onExit(map) {
-    if (!map.getPlayer().hasItem('blueKey')) {
+    if (!map.getPlayer().hasItem('theAlgorithm')) {
         map.writeStatus("You must get that Algorithm!!");
         return false;
     } else {
