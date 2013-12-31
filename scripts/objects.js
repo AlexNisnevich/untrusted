@@ -96,7 +96,7 @@ Game.prototype.objects = {
 		'symbol': 'k',
 		'color': 'red',
 		'onPickUp': function (player, game) {
-			game.display.writeStatus('You have received a red key!');
+			game.display.writeStatus('You have picked up a red key!');
 		}
 	},
 
@@ -105,7 +105,7 @@ Game.prototype.objects = {
 		'symbol': 'k',
 		'color': '#0f0',
 		'onPickUp': function (player, game) {
-			game.display.writeStatus('You have received a green key!');
+			game.display.writeStatus('You have picked up a green key!');
 		}
 	},
 
@@ -114,7 +114,25 @@ Game.prototype.objects = {
 		'symbol': 'k',
 		'color': '#06f',
 		'onPickUp': function (player, game) {
-			game.display.writeStatus('You have received a blue key!');
+			game.display.writeStatus('You have picked up a blue key!');
+		}
+	},
+
+	'yellowKey': {
+		'type': 'item',
+		'symbol': 'k',
+		'color': 'yellow',
+		'onPickUp': function (player, game) {
+			game.display.writeStatus('You have picked up a yellow key!');
+		}
+	},
+
+	'theAlgorithm': {
+		'type': 'item',
+		'symbol': 'A',
+		'color': 'white',
+		'onPickUp': function (player, game) {
+			game.display.writeStatus('You have picked up the Algorithm!');
 		}
 	}
 };

@@ -5,6 +5,8 @@ ROT.Display.create = function(game, opts) {
 	return display;
 };
 
+ROT.Display.prototype.errors = [];
+
 ROT.Display.prototype.setupEventHandlers = function() {
 	var display = this;
 	var game = this.game;
