@@ -1,11 +1,8 @@
 Game.prototype.verbotenWords = [
-	'eval', 'prototype', 'delete', 'return', 'console', 'debugger',
+	'eval', 'prototype', 'delete', 'return', 'debugger',
 	'setTimeout', 'setInterval', 'level', 'Level', 'removeItemFromMap'
 ];
 Game.prototype.allowedTime = 2000;
-
-// We may want to have level-specific hidden validation rules in the future.
-// var validationRulesByLevel = [ null ];
 
 var DummyDisplay = function () {
 	this.clear = function () {};
@@ -39,7 +36,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 		}).join('\n');
 
 		// evaluate the code to get startLevel() and (opt) validateLevel() methods
-		validateLevel = function () {}; // in case validateLevel isn't defined
+		var validateLevel = function () {}; // in case validateLevel isn't defined
 		eval(allCode);
 
 		// start the level on a dummy map to validate

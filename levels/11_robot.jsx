@@ -1,8 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["object.inventory", "object.giveItemTo", "object.passableFor"],
-    "itemsIntroduced": ["redKey"]
+        ["object.inventory", "object.giveItemTo", "object.passableFor"]
 }
 #END_PROPERTIES#
 /*

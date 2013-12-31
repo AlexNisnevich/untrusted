@@ -1,7 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": [],
-    "itemsIntroduced": ["greenKey"]
+    "commandsIntroduced": []
 }
 #END_PROPERTIES#
 /*

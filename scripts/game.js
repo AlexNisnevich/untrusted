@@ -184,12 +184,7 @@ function Game(debugMode, startLevel) {
 			// start the level
 			validatedStartLevel(this.map);
 
-			// remove inventory items introduced in this level (if any)
-			if (this.editor.getProperties().itemsIntroduced) {
-				this.editor.getProperties().itemsIntroduced.forEach(function (item) {
-					game.removeFromInventory(item);
-				});
-			}
+			// set correct inventory state
 			this.setInventoryStateByLevel(this.currentLevel);
 
 			// draw the map

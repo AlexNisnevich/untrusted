@@ -1,5 +1,7 @@
 #BEGIN_PROPERTIES#
 {
+    "commandsIntroduced":
+        ["map.createFromGrid"],
     "music": "ThatAndyGuy-Chip"
 }
 #END_PROPERTIES#
@@ -12,7 +14,7 @@
 
 function startLevel(map) {
     map.defineObject('redLock', {
-        'symbol': String.fromCharCode(0x13cc),
+        'symbol': String.fromCharCode(0x2297),
         'color': 'red',
         'impassable': function (player) {
             if (player.hasItem('redKey')) {
@@ -25,7 +27,7 @@ function startLevel(map) {
     });
 
     map.defineObject('blueLock', {
-        'symbol': String.fromCharCode(0x13cc),
+        'symbol': String.fromCharCode(0x2297),
         'color': '#06f',
         'impassable': function (player) {
             if (player.hasItem('blueKey')) {
@@ -38,7 +40,7 @@ function startLevel(map) {
     });
 
     map.defineObject('greenLock', {
-        'symbol': String.fromCharCode(0x13cc),
+        'symbol': String.fromCharCode(0x2297),
         'color': '#0f0',
         'impassable': function (player) {
             if (player.hasItem('greenKey')) {
@@ -51,7 +53,7 @@ function startLevel(map) {
     });
 
     map.defineObject('yellowLock', {
-        'symbol': String.fromCharCode(0x13cc),
+        'symbol': String.fromCharCode(0x2297),
         'color': 'yellow',
         'impassable': function (player) {
             if (player.hasItem('yellowKey')) {
@@ -90,7 +92,7 @@ function startLevel(map) {
         'g': 'greenKey',
         'b': 'blueKey',
         'y': 'yellowKey'
-    }, 15, 6);
+    }, 17, 6);
 }
 
 function validateLevel(map) {
@@ -98,10 +100,17 @@ function validateLevel(map) {
 }
 
 function onExit(map) {
+    // make sure we have all the items we need!
     if (!map.getPlayer().hasItem('theAlgorithm')) {
         map.writeStatus("You must get that Algorithm!!");
         return false;
-    } else {
+    } else if (!map.getPlayer().hasItem('computer')) {
+        map.writeStatus("You'll need your computer! [Ctrl-5 to restart]");
+        return false;
+    } else if (!map.getPlayer().hasItem('phone')) {
+        map.writeStatus("You'll need your phone! [Ctrl-5 to restart]");
+        return false;
+    } {
         return true;
     }
 }
