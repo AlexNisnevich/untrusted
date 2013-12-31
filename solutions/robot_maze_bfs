@@ -24,7 +24,7 @@
                     path.push(direction);
                     frontier.push([child, path.slice(0)]);
                     frontierSet.push(child.toString());
-                    if (child[0] == map.getWidth() - 2 && child[1] == 8) {
+                    if (child[0] == map.getWidth() - 2 && child[1] == 7) {
                         me.pathFound = path;
                         me.done = true;
                         break;

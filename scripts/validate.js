@@ -9,6 +9,7 @@ var DummyDisplay = function () {
 	this.drawAll = function () {};
 	this.drawObject = function () {};
 	this.drawText = function () {};
+	this.writeStatus = function () {};
 };
 
 Game.prototype.validate = function(allCode, playerCode) {
@@ -119,6 +120,13 @@ Map.prototype.validateAtLeastXObjects = function(num, type) {
 	var count = this.countObjects(type);
 	if (count < num) {
 		throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+	}
+};
+
+Map.prototype.validateAtMostXObjects = function(num, type) {
+	var count = this.countObjects(type);
+	if (count > num) {
+		throw 'Too many ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
 	}
 };
 

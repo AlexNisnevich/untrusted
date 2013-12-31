@@ -6,7 +6,11 @@
 /*
  * robotMaze.js
  *
+ * The blue key is inside a labyrinth, and extracting
+ * it will not be easy.
  *
+ * It's a good thing that you're a AI expert, or
+ * we would have to leave empty-handed.
  */
 
 function getRandomInt(min, max) {
@@ -25,51 +29,44 @@ function startLevel(map) {
         },
         'behavior': function (me) {
 #BEGIN_EDITABLE#
-            // move randomly
-            var moves = map.getAdjacentEmptyCells(me.getX(), me.getY());
-            // getAdjacentEmptyCells gives array of ((x, y), direction) pairs
-            me.move(moves[getRandomInt(0, moves.length - 1)][1]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          if (me.pathFound) {
+             if (me.pathFound.length > 0) {
+                me.move(me.pathFound.shift());
+             } else {
+                me.move('down');
+             }
+          } else {
+             me.pathFound = [];
+             exploredSet = [];
+             frontier = [[[1, 1], []]];
+             frontierSet = ["1,1"];
+             for (var j=0; j<500; j++) {
+                node = frontier.shift(); frontierSet.shift();
+                state = node[0];
+                exploredSet.push(state.toString());
+                var moves = map.getAdjacentEmptyCells(state[0], state[1]);
+                for (var i = 0; i < moves.length; i++) {
+                  var move = moves[i];
+                  var child = move[0];
+                  var direction = move[1];
+                  if (exploredSet.indexOf(child.toString()) == -1 &&
+                  frontierSet.indexOf(child.toString()) == -1) {
+                    path = node[1].slice(0);
+                    path.push(direction);
+                    frontier.push([child, path.slice(0)]);
+                    frontierSet.push(child.toString());
+                    if (child[0] == map.getWidth() - 2 && child[1] == 7) {
+                        me.pathFound = path;
+                        me.done = true;
+                        break;
+                    }
+                  }
+                }
+                if (me.done) {
+                    break;
+                }
+             }
+          }
 
 
 
@@ -105,6 +102,8 @@ function startLevel(map) {
 
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
+    map.validateExactlyXManyObjects(1, 'robot');
+    map.validateAtMostXObjects(1, 'blueKey');
 }
 
 function onExit(map) {

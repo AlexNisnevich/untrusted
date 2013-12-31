@@ -133,6 +133,9 @@ Game.prototype.objects = {
 		'color': 'white',
 		'onPickUp': function (player, game) {
 			game.display.writeStatus('You have picked up the Algorithm!');
+		},
+		'onDrop': function (game) {
+			game.display.writeStatus('You have lost the Algorithm!');
 		}
 	}
 };

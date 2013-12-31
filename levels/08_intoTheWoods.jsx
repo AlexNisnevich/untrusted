@@ -22,9 +22,6 @@
  * need to go through the forest and across the river, and
  * you'll reach the fortress where it's kept. Their defences
  * are light, and we should be able to catch them off-guard.
- *
- * Oh, and just a note: your function phone may serve you
- * well here.
  */
 
 function startLevel(map) {

@@ -63,6 +63,8 @@ function Map(display, game) {
 	// used by validators
 	this.countObjects = function (type) {
 		var count = 0;
+
+		// count static objects
 		for (var x = 0; x < this.getWidth(); x++) {
 			for (var y = 0; y < this.getHeight(); y++) {
 				if (this.getGrid()[x][y].type === type) {
@@ -70,6 +72,14 @@ function Map(display, game) {
 				}
 			}
 		}
+
+		// count dynamic objects
+		this.getDynamicObjects().forEach(function (obj) {
+			if (obj.getType() === type) {
+				count++;
+			}
+		}) 
+
 		return count;
 	};
 

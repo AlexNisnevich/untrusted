@@ -181,16 +181,22 @@ function Game(debugMode, startLevel) {
 			$('#drawingCanvas')[0].width = $('#drawingCanvas')[0].width;
 			$('#drawingCanvas').hide();
 
-			// start the level
-			validatedStartLevel(this.map);
-
 			// set correct inventory state
 			this.setInventoryStateByLevel(this.currentLevel);
+
+			// start the level
+			validatedStartLevel(this.map);
 
 			// draw the map
 			this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
 				game.drawInventory(); // refresh inventory display
 				$('#drawingCanvas').show(); // show the drawing canvas again
+
+				// workaround because we can't use writeStatus() in startLevel()
+				// (due to the text getting overwritten by the fade-in)
+				if (game.editor.getProperties().startingMessage) {
+					game.display.writeStatus(game.editor.getProperties().startingMessage);
+				}
 			});
 
 			// start bg music for this level

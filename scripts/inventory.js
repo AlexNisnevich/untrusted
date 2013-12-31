@@ -3,6 +3,7 @@ Game.prototype.inventory = [];
 Game.prototype.addToInventory = function (itemName) {
 	if (this.inventory.indexOf(itemName) === -1) {
 		this.inventory.push(itemName);
+		this.drawInventory();
 	}
 };
 
@@ -17,6 +18,7 @@ Game.prototype.removeFromInventory = function (itemName) {
 	}
 
 	this.inventory.remove(itemName);
+	this.drawInventory();
 	
 	if (object.onDrop) {
 		object.onDrop(this);

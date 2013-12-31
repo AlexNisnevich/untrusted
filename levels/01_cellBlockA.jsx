@@ -1,8 +1,9 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["global.startLevel", "global.onExit", "map.placePlayer", "map.placeObject",
-         "map.getHeight", "map.getWidth", "map.getPlayer", "player.hasItem"],
+        ["global.startLevel", "global.onExit", "map.placePlayer", 
+         "map.placeObject", "map.getHeight", "map.getWidth", 
+         "map.displayChapter", "map.getPlayer", "player.hasItem"],
     "music": "Yonnie_The_Green"
 }
 #END_PROPERTIES#

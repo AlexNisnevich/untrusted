@@ -6,7 +6,9 @@
 /*
  * robotNav.js
  *
- *
+ * The green key is located in a slightly more 
+ * complicated room. You'll need to get the robot
+ * past these obstacles.
  */
 
 function getRandomInt(min, max) {
@@ -77,6 +79,8 @@ function startLevel(map) {
 
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
+    map.validateExactlyXManyObjects(1, 'robot');
+    map.validateAtMostXObjects(1, 'greenKey');
 }
 
 function onExit(map) {
