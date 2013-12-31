@@ -42,9 +42,7 @@ function startLevel(map) {
         'color': '#0f0',
         'impassable': function (player) {
             if (player.hasItem('greenKey')) {
-#BEGIN_EDITABLE#
-                player.removeItem('greenKey');
-#END_EDITABLE#
+                player.removeItem(#{#'greenKey'#}#);
                 return false;
             } else {
                 return true;

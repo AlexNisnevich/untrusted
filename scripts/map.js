@@ -87,13 +87,10 @@ function Map(display, game) {
 				return true;
 			} else if (typeof object.impassable === 'function') {
 				// the obstacle is impassable only in certain circumstances
-				if (object.impassable(_player, object)) {
-					return false;
-				} else {
-					if (object.selfDestructsWhenPassedThrough) {
-						this.removeItemFromMap(x, y, objType);
-					}
-					return true;
+				try {
+					return !object.impassable(_player, object);
+				} catch (e) {
+					display.writeStatus(e);
 				}
 			} else {
 				// the obstacle is always impassable

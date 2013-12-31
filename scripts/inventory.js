@@ -12,7 +12,12 @@ Game.prototype.checkInventory = function (itemName) {
 
 Game.prototype.removeFromInventory = function (itemName) {
 	var object = this.objects[itemName];
+	if (!object) {
+		throw 'No such item: ' + itemName;
+	}
+
 	this.inventory.remove(itemName);
+	
 	if (object.onDrop) {
 		object.onDrop(this);
 	}
