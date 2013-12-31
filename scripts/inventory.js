@@ -24,7 +24,18 @@ Game.prototype.removeFromInventory = function (itemName) {
 };
 
 Game.prototype.setInventoryStateByLevel = function (levelNum) {
+	// first remove items that have onDrop effects
+	if (levelNum == 1) {
+		this.removeFromInventory('computer');
+	}
+	if (levelNum <= 7) {
+		this.removeFromInventory('phone');
+	}
+
+	// clear any remaining items from inventory
 	this.inventory = [];
+
+	// repopulate inventory by level
 	if (levelNum > 1) {
 		this.addToInventory('computer');
 		$('#editorPane').fadeIn();
@@ -44,9 +55,13 @@ Game.prototype.setInventoryStateByLevel = function (levelNum) {
 		this.addToInventory('blueKey');
 	}
 	if (levelNum > 14) {
+		this.addToInventory('theAlgorithm');
 		this.removeFromInventory('redKey');
 		this.removeFromInventory('greenKey');
 		this.removeFromInventory('blueKey');
+	}
+	if (levelNum > 15) {
+		this.removeFromInventory('theAlgorithm');
 	}
 };
 
