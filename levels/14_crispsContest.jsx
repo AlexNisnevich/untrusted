@@ -52,22 +52,14 @@ function startLevel(map) {
         }
     });
 
-    map.placePlayer(20, 10);
-    map.placeObject(20, 6, 'exit');
-
-    map.placeObject(20, 12, 'blueLock');
-
-    for (var x = 17; x <= 23; x++) {
-        map.placeObject(x, 7, 'block');
-        map.placeObject(x, 13, 'block');
-    }
-
-    for (var y = 7; y <= 13; y++) {
-        map.placeObject(17, y, 'block');
-        map.placeObject(23, y, 'block');
-    }
-
+    map.createFromGrid(
+        [' +++ ',
+         ' +@+ ',
+         ' +E+ ',
+         ' +++ '],
+    {
+        '@': 'player',
+        'E': 'exit',
+        '+': 'block'
+    }, 15, 10);
 }
-
-#BEGIN_EDITABLE#
-#END_EDITABLE#

@@ -181,9 +181,9 @@ function Map(display, game) {
 
 	/* functions explicitly exposed to player */
 
-	this.placeObject = function (x, y, klass) {
-		if (!_objectDefinitions[klass]) {
-			throw "There is no type of object named " + klass + "!";
+	this.placeObject = function (x, y, type) {
+		if (!_objectDefinitions[type]) {
+			throw "There is no type of object named " + type + "!";
 		}
 
 		if (typeof(_grid[x]) === 'undefined' || typeof(_grid[x][y]) === 'undefined') {
@@ -191,13 +191,13 @@ function Map(display, game) {
 			// throw "Not a valid location to place an object!";
 		}
 
-		if (_objectDefinitions[klass].type === 'dynamic') {
+		if (_objectDefinitions[type].type === 'dynamic') {
 			// dynamic object
-			_dynamicObjects.push(new DynamicObject(this, klass, x, y));
+			_dynamicObjects.push(new DynamicObject(this, type, x, y));
 		} else {
 			// static object
-			if (_grid[x][y].type === 'empty' || _grid[x][y].type === klass || _allowOverwrite) {
-				_grid[x][y].type = klass;
+			if (_grid[x][y].type === 'empty' || _grid[x][y].type === type || _allowOverwrite) {
+				_grid[x][y].type = type;
 			} else {
 				throw "There is already an object at (" + x + ", " + y + ")!";
 			}
@@ -210,6 +210,21 @@ function Map(display, game) {
 		}
 		_player = new Player(x, y, this);
 		display.drawAll(this);
+	};
+
+	this.createFromGrid = function (grid, tiles, xOffset, yOffset) {
+		for (var y = 0; y < grid.length; y++) {
+			var line = grid[y];
+			for (var x = 0; x < line.length; x++) {
+				var tile = line[x];
+				var type = tiles[tile];
+				if (type === 'player') {
+					this.placePlayer(x + xOffset, y + yOffset);
+				} else if (type) {
+					this.placeObject(x + xOffset, y + yOffset, type);
+				}
+			}
+		}
 	};
 
 	this.setSquareColor = function (x, y, bgColor) {
