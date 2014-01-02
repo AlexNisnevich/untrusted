@@ -29,10 +29,10 @@ function startLevel(map) {
         },
         'behavior': function (me) {
 #BEGIN_EDITABLE#
-
-
-
-
+            // move randomly
+            var moves = map.getAdjacentEmptyCells(me.getX(), me.getY());
+            // getAdjacentEmptyCells gives array of ((x, y), direction) pairs
+            me.move(moves[getRandomInt(0, moves.length - 1)][1]);
 
 
 
