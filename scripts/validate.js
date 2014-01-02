@@ -1,8 +1,9 @@
 Game.prototype.verbotenWords = [
+	'._', ' "_', " '_",
 	'eval', 'prototype', 'delete', 'return', 'debugger',
-	'setTimeout', 'setInterval', 'level', 'Level', 'removeItemFromMap'
+	'setTimeout', 'setInterval'
 ];
-Game.prototype.allowedTime = 2000;
+Game.prototype.allowedTime = 2000; // for infinite loop prevention
 
 var DummyDisplay = function () {
 	this.clear = function () {};
@@ -24,7 +25,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 		}
 
 		var dummyMap = new Map(new DummyDisplay(), this);
-		dummyMap.setProperties(this.editor.getProperties().mapProperties);
+		dummyMap._setProperties(this.editor.getProperties().mapProperties);
 
 		// modify the code to always check time to prevent infinite loops
 		allCode = $.map(allCode.split('\n'), function (line, i) {
@@ -61,6 +62,8 @@ Game.prototype.validate = function(allCode, playerCode) {
 			}
 		}
 		this.display.appendError(exceptionText);
+
+		//throw e; // for debugging
 		return null;
 	}
 };
@@ -86,13 +89,14 @@ Game.prototype.validateCallback = function(callback) {
 			this.sound.playSound('static');
 
 			// disable player movement
-			this.map.getPlayer().canMove = false;
+			this.map.getPlayer()._canMove = false;
 		}
 
 		// refresh the map, just in case
 		this.map.refresh();
 	} catch (e) {
 		this.display.writeStatus(e.toString());
+		//throw e; // for debugging
 	}
 };
 
@@ -117,21 +121,21 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
 // Specific validators go here
 
 Map.prototype.validateAtLeastXObjects = function(num, type) {
-	var count = this.countObjects(type);
+	var count = this._countObjects(type);
 	if (count < num) {
 		throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
 	}
 };
 
 Map.prototype.validateAtMostXObjects = function(num, type) {
-	var count = this.countObjects(type);
+	var count = this._countObjects(type);
 	if (count > num) {
 		throw 'Too many ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
 	}
 };
 
 Map.prototype.validateExactlyXManyObjects = function(num, type) {
-	var count = this.countObjects(type);
+	var count = this._countObjects(type);
 	if (count != num) {
 		throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
 	}

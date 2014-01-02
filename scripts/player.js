@@ -1,101 +1,54 @@
-function Player(x, y, map) {
-	var _x = x;
-	var _y = y;
-	var _color = "#0f0";
+function Player(x, y, __map) {
+	/* private variables */
 
-	this.getX = function () { return _x; };
-	this.getY = function () { return _y; };
+	var __x = x;
+	var __y = y;
+	var __color = "#0f0";
 
-	this.getColor = function () { return _color; };
+	var __game = __map._game;
+	var __display = __map._display;
+
+	/* unexposed variables */
+
+	this._canMove = false;
+
+	/* exposed getters/setters */
+
+	this.getX = function () { return __x; };
+	this.getY = function () { return __y; };
+
+	this.getColor = function () { return __color; };
 	this.setColor = function (c) {
-		_color = c;
-		this.display.drawAll(this.map);
+		__color = c;
+		__display.drawAll(__map);
 	};
 
-	this.init = function () {
-		this.rep = "@";
+	/* unexposed methods */
 
-		this.map = map;
-		this.display = map.display;
-		this.game = map.game;
-
-		this.canMove = false;
-	};
-
-	this.atLocation = function (x, y) {
-		return (_x === x && _y === y);
-	};
-
-	this.move = function (direction, fromKeyboard) {
-		if (!this.canMove) { // mainly for key delay
-			return false;
-		}
-
-		var new_x;
-		var new_y;
-		if (direction === 'up') {
-			new_x = _x;
-			new_y = _y - 1;
-		}
-		else if (direction === 'down') {
-			new_x = _x;
-			new_y = _y + 1;
-		}
-		else if (direction === 'left') {
-			new_x = _x - 1;
-			new_y = _y;
-		}
-		else if (direction === 'right') {
-			new_x = _x + 1;
-			new_y = _y;
-		}
-		else if (direction === 'rest') {
-			new_x = _x;
-			new_y = _y;
-		}
-		else if (direction === 'funcPhone') {
-			this.game.usePhone();
-			return;
-		}
-
-		if (this.map.canMoveTo(new_x, new_y)) {
-			_x = new_x;
-			_y = new_y;
-
-			this.map.refresh();
-
-			this.canMove = false;
-
-			this.afterMove(_x, _y);
-
-			map.reenableMovementForPlayer(this); // (key delay can vary by map)
-		}
-	};
-
-	// NOT exposed to player, used for teleporters
-	this.moveTo = function (dynamicObject) {
+	// (used for teleporters)
+	this._moveTo = function (dynamicObject) {
 		// no safety checks or anything
 		// this method is about as safe as a war zone
-		_x = dynamicObject.getX();
-		_y = dynamicObject.getY();
-		this.display.drawAll(this.map);
+		__x = dynamicObject.getX();
+		__y = dynamicObject.getY();
+		__display.drawAll(__map);
 	};
 
-	this.afterMove = function (x, y) {
+	this._afterMove = function (x, y) {
 		var player = this;
 
-		this.hasTeleported = false; // necessary to prevent bugs with teleportation
+		this._hasTeleported = false; // necessary to prevent bugs with teleportation
 
-		this.map.hideChapter();
-		this.map.moveAllDynamicObjects();
+		__map._hideChapter();
+		__map._moveAllDynamicObjects();
 
 		var onTransport = false;
 
 		// check for collision with transport object
-		for (var i = 0; i < this.map.getDynamicObjects().length; i++) {
-			var object = this.map.getDynamicObjects()[i];
+		for (var i = 0; i < __map.getDynamicObjects().length; i++) {
+			var object = __map.getDynamicObjects()[i];
 			if (object.getX() === x && object.getY() === y) {
-				var objectDef = this.map.getObjectDefinition(object.getType());
+				var objectDef = __map._getObjectDefinition(object.getType());
 				if (objectDef.transport) {
 					onTransport = true;
 				}
@@ -105,37 +58,89 @@ function Player(x, y, map) {
 		// check for collision with static object UNLESS
 		// we are on a transport
 		if (!onTransport) {
-			var objectName = this.map.getGrid()[x][y].type;
-			var objectDef = this.map.getObjectDefinition(objectName);
+			var objectName = __map._getGrid()[x][y].type;
+			var objectDef = __map._getObjectDefinition(objectName);
 			if (objectDef.type === 'item') {
 				this.pickUpItem(objectName, objectDef);
 			} else if (objectDef.onCollision) {
-				this.game.validateCallback(function () {
-					objectDef.onCollision(player, player.game);
+				__game.validateCallback(function () {
+					objectDef.onCollision(player, game);
 				});
 			}
 		}
 	};
 
-	this.killedBy = function (killer) {
-		this.game.sound.playSound('hurt');
-		this.game.restartLevel();
+	/* exposed methods */
 
-		this.map.displayChapter('You have been killed by \n' + killer + '!', 'death');
+	this.atLocation = function (x, y) {
+		return (__x === x && __y === y);
+	};
+
+	this.move = function (direction) {
+		if (!this._canMove) { // mainly for key delay
+			return false;
+		}
+
+		var new__x;
+		var new__y;
+		if (direction === 'up') {
+			new__x = __x;
+			new__y = __y - 1;
+		}
+		else if (direction === 'down') {
+			new__x = __x;
+			new__y = __y + 1;
+		}
+		else if (direction === 'left') {
+			new__x = __x - 1;
+			new__y = __y;
+		}
+		else if (direction === 'right') {
+			new__x = __x + 1;
+			new__y = __y;
+		}
+		else if (direction === 'rest') {
+			new__x = __x;
+			new__y = __y;
+		}
+		else if (direction === 'funcPhone') {
+			__game.usePhone();
+			return;
+		}
+
+		if (__map._canMoveTo(new__x, new__y)) {
+			__x = new__x;
+			__y = new__y;
+
+			__map.refresh();
+
+			this._canMove = false;
+
+			this._afterMove(__x, __y);
+
+			__map._reenableMovementForPlayer(this); // (key delay can vary by map)
+		}
+	};
+
+	this.killedBy = function (killer) {
+		__game.sound.playSound('hurt');
+		__game._restartLevel();
+
+		__map.displayChapter('You have been killed by \n' + killer + '!', 'death');
 	};
 
 	this.pickUpItem = function (itemName, object) {
 		var player = this;
 
-		this.game.addToInventory(itemName);
-		map.removeItemFromMap(_x, _y, itemName);
-		map.refresh();
-		this.game.sound.playSound('pickup');
+		__game.addToInventory(itemName);
+		__map._removeItemFromMap(__x, __y, itemName);
+		__map.refresh();
+		__game.sound.playSound('pickup');
 
 		if (object.onPickUp) {
-			this.game.validateCallback(function () {
+			__game.validateCallback(function () {
 				setTimeout(function () {
-					object.onPickUp(player, player.game);
+					object.onPickUp(player, game);
 				}, 100);
 				// timeout is so that written text is not immediately overwritten
 				// TODO: play around with Display.writeStatus so that this is
@@ -145,24 +150,17 @@ function Player(x, y, map) {
 	};
 
 	this.hasItem = function (itemName) {
-		return this.game.checkInventory(itemName);
+		return __game.checkInventory(itemName);
 	};
 
 	this.removeItem = function (itemName) {
-		var object = this.game.objects[itemName];
+		var object = __game.objects[itemName];
 
-		this.game.removeFromInventory(itemName);
-		this.game.sound.playSound('blip');
-
-		if (object.onDrop) {
-			object.onDrop(this, this.game);
-		}
+		__game.removeFromInventory(itemName);
+		__game.sound.playSound('blip');
 	};
 
 	this.setPhoneCallback = function(func) {
 		this._phoneFunc = func;
 	};
-
-	// Constructor
-	this.init();
 }

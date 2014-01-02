@@ -26,7 +26,7 @@ Game.prototype.removeFromInventory = function (itemName) {
 };
 
 Game.prototype.setInventoryStateByLevel = function (levelNum) {
-	// first remove items that have onDrop effects
+	// first remove items that have onDrop effects on UI
 	if (levelNum == 1) {
 		this.removeFromInventory('computer');
 	}
@@ -91,7 +91,7 @@ Game.prototype.drawInventory = function () {
 
 Game.prototype.usePhone = function () {
 	var player = this.map.getPlayer();
-	if (player && player.canMove && player.hasItem('phone')) {
+	if (player && player._canMove && player.hasItem('phone')) {
 		if (player._phoneFunc) {
 			this.sound.playSound('select');
 			this.validateCallback(player._phoneFunc);

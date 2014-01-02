@@ -25,7 +25,7 @@ Game.prototype.objects = {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#0ff',
 		'onCollision': function (player, game) {
-			game.moveToNextLevel();
+			game._moveToNextLevel();
 		}
 	},
 
@@ -55,10 +55,10 @@ Game.prototype.objects = {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#f0f',
 		'onCollision': function (player, me) {
-            if (!player.hasTeleported) {
-                player.moveTo(me.target);
+            if (!player._hasTeleported) {
+                player._moveTo(me.target);
             }
-            player.hasTeleported = true;
+            player._hasTeleported = true;
 		},
 		'behavior': function (me) {}
 	},

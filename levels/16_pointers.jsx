@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "commandsIntroduced": ["map.getDynamicObjects"],
     "music": "Various_Artists_-_15_-_Slimeball_vomit"
 }
 #END_PROPERTIES#

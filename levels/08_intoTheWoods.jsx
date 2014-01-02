@@ -2,7 +2,7 @@
 {
     "commandsIntroduced":
         ["map.getObjectTypeAt", "player.getX", "player.getY",
-         "output.write"],
+         "map.refresh"],
     "mapProperties": {
         "allowOverwrite": true
     }

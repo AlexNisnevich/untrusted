@@ -32,9 +32,9 @@ ROT.Display.prototype.setupEventHandlers = function() {
 	// contentEditable is required for canvas elements to detect keyboard events
 	$(this.getContainer()).attr("contentEditable", "true");
 	this.getContainer().addEventListener("keydown", function(e) {
-		if (display.intro == true) {
-			game.start();
-			display.intro = false;
+		if (display._intro == true) {
+			game._start();
+			display._intro = false;
 		} else if (keys[e.keyCode] && game.map.getPlayer()) {
 			game.map.getPlayer().move(keys[e.keyCode], true);
 		}
@@ -53,7 +53,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
 // according to name (NOT according to the actual object literal!)
 ROT.Display.prototype.drawObject = function (map, x, y, object) {
 	var type = object.type;
-	var definition = map.getObjectDefinition(type) || this.savedDefinitions[type];
+	var definition = map._getObjectDefinition(type) || this.savedDefinitions[type];
 
 	var symbol = definition.symbol;
 	var color = object.color || definition.color || "#fff";
@@ -67,11 +67,11 @@ ROT.Display.prototype.drawAll = function(map) {
 
 	var game = this.game;
 
-	// initialize grid
-	var grid = new Array(game.dimensions.width);
-	for (var x = 0; x < game.dimensions.width; x++) {
-		grid[x] = new Array(game.dimensions.height);
-		for (var y = 0; y < game.dimensions.height; y++) {
+	// _initialize grid
+	var grid = new Array(game._dimensions.width);
+	for (var x = 0; x < game._dimensions.width; x++) {
+		grid[x] = new Array(game._dimensions.height);
+		for (var y = 0; y < game._dimensions.height; y++) {
 			grid[x][y] = {
 				type: 'empty',
 				bgColor: 'black'
@@ -80,11 +80,11 @@ ROT.Display.prototype.drawAll = function(map) {
 	}
 
 	// place static objects
-	for (var x = 0; x < game.dimensions.width; x++) {
-		for (var y = 0; y < game.dimensions.height; y++) {
+	for (var x = 0; x < game._dimensions.width; x++) {
+		for (var y = 0; y < game._dimensions.height; y++) {
 			grid[x][y] = {
-				type: map.getGrid()[x][y].type,
-				bgColor: map.getGrid()[x][y].bgColor
+				type: map._getGrid()[x][y].type,
+				bgColor: map._getGrid()[x][y].bgColor
 			};
 		}
 	}
@@ -94,7 +94,7 @@ ROT.Display.prototype.drawAll = function(map) {
 		var obj = map.getDynamicObjects()[i];
 		grid[obj.getX()][obj.getY()] = {
 			type: obj.getType(),
-			bgColor: map.getGrid()[obj.getX()][obj.getY()].bgColor
+			bgColor: map._getGrid()[obj.getX()][obj.getY()].bgColor
 		};
 	}
 
@@ -104,13 +104,13 @@ ROT.Display.prototype.drawAll = function(map) {
 		grid[player.getX()][player.getY()] = {
 			type: 'player',
 			color: player.getColor(),
-			bgColor: map.getGrid()[player.getX()][player.getY()].bgColor
+			bgColor: map._getGrid()[player.getX()][player.getY()].bgColor
 		}
 	}
 
 	// draw grid
-	for (var x = 0; x < game.dimensions.width; x++) {
-		for (var y = Math.max(0, this.offset - map.getHeight()); y < game.dimensions.height; y++) {
+	for (var x = 0; x < game._dimensions.width; x++) {
+		for (var y = Math.max(0, this.offset - map.getHeight()); y < game._dimensions.height; y++) {
 			this.drawObject(map, x, y + this.offset, grid[x][y]);
 		}
 	}
@@ -118,7 +118,7 @@ ROT.Display.prototype.drawAll = function(map) {
 	// write error messages, if any
 	if (this.errors && this.errors.length > 0) {
 		for (var i = 0; i < this.errors.length; i++) {
-			var y = this.game.dimensions.height - this.errors.length + i;
+			var y = this.game._dimensions.height - this.errors.length + i;
 			this.drawText(0, y, this.errors[i]);
 		}
 	}
@@ -134,8 +134,8 @@ ROT.Display.prototype.drawPreviousLevel = function(map, offset) {
 	var grid = this.savedGrid;
 
 	if (grid) {
-		for (var x = 0; x < game.dimensions.width; x++) {
-			for (var y = 0; y < game.dimensions.height; y++) {
+		for (var x = 0; x < game._dimensions.width; x++) {
+			for (var y = 0; y < game._dimensions.height; y++) {
 				this.drawObject(map, x, y + offset, grid[x][y]);
 			}
 		}
@@ -144,14 +144,14 @@ ROT.Display.prototype.drawPreviousLevel = function(map, offset) {
 
 ROT.Display.prototype.saveGrid = function (map) {
 	this.savedGrid = this.grid;
-	this.savedDefinitions = map.getObjectDefinitions();
+	this.savedDefinitions = map._getObjectDefinitions();
 }
 
 ROT.Display.prototype.playIntro = function (map, i) {
 	display = this;
 
 	if (i < 0) {
-		this.intro = true;
+		this._intro = true;
 	} else {
 		if (typeof i === 'undefined') { i = map.getHeight(); }
 		this.clear();
@@ -169,7 +169,7 @@ ROT.Display.prototype.playIntro = function (map, i) {
 ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
 	var display = this;
 	var game = this.game;
-	var command = "%c{#0f0}> run " + game.levelFileNames[game.currentLevel - 1];
+	var command = "%c{#0f0}> run " + game._levelFileNames[game._currentLevel - 1];
 
 	if (i < -3) {
 		if (callback) { callback(); }
@@ -212,7 +212,7 @@ ROT.Display.prototype.writeStatus = function(text) {
 ROT.Display.prototype.appendError = function(errorText, command) {
 	var map = this.game.map;
 	if (!command) {
-		command = "%c{#0f0}> run " + this.game.levelFileNames[this.game.currentLevel - 1];
+		command = "%c{#0f0}> run " + this.game._levelFileNames[this.game._currentLevel - 1];
 	}
 
 	this.offset -= 3;
