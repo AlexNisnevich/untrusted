@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["map.createFromGrid"],
+        ["map.createFromGrid", "player.removeItem"],
     "music": "ThatAndyGuy-Chip"
 }
 #END_PROPERTIES#

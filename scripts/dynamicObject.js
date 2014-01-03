@@ -108,4 +108,17 @@ function DynamicObject(map, type, x, y) {
 	this.findNearest = function (type) {
 		return map._findNearestToPoint(type, __x, __y);
 	};
+
+	// only for teleporters
+	this.setTarget = function (target) {
+		if (__type != 'teleporter') {
+			throw 'setTarget() can only be called on a teleporter!';
+		}
+
+		if (this.target) {
+			throw 'This teleporter already has a target!';
+		}
+		
+		this.target = target;
+	};
 }

@@ -1,4 +1,10 @@
 Game.prototype.reference = {
+	'global.onExit': {
+		'name': 'onExit(map)',
+		'category': 'global',
+		'type': 'method',
+		'description': 'The player can exit the level only if this method returns true.'
+	},
 	'global.startLevel': {
 		'name': 'startLevel(map)',
 		'category': 'global',
@@ -18,6 +24,18 @@ Game.prototype.reference = {
 		'description': 'Instantiates a Maze object of given width and height. The Maze object can create a maze by calling maze.create(callback), where the callback is a function that accepts (x, y, mapValue) and performs some action for each point in a grid, where mapValue is a boolean that is true if and only if the given point is part of the maze.'
 	},
 
+	'map.createFromGrid': {
+		'name': 'map.createFromGrid(grid, tiles, xOffset, yOffset)',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Places objects on the map corresponding to their position on the grid (an array of strings), with mappings as defined in tiles (a dictionary of character -> object type mappings), at the given offset from the top-left corner of the map.'
+	},
+	'map.displayChapter': {
+		'name': 'map.displayChapter(chapter)',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Displays the given chapter name.'
+	},
 	'map.defineObject': {
 		'name': 'map.defineObject(type, properties)',
 		'category': 'map',
@@ -29,6 +47,24 @@ Game.prototype.reference = {
 		'category': 'map',
 		'type': 'method',
 		'description': 'Returns the empty cells adjacent to the cell at the given coordinates (if any), as an array of items of the form <i>[[x, y], direction]</i>, where (x, y) are the coordinates of each empty cell, and <i>direction</i> is the direction from the given cell to each empty cell ("left", "right", "up", or "down").'
+	},
+	'map.getCanvasContext': {
+		'name': 'map.getCanvasContext()',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Returns the 2D drawing context of the canvas overlaying the map.'
+	},
+	'map.getCanvasCoords': {
+		'name': 'map.getCanvasCoords(obj)',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Returns {"x": x, "y": y}, where x and y are the respective coordinates of the given object on the canvas returned by map.getCanvasContext().'
+	},
+	'map.getDynamicObjects': {
+		'name': 'map.getDynamicObjects()',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Returns all dynamic objects currently on the map.'
 	},
 	'map.getHeight': {
 		'name': 'map.getHeight()',
@@ -47,6 +83,12 @@ Game.prototype.reference = {
 		'category': 'map',
 		'type': 'method',
 		'description': 'Returns the Player object.'
+	},
+	'map.getRandomColor': {
+		'name': 'map.getRandomColor(start, end)',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Returns a hexadecimal string representing a random color in between the start and end colors. The start and end colors must be arrays of the form [R, G, B], where R, G, and B are decimal integers.'
 	},
 	'map.getWidth': {
 		'name': 'map.getWidth()',
@@ -71,6 +113,18 @@ Game.prototype.reference = {
 		'category': 'map',
 		'type': 'method',
 		'description': 'Sets the background color of the given square.'
+	},
+	'map.setSquareColor': {
+		'name': 'map.setSquareColor(x, y, color)',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Sets the background color of the given square.'
+	},
+	'map.startTimer': {
+		'name': 'map.startTimer(callback, delay)',
+		'category': 'map',
+		'type': 'method',
+		'description': 'Starts a timer (c.f. setInterval) of the given delay, in milliseconds (minimum 25 ms).'
 	},
 	'map.validateAtLeastXObjects': {
 		'name': 'map.validateAtLeastXObjects(num, objectType)',
@@ -157,6 +211,12 @@ Game.prototype.reference = {
 		'type': 'property',
 		'description': 'The object\'s symbol on the map.'
 	},
+	'object.setTarget': {
+		'name': 'object.setTarget()',
+		'category': 'object',
+		'type': 'method',
+		'description': '(For teleporters only.) Sets the destination of this teleporter.'
+	},
 	'object.type': {
 		'name': 'object.type',
 		'category': 'object',
@@ -199,6 +259,18 @@ Game.prototype.reference = {
 		'category': 'player',
 		'type': 'method',
 		'description': 'Kills the player and displays the given text as the cause of death.'
+	},
+	'player.move': {
+		'name': 'player.move(direction)',
+		'category': 'player',
+		'type': 'method',
+		'description': 'Moves the player one square in the given direction. The player can only move once in a given function.'
+	},
+	'player.removeItem': {
+		'name': 'player.removeItem(itemType)',
+		'category': 'player',
+		'type': 'method',
+		'description': 'Removes the given item from the player\'s inventory, if the player has the given item.'
 	},
 	'player.setColor': {
 		'name': 'player.setColor(color)',

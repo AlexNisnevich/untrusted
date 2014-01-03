@@ -329,12 +329,28 @@ function Map(display, game) {
 		return $('#drawingCanvas')[0].getContext('2d');
 	};
 
-	this.getCanvasCoords = function(x, y) {
+	this.getCanvasCoords = function(obj) {
+		// 0.7 is a bit of a magic number to make the canvas
+		// operations in lvl 16 look good
 		return {
-			x: (x + .5) * 600 / this._game._dimensions.width,
-			y: (y + .5) * 500 / this._game._dimensions.height
+			x: (obj.getX() + 0.7) * 600 / this._game._dimensions.width,
+			y: (obj.getY() + 0.7) * 500 / this._game._dimensions.height
 		};
 	};
+
+	this.getRandomColor = function(start, end) {
+		var mean = [
+			Math.floor((start[0] + end[0]) / 2),
+			Math.floor((start[1] + end[1]) / 2),
+			Math.floor((start[2] + end[2]) / 2)
+		];
+		var std = [
+			Math.floor((end[0] - start[0]) / 2),
+			Math.floor((end[1] - start[1]) / 2),
+			Math.floor((end[2] - start[2]) / 2)
+		];
+		return ROT.Color.toHex(ROT.Color.randomize(mean, std));
+	}
 
 	/* initialization */
 

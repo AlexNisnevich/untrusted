@@ -1,18 +1,21 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": ["player.move"],
+    "commandsIntroduced": ["player.move", "map.startTimer"],
     "music": "Rolemusic_-_07_-_Beach_Wedding_Dance",
     "mapProperties": {
         "keyDelay": 25
     }
 }
 #END_PROPERTIES#
-
 /**********************
  * superDrEvalBros.js *
  **********************
  *
+ * You're still here?! Well, Dr. Eval, let's see
+ * how well you can operate with one less dimension.
  *
+ * Give up now. Unless you have a magic mushroom
+ * up your sleeve, it's all over.
  */
 
 function startLevel(map) {

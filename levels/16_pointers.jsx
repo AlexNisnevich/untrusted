@@ -1,19 +1,24 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": ["map.getDynamicObjects"],
+    "commandsIntroduced": 
+        ["map.getDynamicObjects", "map.getRandomColor",
+         "map.getCanvasContext", "map.getCanvasCoords",
+         "object.setTarget"],
     "music": "Various_Artists_-_15_-_Slimeball_vomit"
 }
 #END_PROPERTIES#
-
 /***************
  * pointers.js *
  ***************
+ * 
+ * You! How are you still alive?
  *
+ * Well, no matter. Good luck getting through this
+ * maze. You'll never see me or the Algorithm again!
  */
 
 function startLevel(map) {
-    //+ Jonas Raoni Soares Silva
-    //@ http://jsfromhell.com/array/shuffle [v1.0]
+    // Randomly shuffles an array [http://bit.ly/1l6LGQT]
     function shuffle(o){ //v1.0
         for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i),
             x = o[--i], o[i] = o[j], o[j] = x);
@@ -47,35 +52,37 @@ function startLevel(map) {
         }
     }
     
-    // Ooh, canvas is so shiny
-    // I wonder what else it could do?
+    // Ah look, Dr. Eval! It's your old friend,
+    // the canvas.
     var canvas = map.getCanvasContext();
-    var exitCoords = map.getCanvasCoords(35, 21);
-    canvas.beginPath();
-    canvas.arc(exitCoords.x, exitCoords.y, 20, 0, 2*Math.PI);
-    canvas.strokeStyle = "white";
-    canvas.stroke();
-    
-    // N.B. If you use w3schools to look up these canvas methods,
-    // you're a bad person.
 
     var teleporters = map.getDynamicObjects();
     teleporters = shuffle(teleporters);
 
     for (i = 0; i < teleporters.length; i+=2) {
+        var t1 = teleporters[i]; 
+        var t2 = teleporters[i+1];
+
+        // Make each pair of teleporters point to each other
+        t1.setTarget(t2);
+        t2.setTarget(t1);
+
 #BEGIN_EDITABLE#
-
-
-
-
-
-
+        // I could draw the path between the teleporters ...
+        // but I'm going to draw useless circles instead. Ha!
+        var startCoords = map.getCanvasCoords(t1);
+        canvas.beginPath();
+        canvas.arc(startCoords.x, startCoords.y, 3, 0, 2 * Math.PI);
+        canvas.strokeStyle = map.getRandomColor(
+            [150, 150, 150], [255, 255, 255]
+        );
+        canvas.stroke();
 
 
 #END_EDITABLE#
-
-        teleporters[i].target = teleporters[i+1];
-        teleporters[i+1].target = teleporters[i];
     }
+}
 
+function validateLevel(map) {
+    map.validateExactlyXManyObjects(1, 'exit');
 }
