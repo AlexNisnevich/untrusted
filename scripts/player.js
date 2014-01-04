@@ -64,7 +64,7 @@ function Player(x, y, __map) {
 				this.pickUpItem(objectName, objectDef);
 			} else if (objectDef.onCollision) {
 				__game.validateCallback(function () {
-					objectDef.onCollision(player, game);
+					objectDef.onCollision(player, __game);
 				});
 			}
 		}
@@ -140,7 +140,7 @@ function Player(x, y, __map) {
 		if (object.onPickUp) {
 			__game.validateCallback(function () {
 				setTimeout(function () {
-					object.onPickUp(player, game);
+					object.onPickUp(player, __game);
 				}, 100);
 				// timeout is so that written text is not immediately overwritten
 				// TODO: play around with Display.writeStatus so that this is

@@ -63,7 +63,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 		}
 		this.display.appendError(exceptionText);
 
-		//throw e; // for debugging
+		// throw e; // for debugging
 		return null;
 	}
 };

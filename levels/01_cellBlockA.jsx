@@ -19,6 +19,10 @@
  *
  * Now, let's get you out of here. Easy peasy.
  *
+ * I've given you as much access to their code as I could, but
+ * it's not perfect. The red background indicates lines that
+ * are off-limits from editing.
+ *
  * The code currently places blocks in a rectangle surrounding
  * you. All you need to do is make a gap. You don't even need
  * to do anything extra. In fact, you should be doing less.
