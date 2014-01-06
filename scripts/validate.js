@@ -1,6 +1,7 @@
 Game.prototype.verbotenWords = [
 	'._', ' "_', " '_",
-	'eval', 'prototype', 'delete', 'return', 'debugger',
+	'eval', 'prototype', 'call', 'apply', 'bind',
+	'prompt', 'confirm', 'debugger', 'delete', 'return', 
 	'setTimeout', 'setInterval'
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
