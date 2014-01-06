@@ -39,6 +39,8 @@ function Game(debugMode, startLevel) {
 	this._levelReached = localStorage.getItem('levelReached') || 1;
 	this._displayedChapters = [];
 
+	this._eval = window.eval; // store our own copy of eval so that we can override window.eval
+
 	/* unexposed getters */
 
 	this._getHelpCommands = function () { return __commands; };

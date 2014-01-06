@@ -39,7 +39,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 
 		// evaluate the code to get startLevel() and (opt) validateLevel() methods
 		var validateLevel = function () {}; // in case validateLevel isn't defined
-		eval(allCode);
+		this._eval(allCode);
 
 		// start the level on a dummy map to validate
 		startLevel(dummyMap);
@@ -71,7 +71,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback) {
-	eval(this.editor.getGoodState().code); // get validateLevel method from last good state (if such a method exists)
+	this._eval(this.editor.getGoodState().code); // get validateLevel method from last good state (if such a method exists)
 	try {
 		// run the callback
 		callback();
@@ -108,7 +108,7 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
 		var testCode = lines.slice(0, i).join('\n');
 
 		try {
-			eval(testCode);
+			this._eval(testCode);
 		} catch (e) {
 			if (e.message === errorMsg) {
 				return i;
