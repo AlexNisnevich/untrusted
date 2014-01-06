@@ -24,8 +24,11 @@ function DynamicObject(map, type, x, y) {
 	};
 
 	this._onTurn = function () {
-		__myTurn = true;
+		var me = this;
 		var player = map.getPlayer();
+
+		__myTurn = true;
+
 		try {
 			//we need to check for a collision with the player *after*
 			//the player has moved but *before* the object itself moves
@@ -36,7 +39,9 @@ function DynamicObject(map, type, x, y) {
 					__definition.onCollision(player, this);
 				}
 			}
-			__definition.behavior(this, player);
+			map._game.validateCallback(function () {
+				__definition.behavior(me, player);
+			});
 		} catch (e) {
 			map._game.display.writeStatus(e.toString());
 		}
