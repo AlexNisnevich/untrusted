@@ -33,6 +33,7 @@ function startLevel(map) {
 #END_EDITABLE#
 
     map.placeObject(7, 5, 'exit');
+#END_OF_START_LEVEL#
 }
 
 function validateLevel(map) {

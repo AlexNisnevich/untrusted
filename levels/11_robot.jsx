@@ -68,6 +68,7 @@ function startLevel(map) {
         map.placeObject(0, y, 'block');
         map.placeObject(map.getWidth() - 1, y, 'block');
     }
+#END_OF_START_LEVEL#
 }
 
 function validateLevel(map) {

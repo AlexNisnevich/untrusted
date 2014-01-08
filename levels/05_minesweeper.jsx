@@ -43,6 +43,7 @@ function startLevel(map) {
     }
 
     map.placeObject(2, map.getHeight() - 1, 'exit');
+#END_OF_START_LEVEL#
 }
 
 function validateLevel(map) {

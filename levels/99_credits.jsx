@@ -30,4 +30,5 @@ function startLevel(map) {
             map._display.drawText(credits[i][0], credits[i][1], credits[i][2]);
         }, (i + 2) * 2000, i);
     }
+#END_OF_START_LEVEL#
 }

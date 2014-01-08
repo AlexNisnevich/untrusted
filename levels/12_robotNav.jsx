@@ -75,6 +75,7 @@ function startLevel(map) {
         map.placeObject(20 - i, i + 1, 'block');
         map.placeObject(35 - i, 8 - i, 'block');
     }
+#END_OF_START_LEVEL#
 }
 
 function validateLevel(map) {

@@ -77,6 +77,7 @@ function startLevel(map) {
             jump();
         }
     });
+#END_OF_START_LEVEL#
 }
 
 function validateLevel(map) {

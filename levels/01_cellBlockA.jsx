@@ -48,6 +48,7 @@ function startLevel(map) {
     map.placeObject(15, 12, 'computer');
 
     map.placeObject(map.getWidth()-7, map.getHeight()-5, 'exit');
+#END_OF_START_LEVEL#
 }
 
 function onExit(map) {

@@ -1,7 +1,7 @@
 Game.prototype.verbotenWords = [
 	'._', ' "_', " '_",
 	'eval', 'prototype', 'call', 'apply', 'bind',
-	'prompt', 'confirm', 'debugger', 'delete', 'return', 
+	'prompt', 'confirm', 'debugger', 'delete',
 	'setTimeout', 'setInterval'
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
@@ -43,7 +43,11 @@ Game.prototype.validate = function(allCode, playerCode) {
 		this._eval(allCode);
 
 		// start the level on a dummy map to validate
+		this._endOfStartLevelReached = false;
 		startLevel(dummyMap);
+		if (!this._endOfStartLevelReached) {
+			throw 'startLevel() returned prematurely!';
+		}
 		if (typeof(validateLevel) !== 'undefined') {
 			validateLevel(dummyMap);
 		}

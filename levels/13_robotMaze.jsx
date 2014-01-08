@@ -105,6 +105,7 @@ function startLevel(map) {
             map.placeObject(x,y,'empty');
         }
     });
+#END_OF_START_LEVEL#
 }
 
 function validateLevel(map) {

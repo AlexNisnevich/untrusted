@@ -116,6 +116,7 @@ function startLevel(map) {
     map.placeObject(26, 13, 'reinforcementDrone');
 
     map.placeObject(map.getWidth()-1, 12, 'exit');
+#END_OF_START_LEVEL#
 }
 
 function validateLevel(map) {

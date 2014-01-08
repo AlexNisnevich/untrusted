@@ -100,6 +100,7 @@ function startLevel(map) {
         'b': 'blueKey',
         'y': 'yellowKey'
     }, 17, 6);
+#END_OF_START_LEVEL#
 }
 
 function validateLevel(map) {

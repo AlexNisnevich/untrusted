@@ -82,6 +82,7 @@ function startLevel(map) {
             map.setSquareColor(x, y, '#080');
         }
     }
+#END_OF_START_LEVEL#
 }
 
 function validateLevel(map) {
