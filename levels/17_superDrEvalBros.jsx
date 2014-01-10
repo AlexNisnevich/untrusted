@@ -53,7 +53,7 @@ function startLevel(map) {
         }
 
     }
-    map.startTimer(gravity, 50);
+    map.startTimer(gravity, 40);
 
     function jump() {
 #BEGIN_EDITABLE#
