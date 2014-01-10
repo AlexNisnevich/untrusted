@@ -19,12 +19,12 @@
  */
 
 function startLevel(map) {
-
     var fl = Math.floor;
     var w = map.getWidth();
     var h = map.getHeight();
 
     map.placePlayer(1, fl(h/2)-1);
+    var player = map.getPlayer();
 
     map.placeObject(w-1, fl(h/2)-1, 'exit');
 
@@ -41,7 +41,6 @@ function startLevel(map) {
     }
 
     function gravity() {
-        var player = map.getPlayer();
         var x = player.getX();
         var y = player.getY() + 1;
 
@@ -68,8 +67,7 @@ function startLevel(map) {
 #END_EDITABLE#
     }
 
-    map.getPlayer().setPhoneCallback(function () {
-        var player = map.getPlayer();
+    player.setPhoneCallback(function () {
         var x = player.getX();
         var y = player.getY() + 1;
 

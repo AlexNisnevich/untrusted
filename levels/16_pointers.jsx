@@ -26,6 +26,8 @@ function startLevel(map) {
     };
 
     map.placePlayer(5, 5);
+    var player = map.getPlayer();
+    
     map.placeObject(35, 21, 'exit');
 
     for (x = 4; x <= 36; x++) {

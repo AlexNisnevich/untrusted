@@ -26,6 +26,7 @@ function getRandomInt(min, max) {
 
 function startLevel(map) {
     map.placePlayer(map.getWidth()-2, map.getHeight()-2);
+    var player = map.getPlayer();
 
     map.defineObject('robot', {
         'type': 'dynamic',

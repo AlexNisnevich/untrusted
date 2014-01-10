@@ -319,6 +319,7 @@ function CodeEditor(textAreaDomID, width, height) {
 			lines.splice(endOfStartLevel, 0, "map._game._endOfStartLevelReached = true;");
 		}
 
+		console.log(lines.join('\n'));
 		return lines.join('\n');
 	}
 

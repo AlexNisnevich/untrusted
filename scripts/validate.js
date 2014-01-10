@@ -45,9 +45,13 @@ Game.prototype.validate = function(allCode, playerCode) {
 		// start the level on a dummy map to validate
 		this._endOfStartLevelReached = false;
 		startLevel(dummyMap);
+
+		// does startLevel() execute fully?
 		if (!this._endOfStartLevelReached) {
 			throw 'startLevel() returned prematurely!';
 		}
+
+		// does validateLevel() succeed?
 		if (typeof(validateLevel) !== 'undefined') {
 			validateLevel(dummyMap);
 		}
