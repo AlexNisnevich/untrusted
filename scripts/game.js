@@ -58,7 +58,7 @@ function Game(debugMode, startLevel) {
 			fontSize: 20
 		});
 		this.display.setupEventHandlers();
-		display = this.display;
+		var display = this.display;
 		$('#screen').append(this.display.getContainer());
 		$('#drawingCanvas').click(function () {
 			display.focus();
