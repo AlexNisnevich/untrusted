@@ -295,7 +295,7 @@ function Map(display, game) {
 	};
 
 	this.startTimer = function(timer, delay) {
-		if (!delay) {
+		if (typeof(delay) === 'undefined') {
 			throw "startTimer(): delay not specified"
 		} else if (delay < 25) {
 			throw "startTimer(): minimum delay is 25 milliseconds";
