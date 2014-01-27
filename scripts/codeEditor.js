@@ -20,7 +20,7 @@ function CodeEditor(textAreaDomID, width, height) {
 
 	// preprocesses code,determines the location
 	// of editable lines and sections, loads properties
-	function preprocess(codeString) {
+	var preprocess = function(codeString) {
 		editableLines = [];
 		editableSections = {};
 		endOfStartLevel = null;
@@ -95,7 +95,7 @@ function CodeEditor(textAreaDomID, width, height) {
 
 	// enforces editing restrictions when set as the handler
 	// for the 'beforeChange' event
-	function enforceRestrictions(instance, change) {
+	var enforceRestrictions = function(instance, change) {
 		lastChange = change;
 
 		function inEditableArea(c) {
