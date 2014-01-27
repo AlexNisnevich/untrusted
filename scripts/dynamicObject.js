@@ -84,8 +84,6 @@ function DynamicObject(map, type, x, y) {
 			throw 'Can\'t move when it isn\'t your turn!';
 		}
 
-		var nearestObj = map._findNearestToPoint("anyDynamic", dest.x, dest.y);
-
 		// check for collision with player
 		if (map.getPlayer().atLocation(dest.x, dest.y) && __definition.onCollision) {
 			// trigger collision
