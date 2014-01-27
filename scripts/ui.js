@@ -97,8 +97,8 @@ Game.prototype.openMenu = function () {
 
 	$('#menuPane #levels').html('');
 	$.each(game._levelFileNames, function (levelNum, fileName) {
-		levelNum += 1;
-		var levelName = fileName.split('.')[0]
+		++levelNum;
+		var levelName = fileName.split('.')[0];
         levelName = levelName.split('_').join(' ');
 
 		var levelButton = $('<button>');
