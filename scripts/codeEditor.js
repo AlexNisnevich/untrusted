@@ -333,8 +333,7 @@ function CodeEditor(textAreaDomID, width, height) {
 		for (var line in editableSections) {
 			if (editableSections.hasOwnProperty(line)) {
 				var sections = editableSections[line];
-				for (var i = 0; i < sections.length; i++) {
-					var section = sections[i];
+				for (var section in sections) {
 					code += this.internalEditor.getLine(line).slice(section[0], section[1]) + ' \n';
 				}
 			}
