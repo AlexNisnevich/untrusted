@@ -92,7 +92,7 @@ Game.prototype.drawInventory = function () {
 
 Game.prototype.usePhone = function () {
 	var player = this.map.getPlayer();
-	if (player && player._canMove && player.hasItem('phone')) {
+	if (player && player.hasItem('phone') && player._canMove) {
 		if (player._phoneFunc) {
 			this.sound.playSound('select');
 			this.validateCallback(player._phoneFunc);
