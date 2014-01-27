@@ -56,13 +56,13 @@ function CodeEditor(textAreaDomID, width, height) {
 				lineArray.splice(i,1);
 				i--;
 				inEditableBlock = false;
-			} 
+			}
 			// process end of startLevel()
 			  else if (currentLine.indexOf(symbols.end_start_level) === 0) {
 				lineArray.splice(i,1);
 				endOfStartLevel = i;
 				i--;
-			} 
+			}
 			// everything else
 			  else {
 				if (inEditableBlock) {
@@ -98,7 +98,7 @@ function CodeEditor(textAreaDomID, width, height) {
 	var enforceRestrictions = function(instance, change) {
 		lastChange = change;
 
-		function inEditableArea(c) {
+		var inEditableArea = function(c) {
 			var lineNum = c.to.line;
 			if (editableLines.indexOf(lineNum) > -1) {
 				// editable line?
@@ -119,9 +119,8 @@ function CodeEditor(textAreaDomID, width, height) {
 
 		if (!inEditableArea(change)) {
 			change.cancel();
-		}
-		else if (change.to.line !== change.from.line) {
-			// don't allow multi-line deletion
+		} else if (change.to.line !== change.from.line) {
+		    // don't allow multi-line deletion
 			change.cancel();
 
 			// unless it's pressing backspace at the start of a line

@@ -308,17 +308,17 @@ function Map(display, game) {
 		if (this._game._displayedChapters.indexOf(chapterName) === -1) {
             var $chapter = $('#chapter');
 
-			$chapter.html(chapterName.replace("\n","<br>"));
-			$chapter.removeClass().show();
+            $chapter.html(chapterName.replace("\n","<br>"));
+            $chapter.removeClass().show();
 
 			if (cssClass) {
-				$chapter.addClass(cssClass);
+                $chapter.addClass(cssClass);
 			} else {
 				this._game._displayedChapters.push(chapterName);
 			}
 
 			setTimeout(function () {
-				$chapter.fadeOut();
+                $chapter.fadeOut();
 			}, 5 * 1000);
 		}
 	};
