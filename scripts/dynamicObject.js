@@ -120,10 +120,10 @@ function DynamicObject(map, type, x, y) {
 			throw 'setTarget() can only be called on a teleporter!';
 		}
 
-		if (this.target) {
-			throw 'This teleporter already has a target!';
+		if (target === this) {
+			throw 'Teleporters cannot target themselves!';
 		}
-		
+
 		this.target = target;
 	};
 }
