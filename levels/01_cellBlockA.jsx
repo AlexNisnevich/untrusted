@@ -53,7 +53,7 @@ function startLevel(map) {
 
 function onExit(map) {
     if (!map.getPlayer().hasItem('computer')) {
-        map.writeStatus("Don't forget to pick up the computer!");
+        map.writeStatus("You are an idiot!");//Don't forget to pick up the computer!");
         return false;
     } else {
         return true;
