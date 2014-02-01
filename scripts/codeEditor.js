@@ -56,13 +56,13 @@ function CodeEditor(textAreaDomID, width, height) {
 				lineArray.splice(i,1);
 				i--;
 				inEditableBlock = false;
-			} 
+			}
 			// process end of startLevel()
 			  else if (currentLine.indexOf(symbols.end_start_level) === 0) {
 				lineArray.splice(i,1);
 				endOfStartLevel = i;
 				i--;
-			} 
+			}
 			// everything else
 			  else {
 				if (inEditableBlock) {
@@ -282,6 +282,7 @@ function CodeEditor(textAreaDomID, width, height) {
 		this.internalEditor.on('beforeChange', enforceRestrictions);
 		this.markUneditableLines();
 		this.internalEditor.refresh();
+		this.internalEditor.clearHistory();
 	};
 
 	// marks uneditable lines within editor
