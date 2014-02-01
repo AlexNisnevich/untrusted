@@ -55,30 +55,16 @@ function startLevel(map) {
         }
     });
 
-    map.defineObject('upDrone', {
-        'type': 'dynamic',
-        'symbol': 'd',
-        'color': 'blue',
-        'onCollision': function (player) {
-            player.killedBy('an upward-facing drone');
-        },
-        'behavior': function (me) {
-#BEGIN_EDITABLE#
-            me.move('left');
-#END_EDITABLE#
-        }
-    });
-
-    map.defineObject('downDrone', {
+    map.defineObject('reinforcementDrone', {
         'type': 'dynamic',
         'symbol': 'd',
         'color': 'yellow',
         'onCollision': function (player) {
-            player.killedBy('a downward-facing drone');
+            player.killedBy('a reinforcement drone');
         },
         'behavior': function (me) {
 #BEGIN_EDITABLE#
-            me.move('left');
+            moveToward(me, 'attackDrone');
 #END_EDITABLE#
         }
     });
@@ -122,17 +108,17 @@ function startLevel(map) {
     map.placeObject(27, 12, 'defenseDrone');
     map.placeObject(27, 13, 'defenseDrone');
 
-    map.placeObject(24, 11, 'upDrone');
-    map.placeObject(25, 11, 'upDrone');
-    map.placeObject(26, 11, 'upDrone');
-
-    map.placeObject(24, 13, 'downDrone');
-    map.placeObject(25, 13, 'downDrone');
-    map.placeObject(26, 13, 'downDrone');
+    map.placeObject(24, 11, 'reinforcementDrone');
+    map.placeObject(25, 11, 'reinforcementDrone');
+    map.placeObject(26, 11, 'reinforcementDrone');
+    map.placeObject(24, 13, 'reinforcementDrone');
+    map.placeObject(25, 13, 'reinforcementDrone');
+    map.placeObject(26, 13, 'reinforcementDrone');
 
     map.placeObject(map.getWidth()-1, 12, 'exit');
+#END_OF_START_LEVEL#
 }
 
-function validateLevel(map, validators) {
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateExactlyXManyObjects(1, 'exit');
 }

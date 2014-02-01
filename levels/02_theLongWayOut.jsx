@@ -37,4 +37,5 @@ function startLevel(map) {
 
 #END_EDITABLE#
     map.placeObject(map.getWidth()-5, map.getHeight()-4, 'exit');
+#END_OF_START_LEVEL#
 }

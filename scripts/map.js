@@ -1,99 +1,115 @@
 function Map(display, game) {
-	var _player;
-	var _grid;
-	var _dynamicObjects;
-	var _objectDefinitions;
+	/* private variables */
 
-	var _allowOverwrite;
-	var _allowMultiMove;
-	var _keyDelay;
-	var _intervals = [];
+	var __player;
+	var __grid;
+	var __dynamicObjects;
+	var __objectDefinitions;
 
-	this.getObjectDefinition = function(objName) { return _objectDefinitions[objName]; };
-	this.getObjectDefinitions = function() { return _objectDefinitions; };
-	this.getPlayer = function () { return _player; };
-	this.getGrid = function () { return _grid; };
-	this.getDynamicObjects = function () { return _dynamicObjects; };
-	this.getWidth = function () { return game.dimensions.width; };
-	this.getHeight = function () { return game.dimensions.height; };
+	var __allowOverwrite;
+	var __allowMultiMove;
+	var __keyDelay;
+	var __intervals = [];
 
-	this.reset = function () {
-		_objectDefinitions = clone(game.objects);
-		this.display.clear();
-		_grid = new Array(game.dimensions.width);
-		for (var x = 0; x < game.dimensions.width; x++) {
-			_grid[x] = new Array(game.dimensions.height);
-			for (var y = 0; y < game.dimensions.height; y++) {
-				_grid[x][y] = {type: 'empty'};
+	/* unexposed variables */
+
+	this._game = game;
+	this._display = display;
+
+	/* unexposed getters */
+
+	this._getObjectDefinition = function(objName) { return __objectDefinitions[objName]; };
+	this._getObjectDefinitions = function() { return __objectDefinitions; };
+	this._getGrid = function () { return __grid; };
+
+	/* exposed getters */
+
+	this.getDynamicObjects = function () { return __dynamicObjects; };
+	this.getPlayer = function () { return __player; };
+	this.getWidth = function () { return this._game._dimensions.width; };
+	this.getHeight = function () { return this._game._dimensions.height; };
+
+	/* unexposed methods */
+
+	this._reset = function () {
+		__objectDefinitions = clone(this._game.objects);
+		this._display.clear();
+		__grid = new Array(this._game._dimensions.width);
+		for (var x = 0; x < this._game._dimensions.width; x++) {
+			__grid[x] = new Array(this._game._dimensions.height);
+			for (var y = 0; y < this._game._dimensions.height; y++) {
+				__grid[x][y] = {type: 'empty'};
 			}
 		}
 
-		_dynamicObjects = [];
-		_player = null;
+		__dynamicObjects = [];
+		__player = null;
 
-		for (var i = 0; i < _intervals.length; i++) {
-			clearInterval(_intervals[i]);
+		for (var i = 0; i < __intervals.length; i++) {
+			clearInterval(__intervals[i]);
 		}
-		_intervals = [];
+		__intervals = [];
 	};
 
-	this.setProperties = function (mapProperties) {
+	this._setProperties = function (mapProperties) {
 		// set defaults
-		_allowOverwrite = false;
-		_allowMultiMove = false;
-		_keyDelay = 0;
+		__allowOverwrite = false;
+		__allowMultiMove = false;
+		__keyDelay = 0;
 
 		// now set any properties that were passed in
 		if (mapProperties) {
 			if (mapProperties.allowOverwrite === true) {
-				_allowOverwrite = true;
+				__allowOverwrite = true;
 			}
 
 			if (mapProperties.keyDelay) {
-				_keyDelay = mapProperties.keyDelay;
+				__keyDelay = mapProperties.keyDelay;
 			}
 		}
 	};
 
-	this.refresh = function () {
-		this.display.drawAll(this);
-		game.drawInventory();
-	};
-
-	// used by validators
-	this.countObjects = function (type) {
+	// (Used by validators)
+	this._countObjects = function (type) {
 		var count = 0;
+
+		// count static objects
 		for (var x = 0; x < this.getWidth(); x++) {
 			for (var y = 0; y < this.getHeight(); y++) {
-				if (this.getGrid()[x][y].type === type) {
+				if (__grid[x][y].type === type) {
 					count++;
 				}
 			}
 		}
+
+		// count dynamic objects
+		this.getDynamicObjects().forEach(function (obj) {
+			if (obj.getType() === type) {
+				count++;
+			}
+		}) 
+
 		return count;
 	};
 
-	this.canMoveTo = function (x, y, myType) {
-		if (x < 0 || x >= game.dimensions.width || y < 0 || y >= game.dimensions.height) {
+	this._canMoveTo = function (x, y, myType) {
+		if (x < 0 || x >= this._game._dimensions.width || y < 0 || y >= this._game._dimensions.height) {
 			return false;
 		}
 
 		// look for static objects that can serve as obstacles
-		var objType = this.getGrid()[x][y].type;
-		var object = _objectDefinitions[objType];
+		var objType = __grid[x][y].type;
+		var object = __objectDefinitions[objType];
 		if (object.impassable) {
 			if (myType && object.passableFor && object.passableFor.indexOf(myType) > -1) {
 				// this object is of a type that can pass the obstacle
 				return true;
 			} else if (typeof object.impassable === 'function') {
 				// the obstacle is impassable only in certain circumstances
-				if (object.impassable(_player, object)) {
-					return false;
-				} else {
-					if (object.selfDestructsWhenPassedThrough) {
-						this.removeItemFromMap(x, y, objType);
-					}
-					return true;
+				try {
+					return !object.impassable(__player, object);
+				} catch (e) {
+					this._display.writeStatus(e);
 				}
 			} else {
 				// the obstacle is always impassable
@@ -109,21 +125,21 @@ function Map(display, game) {
 	};
 
 	// Returns the object of the given type closest to target coordinates
-	this.findNearestToPoint = function (type, targetX, targetY) {
+	this._findNearestToPoint = function (type, targetX, targetY) {
 		var foundObjects = [];
 
 		// look for static objects
 		for (var x = 0; x < this.getWidth(); x++) {
 			for (var y = 0; y < this.getHeight(); y++) {
-				if (_grid[x][y].type === type) {
+				if (__grid[x][y].type === type) {
 					foundObjects.push({x: x, y: y});
 				}
 			}
 		}
 
 		// look for dynamic objects
-		for (var i = 0; i < _dynamicObjects.length; i++) {
-			var object = _dynamicObjects[i];
+		for (var i = 0; i < __dynamicObjects.length; i++) {
+			var object = __dynamicObjects[i];
 			if (object.getType() === type) {
 				foundObjects.push({x: object.getX(), y: object.getY()});
 			}
@@ -131,7 +147,7 @@ function Map(display, game) {
 
 		// look for player
 		if (type === 'player') {
-			foundObjects.push({x: _player.getX(), y: _player.getY()});
+			foundObjects.push({x: __player.getX(), y: __player.getY()});
 		}
 
 		var dists = [];
@@ -151,9 +167,9 @@ function Map(display, game) {
 		return closestTarget;
 	};
 
-	this.isPointOccupiedByDynamicObject = function (x, y) {
-		for (var i = 0; i < _dynamicObjects.length; i++) {
-			var object = _dynamicObjects[i];
+	this._isPointOccupiedByDynamicObject = function (x, y) {
+		for (var i = 0; i < __dynamicObjects.length; i++) {
+			var object = __dynamicObjects[i];
 			if (object.getX() === x && object.getY() === y) {
 				return true;
 			}
@@ -161,43 +177,52 @@ function Map(display, game) {
 		return false;
 	}
 
-	this.moveAllDynamicObjects = function () {
-		_dynamicObjects.forEach(function(object) {
-			object.onTurn();
+	this._moveAllDynamicObjects = function () {
+		__dynamicObjects.forEach(function(object) {
+			object._onTurn();
 		});
 	};
 
-	this.removeItemFromMap = function (x, y, klass) {
-		if (_grid[x][y].type === klass) {
-			_grid[x][y].type = 'empty';
+	this._removeItemFromMap = function (x, y, klass) {
+		if (__grid[x][y].type === klass) {
+			__grid[x][y].type = 'empty';
 		}
 	};
 
-	this.reenableMovementForPlayer = function(player) {
+	this._reenableMovementForPlayer = function(player) {
 		setTimeout(function () {
-			player.canMove = true;
-		}, _keyDelay);
+			player._canMove = true;
+		}, __keyDelay);
 	};
 
-	/* functions explicitly exposed to player */
+	this._hideChapter = function() {
+		$('#chapter').fadeOut();
+	};
 
-	this.placeObject = function (x, y, klass) {
-		if (!_objectDefinitions[klass]) {
-			throw "There is no type of object named " + klass + "!";
+	/* exposed methods */
+
+	this.refresh = function () {
+		this._display.drawAll(this);
+		this._game.drawInventory();
+	};
+
+	this.placeObject = function (x, y, type) {
+		if (!__objectDefinitions[type]) {
+			throw "There is no type of object named " + type + "!";
 		}
 
-		if (typeof(_grid[x]) === 'undefined' || typeof(_grid[x][y]) === 'undefined') {
+		if (typeof(__grid[x]) === 'undefined' || typeof(__grid[x][y]) === 'undefined') {
 			return;
 			// throw "Not a valid location to place an object!";
 		}
 
-		if (_objectDefinitions[klass].type === 'dynamic') {
+		if (__objectDefinitions[type].type === 'dynamic') {
 			// dynamic object
-			_dynamicObjects.push(new DynamicObject(this, klass, x, y));
+			__dynamicObjects.push(new DynamicObject(this, type, x, y));
 		} else {
 			// static object
-			if (_grid[x][y].type === 'empty' || _grid[x][y].type === klass || _allowOverwrite) {
-				_grid[x][y].type = klass;
+			if (__grid[x][y].type === 'empty' || __grid[x][y].type === type || __allowOverwrite) {
+				__grid[x][y].type = type;
 			} else {
 				throw "There is already an object at (" + x + ", " + y + ")!";
 			}
@@ -205,27 +230,42 @@ function Map(display, game) {
 	};
 
 	this.placePlayer = function (x, y) {
-		if (_player) {
+		if (__player) {
 			throw "Can't place player twice!";
 		}
-		_player = new Player(x, y, this);
-		display.drawAll(this);
+		__player = new Player(x, y, this);
+		this._display.drawAll(this);
+	};
+
+	this.createFromGrid = function (grid, tiles, xOffset, yOffset) {
+		for (var y = 0; y < grid.length; y++) {
+			var line = grid[y];
+			for (var x = 0; x < line.length; x++) {
+				var tile = line[x];
+				var type = tiles[tile];
+				if (type === 'player') {
+					this.placePlayer(x + xOffset, y + yOffset);
+				} else if (type) {
+					this.placeObject(x + xOffset, y + yOffset, type);
+				}
+			}
+		}
 	};
 
 	this.setSquareColor = function (x, y, bgColor) {
-		_grid[x][y].bgColor = bgColor;
+		__grid[x][y].bgColor = bgColor;
 	};
 
 	this.defineObject = function (name, properties) {
-		if (!_objectDefinitions[name]) {
-			_objectDefinitions[name] = properties;
+		if (!__objectDefinitions[name]) {
+			__objectDefinitions[name] = properties;
 		} else {
 			throw "There is already a type of object named " + name + "!";
 		}
 	};
 
 	this.getObjectTypeAt = function (x, y) {
-		return this.getGrid()[x][y].type;
+		return __grid[x][y].type;
 	}
 
 	this.getAdjacentEmptyCells = function (x, y) {
@@ -255,32 +295,30 @@ function Map(display, game) {
 	};
 
 	this.startTimer = function(timer, delay) {
-		if (delay < 25) {
-			throw "Minimum timer delay is 25 milliseconds";
+		if (!delay) {
+			throw "startTimer(): delay not specified"
+		} else if (delay < 25) {
+			throw "startTimer(): minimum delay is 25 milliseconds";
 		}
 
-		_intervals.push(setInterval(timer, delay));
+		__intervals.push(setInterval(timer, delay));
 	};
 
 	this.displayChapter = function(chapterName, cssClass) {
-		if (this.game.displayedChapters.indexOf(chapterName) === -1) {
+		if (this._game._displayedChapters.indexOf(chapterName) === -1) {
 			$('#chapter').html(chapterName.replace("\n","<br>"));
 			$('#chapter').removeClass().show();
 
 			if (cssClass) {
 				$('#chapter').addClass(cssClass);
 			} else {
-				this.game.displayedChapters.push(chapterName);
+				this._game._displayedChapters.push(chapterName);
 			}
 
 			setTimeout(function () {
 				$('#chapter').fadeOut();
 			}, 5 * 1000);
 		}
-	};
-
-	this.hideChapter = function() {
-		$('#chapter').fadeOut();
 	};
 
 	this.writeStatus = function(status) {
@@ -293,16 +331,30 @@ function Map(display, game) {
 		return $('#drawingCanvas')[0].getContext('2d');
 	};
 
-	this.getCanvasCoords = function(x, y) {
+	this.getCanvasCoords = function(obj) {
+		// 0.7 is a bit of a magic number to make the canvas
+		// operations in lvl 16 look good
 		return {
-			x: (x + .5) * 600 / game.dimensions.width,
-			y: (y + .5) * 500 / game.dimensions.height
+			x: (obj.getX() + 0.7) * 600 / this._game._dimensions.width,
+			y: (obj.getY() + 0.7) * 500 / this._game._dimensions.height
 		};
 	};
 
-	/* Initialization */
+	this.getRandomColor = function(start, end) {
+		var mean = [
+			Math.floor((start[0] + end[0]) / 2),
+			Math.floor((start[1] + end[1]) / 2),
+			Math.floor((start[2] + end[2]) / 2)
+		];
+		var std = [
+			Math.floor((end[0] - start[0]) / 2),
+			Math.floor((end[1] - start[1]) / 2),
+			Math.floor((end[2] - start[2]) / 2)
+		];
+		return ROT.Color.toHex(ROT.Color.randomize(mean, std));
+	}
 
-	this.game = game;
-	this.display = display;
-	this.reset();
+	/* initialization */
+
+	this._reset();
 }

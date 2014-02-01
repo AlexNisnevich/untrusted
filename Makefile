@@ -4,7 +4,8 @@
 js-target = scripts/build/untrusted.js
 js-target-min = scripts/build/untrusted.min.js
 
-js-modules = scripts/util.js \
+js-modules = scripts/_head.js \
+			 scripts/util.js \
              scripts/game.js \
              scripts/codeEditor.js \
              scripts/display.js \
@@ -17,9 +18,11 @@ js-modules = scripts/util.js \
              scripts/sound.js \
              scripts/validate.js \
              scripts/ui.js \
-             scripts/launcher.js
+             scripts/_launcher_release.js \
+	         scripts/_tail.js
 
-js-modules-debug = scripts/util.js \
+js-modules-debug = scripts/_head.js \
+				   scripts/util.js \
 	               scripts/game.js \
 	               scripts/codeEditor.js \
 	               scripts/display.js \
@@ -32,7 +35,8 @@ js-modules-debug = scripts/util.js \
 	               scripts/sound.js \
 	               scripts/validate.js \
 	               scripts/ui.js \
-	               scripts/launcher-debug.js
+	               scripts/_launcher_debug.js \
+	               scripts/_tail.js
 
 yui-jar = tools/yuicompressor-2.4.8pre.jar
 

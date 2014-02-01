@@ -56,8 +56,9 @@ function startLevel(map) {
 
 
 #END_EDITABLE#
+#END_OF_START_LEVEL#
 }
 
-function validateLevel(map, validators) {
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateExactlyXManyObjects(1, 'exit');
 }

@@ -5,7 +5,8 @@ function CodeEditor(textAreaDomID, width, height) {
 		'begin_char':"#{#",
 		'end_char': "#}#",
 		'begin_properties':'#BEGIN_PROPERTIES#',
-		'end_properties':'#END_PROPERTIES#'
+		'end_properties':'#END_PROPERTIES#',
+		'end_start_level':'#END_OF_START_LEVEL#'
 	};
 
 	var charLimit = 80;
@@ -15,12 +16,14 @@ function CodeEditor(textAreaDomID, width, height) {
 	var editableSections = {};
 	var lastGoodState = {};
 	var lastChange = {};
+	var endOfStartLevel = null;
 
 	// preprocesses code,determines the location
 	// of editable lines and sections, loads properties
 	function preprocess(codeString) {
 		editableLines = [];
 		editableSections = {};
+		endOfStartLevel = null;
 		var propertiesString = '';
 
 		var lineArray = codeString.split("\n");
@@ -53,7 +56,15 @@ function CodeEditor(textAreaDomID, width, height) {
 				lineArray.splice(i,1);
 				i--;
 				inEditableBlock = false;
-			} else {
+			} 
+			// process end of startLevel()
+			  else if (currentLine.indexOf(symbols.end_start_level) === 0) {
+				lineArray.splice(i,1);
+				endOfStartLevel = i;
+				i--;
+			} 
+			// everything else
+			  else {
 				if (inEditableBlock) {
 					editableLines.push(i);
 				} else {
@@ -301,7 +312,15 @@ function CodeEditor(textAreaDomID, width, height) {
 
 	// returns all contents
 	this.getCode = function () {
-		return this.internalEditor.getValue();
+		var lines = this.internalEditor.getValue().split('\n');
+
+		if (endOfStartLevel) {
+			// insert the end of startLevel() marker at the appropriate location
+			lines.splice(endOfStartLevel, 0, "map._game._endOfStartLevelReached = true;");
+		}
+
+		console.log(lines.join('\n'));
+		return lines.join('\n');
 	}
 
 	// returns only the code written in editable lines and sections

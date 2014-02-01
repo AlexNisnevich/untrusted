@@ -1,13 +1,14 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": [],
-    "itemsIntroduced": ["greenKey"]
+    "commandsIntroduced": []
 }
 #END_PROPERTIES#
 /*
  * robotNav.js
  *
- *
+ * The green key is located in a slightly more 
+ * complicated room. You'll need to get the robot
+ * past these obstacles.
  */
 
 function getRandomInt(min, max) {
@@ -16,6 +17,7 @@ function getRandomInt(min, max) {
 
 function startLevel(map) {
     map.placePlayer(0, map.getHeight() - 1);
+    var player = map.getPlayer();
 
     map.defineObject('robot', {
         'type': 'dynamic',
@@ -74,10 +76,13 @@ function startLevel(map) {
         map.placeObject(20 - i, i + 1, 'block');
         map.placeObject(35 - i, 8 - i, 'block');
     }
+#END_OF_START_LEVEL#
 }
 
-function validateLevel(map, validators) {
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateExactlyXManyObjects(1, 'exit');
+    map.validateExactlyXManyObjects(1, 'robot');
+    map.validateAtMostXObjects(1, 'greenKey');
 }
 
 function onExit(map) {

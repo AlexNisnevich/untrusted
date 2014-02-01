@@ -43,9 +43,10 @@ function startLevel(map) {
     }
 
     map.placeObject(2, map.getHeight() - 1, 'exit');
+#END_OF_START_LEVEL#
 }
 
-function validateLevel(map, validators) {
-    validators.validateAtLeastXObjects(map, 40, 'mine');
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateAtLeastXObjects(40, 'mine');
+    map.validateExactlyXManyObjects(1, 'exit');
 }

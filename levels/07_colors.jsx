@@ -3,12 +3,11 @@
     "commandsIntroduced":
         ["map.defineObject", "player.getColor", "player.setColor",
          "object.color", "object.impassable", "object.symbol",
-         "player.setPhoneCallback"],
-    "itemsIntroduced": ["phone"]
+         "player.setPhoneCallback"]
 }
 #END_PROPERTIES#
 /*************
- * colors.js *
+* colors.js *
  *************
  *
  * You're almost at the exit. You just need to get past this
@@ -21,16 +20,17 @@
 
 function startLevel(map) {
     map.placePlayer(0, 12);
+    var player = map.getPlayer();
 
     map.placeObject(5, 12, 'phone');
 
     // The function phone lets you call arbitrary functions,
     // as defined by player.setPhoneCallback() below.
     // The function phone callback is bound to Q or Ctrl-6.
-    map.getPlayer().setPhoneCallback(function () {
+    player.setPhoneCallback(function () {
 #BEGIN_EDITABLE#
 
-        map.getPlayer().setColor('#f00');
+       player.setColor('#f00');
 
 
 
@@ -83,8 +83,9 @@ function startLevel(map) {
             map.setSquareColor(x, y, '#080');
         }
     }
+#END_OF_START_LEVEL#
 }
 
-function validateLevel(map, validators) {
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateExactlyXManyObjects(1, 'exit');
 }

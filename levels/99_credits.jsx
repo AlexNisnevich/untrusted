@@ -20,12 +20,15 @@ function startLevel(map) {
         [1, 17, "Slimeball Vomit - Radio Scotvoid"],
         [1, 18, "Beach Wedding Dance - Rolemusic"],
         [1, 19, "Brazilian Rhythm - Vernon Lenoir"],
+        [1, 20, "Soixante-8 - Obsibilo"],
+        [1, 21, "Da Funk Do You Know 'bout Chip? - That Andy Guy"],
         [15, map.getHeight() - 2, "Thank you for playing!"]
     ];
 
     for (var i = 0; i < credits.length; i++) {
         setTimeout(function (i) {
-            map.display.drawText(credits[i][0], credits[i][1], credits[i][2]);
+            map._display.drawText(credits[i][0], credits[i][1], credits[i][2]);
         }, (i + 2) * 2000, i);
     }
+#END_OF_START_LEVEL#
 }

@@ -25,7 +25,7 @@ Game.prototype.objects = {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#0ff',
 		'onCollision': function (player, game) {
-			game.moveToNextLevel();
+			game._moveToNextLevel();
 		}
 	},
 
@@ -55,10 +55,10 @@ Game.prototype.objects = {
 		'symbol' : String.fromCharCode(0x2395), // ⎕
 		'color': '#f0f',
 		'onCollision': function (player, me) {
-            if (!player.hasTeleported) {
-                player.moveTo(me.target);
+            if (!player._hasTeleported) {
+                player._moveTo(me.target);
             }
-            player.hasTeleported = true;
+            player._hasTeleported = true;
 		},
 		'behavior': function (me) {}
 	},
@@ -96,7 +96,7 @@ Game.prototype.objects = {
 		'symbol': 'k',
 		'color': 'red',
 		'onPickUp': function (player, game) {
-			game.display.writeStatus('You have received a red key!');
+			game.display.writeStatus('You have picked up a red key!');
 		}
 	},
 
@@ -105,7 +105,7 @@ Game.prototype.objects = {
 		'symbol': 'k',
 		'color': '#0f0',
 		'onPickUp': function (player, game) {
-			game.display.writeStatus('You have received a green key!');
+			game.display.writeStatus('You have picked up a green key!');
 		}
 	},
 
@@ -114,7 +114,28 @@ Game.prototype.objects = {
 		'symbol': 'k',
 		'color': '#06f',
 		'onPickUp': function (player, game) {
-			game.display.writeStatus('You have received a blue key!');
+			game.display.writeStatus('You have picked up a blue key!');
+		}
+	},
+
+	'yellowKey': {
+		'type': 'item',
+		'symbol': 'k',
+		'color': 'yellow',
+		'onPickUp': function (player, game) {
+			game.display.writeStatus('You have picked up a yellow key!');
+		}
+	},
+
+	'theAlgorithm': {
+		'type': 'item',
+		'symbol': 'A',
+		'color': 'white',
+		'onPickUp': function (player, game) {
+			game.display.writeStatus('You have picked up the Algorithm!');
+		},
+		'onDrop': function (game) {
+			game.display.writeStatus('You have lost the Algorithm!');
 		}
 	}
 };

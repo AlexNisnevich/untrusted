@@ -1,43 +1,46 @@
 #BEGIN_PROPERTIES#
 {
+    "commandsIntroduced": ["player.move", "map.startTimer"],
     "music": "Rolemusic_-_07_-_Beach_Wedding_Dance",
     "mapProperties": {
         "keyDelay": 25
     }
 }
 #END_PROPERTIES#
-
 /**********************
  * superDrEvalBros.js *
  **********************
  *
+ * You're still here?! Well, Dr. Eval, let's see
+ * how well you can operate with one less dimension.
  *
+ * Give up now. Unless you have a magic mushroom
+ * up your sleeve, it's all over.
  */
 
 function startLevel(map) {
-
     var fl = Math.floor;
     var w = map.getWidth();
     var h = map.getHeight();
 
     map.placePlayer(1, fl(h/2)-1);
+    var player = map.getPlayer();
 
     map.placeObject(w-1, fl(h/2)-1, 'exit');
 
-    for (var x = 0; x < fl(w/2) - 3; x++) {
+    for (var x = 0; x < fl(w/2) - 5; x++) {
         for (var y = fl(h/2); y < h; y++) {
             map.placeObject(x, y, 'block');
         }
     }
 
-    for (var x = fl(w/2)+3; x <= w; x++) {
+    for (var x = fl(w/2) + 5; x <= w; x++) {
         for (var y = fl(h/2); y < h; y++) {
             map.placeObject(x, y, 'block');
         }
     }
 
     function gravity() {
-        var player = map.getPlayer();
         var x = player.getX();
         var y = player.getY() + 1;
 
@@ -50,7 +53,7 @@ function startLevel(map) {
         }
 
     }
-    map.startTimer(gravity, 50);
+    map.startTimer(gravity, 45);
 
     function jump() {
 #BEGIN_EDITABLE#
@@ -64,8 +67,7 @@ function startLevel(map) {
 #END_EDITABLE#
     }
 
-    map.getPlayer().setPhoneCallback(function () {
-        var player = map.getPlayer();
+    player.setPhoneCallback(function () {
         var x = player.getX();
         var y = player.getY() + 1;
 
@@ -73,8 +75,9 @@ function startLevel(map) {
             jump();
         }
     });
+#END_OF_START_LEVEL#
 }
 
-function validateLevel(map, validators) {
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateExactlyXManyObjects(1, 'exit');
 }

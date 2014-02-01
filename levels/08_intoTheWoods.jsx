@@ -2,7 +2,7 @@
 {
     "commandsIntroduced":
         ["map.getObjectTypeAt", "player.getX", "player.getY",
-         "output.write"],
+         "map.refresh"],
     "mapProperties": {
         "allowOverwrite": true
     }
@@ -22,9 +22,6 @@
  * need to go through the forest and across the river, and
  * you'll reach the fortress where it's kept. Their defences
  * are light, and we should be able to catch them off-guard.
- *
- * Oh, and just a note: your function phone may serve you
- * well here.
  */
 
 function startLevel(map) {
@@ -113,9 +110,10 @@ function startLevel(map) {
     map.getPlayer().setPhoneCallback(functionList[#{#"movePlayerToExit"#}#]);
 
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
+#END_OF_START_LEVEL#
 }
 
-function validateLevel(map, validators) {
-    validators.validateAtLeastXObjects(map, 100, 'tree');
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateAtLeastXObjects(100, 'tree');
+    map.validateExactlyXManyObjects(1, 'exit');
 }

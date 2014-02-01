@@ -21,13 +21,13 @@ Game.prototype.enableShortcutKeys = function () {
 
 	shortcut.add('ctrl+4', function () {
 		game.sound.playSound('select');
-		game.getLevel(game.currentLevel);
+		game._getLevel(game._currentLevel);
 		return true;
 	});
 
 	shortcut.add('ctrl+5', function () {
 		game.sound.playSound('blip');
-		game.evalLevelCode();
+		game._evalLevelCode();
 		return true;
 	});
 
@@ -64,12 +64,12 @@ Game.prototype.enableButtons = function () {
 
 	$("#resetButton").click( function () {
 		game.sound.playSound('select');
-		game.getLevel(game.currentLevel);
+		game._getLevel(game._currentLevel);
 	});
 
 	$("#executeButton").click( function () {
 		game.sound.playSound('blip');
-		game.evalLevelCode();
+		game._evalLevelCode();
 	});
 
 	$("#phoneButton").click( function () {
@@ -96,15 +96,15 @@ Game.prototype.openMenu = function () {
 	var game = this;
 
 	$('#menuPane #levels').html('');
-	$.each(game.levelFileNames, function (levelNum, fileName) {
+	$.each(game._levelFileNames, function (levelNum, fileName) {
 		levelNum += 1;
 		var levelName = fileName.split('.')[0]
         levelName = levelName.split('_').join(' ');
 
 		var levelButton = $('<button>');
-		if (levelNum <= game.levelReached) {
+		if (levelNum <= game._levelReached) {
 			levelButton.text(levelName).click(function () {
-				game.jumpToNthLevel(levelNum);
+				game._jumpToNthLevel(levelNum);
 				$('#menuPane').hide();
 			});
 		} else {
@@ -129,7 +129,7 @@ Game.prototype.openHelp = function () {
 	$('#helpPaneContent').html('');
 
 	// build help
-	$.each(game.getHelpCommands(), function (i, command) {
+	$.each(game._getHelpCommands(), function (i, command) {
 		if (game.reference[command]) {
 			var reference = game.reference[command];
 

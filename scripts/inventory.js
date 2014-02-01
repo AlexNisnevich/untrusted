@@ -3,6 +3,7 @@ Game.prototype.inventory = [];
 Game.prototype.addToInventory = function (itemName) {
 	if (this.inventory.indexOf(itemName) === -1) {
 		this.inventory.push(itemName);
+		this.drawInventory();
 	}
 };
 
@@ -12,14 +13,31 @@ Game.prototype.checkInventory = function (itemName) {
 
 Game.prototype.removeFromInventory = function (itemName) {
 	var object = this.objects[itemName];
+	if (!object) {
+		throw 'No such item: ' + itemName;
+	}
+
 	this.inventory.remove(itemName);
+	this.drawInventory();
+	
 	if (object.onDrop) {
 		object.onDrop(this);
 	}
 };
 
 Game.prototype.setInventoryStateByLevel = function (levelNum) {
+	// first remove items that have onDrop effects on UI
+	if (levelNum == 1) {
+		this.removeFromInventory('computer');
+	}
+	if (levelNum <= 7) {
+		this.removeFromInventory('phone');
+	}
+
+	// clear any remaining items from inventory
 	this.inventory = [];
+
+	// repopulate inventory by level
 	if (levelNum > 1) {
 		this.addToInventory('computer');
 		$('#editorPane').fadeIn();
@@ -39,9 +57,13 @@ Game.prototype.setInventoryStateByLevel = function (levelNum) {
 		this.addToInventory('blueKey');
 	}
 	if (levelNum > 14) {
+		this.addToInventory('theAlgorithm');
 		this.removeFromInventory('redKey');
 		this.removeFromInventory('greenKey');
 		this.removeFromInventory('blueKey');
+	}
+	if (levelNum > 15) {
+		this.removeFromInventory('theAlgorithm');
 	}
 };
 
@@ -69,7 +91,7 @@ Game.prototype.drawInventory = function () {
 
 Game.prototype.usePhone = function () {
 	var player = this.map.getPlayer();
-	if (player && player.canMove && player.hasItem('phone')) {
+	if (player && player._canMove && player.hasItem('phone')) {
 		if (player._phoneFunc) {
 			this.sound.playSound('select');
 			this.validateCallback(player._phoneFunc);

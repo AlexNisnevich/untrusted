@@ -1,13 +1,16 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": ["map.getAdjacentEmptyCells"],
-    "itemsIntroduced": ["blueKey"]
+    "commandsIntroduced": ["map.getAdjacentEmptyCells"]
 }
 #END_PROPERTIES#
 /*
  * robotMaze.js
  *
+ * The blue key is inside a labyrinth, and extracting
+ * it will not be easy.
  *
+ * It's a good thing that you're a AI expert, or
+ * we would have to leave empty-handed.
  */
 
 function getRandomInt(min, max) {
@@ -15,7 +18,8 @@ function getRandomInt(min, max) {
 }
 
 function startLevel(map) {
-    map.placePlayer(map.getWidth()-2, map.getHeight()-2);
+    map.placePlayer(map.getWidth()-1, map.getHeight()-1);
+    var player = map.getPlayer();
 
     map.defineObject('robot', {
         'type': 'dynamic',
@@ -102,10 +106,13 @@ function startLevel(map) {
             map.placeObject(x,y,'empty');
         }
     });
+#END_OF_START_LEVEL#
 }
 
-function validateLevel(map, validators) {
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateExactlyXManyObjects(1, 'exit');
+    map.validateExactlyXManyObjects(1, 'robot');
+    map.validateAtMostXObjects(1, 'blueKey');
 }
 
 function onExit(map) {

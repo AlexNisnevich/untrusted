@@ -3,6 +3,7 @@ function Sound() {
 		"music/DmitryMazin-GameScratch.mp3",
 		"music/Tortue_Super_Sonic_-_11_-_Y.mp3",
 		"music/Eric_Skiff_-_06_-_Searching.mp3",
+		"music/Obsibilo_-_Soixante-8.mp3",
 		"music/Eric_Skiff_-_09_-_Come_and_Find_Me_-_B_mix.mp3"
 	];
 

@@ -1,14 +1,23 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["object.inventory", "object.giveItemTo", "object.passableFor"],
-    "itemsIntroduced": ["redKey"]
+        ["object.inventory", "object.giveItemTo", "object.passableFor",
+         "map.validateAtMostXObjects"]
 }
 #END_PROPERTIES#
 /*
  * robot.js
  *
+ * You'll need three keys in order to unlock the
+ * Algorithm: the red key, the green key, and the
+ * blue key. Unfortunately, all three of them are
+ * behind human-proof barriers.
  *
+ * The plan is simple: reprogram the maintenance
+ * robots to grab the key and bring it through
+ * the barrier to us.
+ *
+ * Let's try it on the red key first.
  */
 
 function getRandomInt(min, max) {
@@ -17,6 +26,7 @@ function getRandomInt(min, max) {
 
 function startLevel(map) {
     map.placePlayer(map.getWidth()-2, map.getHeight()-2);
+    var player = map.getPlayer();
 
     map.defineObject('robot', {
         'type': 'dynamic',
@@ -59,10 +69,13 @@ function startLevel(map) {
         map.placeObject(0, y, 'block');
         map.placeObject(map.getWidth() - 1, y, 'block');
     }
+#END_OF_START_LEVEL#
 }
 
-function validateLevel(map, validators) {
-    validators.validateExactlyXManyObjects(map, 1, 'exit');
+function validateLevel(map) {
+    map.validateExactlyXManyObjects(1, 'exit');
+    map.validateExactlyXManyObjects(1, 'robot');
+    map.validateAtMostXObjects(1, 'redKey');
 }
 
 function onExit(map) {

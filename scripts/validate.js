@@ -1,33 +1,17 @@
 Game.prototype.verbotenWords = [
-	'eval', 'prototype', 'delete', 'return', 'console', 'debugger',
-	'setTimeout', 'setInterval', 'level', 'Level', 'removeItemFromMap'
+	'._', ' "_', " '_",
+	'eval', 'prototype', 'call', 'apply', 'bind',
+	'prompt', 'confirm', 'debugger', 'delete',
+	'setTimeout', 'setInterval'
 ];
-Game.prototype.allowedTime = 2000;
-
-// We may want to have level-specific hidden validation rules in the future.
-// var validationRulesByLevel = [ null ];
+Game.prototype.allowedTime = 2000; // for infinite loop prevention
 
 var DummyDisplay = function () {
 	this.clear = function () {};
 	this.drawAll = function () {};
 	this.drawObject = function () {};
 	this.drawText = function () {};
-};
-
-Game.prototype.validators = {
-	validateAtLeastXObjects: function(map, num, type) {
-		var count = map.countObjects(type);
-		if (count < num) {
-			throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-		}
-	},
-
-	validateExactlyXManyObjects: function(map, num, type) {
-		var count = map.countObjects(type);
-		if (count != num) {
-			throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-		}
-	}
+	this.writeStatus = function () {};
 };
 
 Game.prototype.validate = function(allCode, playerCode) {
@@ -42,7 +26,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 		}
 
 		var dummyMap = new Map(new DummyDisplay(), this);
-		dummyMap.setProperties(this.editor.getProperties().mapProperties);
+		dummyMap._setProperties(this.editor.getProperties().mapProperties);
 
 		// modify the code to always check time to prevent infinite loops
 		allCode = $.map(allCode.split('\n'), function (line, i) {
@@ -55,13 +39,21 @@ Game.prototype.validate = function(allCode, playerCode) {
 		}).join('\n');
 
 		// evaluate the code to get startLevel() and (opt) validateLevel() methods
-		validateLevel = function () {}; // in case validateLevel isn't defined
-		eval(allCode);
+		var validateLevel = function () {}; // in case validateLevel isn't defined
+		this._eval(allCode);
 
 		// start the level on a dummy map to validate
+		this._endOfStartLevelReached = false;
 		startLevel(dummyMap);
+
+		// does startLevel() execute fully?
+		if (!this._endOfStartLevelReached) {
+			throw 'startLevel() returned prematurely!';
+		}
+
+		// does validateLevel() succeed?
 		if (typeof(validateLevel) !== 'undefined') {
-			validateLevel(dummyMap, this.validators);
+			validateLevel(dummyMap);
 		}
 
 		this.onExit = function () { return true; };
@@ -79,6 +71,8 @@ Game.prototype.validate = function(allCode, playerCode) {
 			}
 		}
 		this.display.appendError(exceptionText);
+
+		// throw e; // for debugging
 		return null;
 	}
 };
@@ -86,7 +80,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback) {
-	eval(this.editor.getGoodState().code); // get validateLevel method from last good state (if such a method exists)
+	this._eval(this.editor.getGoodState().code); // get validateLevel method from last good state (if such a method exists)
 	try {
 		// run the callback
 		callback();
@@ -94,7 +88,7 @@ Game.prototype.validateCallback = function(callback) {
 		// check if validator still passes
 		try {
 			if (typeof(validateLevel) !== 'undefined') {
-				validateLevel(this.map, this.validators);
+				validateLevel(this.map);
 			}
 		} catch (e) {
 			// validation failed - not much to do here but restart the level, unfortunately
@@ -104,13 +98,14 @@ Game.prototype.validateCallback = function(callback) {
 			this.sound.playSound('static');
 
 			// disable player movement
-			this.map.getPlayer().canMove = false;
+			this.map.getPlayer()._canMove = false;
 		}
 
 		// refresh the map, just in case
 		this.map.refresh();
 	} catch (e) {
 		this.display.writeStatus(e.toString());
+		//throw e; // for debugging
 	}
 };
 
@@ -122,7 +117,7 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
 		var testCode = lines.slice(0, i).join('\n');
 
 		try {
-			eval(testCode);
+			this._eval(testCode);
 		} catch (e) {
 			if (e.message === errorMsg) {
 				return i;
@@ -130,4 +125,27 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
 		}
 	}
 	return null;
+};
+
+// Specific validators go here
+
+Map.prototype.validateAtLeastXObjects = function(num, type) {
+	var count = this._countObjects(type);
+	if (count < num) {
+		throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+	}
+};
+
+Map.prototype.validateAtMostXObjects = function(num, type) {
+	var count = this._countObjects(type);
+	if (count > num) {
+		throw 'Too many ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+	}
+};
+
+Map.prototype.validateExactlyXManyObjects = function(num, type) {
+	var count = this._countObjects(type);
+	if (count != num) {
+		throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+	}
 };
