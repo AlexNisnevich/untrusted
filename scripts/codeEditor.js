@@ -311,10 +311,10 @@ function CodeEditor(textAreaDomID, width, height, game) {
     }
 
     // returns all contents
-    this.getCode = function () {
+    this.getCode = function (forSaving) {
         var lines = this.internalEditor.getValue().split('\n');
 
-        if (endOfStartLevel) {
+        if (!forSaving && endOfStartLevel) {
             // insert the end of startLevel() marker at the appropriate location
             lines.splice(endOfStartLevel, 0, "map._game._endOfStartLevelReached = true;");
         }
@@ -362,7 +362,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     this.saveGoodState = function () {
         localStorage.setItem('level' + game._currentLevel + '.lastGoodState', JSON.stringify({
-            code: this.getCode(),
+            code: this.getCode(true),
             playerCode: this.getPlayerCode(),
             editableLines: editableLines,
             editableSections: editableSections
@@ -370,16 +370,18 @@ function CodeEditor(textAreaDomID, width, height, game) {
     }
 
     this.createGist = function () {
-        var filename = 'untrusted-lvl'+game._currentLevel+'-solution.js';
-        var description = 'Solution to level ' + game._currentLevel + ' in Untrusted: http://alex.nisnevich.com/untrusted/';
+        var lvlNum = game._currentLevel;
+        var filename = 'untrusted-lvl' + lvlNum + '-solution.js';
+        var description = 'Solution to level ' + lvlNum + ' in Untrusted: http://alex.nisnevich.com/untrusted/';
         var data = {'files': {}, 'description': description};
-        data['files'][filename] = {'content': this.getCode()};
+        data['files'][filename] = {'content': this.getCode(true)};
         $.ajax({
             'url': 'https://api.github.com/gists',
             'type': 'POST',
             'data': JSON.stringify(data),
             'success': function (data, status, xhr) {
-                console.log(data['html_url']);
+                $('#savedLevelMsg').html('Level ' + lvlNum + ' solution saved at <a href="'
+                    + data['html_url'] + '" target="_blank">' + data['html_url'] + '</a>');
             }
         });
     }

@@ -196,6 +196,8 @@ function Map(display, game) {
     };
 
     this._hideChapter = function() {
+        // start fading out chapter immediately
+        // unless it's a death message, in which case wait 2.5 sec
         setTimeout(function () {
             $('#chapter').fadeOut(1000);
         }, $('#chapter').hasClass('death') ? 2500 : 0);

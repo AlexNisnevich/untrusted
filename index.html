@@ -27,6 +27,7 @@
 	<div id="container">
         <div id="panes">
         	<a id="muteButton"><img src="images/mute-off.png" /></a>
+			<span id="savedLevelMsg"></span>
 			<div id="screenPane">
 				<canvas id="drawingCanvas" width="600" height="500"></canvas>
 				<div id="screen"></div>
@@ -46,7 +47,6 @@
 					<span><a id="menuButton" title="Ctrl+0: Menu" style="float: right;"><span class="keys">^0</span> Menu</a></span>
 				</div>
 			</div>
-
 			<div id="helpPane" style="display: none;">
 				<div id="helpPaneSidebar">
 					<div id="helpPaneTitle">API Reference</div>
@@ -55,12 +55,9 @@
 				<div id="helpPaneContent"></div>
 				<div id="helpPaneCloseButton">x</div>
 			</div>
-
 			<div id="menuPane" style="display: none;">
 				<div class="menuPaneHeading">Level Select</div>
-				<div id="levels">
-
-				</div>
+				<div id="levels"></div>
 			</div>
 		</div>
 	</div>

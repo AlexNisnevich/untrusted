@@ -276,3 +276,16 @@ h2 {
 #drawingCanvas {
 	position: absolute;
 }
+
+#savedLevelMsg {
+	position: relative;
+	float: right;
+	top: -15px;
+	right: 5px;
+	font-size: 0.85em;
+	color: #999;
+}
+
+#savedLevelMsg a {
+	color: white;
+}
