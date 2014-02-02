@@ -120,11 +120,7 @@ Game.prototype.openMenu = function () {
         levelButton.appendTo('#menuPane #levels');
     });
 
-    if (!$('#menuPane').is(':visible')) {
-        $('#menuPane').show();
-    } else {
-        $('#menuPane').hide();
-    }
+    $('#menuPane').toggle();
 };
 
 Game.prototype.openHelp = function () {
