@@ -87,7 +87,7 @@ function Map(display, game) {
 			if (obj.getType() === type) {
 				count++;
 			}
-		}) 
+		})
 
 		return count;
 	};
@@ -196,7 +196,9 @@ function Map(display, game) {
 	};
 
 	this._hideChapter = function() {
-		$('#chapter').fadeOut();
+		setTimeout(function () {
+			$('#chapter').fadeOut(1000);
+		}, 2500);
 	};
 
 	/* exposed methods */
