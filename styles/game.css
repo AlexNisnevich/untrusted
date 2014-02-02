@@ -280,12 +280,13 @@ h2 {
 #savedLevelMsg {
 	position: relative;
 	float: right;
-	top: -15px;
+	top: -16px;
 	right: 5px;
 	font-size: 0.85em;
 	color: #999;
 }
 
 #savedLevelMsg a {
-	color: white;
+	color: #ccc;
+	text-decoration: none;
 }
