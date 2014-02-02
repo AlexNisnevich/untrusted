@@ -161,17 +161,20 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
         }
         else {
+            // Hunt down last editable line in segment
+            var findEndOfSegment = function(line) {
+                if (editableLines.indexOf(line) !== -1) { // This line is editable
+                    return findEndOfSegment(++line); // What about the next line?
+                }
+
+                return --line; // The previous line was the last editable one
+            };
+
             var pasteLength = change.text.length;
             if (pasteLength > 1) {
-                    var findEndOfSegment = function(lineNumber) {
-                    if (editableLines.indexOf(lineNumber) !== -1) { // This line is editable
-                        return findEndOfSegment(++lineNumber); // What about the next line?
-                    }
-
-                    return --lineNumber; // The previous line was the last editable one
-                };
-
                 var lastLine = findEndOfSegment(change.to.line);
+
+                // Shift lines
                 editableLines = editableLines.map(function(line) {
                     if (line > lastLine) {
                         return line + pasteLength - 1;
@@ -180,6 +183,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
                     return line;
                 });
 
+                // Append new lines
                 for (var i = lastLine + 1; i < lastLine + change.text.length; i++) {
                     editableLines.push(i);
                 }
@@ -193,6 +197,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
 
             // modify editable sections accordingly
+            // TODO Update for multiline paste
             var sections = editableSections[change.to.line];
             if (sections) {
                 var delta = change.text[0].length - (change.to.ch - change.from.ch);
