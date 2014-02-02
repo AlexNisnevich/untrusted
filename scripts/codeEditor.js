@@ -174,9 +174,9 @@ function CodeEditor(textAreaDomID, width, height) {
             }
 
             // modify editable sections accordingly
-            if (editableSections[change.to.line]) {
-                var sections = editableSections[change.to.line];
-                    var delta = change.text[0].length - (change.to.ch - change.from.ch);
+            var sections = editableSections[change.to.line];
+            if (sections) {
+                var delta = change.text[0].length - (change.to.ch - change.from.ch);
                 for (var i = 0; i < sections.length; i++) {
                     // move any section start/end points that we are to the left of
                     if (change.to.ch < sections[i][1]) {
