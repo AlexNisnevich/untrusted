@@ -68,10 +68,11 @@ Game.prototype.setInventoryStateByLevel = function (levelNum) {
 };
 
 Game.prototype.drawInventory = function () {
-	var game = this;
+	var game = this,
+        $inventory = $('#inventory');
 
 	if (this.inventory.length > 0) {
-		$('#inventory').text('INVENTORY: ');
+		$inventory.text('INVENTORY: ');
 
 		this.inventory.forEach(function (item) {
 			var object = game.objects[item];
@@ -80,10 +81,10 @@ Game.prototype.drawInventory = function () {
 				.attr('title', item)
 				.css('color', object.color ? object.color : '#fff')
 				.text(object.symbol)
-				.appendTo($('#inventory'));
+				.appendTo($inventory);
 		});
 	} else {
-		$('#inventory').html('');
+		$inventory.html('');
 	}
 };
 
@@ -91,7 +92,7 @@ Game.prototype.drawInventory = function () {
 
 Game.prototype.usePhone = function () {
 	var player = this.map.getPlayer();
-	if (player && player._canMove && player.hasItem('phone')) {
+	if (player && player.hasItem('phone') && player._canMove) {
 		if (player._phoneFunc) {
 			this.sound.playSound('select');
 			this.validateCallback(player._phoneFunc);

@@ -20,7 +20,7 @@ function CodeEditor(textAreaDomID, width, height) {
 
 	// preprocesses code,determines the location
 	// of editable lines and sections, loads properties
-	function preprocess(codeString) {
+	var preprocess = function(codeString) {
 		editableLines = [];
 		editableSections = {};
 		endOfStartLevel = null;
@@ -95,10 +95,10 @@ function CodeEditor(textAreaDomID, width, height) {
 
 	// enforces editing restrictions when set as the handler
 	// for the 'beforeChange' event
-	function enforceRestrictions(instance, change) {
+	var enforceRestrictions = function(instance, change) {
 		lastChange = change;
 
-		function inEditableArea(c) {
+		var inEditableArea = function(c) {
 			var lineNum = c.to.line;
 			if (editableLines.indexOf(lineNum) > -1) {
 				// editable line?
@@ -119,9 +119,8 @@ function CodeEditor(textAreaDomID, width, height) {
 
 		if (!inEditableArea(change)) {
 			change.cancel();
-		}
-		else if (change.to.line !== change.from.line) {
-			// don't allow multi-line deletion
+		} else if (change.to.line !== change.from.line) {
+		    // don't allow multi-line deletion
 			change.cancel();
 
 			// unless it's pressing backspace at the start of a line
@@ -335,8 +334,7 @@ function CodeEditor(textAreaDomID, width, height) {
 		for (var line in editableSections) {
 			if (editableSections.hasOwnProperty(line)) {
 				var sections = editableSections[line];
-				for (var i = 0; i < sections.length; i++) {
-					var section = sections[i];
+				for (var section in sections) {
 					code += this.internalEditor.getLine(line).slice(section[0], section[1]) + ' \n';
 				}
 			}

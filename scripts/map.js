@@ -297,7 +297,7 @@ function Map(display, game) {
 	};
 
 	this.startTimer = function(timer, delay) {
-		if (!delay) {
+		if (typeof(delay) === 'undefined') {
 			throw "startTimer(): delay not specified"
 		} else if (delay < 25) {
 			throw "startTimer(): minimum delay is 25 milliseconds";
@@ -308,17 +308,19 @@ function Map(display, game) {
 
 	this.displayChapter = function(chapterName, cssClass) {
 		if (this._game._displayedChapters.indexOf(chapterName) === -1) {
-			$('#chapter').html(chapterName.replace("\n","<br>"));
-			$('#chapter').removeClass().show();
+            var $chapter = $('#chapter');
+
+            $chapter.html(chapterName.replace("\n","<br>"));
+            $chapter.removeClass().show();
 
 			if (cssClass) {
-				$('#chapter').addClass(cssClass);
+                $chapter.addClass(cssClass);
 			} else {
 				this._game._displayedChapters.push(chapterName);
 			}
 
 			setTimeout(function () {
-				$('#chapter').fadeOut();
+                $chapter.fadeOut();
 			}, 5 * 1000);
 		}
 	};

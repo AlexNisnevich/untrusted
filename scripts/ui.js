@@ -94,30 +94,28 @@ Game.prototype.enableButtons = function () {
 
 Game.prototype.openMenu = function () {
 	var game = this;
+    var $menuPane = $('#menuPane'),
+        $levels = $('#levels');
 
-	$('#menuPane #levels').html('');
+	$levels.html('');
 	$.each(game._levelFileNames, function (levelNum, fileName) {
-		levelNum += 1;
-		var levelName = fileName.split('.')[0]
+		++levelNum;
+		var levelName = fileName.split('.')[0];
         levelName = levelName.split('_').join(' ');
 
 		var levelButton = $('<button>');
 		if (levelNum <= game._levelReached) {
 			levelButton.text(levelName).click(function () {
 				game._jumpToNthLevel(levelNum);
-				$('#menuPane').hide();
+				$menuPane.hide();
 			});
 		} else {
 			levelButton.text('???').addClass('disabled');
 		}
-		levelButton.appendTo('#menuPane #levels');
+		levelButton.appendTo($levels);
 	});
 
-	if (!$('#menuPane').is(':visible')) {
-		$('#menuPane').show();
-	} else {
-		$('#menuPane').hide();
-	}
+    $menuPane.toggle();
 };
 
 Game.prototype.openHelp = function () {
