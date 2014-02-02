@@ -347,6 +347,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
     }
 
     this.setCode = function(code) {
+        // make sure we're not saving the hidden END_OF_START_LEVEL line
+        code = code.split('\n').filter(function (line) {
+            return line.indexOf('_endOfStartLevelReached') < 0;
+        }).join('\n');
+
         this.internalEditor.off('beforeChange',enforceRestrictions);
         this.internalEditor.setValue(code);
         this.internalEditor.on('beforeChange', enforceRestrictions);
