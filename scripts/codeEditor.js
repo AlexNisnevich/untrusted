@@ -56,13 +56,13 @@ function CodeEditor(textAreaDomID, width, height) {
 				lineArray.splice(i,1);
 				i--;
 				inEditableBlock = false;
-			} 
+			}
 			// process end of startLevel()
 			  else if (currentLine.indexOf(symbols.end_start_level) === 0) {
 				lineArray.splice(i,1);
 				endOfStartLevel = i;
 				i--;
-			} 
+			}
 			// everything else
 			  else {
 				if (inEditableBlock) {
@@ -176,9 +176,9 @@ function CodeEditor(textAreaDomID, width, height) {
 			// modify editable sections accordingly
 			if (editableSections[change.to.line]) {
 				var sections = editableSections[change.to.line];
+					var delta = change.text[0].length - (change.to.ch - change.from.ch);
 				for (var i = 0; i < sections.length; i++) {
 					// move any section start/end points that we are to the left of
-					var delta = change.text[0].length - (change.to.ch - change.from.ch);
 					if (change.to.ch < sections[i][1]) {
 						sections[i][1] += delta;
 					}
@@ -282,6 +282,7 @@ function CodeEditor(textAreaDomID, width, height) {
 		this.internalEditor.on('beforeChange', enforceRestrictions);
 		this.markUneditableLines();
 		this.internalEditor.refresh();
+		this.internalEditor.clearHistory();
 	};
 
 	// marks uneditable lines within editor

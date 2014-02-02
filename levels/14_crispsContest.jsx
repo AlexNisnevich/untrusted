@@ -10,12 +10,12 @@
  ********************
  *
  * The Algorithm is almost in our grasp!
- * At long last, we will definitively establish 
- * that 3SAT is solvable in polynomial time. It's 
- * been a long, strange journey, but it will all be 
+ * At long last, we will definitively establish
+ * that 3SAT is solvable in polynomial time. It's
+ * been a long, strange journey, but it will all be
  * worth it.
  *
- * You have the red, green, and blue keys. Now you 
+ * You have the red, green, and blue keys. Now you
  * just need to figure out how to unlock this thing.
  */
 
