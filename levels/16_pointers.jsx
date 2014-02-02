@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": 
+    "commandsIntroduced":
         ["map.getDynamicObjects", "map.getRandomColor",
          "map.getCanvasContext", "map.getCanvasCoords",
          "object.setTarget"],
@@ -10,7 +10,7 @@
 /***************
  * pointers.js *
  ***************
- * 
+ *
  * You! How are you still alive?
  *
  * Well, no matter. Good luck getting through this
@@ -27,7 +27,7 @@ function startLevel(map) {
 
     map.placePlayer(5, 5);
     var player = map.getPlayer();
-    
+
     map.placeObject(35, 21, 'exit');
 
     for (x = 4; x <= 36; x++) {
@@ -53,7 +53,7 @@ function startLevel(map) {
             }
         }
     }
-    
+
     // Ah look, Dr. Eval! It's your old friend,
     // the canvas.
     var canvas = map.getCanvasContext();
@@ -62,7 +62,7 @@ function startLevel(map) {
     teleporters = shuffle(teleporters);
 
     for (i = 0; i < teleporters.length; i+=2) {
-        var t1 = teleporters[i]; 
+        var t1 = teleporters[i];
         var t2 = teleporters[i+1];
 
         // Make each pair of teleporters point to each other
@@ -82,6 +82,10 @@ function startLevel(map) {
 
 
 #END_EDITABLE#
+
+        // No funny business!
+        t1.setTarget(t2);
+        t2.setTarget(t1);
     }
 #END_OF_START_LEVEL#
 }
