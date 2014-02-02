@@ -1,360 +1,362 @@
 function Map(display, game) {
-	/* private variables */
+    /* private variables */
 
-	var __player;
-	var __grid;
-	var __dynamicObjects;
-	var __objectDefinitions;
+    var __player;
+    var __grid;
+    var __dynamicObjects;
+    var __objectDefinitions;
 
-	var __allowOverwrite;
-	var __allowMultiMove;
-	var __keyDelay;
-	var __intervals = [];
+    var __allowOverwrite;
+    var __allowMultiMove;
+    var __keyDelay;
+    var __intervals = [];
 
-	/* unexposed variables */
+    /* unexposed variables */
 
-	this._game = game;
-	this._display = display;
+    this._game = game;
+    this._display = display;
 
-	/* unexposed getters */
+    /* unexposed getters */
 
-	this._getObjectDefinition = function(objName) { return __objectDefinitions[objName]; };
-	this._getObjectDefinitions = function() { return __objectDefinitions; };
-	this._getGrid = function () { return __grid; };
+    this._getObjectDefinition = function(objName) { return __objectDefinitions[objName]; };
+    this._getObjectDefinitions = function() { return __objectDefinitions; };
+    this._getGrid = function () { return __grid; };
 
-	/* exposed getters */
+    /* exposed getters */
 
-	this.getDynamicObjects = function () { return __dynamicObjects; };
-	this.getPlayer = function () { return __player; };
-	this.getWidth = function () { return this._game._dimensions.width; };
-	this.getHeight = function () { return this._game._dimensions.height; };
+    this.getDynamicObjects = function () { return __dynamicObjects; };
+    this.getPlayer = function () { return __player; };
+    this.getWidth = function () { return this._game._dimensions.width; };
+    this.getHeight = function () { return this._game._dimensions.height; };
 
-	/* unexposed methods */
+    /* unexposed methods */
 
-	this._reset = function () {
-		__objectDefinitions = clone(this._game.objects);
-		this._display.clear();
-		__grid = new Array(this._game._dimensions.width);
-		for (var x = 0; x < this._game._dimensions.width; x++) {
-			__grid[x] = new Array(this._game._dimensions.height);
-			for (var y = 0; y < this._game._dimensions.height; y++) {
-				__grid[x][y] = {type: 'empty'};
-			}
-		}
+    this._reset = function () {
+        __objectDefinitions = clone(this._game.objects);
+        this._display.clear();
+        __grid = new Array(this._game._dimensions.width);
+        for (var x = 0; x < this._game._dimensions.width; x++) {
+            __grid[x] = new Array(this._game._dimensions.height);
+            for (var y = 0; y < this._game._dimensions.height; y++) {
+                __grid[x][y] = {type: 'empty'};
+            }
+        }
 
-		__dynamicObjects = [];
-		__player = null;
+        __dynamicObjects = [];
+        __player = null;
 
-		for (var i = 0; i < __intervals.length; i++) {
-			clearInterval(__intervals[i]);
-		}
-		__intervals = [];
-	};
+        for (var i = 0; i < __intervals.length; i++) {
+            clearInterval(__intervals[i]);
+        }
+        __intervals = [];
+    };
 
-	this._setProperties = function (mapProperties) {
-		// set defaults
-		__allowOverwrite = false;
-		__allowMultiMove = false;
-		__keyDelay = 0;
+    this._setProperties = function (mapProperties) {
+        // set defaults
+        __allowOverwrite = false;
+        __allowMultiMove = false;
+        __keyDelay = 0;
 
-		// now set any properties that were passed in
-		if (mapProperties) {
-			if (mapProperties.allowOverwrite === true) {
-				__allowOverwrite = true;
-			}
+        // now set any properties that were passed in
+        if (mapProperties) {
+            if (mapProperties.allowOverwrite === true) {
+                __allowOverwrite = true;
+            }
 
-			if (mapProperties.keyDelay) {
-				__keyDelay = mapProperties.keyDelay;
-			}
-		}
-	};
+            if (mapProperties.keyDelay) {
+                __keyDelay = mapProperties.keyDelay;
+            }
+        }
+    };
 
-	// (Used by validators)
-	this._countObjects = function (type) {
-		var count = 0;
+    // (Used by validators)
+    this._countObjects = function (type) {
+        var count = 0;
 
-		// count static objects
-		for (var x = 0; x < this.getWidth(); x++) {
-			for (var y = 0; y < this.getHeight(); y++) {
-				if (__grid[x][y].type === type) {
-					count++;
-				}
-			}
-		}
+        // count static objects
+        for (var x = 0; x < this.getWidth(); x++) {
+            for (var y = 0; y < this.getHeight(); y++) {
+                if (__grid[x][y].type === type) {
+                    count++;
+                }
+            }
+        }
 
-		// count dynamic objects
-		this.getDynamicObjects().forEach(function (obj) {
-			if (obj.getType() === type) {
-				count++;
-			}
-		}) 
+        // count dynamic objects
+        this.getDynamicObjects().forEach(function (obj) {
+            if (obj.getType() === type) {
+                count++;
+            }
+        })
 
-		return count;
-	};
+        return count;
+    };
 
-	this._canMoveTo = function (x, y, myType) {
-		if (x < 0 || x >= this._game._dimensions.width || y < 0 || y >= this._game._dimensions.height) {
-			return false;
-		}
+    this._canMoveTo = function (x, y, myType) {
+        if (x < 0 || x >= this._game._dimensions.width || y < 0 || y >= this._game._dimensions.height) {
+            return false;
+        }
 
-		// look for static objects that can serve as obstacles
-		var objType = __grid[x][y].type;
-		var object = __objectDefinitions[objType];
-		if (object.impassable) {
-			if (myType && object.passableFor && object.passableFor.indexOf(myType) > -1) {
-				// this object is of a type that can pass the obstacle
-				return true;
-			} else if (typeof object.impassable === 'function') {
-				// the obstacle is impassable only in certain circumstances
-				try {
-					return !object.impassable(__player, object);
-				} catch (e) {
-					this._display.writeStatus(e);
-				}
-			} else {
-				// the obstacle is always impassable
-				return false;
-			}
-		} else if (myType && object.impassableFor && object.impassableFor.indexOf(myType) > -1) {
-			// this object is of a type that cannot pass the obstacle
-			return false;
-		} else {
-			// no obstacle
-			return true;
-		}
-	};
+        // look for static objects that can serve as obstacles
+        var objType = __grid[x][y].type;
+        var object = __objectDefinitions[objType];
+        if (object.impassable) {
+            if (myType && object.passableFor && object.passableFor.indexOf(myType) > -1) {
+                // this object is of a type that can pass the obstacle
+                return true;
+            } else if (typeof object.impassable === 'function') {
+                // the obstacle is impassable only in certain circumstances
+                try {
+                    return !object.impassable(__player, object);
+                } catch (e) {
+                    this._display.writeStatus(e);
+                }
+            } else {
+                // the obstacle is always impassable
+                return false;
+            }
+        } else if (myType && object.impassableFor && object.impassableFor.indexOf(myType) > -1) {
+            // this object is of a type that cannot pass the obstacle
+            return false;
+        } else {
+            // no obstacle
+            return true;
+        }
+    };
 
-	// Returns the object of the given type closest to target coordinates
-	this._findNearestToPoint = function (type, targetX, targetY) {
-		var foundObjects = [];
+    // Returns the object of the given type closest to target coordinates
+    this._findNearestToPoint = function (type, targetX, targetY) {
+        var foundObjects = [];
 
-		// look for static objects
-		for (var x = 0; x < this.getWidth(); x++) {
-			for (var y = 0; y < this.getHeight(); y++) {
-				if (__grid[x][y].type === type) {
-					foundObjects.push({x: x, y: y});
-				}
-			}
-		}
+        // look for static objects
+        for (var x = 0; x < this.getWidth(); x++) {
+            for (var y = 0; y < this.getHeight(); y++) {
+                if (__grid[x][y].type === type) {
+                    foundObjects.push({x: x, y: y});
+                }
+            }
+        }
 
-		// look for dynamic objects
-		for (var i = 0; i < __dynamicObjects.length; i++) {
-			var object = __dynamicObjects[i];
-			if (object.getType() === type) {
-				foundObjects.push({x: object.getX(), y: object.getY()});
-			}
-		}
+        // look for dynamic objects
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
+            if (object.getType() === type) {
+                foundObjects.push({x: object.getX(), y: object.getY()});
+            }
+        }
 
-		// look for player
-		if (type === 'player') {
-			foundObjects.push({x: __player.getX(), y: __player.getY()});
-		}
+        // look for player
+        if (type === 'player') {
+            foundObjects.push({x: __player.getX(), y: __player.getY()});
+        }
 
-		var dists = [];
-		for (var i = 0; i < foundObjects.length; i++) {
-			var obj = foundObjects[i];
-			dists[i] = Math.sqrt(Math.pow(targetX - obj.x, 2) + Math.pow(targetY - obj.y, 2));
+        var dists = [];
+        for (var i = 0; i < foundObjects.length; i++) {
+            var obj = foundObjects[i];
+            dists[i] = Math.sqrt(Math.pow(targetX - obj.x, 2) + Math.pow(targetY - obj.y, 2));
 
-			// We want to find objects distinct from ourselves
-			if (dists[i] === 0) {
-				dists[i] = 999;
-			}
-		}
+            // We want to find objects distinct from ourselves
+            if (dists[i] === 0) {
+                dists[i] = 999;
+            }
+        }
 
-		var minDist = Math.min.apply(Math, dists);
-		var closestTarget = foundObjects[dists.indexOf(minDist)];
+        var minDist = Math.min.apply(Math, dists);
+        var closestTarget = foundObjects[dists.indexOf(minDist)];
 
-		return closestTarget;
-	};
+        return closestTarget;
+    };
 
-	this._isPointOccupiedByDynamicObject = function (x, y) {
-		for (var i = 0; i < __dynamicObjects.length; i++) {
-			var object = __dynamicObjects[i];
-			if (object.getX() === x && object.getY() === y) {
-				return true;
-			}
-		}
-		return false;
-	}
+    this._isPointOccupiedByDynamicObject = function (x, y) {
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
+            if (object.getX() === x && object.getY() === y) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	this._moveAllDynamicObjects = function () {
-		__dynamicObjects.forEach(function(object) {
-			object._onTurn();
-		});
-	};
+    this._moveAllDynamicObjects = function () {
+        __dynamicObjects.forEach(function(object) {
+            object._onTurn();
+        });
+    };
 
-	this._removeItemFromMap = function (x, y, klass) {
-		if (__grid[x][y].type === klass) {
-			__grid[x][y].type = 'empty';
-		}
-	};
+    this._removeItemFromMap = function (x, y, klass) {
+        if (__grid[x][y].type === klass) {
+            __grid[x][y].type = 'empty';
+        }
+    };
 
-	this._reenableMovementForPlayer = function(player) {
-		setTimeout(function () {
-			player._canMove = true;
-		}, __keyDelay);
-	};
+    this._reenableMovementForPlayer = function(player) {
+        setTimeout(function () {
+            player._canMove = true;
+        }, __keyDelay);
+    };
 
-	this._hideChapter = function() {
-		$('#chapter').fadeOut();
-	};
+    this._hideChapter = function() {
+        setTimeout(function () {
+            $('#chapter').fadeOut(1000);
+        }, 2500);
+    };
 
-	/* exposed methods */
+    /* exposed methods */
 
-	this.refresh = function () {
-		this._display.drawAll(this);
-		this._game.drawInventory();
-	};
+    this.refresh = function () {
+        this._display.drawAll(this);
+        this._game.drawInventory();
+    };
 
-	this.placeObject = function (x, y, type) {
-		if (!__objectDefinitions[type]) {
-			throw "There is no type of object named " + type + "!";
-		}
+    this.placeObject = function (x, y, type) {
+        if (!__objectDefinitions[type]) {
+            throw "There is no type of object named " + type + "!";
+        }
 
-		if (typeof(__grid[x]) === 'undefined' || typeof(__grid[x][y]) === 'undefined') {
-			return;
-			// throw "Not a valid location to place an object!";
-		}
+        if (typeof(__grid[x]) === 'undefined' || typeof(__grid[x][y]) === 'undefined') {
+            return;
+            // throw "Not a valid location to place an object!";
+        }
 
-		if (__objectDefinitions[type].type === 'dynamic') {
-			// dynamic object
-			__dynamicObjects.push(new DynamicObject(this, type, x, y));
-		} else {
-			// static object
-			if (__grid[x][y].type === 'empty' || __grid[x][y].type === type || __allowOverwrite) {
-				__grid[x][y].type = type;
-			} else {
-				throw "There is already an object at (" + x + ", " + y + ")!";
-			}
-		}
-	};
+        if (__objectDefinitions[type].type === 'dynamic') {
+            // dynamic object
+            __dynamicObjects.push(new DynamicObject(this, type, x, y));
+        } else {
+            // static object
+            if (__grid[x][y].type === 'empty' || __grid[x][y].type === type || __allowOverwrite) {
+                __grid[x][y].type = type;
+            } else {
+                throw "There is already an object at (" + x + ", " + y + ")!";
+            }
+        }
+    };
 
-	this.placePlayer = function (x, y) {
-		if (__player) {
-			throw "Can't place player twice!";
-		}
-		__player = new Player(x, y, this);
-		this._display.drawAll(this);
-	};
+    this.placePlayer = function (x, y) {
+        if (__player) {
+            throw "Can't place player twice!";
+        }
+        __player = new Player(x, y, this);
+        this._display.drawAll(this);
+    };
 
-	this.createFromGrid = function (grid, tiles, xOffset, yOffset) {
-		for (var y = 0; y < grid.length; y++) {
-			var line = grid[y];
-			for (var x = 0; x < line.length; x++) {
-				var tile = line[x];
-				var type = tiles[tile];
-				if (type === 'player') {
-					this.placePlayer(x + xOffset, y + yOffset);
-				} else if (type) {
-					this.placeObject(x + xOffset, y + yOffset, type);
-				}
-			}
-		}
-	};
+    this.createFromGrid = function (grid, tiles, xOffset, yOffset) {
+        for (var y = 0; y < grid.length; y++) {
+            var line = grid[y];
+            for (var x = 0; x < line.length; x++) {
+                var tile = line[x];
+                var type = tiles[tile];
+                if (type === 'player') {
+                    this.placePlayer(x + xOffset, y + yOffset);
+                } else if (type) {
+                    this.placeObject(x + xOffset, y + yOffset, type);
+                }
+            }
+        }
+    };
 
-	this.setSquareColor = function (x, y, bgColor) {
-		__grid[x][y].bgColor = bgColor;
-	};
+    this.setSquareColor = function (x, y, bgColor) {
+        __grid[x][y].bgColor = bgColor;
+    };
 
-	this.defineObject = function (name, properties) {
-		if (!__objectDefinitions[name]) {
-			__objectDefinitions[name] = properties;
-		} else {
-			throw "There is already a type of object named " + name + "!";
-		}
-	};
+    this.defineObject = function (name, properties) {
+        if (!__objectDefinitions[name]) {
+            __objectDefinitions[name] = properties;
+        } else {
+            throw "There is already a type of object named " + name + "!";
+        }
+    };
 
-	this.getObjectTypeAt = function (x, y) {
-		return __grid[x][y].type;
-	}
+    this.getObjectTypeAt = function (x, y) {
+        return __grid[x][y].type;
+    }
 
-	this.getAdjacentEmptyCells = function (x, y) {
-		var map = this;
-		var actions = ['right', 'down', 'left', 'up'];
-		var adjacentEmptyCells = [];
-		$.each(actions, function (i, action) {
-			switch (actions[i]) {
-				case 'right':
-					var child = [x+1, y];
-					break;
-				case 'left':
-					var child = [x-1, y];
-					break;
-				case 'down':
-					var child = [x, y+1];
-					break;
-				case 'up':
-					var child = [x, y-1];
-					break;
-			}
-			if (map.getObjectTypeAt(child[0], child[1]) === 'empty') {
-				adjacentEmptyCells.push([child, action]);
-			}
-		});
-		return adjacentEmptyCells;
-	};
+    this.getAdjacentEmptyCells = function (x, y) {
+        var map = this;
+        var actions = ['right', 'down', 'left', 'up'];
+        var adjacentEmptyCells = [];
+        $.each(actions, function (i, action) {
+            switch (actions[i]) {
+                case 'right':
+                    var child = [x+1, y];
+                    break;
+                case 'left':
+                    var child = [x-1, y];
+                    break;
+                case 'down':
+                    var child = [x, y+1];
+                    break;
+                case 'up':
+                    var child = [x, y-1];
+                    break;
+            }
+            if (map.getObjectTypeAt(child[0], child[1]) === 'empty') {
+                adjacentEmptyCells.push([child, action]);
+            }
+        });
+        return adjacentEmptyCells;
+    };
 
-	this.startTimer = function(timer, delay) {
-		if (!delay) {
-			throw "startTimer(): delay not specified"
-		} else if (delay < 25) {
-			throw "startTimer(): minimum delay is 25 milliseconds";
-		}
+    this.startTimer = function(timer, delay) {
+        if (!delay) {
+            throw "startTimer(): delay not specified"
+        } else if (delay < 25) {
+            throw "startTimer(): minimum delay is 25 milliseconds";
+        }
 
-		__intervals.push(setInterval(timer, delay));
-	};
+        __intervals.push(setInterval(timer, delay));
+    };
 
-	this.displayChapter = function(chapterName, cssClass) {
-		if (this._game._displayedChapters.indexOf(chapterName) === -1) {
-			$('#chapter').html(chapterName.replace("\n","<br>"));
-			$('#chapter').removeClass().show();
+    this.displayChapter = function(chapterName, cssClass) {
+        if (this._game._displayedChapters.indexOf(chapterName) === -1) {
+            $('#chapter').html(chapterName.replace("\n","<br>"));
+            $('#chapter').removeClass().show();
 
-			if (cssClass) {
-				$('#chapter').addClass(cssClass);
-			} else {
-				this._game._displayedChapters.push(chapterName);
-			}
+            if (cssClass) {
+                $('#chapter').addClass(cssClass);
+            } else {
+                this._game._displayedChapters.push(chapterName);
+            }
 
-			setTimeout(function () {
-				$('#chapter').fadeOut();
-			}, 5 * 1000);
-		}
-	};
+            setTimeout(function () {
+                $('#chapter').fadeOut();
+            }, 5 * 1000);
+        }
+    };
 
-	this.writeStatus = function(status) {
-		setTimeout(function () {
-			display.writeStatus(status);
-		}, 100);
-	};
+    this.writeStatus = function(status) {
+        setTimeout(function () {
+            display.writeStatus(status);
+        }, 100);
+    };
 
-	this.getCanvasContext = function() {
-		return $('#drawingCanvas')[0].getContext('2d');
-	};
+    this.getCanvasContext = function() {
+        return $('#drawingCanvas')[0].getContext('2d');
+    };
 
-	this.getCanvasCoords = function(obj) {
-		// 0.7 is a bit of a magic number to make the canvas
-		// operations in lvl 16 look good
-		return {
-			x: (obj.getX() + 0.7) * 600 / this._game._dimensions.width,
-			y: (obj.getY() + 0.7) * 500 / this._game._dimensions.height
-		};
-	};
+    this.getCanvasCoords = function(obj) {
+        // 0.7 is a bit of a magic number to make the canvas
+        // operations in lvl 16 look good
+        return {
+            x: (obj.getX() + 0.7) * 600 / this._game._dimensions.width,
+            y: (obj.getY() + 0.7) * 500 / this._game._dimensions.height
+        };
+    };
 
-	this.getRandomColor = function(start, end) {
-		var mean = [
-			Math.floor((start[0] + end[0]) / 2),
-			Math.floor((start[1] + end[1]) / 2),
-			Math.floor((start[2] + end[2]) / 2)
-		];
-		var std = [
-			Math.floor((end[0] - start[0]) / 2),
-			Math.floor((end[1] - start[1]) / 2),
-			Math.floor((end[2] - start[2]) / 2)
-		];
-		return ROT.Color.toHex(ROT.Color.randomize(mean, std));
-	}
+    this.getRandomColor = function(start, end) {
+        var mean = [
+            Math.floor((start[0] + end[0]) / 2),
+            Math.floor((start[1] + end[1]) / 2),
+            Math.floor((start[2] + end[2]) / 2)
+        ];
+        var std = [
+            Math.floor((end[0] - start[0]) / 2),
+            Math.floor((end[1] - start[1]) / 2),
+            Math.floor((end[2] - start[2]) / 2)
+        ];
+        return ROT.Color.toHex(ROT.Color.randomize(mean, std));
+    }
 
-	/* initialization */
+    /* initialization */
 
-	this._reset();
+    this._reset();
 }

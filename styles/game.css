@@ -30,6 +30,7 @@ body {
 }
 
 #screen canvas {
+    outline: none;
 	border: 2px solid #333;
 }
 
