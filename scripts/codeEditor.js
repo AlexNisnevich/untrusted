@@ -362,7 +362,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
             editableLines: editableLines,
             editableSections: editableSections
         }));
-        console.log(this.getCode());
     }
 
     this.getGoodState = function () {
