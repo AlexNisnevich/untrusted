@@ -1,3 +1,16 @@
+var toggleFocus = (function () {
+    var focus_state = undefined;
+    return function do_toggle(game) {
+        if (!focus_state || focus_state === 'display') {
+            focus_state = 'editor';
+            game.editor.focus();
+        } else if (focus_state === 'editor') {
+            focus_state = 'display';
+            game.display.focus();
+        }
+    };
+})();
+
 Game.prototype.enableShortcutKeys = function () {
     var game = this;
 
@@ -7,11 +20,11 @@ Game.prototype.enableShortcutKeys = function () {
         return true;
     });
 
-    shortcut.add('ctrl+2', function () {
-        game.sound.playSound('select');
-        game.display.focus();
-        return true;
-    });
+	shortcut.add('ctrl+2', function () {
+		game.sound.playSound('select');
+        toggleFocus(game);
+		return true;
+	});
 
     shortcut.add('ctrl+3', function () {
         game.sound.playSound('select');
@@ -52,14 +65,8 @@ Game.prototype.enableButtons = function () {
         game.openHelp();
     });
 
-    $("#mapButton").click( function () {
-        game.sound.playSound('select');
-        game.display.focus();
-    });
-
-    $("#editorButton").click( function () {
-        game.sound.playSound('select');
-        game.editor.focus();
+    $("#toggleFocusButton").click( function () {
+        toggleFocus(game);
     });
 
     $("#resetButton").click( function () {
@@ -113,11 +120,7 @@ Game.prototype.openMenu = function () {
         levelButton.appendTo('#menuPane #levels');
     });
 
-    if (!$('#menuPane').is(':visible')) {
-        $('#menuPane').show();
-    } else {
-        $('#menuPane').hide();
-    }
+    $('#menuPane').toggle();
 };
 
 Game.prototype.openHelp = function () {
