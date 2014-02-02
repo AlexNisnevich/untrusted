@@ -1,232 +1,232 @@
 function Game(debugMode, startLevel) {
-	/* private properties */
+    /* private properties */
 
-	var __currentCode = '';
-	var __commands = [];
+    var __currentCode = '';
+    var __commands = [];
 
-	/* unexposed properties */
+    /* unexposed properties */
 
-	this._dimensions = {
-		width: 50,
-		height: 25
-	};
+    this._dimensions = {
+        width: 50,
+        height: 25
+    };
 
-	this._levelFileNames = [
-		'01_cellBlockA.jsx',
-		'02_theLongWayOut.jsx',
-		'03_validationEngaged.jsx',
-		'04_multiplicity.jsx',
-		'05_minesweeper.jsx',
-		'06_drones101.jsx',
-		'07_colors.jsx',
-		'08_intoTheWoods.jsx',
-		'09_fordingTheRiver.jsx',
-		'10_ambush.jsx',
-		'11_robot.jsx',
-		'12_robotNav.jsx',
-		'13_robotMaze.jsx',
-		'14_crispsContest.jsx',
-		'15_exceptionalCrossing.jsx',
-		'16_pointers.jsx',
-		'17_superDrEvalBros.jsx',
-		//'18_domManipulation.jsx',
-		//'19_bossFight.jsx',
-		//'20_ULTIMA_BOSS_FIGHT.jsx',
-		'99_credits.jsx'
-	];
+    this._levelFileNames = [
+        '01_cellBlockA.jsx',
+        '02_theLongWayOut.jsx',
+        '03_validationEngaged.jsx',
+        '04_multiplicity.jsx',
+        '05_minesweeper.jsx',
+        '06_drones101.jsx',
+        '07_colors.jsx',
+        '08_intoTheWoods.jsx',
+        '09_fordingTheRiver.jsx',
+        '10_ambush.jsx',
+        '11_robot.jsx',
+        '12_robotNav.jsx',
+        '13_robotMaze.jsx',
+        '14_crispsContest.jsx',
+        '15_exceptionalCrossing.jsx',
+        '16_pointers.jsx',
+        '17_superDrEvalBros.jsx',
+        //'18_domManipulation.jsx',
+        //'19_bossFight.jsx',
+        //'20_ULTIMA_BOSS_FIGHT.jsx',
+        '99_credits.jsx'
+    ];
 
-	this._currentLevel = 1;
-	this._levelReached = localStorage.getItem('levelReached') || 1;
-	this._displayedChapters = [];
+    this._currentLevel = 1;
+    this._levelReached = localStorage.getItem('levelReached') || 1;
+    this._displayedChapters = [];
 
-	this._eval = window.eval; // store our own copy of eval so that we can override window.eval
+    this._eval = window.eval; // store our own copy of eval so that we can override window.eval
 
-	/* unexposed getters */
+    /* unexposed getters */
 
-	this._getHelpCommands = function () { return __commands; };
+    this._getHelpCommands = function () { return __commands; };
 
-	/* unexposed methods */
+    /* unexposed methods */
 
-	this._initialize = function () {
-		// _initialize sound
-		this.sound = new Sound();
+    this._initialize = function () {
+        // _initialize sound
+        this.sound = new Sound();
 
-		// _initialize map display
-		this.display = ROT.Display.create(this, {
-			width: this._dimensions.width,
-			height: this._dimensions.height,
-			fontSize: 20
-		});
-		this.display.setupEventHandlers();
-		var display = this.display;
-		$('#screen').append(this.display.getContainer());
-		$('#drawingCanvas').click(function () {
-			display.focus();
-		});
+        // _initialize map display
+        this.display = ROT.Display.create(this, {
+            width: this._dimensions.width,
+            height: this._dimensions.height,
+            fontSize: 20
+        });
+        this.display.setupEventHandlers();
+        var display = this.display;
+        $('#screen').append(this.display.getContainer());
+        $('#drawingCanvas').click(function () {
+            display.focus();
+        });
 
-		// _initialize map and editor
-		this.editor = new CodeEditor("editor", 600, 500);
-		this.map = new Map(this.display, this);
+        // _initialize map and editor
+        this.editor = new CodeEditor("editor", 600, 500);
+        this.map = new Map(this.display, this);
 
-		// Enable controls
-		this.enableShortcutKeys();
-		this.enableButtons();
+        // Enable controls
+        this.enableShortcutKeys();
+        this.enableButtons();
 
-		// Load help commands from local storage (if possible)
-		if (localStorage.getItem('helpCommands')) {
-			__commands = localStorage.getItem('helpCommands').split(';');
-		}
+        // Load help commands from local storage (if possible)
+        if (localStorage.getItem('helpCommands')) {
+            __commands = localStorage.getItem('helpCommands').split(';');
+        }
 
-		// Enable debug features
-		if (debugMode) {
-			this._levelReached = 999; // make all levels accessible
-			__commands = Object.keys(this.reference); // display all help
-			this.sound.toggleSound(); // mute sound by default in debug mode
-		}
+        // Enable debug features
+        if (debugMode) {
+            this._levelReached = 999; // make all levels accessible
+            __commands = Object.keys(this.reference); // display all help
+            this.sound.toggleSound(); // mute sound by default in debug mode
+        }
 
-		// Lights, camera, action
-		if (startLevel) {
-			this._start(startLevel);
-		} else {
-			this._intro();
-		}
-	};
+        // Lights, camera, action
+        if (startLevel) {
+            this._start(startLevel);
+        } else {
+            this._intro();
+        }
+    };
 
-	this._intro = function () {
-		this.display.focus();
-		this.display.playIntro(this.map);
-	};
+    this._intro = function () {
+        this.display.focus();
+        this.display.playIntro(this.map);
+    };
 
-	this._start = function (lvl) {
-		this._getLevel(lvl ? lvl : 1);
-	};
+    this._start = function (lvl) {
+        this._getLevel(lvl ? lvl : 1);
+    };
 
-	this._moveToNextLevel = function () {
-		var game = this;
+    this._moveToNextLevel = function () {
+        var game = this;
 
-		// is the player permitted to exit?
-		if (!this.onExit(this.map)) {
-			this.sound.playSound('blip');
-			return;
-		}
+        // is the player permitted to exit?
+        if (!this.onExit(this.map)) {
+            this.sound.playSound('blip');
+            return;
+        }
 
-		game._currentLevel++;
-		game.sound.playSound('complete');
+        game._currentLevel++;
+        game.sound.playSound('complete');
 
-		//we disable moving so the player can't move during the fadeout
-		game.map.getPlayer()._canMove = false;
-		game._getLevel(game._currentLevel);
-	};
+        //we disable moving so the player can't move during the fadeout
+        game.map.getPlayer()._canMove = false;
+        game._getLevel(game._currentLevel);
+    };
 
-	this._jumpToNthLevel = function (levelNum) {
-		var game = this;
-		this._currentLevel = levelNum;
-		this._getLevel(levelNum);
-		this.display.focus();
-	};
+    this._jumpToNthLevel = function (levelNum) {
+        var game = this;
+        this._currentLevel = levelNum;
+        this._getLevel(levelNum);
+        this.display.focus();
+    };
 
-	// makes an ajax request to get the level text file and
-	// then loads it into the game
-	this._getLevel = function (levelNumber) {
-		var game = this;
+    // makes an ajax request to get the level text file and
+    // then loads it into the game
+    this._getLevel = function (levelNumber) {
+        var game = this;
 
-		game._currentLevel = levelNumber;
-		game._levelReached = Math.max(levelNumber, game._levelReached);
-		if (!debugMode) {
-			localStorage.setItem('levelReached', game._levelReached);
-		}
+        game._currentLevel = levelNumber;
+        game._levelReached = Math.max(levelNumber, game._levelReached);
+        if (!debugMode) {
+            localStorage.setItem('levelReached', game._levelReached);
+        }
 
-		var fileName = game._levelFileNames[levelNumber - 1];
-		$.get('levels/' + fileName, function (lvlCode) {
-			// load level code in editor
-			game.editor.loadCode(lvlCode);
+        var fileName = game._levelFileNames[levelNumber - 1];
+        $.get('levels/' + fileName, function (lvlCode) {
+            // load level code in editor
+            game.editor.loadCode(lvlCode);
 
-			// start the level and fade in
-			game._evalLevelCode(null, null, true);
-			game.display.focus();
+            // start the level and fade in
+            game._evalLevelCode(null, null, true);
+            game.display.focus();
 
-			// store the commands introduced in this level (for api reference)
-			__commands = __commands.concat(game.editor.getProperties().commandsIntroduced).unique();
-			localStorage.setItem('helpCommands', __commands.join(';'));
-		});
-	};
+            // store the commands introduced in this level (for api reference)
+            __commands = __commands.concat(game.editor.getProperties().commandsIntroduced).unique();
+            localStorage.setItem('helpCommands', __commands.join(';'));
+        });
+    };
 
-	// restart level with currently loaded code
-	this._restartLevel = function () {
-		this.editor.setCode(__currentCode);
-		this._evalLevelCode();
-	};
+    // restart level with currently loaded code
+    this._restartLevel = function () {
+        this.editor.setCode(__currentCode);
+        this._evalLevelCode();
+    };
 
-	this._evalLevelCode = function (allCode, playerCode, isNewLevel) {
-		var game = this;
+    this._evalLevelCode = function (allCode, playerCode, isNewLevel) {
+        var game = this;
 
-		// by default, get code from the editor
-		var loadedFromEditor = false;
-		if (!allCode) {
-			allCode = this.editor.getCode();
-			playerCode = this.editor.getPlayerCode();
-			loadedFromEditor = true;
-		}
+        // by default, get code from the editor
+        var loadedFromEditor = false;
+        if (!allCode) {
+            allCode = this.editor.getCode();
+            playerCode = this.editor.getPlayerCode();
+            loadedFromEditor = true;
+        }
 
-		// save current display state (for scrolling up later)
-		this.display.saveGrid(this.map);
+        // save current display state (for scrolling up later)
+        this.display.saveGrid(this.map);
 
-		// validate the code
-		// if it passes validation, returns the startLevel function if it pass
-		// if it fails validation, returns false
-		var validatedStartLevel = this.validate(allCode, playerCode);
+        // validate the code
+        // if it passes validation, returns the startLevel function if it pass
+        // if it fails validation, returns false
+        var validatedStartLevel = this.validate(allCode, playerCode);
 
-		if (validatedStartLevel) { // code is valid
-			// reset the map
-			this.map._reset();
-			this.map._setProperties(this.editor.getProperties()['mapProperties']);
+        if (validatedStartLevel) { // code is valid
+            // reset the map
+            this.map._reset();
+            this.map._setProperties(this.editor.getProperties()['mapProperties']);
 
-			// save editor state
-			__currentCode = allCode;
-			if (loadedFromEditor) {
-				this.editor.saveGoodState();
-			}
+            // save editor state
+            __currentCode = allCode;
+            if (loadedFromEditor) {
+                this.editor.saveGoodState();
+            }
 
-			// clear drawing canvas and hide it until level loads
-			$('#drawingCanvas')[0].width = $('#drawingCanvas')[0].width;
-			$('#drawingCanvas').hide();
+            // clear drawing canvas and hide it until level loads
+            $('#drawingCanvas')[0].width = $('#drawingCanvas')[0].width;
+            $('#drawingCanvas').hide();
 
-			// set correct inventory state
-			this.setInventoryStateByLevel(this._currentLevel);
+            // set correct inventory state
+            this.setInventoryStateByLevel(this._currentLevel);
 
-			// start the level
-			validatedStartLevel(this.map);
+            // start the level
+            validatedStartLevel(this.map);
 
-			// draw the map
-			this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
-				game.drawInventory(); // refresh inventory display
-				$('#drawingCanvas').show(); // show the drawing canvas again
+            // draw the map
+            this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
+                game.drawInventory(); // refresh inventory display
+                $('#drawingCanvas').show(); // show the drawing canvas again
 
-				// workaround because we can't use writeStatus() in startLevel()
-				// (due to the text getting overwritten by the fade-in)
-				if (game.editor.getProperties().startingMessage) {
-					game.display.writeStatus(game.editor.getProperties().startingMessage);
-				}
-			});
+                // workaround because we can't use writeStatus() in startLevel()
+                // (due to the text getting overwritten by the fade-in)
+                if (game.editor.getProperties().startingMessage) {
+                    game.display.writeStatus(game.editor.getProperties().startingMessage);
+                }
+            });
 
-			// start bg music for this level
-			if (this.editor.getProperties().music) {
-				this.sound.playTrackByName(this._currentLevel, this.editor.getProperties().music);
-			} else {
-				this.sound.playTrackByNum(this._currentLevel);
-			}
+            // start bg music for this level
+            if (this.editor.getProperties().music) {
+                this.sound.playTrackByName(this._currentLevel, this.editor.getProperties().music);
+            } else {
+                this.sound.playTrackByNum(this._currentLevel);
+            }
 
-			// finally, allow player movement
-			if (this.map.getPlayer()) {
-				this.map.getPlayer()._canMove = true;
-				game.display.focus();
-			}
-		} else { // code is invalid
-			// play error sound
-			this.sound.playSound('static');
+            // finally, allow player movement
+            if (this.map.getPlayer()) {
+                this.map.getPlayer()._canMove = true;
+                game.display.focus();
+            }
+        } else { // code is invalid
+            // play error sound
+            this.sound.playSound('static');
 
-			// disable player movement
-			this.map.getPlayer()._canMove = false;
-		}
-	};
+            // disable player movement
+            this.map.getPlayer()._canMove = false;
+        }
+    };
 }
