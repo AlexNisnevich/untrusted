@@ -5,9 +5,9 @@
 <p>Read more about the implementation (Dirichlet prior, simplified Katz back-off) in this <a href="http://www.roguebasin.roguelikedevelopment.org/index.php?title=Names_from_a_high_order_Markov_Process_and_a_simplified_Katz_back-off_scheme">RogueBasin article</a>. The constructor accepts an optional configuration object with the following keys:</p>
 
 <ul>
-	<li><code>words</code> &ndash; use word mode? (default: false, use letters instead)</li>
-	<li><code>order</code> &ndash; how many preceding characters are used to generate next character</li>
-	<li><code>prior</code> &ndash; default probability weight for all (unexpected) events (Dirichlet prior)</li>
+    <li><code>words</code> &ndash; use word mode? (default: false, use letters instead)</li>
+    <li><code>order</code> &ndash; how many preceding characters are used to generate next character</li>
+    <li><code>prior</code> &ndash; default probability weight for all (unexpected) events (Dirichlet prior)</li>
 </ul>
 
 <p>There are only two important public methods: <code>observe()</code> for training and <code>generate()</code> for producing results. In the following example, we will use <strong><a href="http://docs.oracle.com/javase/7/docs/api/allclasses-frame.html">all standard Java 7 class names</a></strong> as a training set; let's see what new Java stuff our generator produces.</p>
@@ -20,15 +20,15 @@ r.open("get", "java.txt", true);
 r.send();
 
 r.onreadystatechange = function() {
-	if (r.readyState != 4) { return; }
+    if (r.readyState != 4) { return; }
 
-	var lines = r.responseText.split("\n");
-	while (lines.length) { 
-		var line = lines.pop().trim();
-		if (!line) { continue; }
-		sg.observe(line); 
-	}
+    var lines = r.responseText.split("\n");
+    while (lines.length) { 
+        var line = lines.pop().trim();
+        if (!line) { continue; }
+        sg.observe(line); 
+    }
 
-	for (var i=0; i&lt;20; i++) { SHOW(sg.generate()); }
+    for (var i=0; i&lt;20; i++) { SHOW(sg.generate()); }
 }
 </div>

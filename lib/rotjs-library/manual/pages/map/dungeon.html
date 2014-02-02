@@ -11,12 +11,12 @@ map.create(display.DEBUG);
 
 var rooms = map.getRooms();
 for (var i=0; i&lt;rooms.length; i++) {
-	var room = rooms[i];
-	SHOW("Room #%s: [%s, %s] => [%s, %s]".format(
-		(i+1),
-		room.getLeft(), room.getTop(),
-		room.getRight(), room.getBottom()
-	));
+    var room = rooms[i];
+    SHOW("Room #%s: [%s, %s] => [%s, %s]".format(
+        (i+1),
+        room.getLeft(), room.getTop(),
+        room.getRight(), room.getBottom()
+    ));
 }
 </div>
 
@@ -26,11 +26,11 @@ for (var i=0; i&lt;rooms.length; i++) {
 <a href="http://www.roguebasin.roguelikedevelopment.org/index.php?title=Dungeon-Building_Algorithm">Roguebasin</a>. 
 Third constructor argument is a configuration object; allowed options:</p>
 <ul>
-	<li><code>roomWidth</code> &ndash; [min, max] room size</li>
-	<li><code>roomHeight</code> &ndash; [min, max] room size</li>
-	<li><code>corridorLength</code> &ndash; [min, max] corridor length</li>
-	<li><code>dugPercentage</code> &ndash; algorithm stops after this fraction of map area has been dug out; default = 0.2</li>
-	<li><code>timeLimit</code> &ndash; algorithm stops after this amount of milliseconds has passed</li>
+    <li><code>roomWidth</code> &ndash; [min, max] room size</li>
+    <li><code>roomHeight</code> &ndash; [min, max] room size</li>
+    <li><code>corridorLength</code> &ndash; [min, max] corridor length</li>
+    <li><code>dugPercentage</code> &ndash; algorithm stops after this fraction of map area has been dug out; default = 0.2</li>
+    <li><code>timeLimit</code> &ndash; algorithm stops after this amount of milliseconds has passed</li>
 </ul>
 
 <div class="example">
@@ -38,9 +38,9 @@ var w = 40, h = 25;
 var map = new ROT.Map.Digger(w, h);
 
 for (var i=0; i&lt;4; i++) {
-	var display = new ROT.Display({width:w, height:h, fontSize:6});
-	SHOW(display.getContainer());
-	map.create(display.DEBUG);
+    var display = new ROT.Display({width:w, height:h, fontSize:6});
+    SHOW(display.getContainer());
+    map.create(display.DEBUG);
 }
 </div>
 
@@ -48,10 +48,10 @@ for (var i=0; i&lt;4; i++) {
 
 <p>Generates a set of rooms; tries to connect them afterwards. Third constructor argument is a configuration object; allowed options:</p>
 <ul>
-	<li><code>roomWidth</code> &ndash; [min, max] room size</li>
-	<li><code>roomHeight</code> &ndash; [min, max] room size</li>
-	<li><code>roomDugPercentage</code> &ndash; algorithm stops after this fraction of map area has been filled with rooms; default = 0.2</li>
-	<li><code>timeLimit</code> &ndash; algorithm stops after this amount of milliseconds has passed</li>
+    <li><code>roomWidth</code> &ndash; [min, max] room size</li>
+    <li><code>roomHeight</code> &ndash; [min, max] room size</li>
+    <li><code>roomDugPercentage</code> &ndash; algorithm stops after this fraction of map area has been filled with rooms; default = 0.2</li>
+    <li><code>timeLimit</code> &ndash; algorithm stops after this amount of milliseconds has passed</li>
 </ul>
 
 
@@ -60,8 +60,8 @@ var w = 40, h = 25;
 var map = new ROT.Map.Uniform(w, h);
 
 for (var i=0; i&lt;4; i++) {
-	var display = new ROT.Display({width:w, height:h, fontSize:6});
-	SHOW(display.getContainer());
-	map.create(display.DEBUG);
+    var display = new ROT.Display({width:w, height:h, fontSize:6});
+    SHOW(display.getContainer());
+    map.create(display.DEBUG);
 }
 </div>

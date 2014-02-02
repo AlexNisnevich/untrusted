@@ -44,12 +44,12 @@ rm -f $TARGET
 VERSION=$(head -1 < ../VERSION)
 
 PROLOGUE="/*
-	This is rot.js, the ROguelike Toolkit in JavaScript.
-	Version $VERSION, generated on $(date).
+    This is rot.js, the ROguelike Toolkit in JavaScript.
+    Version $VERSION, generated on $(date).
 */
 "
 echo "$PROLOGUE" >> $TARGET
 
 for FILE in $LIST; do
-	cat $FILE >> $TARGET
+    cat $FILE >> $TARGET
 done

@@ -11,25 +11,25 @@ You can then repeatedly call the scheduler's <code>next()</code> method: it retu
 <div class="example">
 var scheduler = new ROT.Scheduler();
 var getSpeed = function() {
-	return this.speed;
+    return this.speed;
 }
 
 /* generate four actors */
 for (var i=0;i&lt;4;i++) {
-	var actor = {
-		speed: ROT.RNG.getPercentage(),
-		number: i+1,
-		getSpeed: getSpeed
-	}
-	scheduler.add(actor);
-	SHOW("Object #%s has speed %s.".format(actor.number, actor.speed));
+    var actor = {
+        speed: ROT.RNG.getPercentage(),
+        number: i+1,
+        getSpeed: getSpeed
+    }
+    scheduler.add(actor);
+    SHOW("Object #%s has speed %s.".format(actor.number, actor.speed));
 }
 
 /* simulate several turns */
 var turns = [];
 for (var i=0;i&lt;40;i++) {
-	var next = scheduler.next();
-	turns.push(next.number);
+    var next = scheduler.next();
+    turns.push(next.number);
 }
 
 SHOW("\nGenerated order of turns:");

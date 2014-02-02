@@ -21,7 +21,7 @@ function test(golden, text) {
   var ok = true;
   var i = 0;
   function callback(token, style, lineNo, pos){
-		//console.log(String(token) + " " + String(style) + " " + String(lineNo) + " " + String(pos));
+        //console.log(String(token) + " " + String(style) + " " + String(lineNo) + " " + String(pos));
     var result = [String(token), String(style)];
     if (golden[i][0] != result[0] || golden[i][1] != result[1]){
       return "Error, expected: " + String(golden[i]) + ", got: " + String(result);
@@ -72,9 +72,9 @@ function init() {
     runTest();
 }
 function runTest() {
-	document.getElementById('testresult').innerHTML = testAll();
+    document.getElementById('testresult').innerHTML = testAll();
   initText(editor);
-	
+    
 }
 </script>
 

@@ -33,17 +33,17 @@ THE SOFTWARE.
     <link rel="stylesheet" href="../../doc/docs.css"> 
     <link rel="stylesheet" href="../../theme/xq-dark.css"> 
     <style type="text/css">
-	.CodeMirror {
-	  border-top: 1px solid black; border-bottom: 1px solid black;
-	  height:400px;
-	}
+    .CodeMirror {
+      border-top: 1px solid black; border-bottom: 1px solid black;
+      height:400px;
+    }
     </style> 
   </head> 
   <body> 
     <h1>CodeMirror: XQuery mode</h1> 
  
 <div class="cm-s-default"> 
-	<textarea id="code" name="code"> 
+    <textarea id="code" name="code"> 
 xquery version &quot;1.0-ml&quot;;
 (: this is
  : a 
@@ -51,11 +51,11 @@ xquery version &quot;1.0-ml&quot;;
 let $let := &lt;x attr=&quot;value&quot;&gt;&quot;test&quot;&lt;func&gt;function() $var {function()} {$var}&lt;/func&gt;&lt;/x&gt;
 let $joe:=1
 return element element {
-	attribute attribute { 1 },
-	element test { &#39;a&#39; }, 
-	attribute foo { &quot;bar&quot; },
-	fn:doc()[ foo/@bar eq $let ],
-	//x }    
+    attribute attribute { 1 },
+    element test { &#39;a&#39; }, 
+    attribute foo { &quot;bar&quot; },
+    fn:doc()[ foo/@bar eq $let ],
+    //x }    
  
 (: a more 'evil' test :)
 (: Modified Blakeley example (: with nested comment :) ... :)
@@ -65,11 +65,11 @@ declare private function local:function() {()};
 declare private function local:local() {()};
 let $let := &lt;let&gt;let $let := &quot;let&quot;&lt;/let&gt;
 return element element {
-	attribute attribute { try { xdmp:version() } catch($e) { xdmp:log($e) } },
-	attribute fn:doc { &quot;bar&quot; castable as xs:string },
-	element text { text { &quot;text&quot; } },
-	fn:doc()[ child::eq/(@bar | attribute::attribute) eq $let ],
-	//fn:doc
+    attribute attribute { try { xdmp:version() } catch($e) { xdmp:log($e) } },
+    attribute fn:doc { &quot;bar&quot; castable as xs:string },
+    element text { text { &quot;text&quot; } },
+    fn:doc()[ child::eq/(@bar | attribute::attribute) eq $let ],
+    //fn:doc
 }
 
 

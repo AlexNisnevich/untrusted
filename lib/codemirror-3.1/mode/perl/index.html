@@ -23,7 +23,7 @@ our $s2 = q(multi-
               line);
 
 =item Something
-	Example.
+    Example.
 =cut
 
 my $html=<<'HTML'
@@ -35,13 +35,13 @@ HTML
 print "first,".join(',', 'second', qq~third~);
 
 if($s1 =~ m[(?<!\s)(l.ne)\z]o) {
-	$h->{$1}=$$.' predefined variables';
-	$s2 =~ s/\-line//ox;
-	$s1 =~ s[
-		  line ]
-		[
-		  block
-		]ox;
+    $h->{$1}=$$.' predefined variables';
+    $s2 =~ s/\-line//ox;
+    $s1 =~ s[
+          line ]
+        [
+          block
+        ]ox;
 }
 
 1; # numbers and comments

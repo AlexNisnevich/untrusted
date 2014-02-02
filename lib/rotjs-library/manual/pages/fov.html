@@ -4,8 +4,8 @@
 as <a href="#map">Map generators</a> do: using a user-supplied callback function. This time, however, user has to supply two callbacks:</p>
 
 <ul>
-	<li>Input callback, passed as a constructor argument, which provides visiblity information;</li>
-	<li>Output callback, passed as an argument to the <code>compute</code> method, which receives FOV data.</li>
+    <li>Input callback, passed as a constructor argument, which provides visiblity information;</li>
+    <li>Output callback, passed as an argument to the <code>compute</code> method, which receives FOV data.</li>
 </ul>
 
 <p>Input callback is called by the FOV algorithm to retrieve visibility information for a given coordinate pair. This callback must return <code>true</code> (light passes) 
@@ -15,10 +15,10 @@ the meaning is that "the place at [x,y] is visible with a distance of r". The la
 <p>FOV computation is initiated by calling the <code>compute</code> method with the following arguments:</p>
 
 <ol>
-	<li><code>x</code></li>
-	<li><code>y</code></li>
-	<li><code>r</code> &ndash; maximum visibility radius</li>
-	<li><code>callback</code> &ndash; output callback function</li>
+    <li><code>x</code></li>
+    <li><code>y</code></li>
+    <li><code>r</code> &ndash; maximum visibility radius</li>
+    <li><code>callback</code> &ndash; output callback function</li>
 </ol>
 
 <h3>Precise shadowcasting</h3>
@@ -36,23 +36,23 @@ SHOW(display.getContainer());
 /* create a map */
 var data = {};
 new ROT.Map.Uniform().create(function(x, y, type) {
-	data[x+","+y] = type;
-	display.DEBUG(x, y, type);
+    data[x+","+y] = type;
+    display.DEBUG(x, y, type);
 });
 
 /* input callback */
 var lightPasses = function(x, y) {
-	var key = x+","+y;
-	if (key in data) { return (data[key] == 0); }
-	return false;
+    var key = x+","+y;
+    if (key in data) { return (data[key] == 0); }
+    return false;
 }
 
 var fov = new ROT.FOV.PreciseShadowcasting(lightPasses);
 
 /* output callback */
 fov.compute(50, 22, 10, function(x, y, r, visibility) {
-	var ch = (r ? "" : "@");
-	var color = (data[x+","+y] ? "#aa0": "#660");
-	display.draw(x, y, ch, "#fff", color);
+    var ch = (r ? "" : "@");
+    var color = (data[x+","+y] ? "#aa0": "#660");
+    display.draw(x, y, ch, "#fff", color);
 });
 </div>

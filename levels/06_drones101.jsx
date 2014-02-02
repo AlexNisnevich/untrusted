@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-	"commandsIntroduced":
+    "commandsIntroduced":
         ["object.type", "object.behavior", "object.findNearest",
          "object.getX", "object.getY", "object.canMove", "object.move"]
 }
@@ -26,7 +26,7 @@ function startLevel(map) {
 
         var direction;
         if (upDist == 0 && leftDist == 0) {
-        	return;
+            return;
         } if (upDist > 0 && upDist >= leftDist) {
             direction = 'up';
         } else if (upDist < 0 && upDist < leftDist) {

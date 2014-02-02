@@ -8,9 +8,9 @@ you supply a callback function as an argument to the <code>create</code> method;
 the map creator will call your function repeatedly and pass it the generated map information. Your callback should accept these arguments:</p>
 
 <ul>
-	<li><code>x</code> &ndash; horizontal coordinate of a map's cell</li>
-	<li><code>y</code> &ndash; vertical coordinate of a map's cell</li>
-	<li><code>value</code> &ndash; integer value corresponding to the type of generated cell (different values might be supplied by different map generators)</li>
+    <li><code>x</code> &ndash; horizontal coordinate of a map's cell</li>
+    <li><code>y</code> &ndash; vertical coordinate of a map's cell</li>
+    <li><code>value</code> &ndash; integer value corresponding to the type of generated cell (different values might be supplied by different map generators)</li>
 </ul>
 
 <p>These examples use the simplest map generator, <code>Arena</code>: a fully dug room.</p>
@@ -18,7 +18,7 @@ the map creator will call your function repeatedly and pass it the generated map
 <div class="example">
 var map = new ROT.Map.Arena(3, 3);
 var userCallback = function(x, y, value) {
-	SHOW("Value %s generated at [%s,%s]".format(value, x, y));
+    SHOW("Value %s generated at [%s,%s]".format(value, x, y));
 }
 map.create(userCallback);
 </div>
@@ -33,7 +33,7 @@ var display1 = new ROT.Display({width:10, height:5, fontSize:18});
 SHOW(display1.getContainer());
 
 map.create(function(x, y, wall) {
-	display1.draw(x, y, wall ? "#" : ".");
+    display1.draw(x, y, wall ? "#" : ".");
 });
 
 /* debugging with small font */

@@ -2,13 +2,13 @@
 
 <p>The <code>ROT.Path</code> namespace provides utils for pathfinding: retrieving a set of coordinates represeting shortest route between two points. All pathfinding algorithms share the same usage paradigm:</p>
 <ol>
-	<li>Create an <em>input callback</em>; function that returns passability info (true/false) for a given coordinates</li>
-	<li>Instantialize the pathfinder; pass the values of <code>targetX</code>, <code>targetY</code> and <code>inputCallback</code> to the constructor
-		<ul>
-			<li>Fourth constructor option is a configuration object; so far, only one key is supported: <code>topology</code> (values 4/6/8)</li>
-		</ul>
-	</li>
-	<li>Call the <code>compute</code> method with three arguments: <code>sourceX</code>, <code>sourceY</code> and <code>outputCallback</code></li>
+    <li>Create an <em>input callback</em>; function that returns passability info (true/false) for a given coordinates</li>
+    <li>Instantialize the pathfinder; pass the values of <code>targetX</code>, <code>targetY</code> and <code>inputCallback</code> to the constructor
+        <ul>
+            <li>Fourth constructor option is a configuration object; so far, only one key is supported: <code>topology</code> (values 4/6/8)</li>
+        </ul>
+    </li>
+    <li>Call the <code>compute</code> method with three arguments: <code>sourceX</code>, <code>sourceY</code> and <code>outputCallback</code></li>
 </ol>
 
 <p>The pathfinder will periodically call your <code>outputCallback</code>; once for every cell in the path from <code>[sourceX, sourceY]</code> to <code>[targetX, targetY]</code>. 
@@ -33,13 +33,13 @@ SHOW(display.getContainer());
 var data = {};
 var map = new ROT.Map.Uniform(w, h);
 map.create(function(x, y, value) {
-	data[x+","+y] = value;
-	display.DEBUG(x, y, value);
+    data[x+","+y] = value;
+    display.DEBUG(x, y, value);
 });
 
 /* input callback informs about map structure */
 var passableCallback = function(x, y) {
-	return (data[x+","+y] === 0);
+    return (data[x+","+y] === 0);
 }
 
 /* prepare path to given coords */
@@ -47,12 +47,12 @@ var dijkstra = new ROT.Path.Dijkstra(98, 38, passableCallback);
 
 /* compute from given coords #1 */
 dijkstra.compute(8, 45, function(x, y) {
-	display.draw(x, y, "", "", "#800");
+    display.draw(x, y, "", "", "#800");
 });
 
 /* compute from given coords #2 */
 dijkstra.compute(130, 8, function(x, y) {
-	display.draw(x, y, "", "", "#800");
+    display.draw(x, y, "", "", "#800");
 });
 
 /* highlight */
@@ -75,13 +75,13 @@ SHOW(display.getContainer());
 var data = {};
 var map = new ROT.Map.Uniform(w, h);
 map.create(function(x, y, value) {
-	data[x+","+y] = value;
-	display.DEBUG(x, y, value);
+    data[x+","+y] = value;
+    display.DEBUG(x, y, value);
 });
 
 /* input callback informs about map structure */
 var passableCallback = function(x, y) {
-	return (data[x+","+y] === 0);
+    return (data[x+","+y] === 0);
 }
 
 /* prepare path to given coords */
@@ -89,12 +89,12 @@ var astar = new ROT.Path.AStar(98, 38, passableCallback);
 
 /* compute from given coords #1 */
 astar.compute(8, 45, function(x, y) {
-	display.draw(x, y, "", "", "#800");
+    display.draw(x, y, "", "", "#800");
 });
 
 /* compute from given coords #2 */
 astar.compute(130, 8, function(x, y) {
-	display.draw(x, y, "", "", "#800");
+    display.draw(x, y, "", "", "#800");
 });
 
 /* highlight */

@@ -1,72 +1,72 @@
 @import url(http://fonts.googleapis.com/css?family=Inconsolata);
 
 body {
-	background-color: #000;
-	text-align: center;
+    background-color: #000;
+    text-align: center;
 }
 
 pre {
-	display: inline-block;
-	text-align: left;
-	font-family: inconsolata, monospace;
-	margin: 0;
-	line-height: 100%;
+    display: inline-block;
+    text-align: left;
+    font-family: inconsolata, monospace;
+    margin: 0;
+    line-height: 100%;
 }
 
 pre {
-	font-size: 16px;
+    font-size: 16px;
 }
 
 @media all and (min-height: 610px) {
-	pre { font-size: 17px; }
+    pre { font-size: 17px; }
 }
 
 @media all and (min-height: 650px) {
-	pre { font-size: 18px; }
+    pre { font-size: 18px; }
 }
 
 @media all and (min-height: 700px) {
-	pre { font-size: 19px; }
+    pre { font-size: 19px; }
 }
 
 @media all and (min-height: 750px) {
-	pre { font-size: 20px; }
+    pre { font-size: 20px; }
 }
 
 @media all and (min-height: 800px) {
-	pre { font-size: 21px; }
+    pre { font-size: 21px; }
 }
 
 @media all and (min-height: 850px) {
-	pre { font-size: 22px; }
+    pre { font-size: 22px; }
 }
 
 @media all and (min-height: 900px) {
-	pre { font-size: 23px; }
+    pre { font-size: 23px; }
 }
 
 pre span {
-	opacity: 0.5;
+    opacity: 0.5;
 }
 
 a {
-	color: #fff;
-	text-decoration: none;
-	opacity: 1;
+    color: #fff;
+    text-decoration: none;
+    opacity: 1;
 }
 
 a:hover {
-	background-color: #333;
+    background-color: #333;
 }
 
 .text {
-	color: #bbb;
-	opacity: 1;
+    color: #bbb;
+    opacity: 1;
 }
 
 .text:first-child {
-	color: #fff;
-	text-decoration: underline;
+    color: #fff;
+    text-decoration: underline;
 }
 
 .wall { color: #666; }
@@ -79,8 +79,8 @@ a:hover {
 .potion { color: #3ff; }
 
 .money, .money a {
-	color: #fe0;
-	opacity: 1;
+    color: #fe0;
+    opacity: 1;
 }
 
 .player { color:#f00; }

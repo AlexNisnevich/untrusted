@@ -10,33 +10,33 @@ var output = [];
 
 /* sample actor: pauses the execution when dead */
 var actor1 = {
-	getSpeed: function() { return 100; },
-	lives: 3,
-	act: function() {
-		output.push(".");
-		this.lives--;
-		if (!this.lives) { 
-			engine.removeActor(actor1);
-			engine.lock();              /* pause execution */
-			setTimeout(unlock, 500);    /* wait for 500ms */
-		}
-	}
+    getSpeed: function() { return 100; },
+    lives: 3,
+    act: function() {
+        output.push(".");
+        this.lives--;
+        if (!this.lives) { 
+            engine.removeActor(actor1);
+            engine.lock();              /* pause execution */
+            setTimeout(unlock, 500);    /* wait for 500ms */
+        }
+    }
 }
 engine.addActor(actor1);
 
 var unlock = function() {               /* called asynchronously */
-	var actor2 = {
-		getSpeed: function() { return 100; },
-		act: function() {
-			output.push("@");
-			engine.removeActor(actor2);
-		}
-	}
+    var actor2 = {
+        getSpeed: function() { return 100; },
+        act: function() {
+            output.push("@");
+            engine.removeActor(actor2);
+        }
+    }
 
-	output = [];
-	engine.addActor(actor2);            /* add second actor */
-	engine.unlock();                    /* continue execution */
-	SHOW(output.join(""));
+    output = [];
+    engine.addActor(actor2);            /* add second actor */
+    engine.unlock();                    /* continue execution */
+    SHOW(output.join(""));
 }
 
 engine.start();

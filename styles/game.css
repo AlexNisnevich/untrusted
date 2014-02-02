@@ -1,258 +1,258 @@
 
 html {
-	height: 100%;
+    height: 100%;
 }
 
 body {
-	background: #000;
-	display: table;
-	font-family: monospace;
-	color: white;
-	width: 99%;
-	height: 99%;
+    background: #000;
+    display: table;
+    font-family: monospace;
+    color: white;
+    width: 99%;
+    height: 99%;
 }
 
 #container {
-	width: 1210px;
-	min-width: 1210px;
-	margin: 0 auto;
-	display: table-cell;
-	vertical-align: middle;
+    width: 1210px;
+    min-width: 1210px;
+    margin: 0 auto;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 #panes {
-	position: relative;
-	width: 100%;
+    position: relative;
+    width: 100%;
 }
 
 #screenPane {
-	width: 602px;
+    width: 602px;
 }
 
 #screen canvas {
-	border: 2px solid #333;
+    border: 2px solid #333;
 }
 
 #screen canvas.focus {
-	border: 2px solid #888;
+    border: 2px solid #888;
 }
 
 #inventory {
-	position: absolute;
-	top: 505px;
-	font-size: 13px;
-	cursor: default;
+    position: absolute;
+    top: 505px;
+    font-size: 13px;
+    cursor: default;
 }
 
 #inventory .item {
-	position: relative;
-	top: 3px;
-	margin-right: 5px;
-	font-size: 20px;
+    position: relative;
+    top: 3px;
+    margin-right: 5px;
+    font-size: 20px;
 }
 
 #chapter {
-	display: none;
-	position: absolute;
-	top: 220px;
-	width: 584px;
-	padding: 10px;
-	background-color: white;
-	color: black;
-	text-align: center;
-	font-family: 'Share Tech Mono', monospace;
-	font-variant: small-caps;
-	font-size: 28px;
+    display: none;
+    position: absolute;
+    top: 220px;
+    width: 584px;
+    padding: 10px;
+    background-color: white;
+    color: black;
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-variant: small-caps;
+    font-size: 28px;
 }
 
 #chapter.death {
-	background-color: red;
+    background-color: red;
 }
 
 #editorPane {
-	position: absolute;
-	top: 0;
-	right: 4px;
+    position: absolute;
+    top: 0;
+    right: 4px;
 }
 
 #editorPane #editor {
-	display: none;
+    display: none;
 }
 
 #editorPane #buttons {
-	margin-top: 5px;
-	padding: 7px;
-	background: #000;
-	cursor: pointer;
+    margin-top: 5px;
+    padding: 7px;
+    background: #000;
+    cursor: pointer;
 }
 
 #editorPane #buttons a:hover {
-	background: #fff;
-	color: #000;
+    background: #fff;
+    color: #000;
 }
 
 #editorPane #buttons .keys {
-	background: #fff;
-	color: #000;
+    background: #fff;
+    color: #000;
 }
 
 .CodeMirror {
-	border: 2px solid #333;
-	border-left: 0;
-	margin-left: 2px;
+    border: 2px solid #333;
+    border-left: 0;
+    margin-left: 2px;
 }
 
 .CodeMirror-cursor, .CodeMirror-selected {
-	z-index: 10;
+    z-index: 10;
 }
 
 .CodeMirror.focus {
-	border: 2px solid #888;
-	border-left: 2px solid #888;
-	margin-left: 0;
+    border: 2px solid #888;
+    border-left: 2px solid #888;
+    margin-left: 0;
 }
 
 .CodeMirror-lines .disabled {
-	background: #311 !important;
+    background: #311 !important;
 }
 
 .CodeMirror-lines .disabled .editableSection {
-	background: rgba(0, 0, 0, 0.5); /* semi-transparent so we can see selection over it */
+    background: rgba(0, 0, 0, 0.5); /* semi-transparent so we can see selection over it */
 }
 
 #helpPane {
-	position: absolute;
-	height: 360px;
-	width: 1060px;
-	top: 50px;
-	left: 50px;
-	z-index: 9000;
-	background: black;
-	border: 2px solid yellow;
+    position: absolute;
+    height: 360px;
+    width: 1060px;
+    top: 50px;
+    left: 50px;
+    z-index: 9000;
+    background: black;
+    border: 2px solid yellow;
 }
 
 #helpPaneSidebar {
-	float: left;
-	width: 140px;
-	height: 360px;
-	background: rgb(27, 90, 158);
+    float: left;
+    width: 140px;
+    height: 360px;
+    background: rgb(27, 90, 158);
 }
 
 #helpPaneSidebar #helpPaneTitle {
-	margin-top: 15px;
-	text-align: center;
-	color: yellow;
+    margin-top: 15px;
+    text-align: center;
+    color: yellow;
 }
 
 #helpPaneSidebar li {
-	cursor: pointer;
-	width: 130px;
-	list-style: none;
-	margin-left: -40px;
-	border-top: 1px solid white;
-	padding: 5px;
+    cursor: pointer;
+    width: 130px;
+    list-style: none;
+    margin-left: -40px;
+    border-top: 1px solid white;
+    padding: 5px;
 }
 
 #helpPaneSidebar li.selected {
-	background-color: rgb(22, 62, 105);
+    background-color: rgb(22, 62, 105);
 }
 
 #helpPaneSidebar li:hover {
-	background: white;
-	color: rgb(27, 90, 158);
+    background: white;
+    color: rgb(27, 90, 158);
 }
 
 #helpPaneSidebar li:last-child {
-	border-bottom: 1px solid white;
+    border-bottom: 1px solid white;
 }
 
 #helpPaneContent {
-	float: left;
-	width: 864px;
-	height: 320px;
-	padding: 20px;
-	overflow-y: auto;
+    float: left;
+    width: 864px;
+    height: 320px;
+    padding: 20px;
+    overflow-y: auto;
 }
 
 #helpPaneContent .command {
-	margin-bottom: 1em;
+    margin-bottom: 1em;
 }
 
 #helpPaneContent .commandTitle {
-	font-size: 1.2em;
-	font-weight: bold;
-	color: yellow;
-	margin-bottom: 4px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: yellow;
+    margin-bottom: 4px;
 }
 
 #helpPaneContent .commandDescription a {
-	text-decoration: underline;
-	cursor: pointer;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 #helpPaneCloseButton {
-	float: left;
-	width: 10px;
-	border-bottom: 2px solid yellow;
-	border-left: 2px solid yellow;
-	padding-left: 3px;
-	padding-right: 1px;
-	padding-bottom: 2px;
-	cursor: pointer;
+    float: left;
+    width: 10px;
+    border-bottom: 2px solid yellow;
+    border-left: 2px solid yellow;
+    padding-left: 3px;
+    padding-right: 1px;
+    padding-bottom: 2px;
+    cursor: pointer;
 }
 
 #helpPaneCloseButton:hover {
-	background: yellow;
-	color: black;
+    background: yellow;
+    color: black;
 }
 
 #menuPane {
-	position: absolute;
-	height: 360px;
-	width: 560px;
-	top: 50px;
-	left: 300px;
-	z-index: 9000;
-	background: black;
-	border: 2px solid yellow;
+    position: absolute;
+    height: 360px;
+    width: 560px;
+    top: 50px;
+    left: 300px;
+    z-index: 9000;
+    background: black;
+    border: 2px solid yellow;
 }
 
 #menuPane .menuPaneHeading {
-	margin: 10px;
-	color: yellow;
-	font-size: 1.5em;
-	font-weight: bold;
+    margin: 10px;
+    color: yellow;
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
 #menuPane button {
-	background-color: black;
-	border: 2px solid white;
-	color: white;
-	width: 176px;
-	padding: 4px;
-	margin: 5px;
-	cursor: pointer;
+    background-color: black;
+    border: 2px solid white;
+    color: white;
+    width: 176px;
+    padding: 4px;
+    margin: 5px;
+    cursor: pointer;
 }
 
 #menuPane button:hover {
-	background-color: white;
-	color: black;
+    background-color: white;
+    color: black;
 }
 
 #menuPane button.disabled {
-	background-color: #555;
-	border-color: #ccc;
-	color: #ccc;
-	cursor: auto;
+    background-color: #555;
+    border-color: #ccc;
+    color: #ccc;
+    cursor: auto;
 }
 
 #menuPane button.disabled:hover {
-	background-color: #555;
-	color: #ccc;
+    background-color: #555;
+    color: #ccc;
 }
 
 h1 {
-	display: inline;
+    display: inline;
     color: white;
     font-family: "Lucida Grande", "DejaVu Sans", "Helvetica";
     font-weight: bold;
@@ -260,18 +260,18 @@ h1 {
 }
 
 h2 {
-	margin-left: 0.5em;
-	display: inline;
+    margin-left: 0.5em;
+    display: inline;
     color: yellow;
     font-style: italic;
 }
 
 #muteButton {
-	position: absolute;
-	top: -20px;
-	cursor: pointer;
+    position: absolute;
+    top: -20px;
+    cursor: pointer;
 }
 
 #drawingCanvas {
-	position: absolute;
+    position: absolute;
 }

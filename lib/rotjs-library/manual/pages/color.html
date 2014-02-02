@@ -6,26 +6,26 @@
 
 <div class="example">
 SHOW(
-	ROT.Color.fromString("rgb(10, 128, 230)"),
-	ROT.Color.fromString("#faa"),
-	ROT.Color.fromString("#83fcc4"),
-	ROT.Color.fromString("goldenrod")
+    ROT.Color.fromString("rgb(10, 128, 230)"),
+    ROT.Color.fromString("#faa"),
+    ROT.Color.fromString("#83fcc4"),
+    ROT.Color.fromString("goldenrod")
 );</div>
 
 <h3>Converting array &rarr; string</h3>
 
 <div class="example">
 SHOW(
-	ROT.Color.toRGB([10, 128, 230]),
-	ROT.Color.toHex([10, 128, 230])
+    ROT.Color.toRGB([10, 128, 230]),
+    ROT.Color.toHex([10, 128, 230])
 );</div>
 
 <h3>Converting between RGB and HSL</h3>
 
 <div class="example">
 SHOW(
-	ROT.Color.rgb2hsl([51, 102, 51]),
-	ROT.Color.hsl2rgb([0.333, 0.333, 0.3])
+    ROT.Color.rgb2hsl([51, 102, 51]),
+    ROT.Color.hsl2rgb([0.333, 0.333, 0.3])
 );</div>
 
 <h3>Adding and mixing colors</h3>
@@ -34,12 +34,12 @@ SHOW(
 
 <div class="example">
 SHOW( /* addition = lightening */
-	ROT.Color.add([10, 128, 230], [200, 10, 15], [30, 30, 100]),
-	ROT.Color.add_([10, 128, 230], [200, 10, 15])
+    ROT.Color.add([10, 128, 230], [200, 10, 15], [30, 30, 100]),
+    ROT.Color.add_([10, 128, 230], [200, 10, 15])
 );
 SHOW( /* multiplication = darkening */
-	ROT.Color.multiply([10, 128, 230], [200, 10, 15]),
-	ROT.Color.multiply_([10, 128, 230], [200, 10, 15])
+    ROT.Color.multiply([10, 128, 230], [200, 10, 15]),
+    ROT.Color.multiply_([10, 128, 230], [200, 10, 15])
 );
 </div>
 
@@ -49,11 +49,11 @@ SHOW( /* multiplication = darkening */
 
 <div class="example">
 SHOW(
-	/* computed in RGB space */
-	ROT.Color.interpolate([10, 128, 230], [30, 255, 255], 0.3),
+    /* computed in RGB space */
+    ROT.Color.interpolate([10, 128, 230], [30, 255, 255], 0.3),
 
-	/* computed in HSL space */
-	ROT.Color.interpolateHSL([10, 128, 230], [30, 255, 255], 0.3)
+    /* computed in HSL space */
+    ROT.Color.interpolateHSL([10, 128, 230], [30, 255, 255], 0.3)
 );</div>
 
 <h3>Creating random variants</h3>
@@ -62,7 +62,7 @@ SHOW(
 
 <div class="example">
 SHOW(
-	ROT.Color.randomize([100, 128, 230], [30, 10, 20]),
-	ROT.Color.randomize([100, 128, 230], [30, 10, 20]),
-	ROT.Color.randomize([100, 128, 230], [30, 10, 20])
+    ROT.Color.randomize([100, 128, 230], [30, 10, 20]),
+    ROT.Color.randomize([100, 128, 230], [30, 10, 20]),
+    ROT.Color.randomize([100, 128, 230], [30, 10, 20])
 );</div>

@@ -1,82 +1,82 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Untrusted - a user javascript adventure game</title>
-	<meta charset='utf8'></meta>
-	<link rel="shortcut icon" href="favicon.ico" />
+    <title>Untrusted - a user javascript adventure game</title>
+    <meta charset='utf8'></meta>
+    <link rel="shortcut icon" href="favicon.ico" />
 
-	<link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Share+Tech+Mono' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Share+Tech+Mono' rel='stylesheet' type='text/css'>
 
-	<link rel="stylesheet" href="styles/game.css">
+    <link rel="stylesheet" href="styles/game.css">
 
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script type="text/javascript" src="lib/es5-shim.min.js"></script>
-	<script type="text/javascript" src="lib/shortcut.js"></script>
-	<script type="text/javascript" src="lib/rotjs-library/rot.js"></script>
-	<script type="text/javascript" src="lib/jquery.jplayer.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/es5-shim.min.js"></script>
+    <script type="text/javascript" src="lib/shortcut.js"></script>
+    <script type="text/javascript" src="lib/rotjs-library/rot.js"></script>
+    <script type="text/javascript" src="lib/jquery.jplayer.min.js"></script>
 
-	<link rel="stylesheet" href="lib/codemirror-3.1/lib/codemirror.css">
-	<script src="lib/codemirror-3.1/lib/codemirror.js"></script>
-	<script src="lib/codemirror-3.1/mode/javascript/javascript.js"></script>
-	<link rel="stylesheet" href="lib/codemirror-3.1/theme/vibrant-ink.css">
+    <link rel="stylesheet" href="lib/codemirror-3.1/lib/codemirror.css">
+    <script src="lib/codemirror-3.1/lib/codemirror.js"></script>
+    <script src="lib/codemirror-3.1/mode/javascript/javascript.js"></script>
+    <link rel="stylesheet" href="lib/codemirror-3.1/theme/vibrant-ink.css">
 
-	<script src="scripts/build/untrusted.js"></script>
+    <script src="scripts/build/untrusted.js"></script>
 </head>
 <body>
-	<a href="https://github.com/AlexNisnevich/untrusted" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
-	<div id="container">
+    <a href="https://github.com/AlexNisnevich/untrusted" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    <div id="container">
         <div id="panes">
-        	<a id="muteButton"><img src="images/mute-off.png" /></a>
-			<div id="screenPane">
-				<canvas id="drawingCanvas" width="600" height="500"></canvas>
-				<div id="screen"></div>
-				<div id="inventory"></div>
-				<div id="output"></div>
-				<div id="chapter"></div>
-			</div>
-			<div id="editorPane" style="display: none;">
-				<textarea id="editor">
-				</textarea>
-				<div id="buttons">
-					<span><a id="helpButton" title="Ctrl+1: Help"><span class="keys">^1</span> Help</a></span>
-					<span><a id="mapButton" title="Ctrl+2: Switch to Map"><span class="keys">^2</span> Focus Map</a></span>
-					<span><a id="editorButton" title="Ctrl+3: Switch to Editor"><span class="keys">^3</span> Focus Editor</a></span>
-					<span><a id="resetButton" title="Ctrl+4: Reset Level"><span class="keys">^4</span> Reset</a></span>
-					<span><a id="executeButton" title="Ctrl+5: Execute"><span class="keys">^5</span> Execute</a></span>
-					<span><a id="phoneButton" style="display: none;" title="Ctrl+6: Use Phone"><span class="keys">^6</span> Phone</a></span>
-					<span><a id="menuButton" title="Ctrl+0: Menu" style="float: right;"><span class="keys">^0</span> Menu</a></span>
-				</div>
-			</div>
+            <a id="muteButton"><img src="images/mute-off.png" /></a>
+            <div id="screenPane">
+                <canvas id="drawingCanvas" width="600" height="500"></canvas>
+                <div id="screen"></div>
+                <div id="inventory"></div>
+                <div id="output"></div>
+                <div id="chapter"></div>
+            </div>
+            <div id="editorPane" style="display: none;">
+                <textarea id="editor">
+                </textarea>
+                <div id="buttons">
+                    <span><a id="helpButton" title="Ctrl+1: Help"><span class="keys">^1</span> Help</a></span>
+                    <span><a id="mapButton" title="Ctrl+2: Switch to Map"><span class="keys">^2</span> Focus Map</a></span>
+                    <span><a id="editorButton" title="Ctrl+3: Switch to Editor"><span class="keys">^3</span> Focus Editor</a></span>
+                    <span><a id="resetButton" title="Ctrl+4: Reset Level"><span class="keys">^4</span> Reset</a></span>
+                    <span><a id="executeButton" title="Ctrl+5: Execute"><span class="keys">^5</span> Execute</a></span>
+                    <span><a id="phoneButton" style="display: none;" title="Ctrl+6: Use Phone"><span class="keys">^6</span> Phone</a></span>
+                    <span><a id="menuButton" title="Ctrl+0: Menu" style="float: right;"><span class="keys">^0</span> Menu</a></span>
+                </div>
+            </div>
 
-			<div id="helpPane" style="display: none;">
-				<div id="helpPaneSidebar">
-					<div id="helpPaneTitle">API Reference</div>
-					<ul></ul>
-				</div>
-				<div id="helpPaneContent"></div>
-				<div id="helpPaneCloseButton">x</div>
-			</div>
+            <div id="helpPane" style="display: none;">
+                <div id="helpPaneSidebar">
+                    <div id="helpPaneTitle">API Reference</div>
+                    <ul></ul>
+                </div>
+                <div id="helpPaneContent"></div>
+                <div id="helpPaneCloseButton">x</div>
+            </div>
 
-			<div id="menuPane" style="display: none;">
-				<div class="menuPaneHeading">Level Select</div>
-				<div id="levels">
+            <div id="menuPane" style="display: none;">
+                <div class="menuPaneHeading">Level Select</div>
+                <div id="levels">
 
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="jquery_bgPlayer" class="jp-jplayer"></div>
-	<div id="jquery_soundPlayer" class="jp-jplayer"></div>
-	<script type="text/javascript">
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-345959-12']);
-	  _gaq.push(['_trackPageview']);
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="jquery_bgPlayer" class="jp-jplayer"></div>
+    <div id="jquery_soundPlayer" class="jp-jplayer"></div>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-345959-12']);
+      _gaq.push(['_trackPageview']);
 
-	  (function() {
-		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
-	</script>
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
 </body>
 </html>

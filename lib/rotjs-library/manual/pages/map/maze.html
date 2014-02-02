@@ -2,8 +2,8 @@
 
 <p>This family of algorithms uses the following callback values:</p>
 <ul>
-	<li><code>0</code>: empty space</li>
-	<li><code>1</code>: wall</li>
+    <li><code>0</code>: empty space</li>
+    <li><code>1</code>: wall</li>
 </ul>
 
 <h3>DividedMaze</h3>
@@ -15,10 +15,10 @@ var w = 39, h = 25;
 var dm = new ROT.Map.DividedMaze(w, h);
 
 for (var i=0; i&lt;4; i++) {
-	var display = new ROT.Display({width:w, height:h, fontSize:6});
-	SHOW(display.getContainer());
+    var display = new ROT.Display({width:w, height:h, fontSize:6});
+    SHOW(display.getContainer());
 
-	dm.create(display.DEBUG);
+    dm.create(display.DEBUG);
 }
 </div>
 
@@ -31,11 +31,11 @@ taken from a Rogue Basin wiki. Regularity is an integer value, specified as a th
 var w = 39, h = 25;
 
 for (var i=0; i&lt;4; i++) {
-	var display = new ROT.Display({width:w, height:h, fontSize:6});
-	SHOW(display.getContainer());
+    var display = new ROT.Display({width:w, height:h, fontSize:6});
+    SHOW(display.getContainer());
 
-	var maze = new ROT.Map.IceyMaze(w, h, 4*i);
-	maze.create(display.DEBUG);
+    var maze = new ROT.Map.IceyMaze(w, h, 4*i);
+    maze.create(display.DEBUG);
 }
 </div>
 
@@ -51,9 +51,9 @@ var w = 39, h = 25;
 var em = new ROT.Map.EllerMaze(w, h);
 
 for (var i=0; i&lt;4; i++) {
-	var display = new ROT.Display({width:w, height:h, fontSize:6});
-	SHOW(display.getContainer());
+    var display = new ROT.Display({width:w, height:h, fontSize:6});
+    SHOW(display.getContainer());
 
-	em.create(display.DEBUG);
+    em.create(display.DEBUG);
 }
 </div>

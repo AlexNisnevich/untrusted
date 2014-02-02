@@ -13,16 +13,16 @@ var display = new ROT.Display({width:8, height:5});
 SHOW(display.getContainer());
 
 for (var y = 0; y &lt; 5; y++) {
-	for (var x = y%2; x &lt; 8; x += 2) {
-		display.draw(x, y, "&bull;");
-	}
+    for (var x = y%2; x &lt; 8; x += 2) {
+        display.draw(x, y, "&bull;");
+    }
 }
 </div>
 
 <p>For more advanced hexagonal stuff, switch the display to "hex" layout. This has the following advantages:</p>
 <ul>
-	<li>Precisely computed positioning</li>
-	<li>Filled background hexes</li>
+    <li>Precisely computed positioning</li>
+    <li>Filled background hexes</li>
 </ul>
 
 <div class="example">
@@ -30,10 +30,10 @@ var display = new ROT.Display({width:8, height:5, layout:"hex"});
 SHOW(display.getContainer());
 
 for (var y = 0; y &lt; 5; y++) {
-	for (var x = y%2; x &lt; 8; x += 2) {
-		var bg = ["#333", "#666", "#999", "#ccc", "#fff"].random();
-		display.draw(x, y, "&bull;", "#000", bg);
-	}
+    for (var x = y%2; x &lt; 8; x += 2) {
+        var bg = ["#333", "#666", "#999", "#ccc", "#fff"].random();
+        display.draw(x, y, "&bull;", "#000", bg);
+    }
 }
 </div>
 
@@ -48,24 +48,24 @@ SHOW(display.getContainer());
 
 /* hexagonal map and rules */
 var map = new ROT.Map.Cellular(w, h, {
-	topology: 6,
-	born: [4, 5, 6],
-	survive: [3, 4, 5, 6]
+    topology: 6,
+    born: [4, 5, 6],
+    survive: [3, 4, 5, 6]
 });
 
 /* initialize with irregularly random values */
 for (var i=0; i&lt;w; i++) {
-	for (var j=0; j&lt;h; j++) {
-		var dx = i/w - 0.5;
-		var dy = j/h - 0.5;
-		var dist = Math.pow(dx*dx+dy*dy, 0.3);
-		if (ROT.RNG.getUniform() &lt; dist) { map.set(i, j, 1); }
-	}
+    for (var j=0; j&lt;h; j++) {
+        var dx = i/w - 0.5;
+        var dy = j/h - 0.5;
+        var dist = Math.pow(dx*dx+dy*dy, 0.3);
+        if (ROT.RNG.getUniform() &lt; dist) { map.set(i, j, 1); }
+    }
 }
 
 /* generate four iterations, show the last one */
 for (var i=4; i&gt;=0; i--) {
-	map.create(i ? null : display.DEBUG);
+    map.create(i ? null : display.DEBUG);
 }
 </div>
 
@@ -82,20 +82,20 @@ SHOW(display.getContainer());
 /* generate map and store its data */
 var data = {};
 var map = new ROT.Map.Cellular(w, h, {
-	topology: 6,
-	born: [4, 5, 6],
-	survive: [3, 4, 5, 6]
+    topology: 6,
+    born: [4, 5, 6],
+    survive: [3, 4, 5, 6]
 });
 map.randomize(0.48);
 map.create(); /* two iterations */
 map.create(function(x, y, value) {
-	data[x+","+y] = value;
-	display.DEBUG(x, y, value);
+    data[x+","+y] = value;
+    display.DEBUG(x, y, value);
 });
 
 /* input callback informs about map structure */
 var passableCallback = function(x, y) {
-	return (data[x+","+y] === 0);
+    return (data[x+","+y] === 0);
 }
 
 /* prepare path to given coords */
@@ -103,7 +103,7 @@ var dijkstra = new ROT.Path.Dijkstra(120, 64, passableCallback, {topology:6});
 
 /* compute from given coords */
 dijkstra.compute(30, 16, function(x, y) {
-	display.draw(x, y, "", "", "#800");
+    display.draw(x, y, "", "", "#800");
 });
 
 /* highlight */
@@ -127,30 +127,30 @@ SHOW(display.getContainer());
 /* generate map and store its data */
 var data = {};
 var map = new ROT.Map.Cellular(null, null, {
-	topology: 6,
-	born: [4, 5, 6],
-	survive: [3, 4, 5, 6]
+    topology: 6,
+    born: [4, 5, 6],
+    survive: [3, 4, 5, 6]
 });
 map.randomize(0.4);
 map.create(function(x, y, value) {
-	data[x+","+y] = value;
-	display.DEBUG(x, y, value);
+    data[x+","+y] = value;
+    display.DEBUG(x, y, value);
 });
 
 
 /* input callback */
 var lightPasses = function(x, y) {
-	var key = x+","+y;
-	if (key in data) { return (data[key] == 0); }
-	return false;
+    var key = x+","+y;
+    if (key in data) { return (data[key] == 0); }
+    return false;
 }
 
 var fov = new ROT.FOV.PreciseShadowcasting(lightPasses, {topology:6});
 
 /* output callback */
 fov.compute(20, 14, 6, function(x, y, r, vis) {
-	var ch = (r ? "" : "@");
-	var color = (data[x+","+y] ? "#aa0": "#660");
-	display.draw(x, y, ch, "#fff", color);
+    var ch = (r ? "" : "@");
+    var color = (data[x+","+y] ? "#aa0": "#660");
+    display.draw(x, y, ch, "#fff", color);
 });
 </div>

@@ -9,13 +9,13 @@ var display = new ROT.Display({width:w, height:h, fontSize:3});
 SHOW(display.getContainer());
 
 for (var j=0;j&lt;h;j++) {
-	for (var i=0;i&lt;w;i++) {
-		var val = noise.get(i/20, j/20) * 255;
+    for (var i=0;i&lt;w;i++) {
+        var val = noise.get(i/20, j/20) * 255;
 
-		var r = ~~(val&gt;0 ? val : 0);
-		var g = ~~(val&lt;0 ? -val : 0);
-		display.draw(i, j, "", "", "rgb("+r+","+g+",0)");
-	}
+        var r = ~~(val&gt;0 ? val : 0);
+        var g = ~~(val&lt;0 ? -val : 0);
+        display.draw(i, j, "", "", "rgb("+r+","+g+",0)");
+    }
 }
 </div>
 
