@@ -108,7 +108,9 @@ function Game(debugMode, startLevel) {
             return;
         }
 
+        // save level state and create a gist
         this.editor.saveGoodState();
+        this.editor.createGist();
 
         this._currentLevel++;
         this.sound.playSound('complete');

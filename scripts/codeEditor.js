@@ -364,6 +364,21 @@ function CodeEditor(textAreaDomID, width, height, game) {
         }));
     }
 
+    this.createGist = function () {
+        var filename = 'untrusted-lvl'+game._currentLevel+'-solution.js';
+        var description = 'Solution to level ' + game._currentLevel + ' in Untrusted: http://alex.nisnevich.com/untrusted/';
+        var data = {'files': {}, 'description': description};
+        data['files'][filename] = {'content': this.getCode()};
+        $.ajax({
+            'url': 'https://api.github.com/gists',
+            'type': 'POST',
+            'data': JSON.stringify(data),
+            'success': function (data, status, xhr) {
+                console.log(data['html_url']);
+            }
+        });
+    }
+
     this.getGoodState = function () {
         return JSON.parse(localStorage.getItem('level' + game._currentLevel + '.lastGoodState'));
     }

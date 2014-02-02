@@ -198,7 +198,7 @@ function Map(display, game) {
     this._hideChapter = function() {
         setTimeout(function () {
             $('#chapter').fadeOut(1000);
-        }, 2500);
+        }, $('#chapter').hasClass('death') ? 2500 : 0);
     };
 
     /* exposed methods */
