@@ -98,7 +98,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
         lastChange = change;
 
         function inEditableArea(c) {
-            //debugger;
             var lineNum = c.to.line;
             if (editableLines.indexOf(lineNum) > -1) {
                 // editable line?
@@ -189,6 +188,9 @@ function CodeEditor(textAreaDomID, width, height, game) {
                 // Shift by pasteLength -1 because 1 was already editable
                 editableLines = shiftLinesBy(editableLines, lastLine, pasteLength - 1);
 
+                // Shift editable sections (untested)
+                editableSections = shiftLinesBy(editableSections, lastLine, pasteLength - 1);
+
                 // Append new lines
                 // Strict < because 1 line was already editable
                 for (var i = lastLine + 1; i < lastLine + pasteLength; i++) {
@@ -204,7 +206,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
 
             // modify editable sections accordingly
-            // TODO Update for multiline paste
             var sections = editableSections[change.to.line];
             if (sections) {
                 var delta = change.text[0].length - (change.to.ch - change.from.ch);
