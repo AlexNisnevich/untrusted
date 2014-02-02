@@ -174,9 +174,10 @@ function CodeEditor(textAreaDomID, width, height, game) {
             if (pasteLength > 1) {
                 var lastLine = findEndOfSegment(change.to.line);
 
-                // Shift lines
+                // Shift editable line numbers after this segment
                 editableLines = editableLines.map(function(line) {
                     if (line > lastLine) {
+                        // Subtract 1 because 1 line was already editable
                         return line + pasteLength - 1;
                     }
 
@@ -184,7 +185,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
                 });
 
                 // Append new lines
-                for (var i = lastLine + 1; i < lastLine + change.text.length; i++) {
+                // Strict < because 1 line was already editable
+                for (var i = lastLine + 1; i < lastLine + pasteLength; i++) {
                     editableLines.push(i);
                 }
             }
