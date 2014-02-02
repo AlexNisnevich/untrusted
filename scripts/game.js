@@ -129,7 +129,7 @@ function Game(debugMode, startLevel) {
 
     // makes an ajax request to get the level text file and
     // then loads it into the game
-    this._getLevel = function (levelNum) {
+    this._getLevel = function (levelNum, isResetting) {
         var game = this;
 
         game._levelReached = Math.max(levelNum, game._levelReached);
@@ -142,7 +142,7 @@ function Game(debugMode, startLevel) {
             // load level code in editor
             game.editor.loadCode(lvlCode);
 
-            if (game.editor.getGoodState()) {
+            if (!isResetting && game.editor.getGoodState()) {
                 game.editor.setCode(game.editor.getGoodState()['code']);
             }
 

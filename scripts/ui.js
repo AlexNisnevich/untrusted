@@ -34,7 +34,7 @@ Game.prototype.enableShortcutKeys = function () {
 
     shortcut.add('ctrl+4', function () {
         game.sound.playSound('select');
-        game._getLevel(game._currentLevel);
+        game._getLevel(game._currentLevel, true);
         return true;
     });
 
@@ -71,7 +71,7 @@ Game.prototype.enableButtons = function () {
 
     $("#resetButton").click( function () {
         game.sound.playSound('select');
-        game._getLevel(game._currentLevel);
+        game._getLevel(game._currentLevel, true);
     });
 
     $("#executeButton").click( function () {
