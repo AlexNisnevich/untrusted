@@ -1,4 +1,4 @@
-function CodeEditor(textAreaDomID, width, height) {
+function CodeEditor(textAreaDomID, width, height, game) {
     var symbols = {
         'begin_line':'#BEGIN_EDITABLE#',
         'end_line':'#END_EDITABLE#',
@@ -14,7 +14,6 @@ function CodeEditor(textAreaDomID, width, height) {
     var properties = {}
     var editableLines = [];
     var editableSections = {};
-    var lastGoodState = {};
     var lastChange = {};
     var endOfStartLevel = null;
 
@@ -320,7 +319,6 @@ function CodeEditor(textAreaDomID, width, height) {
             lines.splice(endOfStartLevel, 0, "map._game._endOfStartLevelReached = true;");
         }
 
-        console.log(lines.join('\n'));
         return lines.join('\n');
     }
 
@@ -349,19 +347,26 @@ function CodeEditor(textAreaDomID, width, height) {
     }
 
     this.setCode = function(code) {
+        this.internalEditor.off('beforeChange',enforceRestrictions);
         this.internalEditor.setValue(code);
+        this.internalEditor.on('beforeChange', enforceRestrictions);
+        this.markUneditableLines();
         this.internalEditor.refresh();
+        this.internalEditor.clearHistory();
     }
 
     this.saveGoodState = function () {
-        lastGoodState.code = this.getCode();
-        lastGoodState.playerCode = this.getPlayerCode();
-        lastGoodState.editableLines = editableLines;
-        lastGoodState.editableSections = editableSections;
+        localStorage.setItem('level' + game._currentLevel + '.lastGoodState', JSON.stringify({
+            code: this.getCode(),
+            playerCode: this.getPlayerCode(),
+            editableLines: editableLines,
+            editableSections: editableSections
+        }));
+        console.log(this.getCode());
     }
 
     this.getGoodState = function () {
-        return lastGoodState;
+        return JSON.parse(localStorage.getItem('level' + game._currentLevel + '.lastGoodState'));
     }
 
     this.refresh = function () {

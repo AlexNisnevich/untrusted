@@ -65,7 +65,7 @@ function Game(debugMode, startLevel) {
         });
 
         // _initialize map and editor
-        this.editor = new CodeEditor("editor", 600, 500);
+        this.editor = new CodeEditor("editor", 600, 500, this);
         this.map = new Map(this.display, this);
 
         // Enable controls
@@ -102,20 +102,20 @@ function Game(debugMode, startLevel) {
     };
 
     this._moveToNextLevel = function () {
-        var game = this;
-
         // is the player permitted to exit?
         if (!this.onExit(this.map)) {
             this.sound.playSound('blip');
             return;
         }
 
-        game._currentLevel++;
-        game.sound.playSound('complete');
+        this.editor.saveGoodState();
+
+        this._currentLevel++;
+        this.sound.playSound('complete');
 
         //we disable moving so the player can't move during the fadeout
-        game.map.getPlayer()._canMove = false;
-        game._getLevel(game._currentLevel);
+        this.map.getPlayer()._canMove = false;
+        this._getLevel(this._currentLevel);
     };
 
     this._jumpToNthLevel = function (levelNum) {
@@ -127,19 +127,22 @@ function Game(debugMode, startLevel) {
 
     // makes an ajax request to get the level text file and
     // then loads it into the game
-    this._getLevel = function (levelNumber) {
+    this._getLevel = function (levelNum) {
         var game = this;
 
-        game._currentLevel = levelNumber;
-        game._levelReached = Math.max(levelNumber, game._levelReached);
+        game._levelReached = Math.max(levelNum, game._levelReached);
         if (!debugMode) {
             localStorage.setItem('levelReached', game._levelReached);
         }
 
-        var fileName = game._levelFileNames[levelNumber - 1];
+        var fileName = game._levelFileNames[levelNum - 1];
         $.get('levels/' + fileName, function (lvlCode) {
             // load level code in editor
             game.editor.loadCode(lvlCode);
+
+            if (game.editor.getGoodState()) {
+                game.editor.setCode(game.editor.getGoodState()['code']);
+            }
 
             // start the level and fade in
             game._evalLevelCode(null, null, true);
