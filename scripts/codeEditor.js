@@ -97,9 +97,9 @@ function CodeEditor(textAreaDomID, width, height, game) {
     function enforceRestrictions(instance, change) {
         lastChange = change;
 
-        function inEditableArea(c) {
+        var inEditableArea = function(c) {
             var lineNum = c.to.line;
-            if (editableLines.indexOf(lineNum) > -1) {
+            if (editableLines.indexOf(lineNum) !== -1) {
                 // editable line?
                 return true;
             } else if (editableSections[lineNum]) {
@@ -114,12 +114,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
                 }
                 return false;
             }
-        }
+        };
 
         if (!inEditableArea(change)) {
             change.cancel();
-        }
-        else if (change.to.line !== change.from.line) {
+        } else if (change.to.line !== change.from.line) { // Deletion
             // don't allow multi-line deletion
             change.cancel();
 
@@ -158,8 +157,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
                     instance.setLine(i + 1, '');
                 }
             }
-        }
-        else {
+        } else { // Insert/paste
             var findEndOfSegment = function(line) {
                 // Given an editable line number, returns the last line of the
                 // given line's editable segment.
@@ -172,6 +170,9 @@ function CodeEditor(textAreaDomID, width, height, game) {
             };
 
             var shiftLinesBy = function(array, after, shiftAmount) {
+                // Shifts all line numbers strictly after the given line by
+                // the provided amount.
+
                 return array.map(function(line) {
                     if (line > after) { return line + shiftAmount; }
                     return line;
@@ -202,6 +203,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
 
             // modify editable sections accordingly
+            // TODO Probably broken by multiline paste
             var sections = editableSections[change.to.line];
             if (sections) {
                 var delta = change.text[0].length - (change.to.ch - change.from.ch);
