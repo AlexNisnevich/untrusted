@@ -80,7 +80,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback) {
-    this._eval(this.editor.getGoodState().code); // get validateLevel method from last good state (if such a method exists)
+    this._eval(this.editor.getGoodState(game._currentLevel).code); // get validateLevel method from last good state (if such a method exists)
     try {
         // run the callback
         callback();

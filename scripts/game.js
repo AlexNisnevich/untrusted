@@ -86,6 +86,7 @@ function Game(debugMode, startLevel) {
 
         // Lights, camera, action
         if (startLevel) {
+            this._currentLevel = startLevel;
             this._start(startLevel);
         } else {
             this._intro();
@@ -142,8 +143,8 @@ function Game(debugMode, startLevel) {
             // load level code in editor
             game.editor.loadCode(lvlCode);
 
-            if (!isResetting && game.editor.getGoodState()) {
-                game.editor.setCode(game.editor.getGoodState()['code']);
+            if (!isResetting && game.editor.getGoodState(lvlCode)) {
+                game.editor.setCode(game.editor.getGoodState(lvlCode)['code']);
             }
 
             // start the level and fade in

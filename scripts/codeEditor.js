@@ -386,8 +386,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
         });
     }
 
-    this.getGoodState = function () {
-        return JSON.parse(localStorage.getItem('level' + game._currentLevel + '.lastGoodState'));
+    this.getGoodState = function (lvlNum) {
+        return JSON.parse(localStorage.getItem('level' + lvlNum + '.lastGoodState'));
     }
 
     this.refresh = function () {
