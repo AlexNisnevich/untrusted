@@ -97,6 +97,30 @@ function CodeEditor(textAreaDomID, width, height, game) {
     function enforceRestrictions(instance, change) {
         lastChange = change;
 
+        var findEndOfSegment = function(line) {
+            // Given an editable line number, returns the last line of the
+            // given line's editable segment.
+
+            if (editableLines.indexOf(line + 1) === -1) {
+                return line;
+            }
+
+            return findEndOfSegment(line + 1);
+        };
+
+        var shiftLinesBy = function(array, after, shiftAmount) {
+            // Shifts all line numbers strictly after the given line by
+            // the provided amount.
+
+            return array.map(function(line) {
+                if (line > after) {
+                    console.log('Shifting ' + line + ' to ' + (line + shiftAmount));
+                    return line + shiftAmount;
+                }
+                return line;
+            });
+        };
+
         var inEditableArea = function(c) {
             var lineNum = c.to.line;
             if (editableLines.indexOf(lineNum) !== -1) {
@@ -116,69 +140,31 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
         };
 
+        console.log(
+            '---Editor input---\n' +
+            'Kind: ' + change.origin + '\n' +
+            'Number of lines: ' + change.text.length + '\n' +
+            'From line: ' + change.from.line + '\n' +
+            'To line: ' + change.to.line
+        );
+
         if (!inEditableArea(change)) {
             change.cancel();
         } else if (change.to.line !== change.from.line) { // Deletion
-            // don't allow multi-line deletion
-            change.cancel();
-
-            // unless it's pressing backspace at the start of a line
-            // and the line above it is editable
-            // and the current line text can fit on the line above it
-            if (change.to.ch === 0
-                    && change.from.line === (change.to.line - 1)
-                    && change.from.ch === instance.getLine(change.from.line).length
-                    && editableLines.indexOf(change.from.line) > -1
-                    && instance.getLine(change.from.line).length
-                        + instance.getLine(change.to.line).length < charLimit) {
-
-                // move line up
-                var lineContents = instance.getLine(change.from.line)
-                    + instance.getLine(change.to.line);
-                instance.setLine(change.from.line, '');
-                instance.setLine(change.from.line, lineContents);
-                instance.setLine(change.to.line, '');
-
-                // move the cursor
-                cursorPos = instance.getCursor();
-                cursorPos.line--;
-                cursorPos.ch += change.from.ch;
-                instance.setCursor(cursorPos);
-
-                // shift up all remaining lines in block
-                var startLine = change.to.line;
-                var currentLine = startLine;
-                while (editableLines.indexOf(currentLine) > -1) {
-                    currentLine++;
-                }
-                for (var i = startLine; i < currentLine - 1; i++) {
-                    instance.setLine(i, '');
-                    instance.setLine(i, instance.getLine(i + 1));
-                    instance.setLine(i + 1, '');
-                }
+            // Figure out how many lines just got removed
+            var numRemoved = change.to.line - change.from.line;
+            // Find end of segment
+            var editableSegmentEnd = findEndOfSegment(change.to.line);
+            // Remove that many lines from its end, one by one
+            for (var i = editableSegmentEnd; i > editableSegmentEnd - numRemoved; i--) {
+                console.log('Removing\t' + i);
+                editableLines.remove(i);
             }
+            // Shift lines that came after
+            editableLines = shiftLinesBy(editableLines, editableSegmentEnd, -numRemoved);
+            // TODO Shift editableSections
         } else { // Insert/paste
-            var findEndOfSegment = function(line) {
-                // Given an editable line number, returns the last line of the
-                // given line's editable segment.
-
-                if (editableLines.indexOf(line + 1) === -1) {
-                    return line;
-                }
-
-                return findEndOfSegment(line + 1);
-            };
-
-            var shiftLinesBy = function(array, after, shiftAmount) {
-                // Shifts all line numbers strictly after the given line by
-                // the provided amount.
-
-                return array.map(function(line) {
-                    if (line > after) { return line + shiftAmount; }
-                    return line;
-                });
-            };
-
+            // TODO This allows making sections multiline, fix that
             var newLines = change.text.length - 1; // First line already editable
             if (newLines > 0) {
                 var lastLine = findEndOfSegment(change.to.line);
@@ -186,8 +172,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
                 // Shift editable line numbers after this segment
                 editableLines = shiftLinesBy(editableLines, lastLine, newLines);
 
-                // Shift editable sections (untested)
-                editableSections = shiftLinesBy(editableSections, lastLine, newLines);
+                // Shift editable sections (untested) (doesn't work)
+                //editableSections = shiftLinesBy(editableSections, lastLine, newLines);
 
                 // Append new lines
                 for (var i = lastLine + 1; i <= lastLine + newLines; i++) {

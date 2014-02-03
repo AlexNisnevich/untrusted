@@ -15,6 +15,7 @@ function getParameterByName(name) {
 }
 
 Array.prototype.remove = function(item) {
+    // TODO Update to use Array.prototype.indexOf
     for(var i = this.length; i--;) {
         if(this[i] === item) {
             this.splice(i, 1);
