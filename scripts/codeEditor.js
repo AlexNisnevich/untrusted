@@ -171,29 +171,24 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
             var shiftLinesBy = function(array, after, shiftAmount) {
                 return array.map(function(line) {
-                    if (line > after) {
-                        // Subtract 1 because 1 line was already editable
-                        return line + shiftAmount;
-                    }
-
+                    if (line > after) { return line + shiftAmount; }
                     return line;
                 });
             };
 
-            var pasteLength = change.text.length;
-            if (pasteLength > 1) {
+            var newLines = change.text.length - 1; // First line already editable
+            if (newLines > 0) {
                 var lastLine = findEndOfSegment(change.to.line);
 
                 // Shift editable line numbers after this segment
                 // Shift by pasteLength -1 because 1 was already editable
-                editableLines = shiftLinesBy(editableLines, lastLine, pasteLength - 1);
+                editableLines = shiftLinesBy(editableLines, lastLine, newLines);
 
                 // Shift editable sections (untested)
-                editableSections = shiftLinesBy(editableSections, lastLine, pasteLength - 1);
+                editableSections = shiftLinesBy(editableSections, lastLine, newLines);
 
                 // Append new lines
-                // Strict < because 1 line was already editable
-                for (var i = lastLine + 1; i < lastLine + pasteLength; i++) {
+                for (var i = lastLine + 1; i <= lastLine + newLines; i++) {
                     editableLines.push(i);
                 }
             }
