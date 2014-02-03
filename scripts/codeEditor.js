@@ -160,13 +160,15 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
         }
         else {
-            // Hunt down last editable line in segment
             var findEndOfSegment = function(line) {
-                if (editableLines.indexOf(line) !== -1) { // This line is editable
-                    return findEndOfSegment(++line); // What about the next line?
+                // Given an editable line number, returns the last line of the
+                // given line's editable segment.
+
+                if (editableLines.indexOf(line + 1) === -1) {
+                    return line;
                 }
 
-                return --line; // The previous line was the last editable one
+                return findEndOfSegment(line + 1);
             };
 
             var shiftLinesBy = function(array, after, shiftAmount) {
@@ -181,7 +183,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
                 var lastLine = findEndOfSegment(change.to.line);
 
                 // Shift editable line numbers after this segment
-                // Shift by pasteLength -1 because 1 was already editable
                 editableLines = shiftLinesBy(editableLines, lastLine, newLines);
 
                 // Shift editable sections (untested)
