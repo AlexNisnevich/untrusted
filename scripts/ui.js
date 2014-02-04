@@ -97,6 +97,13 @@ Game.prototype.enableButtons = function () {
     $("#muteButton").click( function () {
         game.sound.toggleSound();
     });
+
+    $('#notepadButton').click(openNotepad);
+};
+
+function openNotepad() {
+    console.log("opening notepad");
+    $('#notepadPane').toggle();
 };
 
 Game.prototype.openMenu = function () {
@@ -105,7 +112,7 @@ Game.prototype.openMenu = function () {
     $('#menuPane #levels').html('');
     $.each(game._levelFileNames, function (levelNum, fileName) {
         levelNum += 1;
-        var levelName = fileName.split('.')[0]
+        var levelName = fileName.split('.')[0];
         levelName = levelName.split('_').join(' ');
 
         var levelButton = $('<button>');
@@ -182,3 +189,16 @@ Game.prototype.openHelp = function () {
         $('#helpPane').hide();
     }
 };
+
+
+/* code to set up notepad text area */
+
+$(document).ready(function() {
+    var textarea = document.getElementById('notepadTextarea');
+    var notepadEditor = CodeMirror.fromTextArea(textarea,
+        { theme: 'vibrant-ink',
+          lineNumbers: true,
+          mode: 'javascript'
+        });
+});
+
