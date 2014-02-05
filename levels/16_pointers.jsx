@@ -14,7 +14,9 @@
  * You! How are you still alive?
  *
  * Well, no matter. Good luck getting through this
- * maze. You'll never see me or the Algorithm again!
+ * maze of rooms. 
+ *
+ * You'll never see me or the Algorithm again!
  */
 
 function startLevel(map) {
@@ -25,35 +27,36 @@ function startLevel(map) {
         return o;
     };
 
-    map.placePlayer(5, 5);
-    var player = map.getPlayer();
-    
-    map.placeObject(35, 21, 'exit');
+    map.createFromGrid(
+        ['+++++++++++++++++++++++++++++++++++++++++++++',
+         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
+         '+o @ o++o   o++o   o++o   o++o   o++o   o++++',
+         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
+         '+++++++++++++++++++++++++++++++++++++++++++++',
+         '+++++o o++++o o++++o o++++o o++++o o++++o o++',
+         '++++o   o++o   o++o   o++o   o++o   o++o   o+',
+         '+++++o o++++o o++++o o++++o o++++o o++++o o++',
+         '+++++++++++++++++++++++++++++++++++++++++++++',
+         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
+         '+o   o++o   o++o   o++o   o++o   o++o   o++++',
+         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
+         '+++++++++++++++++++++++++++++++++++++++++++++',
+         '+++++o o++++o o++++o o++++o o++++o o++++o o++',
+         '++++o   o++o   o++o   o++o   o++o   o++o   o+',
+         '+++++o o++++o o++++o o++++o o++++o o++++o o++',
+         '+++++++++++++++++++++++++++++++++++++++++++++',
+         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
+         '+o   o++o   o++o   o++o   o++o   o++o E o++++',
+         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
+         '+++++++++++++++++++++++++++++++++++++++++++++'],
+        {
+            '@': 'player',
+            'E': 'exit',
+            '+': 'block',
+            'o': 'teleporter',
 
-    for (x = 4; x <= 36; x++) {
-        map.placeObject(x, 4, 'block');
-        map.placeObject(x, 22, 'block');
-    }
-
-    for (y = 5; y <= 21; y++) {
-        map.placeObject(4, y, 'block');
-        map.placeObject(36, y, 'block');
-    }
-
-    for (x = 6; x <= 34; x += 2) {
-        for (y = 6; y <= 20; y += 2) {
-            map.placeObject(x, y, 'block');
-        }
-    }
-
-    for (x = 5; x <= 35; x += 2) {
-        for (y = 5; y <= 21; y += 2) {
-            if (!((x == 5 && y == 5) || (x == 35 && y == 21))) {
-                map.placeObject(x, y, 'teleporter');
-            }
-        }
-    }
-    
+        }, 2, 2);
+  
     // Ah look, Dr. Eval! It's your old friend,
     // the canvas.
     var canvas = map.getCanvasContext();
