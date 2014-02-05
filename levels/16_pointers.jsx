@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": 
+    "commandsIntroduced":
         ["map.getDynamicObjects", "map.getRandomColor",
          "map.getCanvasContext", "map.getCanvasCoords",
          "object.setTarget"],
@@ -10,18 +10,17 @@
 /***************
  * pointers.js *
  ***************
- * 
+ *
  * You! How are you still alive?
  *
  * Well, no matter. Good luck getting through this
- * maze of rooms. 
+ * maze of rooms.
  *
  * You'll never see me or the Algorithm again!
  */
 
 function startLevel(map) {
-    // Randomly shuffles an array [http://bit.ly/1l6LGQT]
-    function shuffle(o){ //v1.0
+    function shuffle(o){ //v1.0 [http://bit.ly/1l6LGQT]
         for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i),
             x = o[--i], o[i] = o[j], o[j] = x);
         return o;
@@ -29,59 +28,59 @@ function startLevel(map) {
 
     map.createFromGrid(
         ['+++++++++++++++++++++++++++++++++++++++++++++',
-         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
-         '+o @ o++o   o++o   o++o   o++o   o++o   o++++',
-         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
+         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
+         '+* @ o++o   o++*   o++o   o++*   o++o   o++++',
+         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
          '+++++++++++++++++++++++++++++++++++++++++++++',
-         '+++++o o++++o o++++o o++++o o++++o o++++o o++',
-         '++++o   o++o   o++o   o++o   o++o   o++o   o+',
-         '+++++o o++++o o++++o o++++o o++++o o++++o o++',
+         '+++++* o++++o o++++* o++++o o++++* o++++o o++',
+         '++++o   *++o   o++o   *++o   o++o   *++o   o+',
+         '+++++* o++++o o++++* o++++o o++++* o++++o o++',
          '+++++++++++++++++++++++++++++++++++++++++++++',
-         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
-         '+o   o++o   o++o   o++o   o++o   o++o   o++++',
-         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
+         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
+         '+*   o++o   o++*   o++o   o++*   o++o   o++++',
+         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
          '+++++++++++++++++++++++++++++++++++++++++++++',
-         '+++++o o++++o o++++o o++++o o++++o o++++o o++',
-         '++++o   o++o   o++o   o++o   o++o   o++o   o+',
-         '+++++o o++++o o++++o o++++o o++++o o++++o o++',
+         '+++++* o++++o o++++* o++++o o++++* o++++o o++',
+         '++++o   *++o   o++o   *++o   o++o   *++o   o+',
+         '+++++* o++++o o++++* o++++o o++++* o++++o o++',
          '+++++++++++++++++++++++++++++++++++++++++++++',
-         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
-         '+o   o++o   o++o   o++o   o++o   o++o E o++++',
-         '++o o++++o o++++o o++++o o++++o o++++o o+++++',
+         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
+         '+*   o++o   o++*   o++o   o++*   o++o E o++++',
+         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
          '+++++++++++++++++++++++++++++++++++++++++++++'],
         {
             '@': 'player',
             'E': 'exit',
             '+': 'block',
             'o': 'teleporter',
-
+            '*': 'trap',
         }, 2, 2);
-  
-    // Ah look, Dr. Eval! It's your old friend,
-    // the canvas.
-    var canvas = map.getCanvasContext();
 
-    var teleporters = map.getDynamicObjects();
-    teleporters = shuffle(teleporters);
+    var teleportersAndTraps = map.getDynamicObjects();
+    teleportersAndTraps = shuffle(teleportersAndTraps);
 
-    for (i = 0; i < teleporters.length; i+=2) {
-        var t1 = teleporters[i]; 
-        var t2 = teleporters[i+1];
+    for (i = 0; i < teleportersAndTraps.length; i+=2) {
+        var t1 = teleportersAndTraps[i];
+        var t2 = teleportersAndTraps[i+1];
 
-        // Make each pair of teleporters point to each other
-        t1.setTarget(t2);
-        t2.setTarget(t1);
+        // Point each teleporter to either another teleporter
+        // or a trap
+        if (t1.getType() == 'teleporter') {
+            t1.setTarget(t2);
+        }
+        if (t2.getType() == 'teleporter') {
+            t2.setTarget(t1);
+        }
 
 #BEGIN_EDITABLE#
-        // I could draw the path between the teleporters ...
-        // but I'm going to draw useless circles instead. Ha!
-        var startCoords = map.getCanvasCoords(t1);
-        canvas.beginPath();
-        canvas.arc(startCoords.x, startCoords.y, 3, 0, 2 * Math.PI);
-        canvas.strokeStyle = map.getRandomColor(
-            [150, 150, 150], [255, 255, 255]
-        );
-        canvas.stroke();
+
+
+
+
+
+
+
+
 
 
 #END_EDITABLE#

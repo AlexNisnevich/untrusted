@@ -50,6 +50,16 @@ Game.prototype.objects = {
         }
     },
 
+    'trap': {
+        'type': 'dynamic',
+        'symbol': '*',
+        'color': '#f00',
+        'onCollision': function (player, game) {
+            player.killedBy('a trap');
+        },
+        'behavior': function (me) {}
+    },
+
     'teleporter': {
         'type': 'dynamic',
         'symbol' : String.fromCharCode(0x2395), // ⎕
