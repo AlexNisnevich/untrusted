@@ -30,6 +30,7 @@ body {
 }
 
 #screen canvas {
+    outline: none;
 	border: 2px solid #333;
 }
 
@@ -274,4 +275,18 @@ h2 {
 
 #drawingCanvas {
 	position: absolute;
+}
+
+#savedLevelMsg {
+	position: relative;
+	float: right;
+	top: -16px;
+	right: 5px;
+	font-size: 0.85em;
+	color: #999;
+}
+
+#savedLevelMsg a {
+	color: #ccc;
+	text-decoration: none;
 }
