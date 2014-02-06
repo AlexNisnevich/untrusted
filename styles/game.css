@@ -6,10 +6,15 @@ html {
 body {
 	background: #000;
 	display: table;
-	font-family: monospace;
+	font-family: "droid sans mono", monospace;
 	color: white;
 	width: 99%;
 	height: 99%;
+	font-size: 1em;
+}
+
+.CodeMirror pre {
+	font-family: "droid sans mono", monospace;
 }
 
 #container {
@@ -85,6 +90,7 @@ body {
 	padding: 7px;
 	background: #000;
 	cursor: pointer;
+	font-size: 0.8em;
 }
 
 #editorPane #buttons a:hover {
@@ -284,6 +290,7 @@ h2 {
 	right: 5px;
 	font-size: 0.85em;
 	color: #999;
+	font-size: 0.8em;
 }
 
 #savedLevelMsg a {
