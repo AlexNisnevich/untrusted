@@ -56,6 +56,10 @@ function startLevel(map) {
             '*': 'trap',
         }, 2, 2);
 
+    // Ah look, Dr. Eval! It's your old friend,
+    // the canvas.
+    var canvas = map.getCanvasContext();
+
     var teleportersAndTraps = map.getDynamicObjects();
     teleportersAndTraps = shuffle(teleportersAndTraps);
 
