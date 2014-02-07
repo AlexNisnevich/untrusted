@@ -27,6 +27,7 @@ function Game(debugMode, startLevel) {
         '13_robotMaze.jsx',
         '14_crispsContest.jsx',
         '15_exceptionalCrossing.jsx',
+        '16_laserLevel.jsx',
         '16_pointers.jsx',
         '17_superDrEvalBros.jsx',
         //'18_domManipulation.jsx',
