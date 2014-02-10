@@ -52,7 +52,6 @@ Game.prototype.validate = function(allCode, playerCode) {
 
         // does validateLevel() succeed?
         if (typeof(validateLevel) !== 'undefined') {
-            console.log(validateLevel);
             validateLevel(dummyMap);
         }
 
