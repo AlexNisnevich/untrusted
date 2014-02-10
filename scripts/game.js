@@ -71,6 +71,7 @@ function Game(debugMode, startLevel) {
         // Enable controls
         this.enableShortcutKeys();
         this.enableButtons();
+        this.setUpNotepad();
 
         // Load help commands from local storage (if possible)
         if (localStorage.getItem('helpCommands')) {

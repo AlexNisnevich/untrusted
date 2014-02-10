@@ -98,13 +98,39 @@ Game.prototype.enableButtons = function () {
         game.sound.toggleSound();
     });
 
-    $('#notepadButton').click(openNotepad);
+    $('#notepadButton').click( function () {
+        $('#notepadPane').toggle();
+        game.notepadEditor.refresh();
+    });
 };
 
-function openNotepad() {
-    $('#notepadPane').toggle();
-    Game.notepadEditor.refresh();
+Game.prototype.setUpNotepad = function () {
+    var game = this;
+
+    var textarea = document.getElementById('notepadTextarea');
+    this.notepadEditor = CodeMirror.fromTextArea(textarea, {
+        theme: 'vibrant-ink',
+        lineNumbers: true,
+        mode: 'javascript'
+    });
+
+    var ls_tag = 'notepadContent';
+    var content = localStorage.getItem(ls_tag);
+    if (content === null) {
+        content = '';
+    }
+    this.notepadEditor.setValue(content);
+
+    $('#notepadPaneCloseButton').click(function () {
+        $('#notepadPane').hide();
+    });
+
+    $('#notepadSaveButton').click(function () {
+        var v = game.notepadEditor.getValue();
+        localStorage.setItem(ls_tag, v);
+    });
 };
+
 
 Game.prototype.openMenu = function () {
     var game = this;
@@ -189,30 +215,3 @@ Game.prototype.openHelp = function () {
         $('#helpPane').hide();
     }
 };
-
-
-/* code to set up notepad text area */
-$(function() {
-    var textarea = document.getElementById('notepadTextarea');
-    Game.notepadEditor = CodeMirror.fromTextArea(textarea,
-        { theme: 'vibrant-ink',
-          lineNumbers: true,
-          mode: 'javascript'
-        });
-
-    var ls_tag = 'notepadContent';
-    var content = localStorage.getItem(ls_tag);
-    if (content === null) {
-        content = '';
-    }
-    Game.notepadEditor.setValue(content);
-
-    $('#notepadPaneCloseButton').click( function() {
-        $('#notepadPane').hide();
-    });
-
-    $('#notepadSaveButton').click( function() {
-        var v = Game.notepadEditor.getValue();
-        localStorage.setItem(ls_tag, v);
-    });
-});
