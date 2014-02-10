@@ -27,8 +27,8 @@ Game.prototype.enableShortcutKeys = function () {
 	});
 
     shortcut.add('ctrl+3', function () {
-        game.sound.playSound('select');
-        game.editor.focus();
+        $('#notepadPane').toggle();
+        game.notepadEditor.refresh();
         return true;
     });
 
@@ -114,6 +114,8 @@ Game.prototype.setUpNotepad = function () {
         mode: 'javascript'
     });
 
+    this.notepadEditor.setSize(null, 275);
+
     var ls_tag = 'notepadContent';
     var content = localStorage.getItem(ls_tag);
     if (content === null) {
@@ -130,7 +132,6 @@ Game.prototype.setUpNotepad = function () {
         localStorage.setItem(ls_tag, v);
     });
 };
-
 
 Game.prototype.openMenu = function () {
     var game = this;
