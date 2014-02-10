@@ -39,7 +39,6 @@ Game.prototype.validate = function(allCode, playerCode) {
         }).join('\n');
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
-        var validateLevel = function () {}; // in case validateLevel isn't defined
         this._eval(allCode);
 
         // start the level on a dummy map to validate
@@ -53,6 +52,7 @@ Game.prototype.validate = function(allCode, playerCode) {
 
         // does validateLevel() succeed?
         if (typeof(validateLevel) !== 'undefined') {
+            console.log(validateLevel);
             validateLevel(dummyMap);
         }
 
