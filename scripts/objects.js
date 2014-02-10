@@ -57,7 +57,7 @@ Game.prototype.objects = {
         'onCollision': function (player, game) {
             player.killedBy('a trap');
         },
-        'behavior': function (me) {}
+        'behavior': null
     },
 
     'teleporter': {
@@ -70,7 +70,7 @@ Game.prototype.objects = {
             }
             player._hasTeleported = true;
         },
-        'behavior': function (me) {}
+        'behavior': null
     },
 
     // items

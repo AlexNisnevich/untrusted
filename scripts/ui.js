@@ -27,8 +27,8 @@ Game.prototype.enableShortcutKeys = function () {
 	});
 
     shortcut.add('ctrl+3', function () {
-        game.sound.playSound('select');
-        game.editor.focus();
+        $('#notepadPane').toggle();
+        game.notepadEditor.refresh();
         return true;
     });
 
@@ -97,6 +97,40 @@ Game.prototype.enableButtons = function () {
     $("#muteButton").click( function () {
         game.sound.toggleSound();
     });
+
+    $('#notepadButton').click( function () {
+        $('#notepadPane').toggle();
+        game.notepadEditor.refresh();
+    });
+};
+
+Game.prototype.setUpNotepad = function () {
+    var game = this;
+
+    var textarea = document.getElementById('notepadTextarea');
+    this.notepadEditor = CodeMirror.fromTextArea(textarea, {
+        theme: 'vibrant-ink',
+        lineNumbers: true,
+        mode: 'javascript'
+    });
+
+    this.notepadEditor.setSize(null, 275);
+
+    var ls_tag = 'notepadContent';
+    var content = localStorage.getItem(ls_tag);
+    if (content === null) {
+        content = '';
+    }
+    this.notepadEditor.setValue(content);
+
+    $('#notepadPaneCloseButton').click(function () {
+        $('#notepadPane').hide();
+    });
+
+    $('#notepadSaveButton').click(function () {
+        var v = game.notepadEditor.getValue();
+        localStorage.setItem(ls_tag, v);
+    });
 };
 
 Game.prototype.openMenu = function () {
@@ -105,7 +139,7 @@ Game.prototype.openMenu = function () {
     $('#menuPane #levels').html('');
     $.each(game._levelFileNames, function (levelNum, fileName) {
         levelNum += 1;
-        var levelName = fileName.split('.')[0]
+        var levelName = fileName.split('.')[0];
         levelName = levelName.split('_').join(' ');
 
         var levelButton = $('<button>');

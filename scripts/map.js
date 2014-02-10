@@ -5,6 +5,7 @@ function Map(display, game) {
     var __grid;
     var __dynamicObjects;
     var __objectDefinitions;
+    var __lines;
 
     var __allowOverwrite;
     var __allowMultiMove;
@@ -49,6 +50,8 @@ function Map(display, game) {
             clearInterval(__intervals[i]);
         }
         __intervals = [];
+
+        __lines = [];
     };
 
     this._setProperties = function (mapProperties) {
@@ -178,7 +181,22 @@ function Map(display, game) {
     }
 
     this._moveAllDynamicObjects = function () {
-        __dynamicObjects.forEach(function(object) {
+        // the way things work right now, teleporters must take precedence
+        // over all other objects -- otherwise, pointers.jsx will not work
+        // correctly.
+        // TODO: make this not be the case
+
+        // "move" teleporters
+        __dynamicObjects.filter(function (object) {
+            return (object.getType() === 'teleporter');
+        }).forEach(function(object) {
+            object._onTurn();
+        });
+
+        // move everything else
+        __dynamicObjects.filter(function (object) {
+            return (object.getType() !== 'teleporter');
+        }).forEach(function(object) {
             object._onTurn();
         });
     };
@@ -331,16 +349,16 @@ function Map(display, game) {
         }, 100);
     };
 
+    /* canvas-related stuff */
+
     this.getCanvasContext = function() {
         return $('#drawingCanvas')[0].getContext('2d');
     };
 
     this.getCanvasCoords = function(obj) {
-        // 0.7 is a bit of a magic number to make the canvas
-        // operations in lvl 16 look good
         return {
-            x: (obj.getX() + 0.7) * 600 / this._game._dimensions.width,
-            y: (obj.getY() + 0.7) * 500 / this._game._dimensions.height
+            x: (obj.getX() + 0.5) * 600 / this._game._dimensions.width,
+            y: (obj.getY() + 0.5) * 500 / this._game._dimensions.height
         };
     };
 
@@ -356,7 +374,23 @@ function Map(display, game) {
             Math.floor((end[2] - start[2]) / 2)
         ];
         return ROT.Color.toHex(ROT.Color.randomize(mean, std));
-    }
+    };
+
+    this.createLine = function(start, end, callback) {
+        __lines.push({'start': start, 'end': end, 'callback': callback});
+    };
+
+    this.testLineCollisions = function() {
+        var threshold = 7;
+        var playerCoords = this.getCanvasCoords(__player);
+        __lines.forEach(function (line) {
+            if (pDistance(playerCoords.x, playerCoords.y,
+                    line.start[0], line.start[1],
+                    line.end[0], line.end[1]) < threshold) {
+                line.callback(__player);
+            }
+        })
+    };
 
     /* initialization */
 

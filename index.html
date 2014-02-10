@@ -41,6 +41,7 @@
 				<div id="buttons">
 					<span><a id="helpButton" title="Ctrl+1: Help"><span class="keys">^1</span> Help</a></span>
 					<span><a id="toggleFocusButton" title="Ctrl+2: Toggle Focus"><span class="keys">^2</span> Toggle Focus</a></span>
+                    <span><a id="notepadButton" title="Ctrl+3: Notepad"><span class="keys">^3</span> Notepad</a></span>
 					<span><a id="resetButton" title="Ctrl+4: Reset Level"><span class="keys">^4</span> Reset</a></span>
 					<span><a id="executeButton" title="Ctrl+5: Execute"><span class="keys">^5</span> Execute</a></span>
 					<span><a id="phoneButton" style="display: none;" title="Ctrl+6: Use Phone"><span class="keys">^6</span> Phone</a></span>
@@ -55,10 +56,20 @@
 				<div id="helpPaneContent"></div>
 				<div id="helpPaneCloseButton">x</div>
 			</div>
-			<div id="menuPane" style="display: none;">
-				<div class="menuPaneHeading">Level Select</div>
+
+			<div id="menuPane" class='pop_up_box'>
+				<div class="pop_up_box_heading">Level Select</div>
 				<div id="levels"></div>
 			</div>
+
+            <div id="notepadPane" class='pop_up_box'>
+                <div id='notepadPaneContent'>
+                    <div class="pop_up_box_heading">$EDITOR</div>
+                    <textarea id=notepadTextarea></textarea>
+                    <button id='notepadSaveButton'>Save</button>
+                </div>
+                <div id='notepadPaneCloseButton'>x</div>
+            </div>
 		</div>
 	</div>
 	<div id="jquery_bgPlayer" class="jp-jplayer"></div>

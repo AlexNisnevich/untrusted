@@ -1,9 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced":
-        ["map.getDynamicObjects", "map.getRandomColor",
-         "map.getCanvasContext", "map.getCanvasCoords",
-         "object.setTarget"],
+        ["map.getDynamicObjects", "map.getCanvasCoords", "object.setTarget"],
     "music": "Various_Artists_-_15_-_Slimeball_vomit"
 }
 #END_PROPERTIES#
@@ -28,25 +26,25 @@ function startLevel(map) {
 
     map.createFromGrid(
         ['+++++++++++++++++++++++++++++++++++++++++++++',
-         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
-         '+* @ o++o   o++*   o++o   o++*   o++o   o++++',
-         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
+         '++o *++++o *++++o *++++o *++++o *++++o *+++++',
+         '+* @ o++*   o++*   o++*   o++*   o++*   o++++',
+         '++o *++++o *++++o *++++o *++++o *++++o *+++++',
          '+++++++++++++++++++++++++++++++++++++++++++++',
-         '+++++* o++++o o++++* o++++o o++++* o++++o o++',
-         '++++o   *++o   o++o   *++o   o++o   *++o   o+',
-         '+++++* o++++o o++++* o++++o o++++* o++++o o++',
+         '+++++* o++++* o++++* o++++* o++++* o++++* o++',
+         '++++o   *++o   *++o   *++o   *++o   *++o   *+',
+         '+++++* o++++* o++++* o++++* o++++* o++++* o++',
          '+++++++++++++++++++++++++++++++++++++++++++++',
-         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
-         '+*   o++o   o++*   o++o   o++*   o++o   o++++',
-         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
+         '++o *++++o *++++o *++++o *++++o *++++o *+++++',
+         '+*   o++*   o++*   o++*   o++*   o++*   o++++',
+         '++o *++++o *++++o *++++o *++++o *++++o *+++++',
          '+++++++++++++++++++++++++++++++++++++++++++++',
-         '+++++* o++++o o++++* o++++o o++++* o++++o o++',
-         '++++o   *++o   o++o   *++o   o++o   *++o   o+',
-         '+++++* o++++o o++++* o++++o o++++* o++++o o++',
+         '+++++* o++++* o++++* o++++* o++++* o++++* o++',
+         '++++o   *++o   *++o   *++o   *++o   *++o   *+',
+         '+++++* o++++* o++++* o++++* o++++* o++++* o++',
          '+++++++++++++++++++++++++++++++++++++++++++++',
-         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
-         '+*   o++o   o++*   o++o   o++*   o++o E o++++',
-         '++o *++++o o++++o *++++o o++++o *++++o o+++++',
+         '++o *++++o *++++o *++++o *++++o *++++o *+++++',
+         '+*   o++*   o++*   o++*   o++*   o++* E o++++',
+         '++o *++++o *++++o *++++o *++++o *++++o *+++++',
          '+++++++++++++++++++++++++++++++++++++++++++++'],
         {
             '@': 'player',
@@ -55,6 +53,10 @@ function startLevel(map) {
             'o': 'teleporter',
             '*': 'trap',
         }, 2, 2);
+
+    // Ah look, Dr. Eval! It's your old friend,
+    // the canvas.
+    var canvas = map.getCanvasContext();
 
     var teleportersAndTraps = map.getDynamicObjects();
     teleportersAndTraps = shuffle(teleportersAndTraps);
