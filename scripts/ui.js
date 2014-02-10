@@ -200,5 +200,10 @@ $(document).ready(function() {
           lineNumbers: true,
           mode: 'javascript'
         });
+
+    $('#notepadPaneCloseButton').click( function() {
+        $('#notepadPane').hide();
+    });
+
 });
 

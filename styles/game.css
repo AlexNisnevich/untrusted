@@ -202,6 +202,31 @@ body {
 	cursor: pointer;
 }
 
+#notepadPaneCloseButton {
+	float: right;
+	width: 10px;
+	border-bottom: 2px solid yellow;
+	border-left: 2px solid yellow;
+	padding-left: 3px;
+	padding-right: 1px;
+	padding-bottom: 2px;
+	cursor: pointer;
+}
+
+#notepadPaneCloseButton:hover {
+    background: yellow;
+    color: black;
+}
+
+#notepadPaneContent {
+    float:left;
+    width:90%;
+}
+
+#notepadTextarea {
+    width:100%;
+}
+
 #helpPaneCloseButton:hover {
 	background: yellow;
 	color: black;
