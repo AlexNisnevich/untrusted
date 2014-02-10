@@ -141,7 +141,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         };
 
         console.log(
-            '---Editor input---\n' +
+            '---Editor input (beforeChange) ---\n' +
             'Kind: ' + change.origin + '\n' +
             'Number of lines: ' + change.text.length + '\n' +
             'From line: ' + change.from.line + '\n' +
@@ -203,6 +203,30 @@ function CodeEditor(textAreaDomID, width, height, game) {
                     }
                 }
             }
+        }
+    }
+
+    function trackUndoRedo(instance, change) {
+        if (change.origin === 'undo') {
+            // TODO shift lines if necessary for undo action
+
+            console.log(
+                '---Editor input (change) ---\n' +
+                'Kind: ' + change.origin + '\n' +
+                'Number of lines: ' + change.text.length + '\n' +
+                'From line: ' + change.from.line + '\n' +
+                'To line: ' + change.to.line
+            );
+        } else if (change.origin === 'redo') {
+            // TODO shift lines if necessary for redo action
+
+            console.log(
+                '---Editor input (change) ---\n' +
+                'Kind: ' + change.origin + '\n' +
+                'Number of lines: ' + change.text.length + '\n' +
+                'From line: ' + change.from.line + '\n' +
+                'To line: ' + change.to.line
+            );
         }
     }
 
@@ -281,6 +305,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         });
 
         this.internalEditor.on('change', this.markEditableSections);
+        this.internalEditor.on('change', this.trackUndoRedo);
     }
 
     // loads code into editor
@@ -296,6 +321,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         codeString = preprocess(codeString);
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);
+
         this.markUneditableLines();
         this.internalEditor.refresh();
         this.internalEditor.clearHistory();
