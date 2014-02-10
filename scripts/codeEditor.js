@@ -92,34 +92,34 @@ function CodeEditor(textAreaDomID, width, height, game) {
         return lineArray.join("\n");
     }
 
+    var findEndOfSegment = function(line) {
+        // Given an editable line number, returns the last line of the
+        // given line's editable segment.
+
+        if (editableLines.indexOf(line + 1) === -1) {
+            return line;
+        }
+
+        return findEndOfSegment(line + 1);
+    };
+
+    var shiftLinesBy = function(array, after, shiftAmount) {
+        // Shifts all line numbers strictly after the given line by
+        // the provided amount.
+
+        return array.map(function(line) {
+            if (line > after) {
+                console.log('Shifting ' + line + ' to ' + (line + shiftAmount));
+                return line + shiftAmount;
+            }
+            return line;
+        });
+    };
+
     // enforces editing restrictions when set as the handler
     // for the 'beforeChange' event
     function enforceRestrictions(instance, change) {
         lastChange = change;
-
-        var findEndOfSegment = function(line) {
-            // Given an editable line number, returns the last line of the
-            // given line's editable segment.
-
-            if (editableLines.indexOf(line + 1) === -1) {
-                return line;
-            }
-
-            return findEndOfSegment(line + 1);
-        };
-
-        var shiftLinesBy = function(array, after, shiftAmount) {
-            // Shifts all line numbers strictly after the given line by
-            // the provided amount.
-
-            return array.map(function(line) {
-                if (line > after) {
-                    console.log('Shifting ' + line + ' to ' + (line + shiftAmount));
-                    return line + shiftAmount;
-                }
-                return line;
-            });
-        };
 
         var inEditableArea = function(c) {
             var lineNum = c.to.line;
@@ -206,10 +206,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
         }
     }
 
-    function trackUndoRedo(instance, change) {
-        if (change.origin === 'undo') {
-            // TODO shift lines if necessary for undo action
-
+    this.trackUndoRedo = function(instance, change) {
+        if (change.origin === 'undo' || change.origin === 'redo') {
             console.log(
                 '---Editor input (change) ---\n' +
                 'Kind: ' + change.origin + '\n' +
@@ -217,17 +215,41 @@ function CodeEditor(textAreaDomID, width, height, game) {
                 'From line: ' + change.from.line + '\n' +
                 'To line: ' + change.to.line
             );
-        } else if (change.origin === 'redo') {
-            // TODO shift lines if necessary for redo action
 
-            console.log(
-                '---Editor input (change) ---\n' +
-                'Kind: ' + change.origin + '\n' +
-                'Number of lines: ' + change.text.length + '\n' +
-                'From line: ' + change.from.line + '\n' +
-                'To line: ' + change.to.line
-            );
+            if (change.to.line !== change.from.line) { // Deletion
+                // Figure out how many lines just got removed
+                var numRemoved = change.to.line - change.from.line;
+                // Find end of segment
+                var editableSegmentEnd = findEndOfSegment(change.to.line);
+                // Remove that many lines from its end, one by one
+                for (var i = editableSegmentEnd; i > editableSegmentEnd - numRemoved; i--) {
+                    console.log('Removing\t' + i);
+                    editableLines.remove(i);
+                }
+                // Shift lines that came after
+                editableLines = shiftLinesBy(editableLines, editableSegmentEnd, -numRemoved);
+                // TODO Shift editableSections
+            } else { // Insert/paste
+                // TODO This allows making sections multiline, fix that
+                var newLines = change.text.length - 1; // First line already editable
+                if (newLines > 0) {
+                    var lastLine = findEndOfSegment(change.to.line);
+
+                    // Shift editable line numbers after this segment
+                    editableLines = shiftLinesBy(editableLines, lastLine, newLines);
+
+                    // Shift editable sections (untested) (doesn't work)
+                    //editableSections = shiftLinesBy(editableSections, lastLine, newLines);
+
+                    // Append new lines
+                    for (var i = lastLine + 1; i <= lastLine + newLines; i++) {
+                        editableLines.push(i);
+                    }
+                }
+            }
         }
+
+        console.log(editableLines);
     }
 
     this.initialize = function() {
@@ -317,7 +339,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
          * a data structure of editable areas
          */
 
-        this.internalEditor.off('beforeChange',enforceRestrictions);
+        this.internalEditor.off('beforeChange', enforceRestrictions);
         codeString = preprocess(codeString);
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);
