@@ -181,7 +181,22 @@ function Map(display, game) {
     }
 
     this._moveAllDynamicObjects = function () {
-        __dynamicObjects.forEach(function(object) {
+        // the way things work right now, teleporters must take precedence
+        // over all other objects -- otherwise, pointers.jsx will not work
+        // correctly.
+        // TODO: make this not be the case
+
+        // "move" teleporters
+        __dynamicObjects.filter(function (object) {
+            return (object.getType() === 'teleporter');
+        }).forEach(function(object) {
+            object._onTurn();
+        });
+
+        // move everything else
+        __dynamicObjects.filter(function (object) {
+            return (object.getType() !== 'teleporter');
+        }).forEach(function(object) {
             object._onTurn();
         });
     };
@@ -341,11 +356,9 @@ function Map(display, game) {
     };
 
     this.getCanvasCoords = function(obj) {
-        // 0.7 is a bit of a magic number to make the canvas
-        // operations in lvl 16 look good
         return {
-            x: (obj.getX() + 0.7) * 600 / this._game._dimensions.width,
-            y: (obj.getY() + 0.7) * 500 / this._game._dimensions.height
+            x: (obj.getX() + 0.5) * 600 / this._game._dimensions.width,
+            y: (obj.getY() + 0.5) * 500 / this._game._dimensions.height
         };
     };
 
