@@ -225,3 +225,22 @@ ROT.Display.prototype.focus = function() {
     $('#screen').show();
     $(this.getContainer()).attr('tabindex', '0').click().focus();
 };
+
+// using ideas from http://robert.ocallahan.org/2011/11/drawing-dom-content-to-canvas.html
+ROT.Display.prototype.renderDom = function(html) {
+    var ctx = $('#drawingCanvas')[0].getContext("2d");
+    var data = "data:image/svg+xml," +
+               "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'>" +
+                 "<foreignObject width='100%' height='100%'>" +
+                   "<div xmlns='http://www.w3.org/1999/xhtml'>" +
+                        html +
+                   "</div>" +
+                 "</foreignObject>" +
+               "</svg>";
+    console.log(data);
+    var img = new Image();
+    img.src = data;
+    img.onload = function() {
+        ctx.drawImage(img, 0, 0);
+    }
+}
