@@ -164,9 +164,14 @@ function CodeEditor(textAreaDomID, width, height, game) {
             editableLines = shiftLinesBy(editableLines, editableSegmentEnd, -numRemoved);
             // TODO Shift editableSections
         } else { // Insert/paste
-            // TODO This allows making sections multiline, fix that
             var newLines = change.text.length - 1; // First line already editable
+
             if (newLines > 0) {
+                if (editableLines.indexOf(change.to.line) < 0) {
+                    change.cancel();
+                    return;
+                }
+
                 var lastLine = findEndOfSegment(change.to.line);
 
                 // Shift editable line numbers after this segment
