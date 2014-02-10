@@ -11,8 +11,6 @@ var toggleFocus = (function () {
     };
 })();
 
-var notepadEditor;
-
 Game.prototype.enableShortcutKeys = function () {
     var game = this;
 
@@ -105,7 +103,7 @@ Game.prototype.enableButtons = function () {
 
 function openNotepad() {
     $('#notepadPane').toggle();
-    notepadEditor.refresh();
+    Game.notepadEditor.refresh();
 };
 
 Game.prototype.openMenu = function () {
@@ -194,15 +192,27 @@ Game.prototype.openHelp = function () {
 
 
 /* code to set up notepad text area */
-$(document).ready(function() {
+$(function() {
     var textarea = document.getElementById('notepadTextarea');
-    notepadEditor = CodeMirror.fromTextArea(textarea,
+    Game.notepadEditor = CodeMirror.fromTextArea(textarea,
         { theme: 'vibrant-ink',
           lineNumbers: true,
           mode: 'javascript'
         });
 
+    var ls_tag = 'notepadContent';
+    var content = localStorage.getItem(ls_tag);
+    if (content === null) {
+        content = '';
+    }
+    Game.notepadEditor.setValue(content);
+
     $('#notepadPaneCloseButton').click( function() {
         $('#notepadPane').hide();
+    });
+
+    $('#notepadSaveButton').click( function() {
+        var v = Game.notepadEditor.getValue();
+        localStorage.setItem(ls_tag, v);
     });
 });
