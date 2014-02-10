@@ -275,6 +275,7 @@ h2 {
 
 #drawingCanvas {
 	position: absolute;
+	border: 2px solid transparent;
 }
 
 #savedLevelMsg {
