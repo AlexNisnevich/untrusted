@@ -68,6 +68,9 @@ function Player(x, y, __map) {
                 });
             }
         }
+
+        // check for collision with any lines on the map
+        __map.testLineCollisions();
     };
 
     /* exposed methods */

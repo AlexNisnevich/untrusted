@@ -27,12 +27,12 @@ function Game(debugMode, startLevel) {
         '13_robotMaze.jsx',
         '14_crispsContest.jsx',
         '15_exceptionalCrossing.jsx',
-        '16_pointers.jsx',
-        '17_superDrEvalBros.jsx',
-        //'18_domManipulation.jsx',
-        //'19_bossFight.jsx',
-        //'20_ULTIMA_BOSS_FIGHT.jsx',
-        '99_credits.jsx'
+        '16_lasers.jsx',
+        '17_pointers.jsx',
+        '18_superDrEvalBros.jsx',
+        //'19_domManipulation.jsx',
+        //'20_bossFight.jsx',
+        'XX_credits.jsx'
     ];
 
     this._currentLevel = 1;

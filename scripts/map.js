@@ -5,6 +5,7 @@ function Map(display, game) {
     var __grid;
     var __dynamicObjects;
     var __objectDefinitions;
+    var __lines;
 
     var __allowOverwrite;
     var __allowMultiMove;
@@ -49,6 +50,8 @@ function Map(display, game) {
             clearInterval(__intervals[i]);
         }
         __intervals = [];
+
+        __lines = [];
     };
 
     this._setProperties = function (mapProperties) {
@@ -331,6 +334,8 @@ function Map(display, game) {
         }, 100);
     };
 
+    /* canvas-related stuff */
+
     this.getCanvasContext = function() {
         return $('#drawingCanvas')[0].getContext('2d');
     };
@@ -356,7 +361,23 @@ function Map(display, game) {
             Math.floor((end[2] - start[2]) / 2)
         ];
         return ROT.Color.toHex(ROT.Color.randomize(mean, std));
-    }
+    };
+
+    this.createLine = function(start, end, callback) {
+        __lines.push({'start': start, 'end': end, 'callback': callback});
+    };
+
+    this.testLineCollisions = function() {
+        var threshold = 7;
+        var playerCoords = this.getCanvasCoords(__player);
+        __lines.forEach(function (line) {
+            if (pDistance(playerCoords.x, playerCoords.y,
+                    line.start[0], line.start[1],
+                    line.end[0], line.end[1]) < threshold) {
+                line.callback(__player);
+            }
+        })
+    };
 
     /* initialization */
 
