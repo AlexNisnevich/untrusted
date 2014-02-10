@@ -11,6 +11,8 @@ var toggleFocus = (function () {
     };
 })();
 
+var notepadEditor;
+
 Game.prototype.enableShortcutKeys = function () {
     var game = this;
 
@@ -102,8 +104,8 @@ Game.prototype.enableButtons = function () {
 };
 
 function openNotepad() {
-    console.log("opening notepad");
     $('#notepadPane').toggle();
+    notepadEditor.refresh();
 };
 
 Game.prototype.openMenu = function () {
@@ -192,10 +194,9 @@ Game.prototype.openHelp = function () {
 
 
 /* code to set up notepad text area */
-
 $(document).ready(function() {
     var textarea = document.getElementById('notepadTextarea');
-    var notepadEditor = CodeMirror.fromTextArea(textarea,
+    notepadEditor = CodeMirror.fromTextArea(textarea,
         { theme: 'vibrant-ink',
           lineNumbers: true,
           mode: 'javascript'
@@ -204,6 +205,4 @@ $(document).ready(function() {
     $('#notepadPaneCloseButton').click( function() {
         $('#notepadPane').hide();
     });
-
 });
-
