@@ -143,8 +143,8 @@ function Game(debugMode, startLevel) {
             // load level code in editor
             game.editor.loadCode(lvlCode);
 
-            if (!isResetting && game.editor.getGoodState(lvlCode)) {
-                game.editor.setCode(game.editor.getGoodState(lvlCode)['code']);
+            if (!isResetting && game.editor.getGoodState(levelNum)) {
+                game.editor.setCode(game.editor.getGoodState(levelNum)['code']);
             }
 
             // start the level and fade in
