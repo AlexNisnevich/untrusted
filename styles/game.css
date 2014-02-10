@@ -202,12 +202,37 @@ body {
 	cursor: pointer;
 }
 
+#notepadPaneCloseButton {
+	float: right;
+	width: 10px;
+	border-bottom: 2px solid yellow;
+	border-left: 2px solid yellow;
+	padding-left: 3px;
+	padding-right: 1px;
+	padding-bottom: 2px;
+	cursor: pointer;
+}
+
+#notepadPaneCloseButton:hover {
+    background: yellow;
+    color: black;
+}
+
+#notepadPaneContent {
+    float:left;
+    width:90%;
+}
+
+#notepadTextarea {
+    width:100%;
+}
+
 #helpPaneCloseButton:hover {
 	background: yellow;
 	color: black;
 }
 
-#menuPane {
+.pop_up_box {
 	position: absolute;
 	height: 360px;
 	width: 560px;
@@ -216,16 +241,10 @@ body {
 	z-index: 9000;
 	background: black;
 	border: 2px solid yellow;
+    display: none;
 }
 
-#menuPane .menuPaneHeading {
-	margin: 10px;
-	color: yellow;
-	font-size: 1.5em;
-	font-weight: bold;
-}
-
-#menuPane button {
+.pop_up_box button {
 	background-color: black;
 	border: 2px solid white;
 	color: white;
@@ -235,19 +254,26 @@ body {
 	cursor: pointer;
 }
 
-#menuPane button:hover {
+.pop_up_box button:hover {
 	background-color: white;
 	color: black;
 }
 
-#menuPane button.disabled {
+.pop_up_box_heading {
+	margin: 10px;
+	color: yellow;
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.pop_up_box button.disabled {
 	background-color: #555;
 	border-color: #ccc;
 	color: #ccc;
 	cursor: auto;
 }
 
-#menuPane button.disabled:hover {
+.pop_up_box button.disabled:hover {
 	background-color: #555;
 	color: #ccc;
 }
