@@ -145,11 +145,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
             'Kind: ' + change.origin + '\n' +
             'Number of lines: ' + change.text.length + '\n' +
             'From line: ' + change.from.line + '\n' +
-            'To line: ' + change.to.line + '\n' +
-            'Text: ["' + change.text.join('", "') + '"]'
+            'To line: ' + change.to.line
         );
-
-        console.log(change.text);
 
         if (!inEditableArea(change)) {
             change.cancel();
@@ -175,6 +172,25 @@ function CodeEditor(textAreaDomID, width, height, game) {
                     return;
                 }
 
+                // enforce 80-char limit by wrapping all lines > 80 chars
+                var wrappedText = [];
+                change.text.forEach(function (line) {
+                    while (line.length > charLimit) {
+                        // wrap lines at spaces if at all possible
+                        var minCutoff = charLimit - 20;
+                        var cutoff = minCutoff + line.slice(minCutoff).indexOf(" ");
+                        if (cutoff > 80) {
+                            // no suitable cutoff point found - let's get messy
+                            cutoff = 80;
+                        }
+                        wrappedText.push(line.substr(0, cutoff));
+                        line = line.substr(cutoff);
+                    }
+                    wrappedText.push(line);
+                });
+                change.text = wrappedText;
+                newLines = change.text.length - 1; // updating line count
+
                 var lastLine = findEndOfSegment(change.to.line);
 
                 // Shift editable line numbers after this segment
@@ -187,14 +203,15 @@ function CodeEditor(textAreaDomID, width, height, game) {
                 for (var i = lastLine + 1; i <= lastLine + newLines; i++) {
                     editableLines.push(i);
                 }
+            } else {
+                // enforce 80-char limit by trimming the line
+                var lineLength = instance.getLine(change.to.line).length;
+                if (lineLength + change.text[0].length > charLimit) {
+                    var allowedLength = Math.max(charLimit - lineLength, 0);
+                    change.text[0] = change.text[0].substr(0, allowedLength);
+                }
             }
 
-            // enforce 80-char limit
-            var lineLength = instance.getLine(change.to.line).length;
-            if (lineLength + change.text[0].length > charLimit) {
-                var allowedLength = Math.max(charLimit - lineLength, 0);
-                change.text[0] = change.text[0].substr(0, allowedLength);
-            }
 
             // modify editable sections accordingly
             // TODO Probably broken by multiline paste
