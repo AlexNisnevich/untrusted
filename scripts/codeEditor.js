@@ -145,8 +145,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
             'Kind: ' + change.origin + '\n' +
             'Number of lines: ' + change.text.length + '\n' +
             'From line: ' + change.from.line + '\n' +
-            'To line: ' + change.to.line
+            'To line: ' + change.to.line + '\n' +
+            'Text: ["' + change.text.join('", "') + '"]'
         );
+
+        console.log(change.text);
 
         if (!inEditableArea(change)) {
             change.cancel();
@@ -262,46 +265,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
             theme: 'vibrant-ink',
             lineNumbers: true,
             dragDrop: false,
-            smartIndent: false,
-            extraKeys: {'Enter': function (instance) {
-                cursorPos = instance.getCursor();
-
-                // is this line in an editable block?
-                if (editableLines.indexOf(cursorPos.line) > -1) {
-                    // search for a blank line within the editable block
-                    var currentLine = cursorPos.line + 1;
-                    while (true) {
-                        if (editableLines.indexOf(currentLine) === -1) {
-                            // out of editable block
-                            break;
-                        } else if (instance.getLine(currentLine).trim() === '') {
-                            // blank line found - shift lines down to it
-                            for (var i = currentLine; i > cursorPos.line; i--) {
-                                instance.setLine(i, '');
-                                instance.setLine(i, instance.getLine(i - 1));
-                            }
-
-                            // split first line at cursor position
-                            var firstLine = instance.getLine(cursorPos.line).slice(0, cursorPos.ch);
-                            var secondLine = Array(cursorPos.ch + 1).join(" ")
-                                + instance.getLine(cursorPos.line).slice(cursorPos.ch);
-                            instance.setLine(cursorPos.line, '');
-                            instance.setLine(cursorPos.line, firstLine);
-                            instance.setLine(cursorPos.line + 1, '');
-                            instance.setLine(cursorPos.line + 1, secondLine);
-                            break;
-                        }
-                        currentLine++;
-                    }
-                }
-
-                // move the cursor and smart-indent
-                cursorPos.line++;
-                instance.setCursor(cursorPos);
-                if (instance.getLine(cursorPos.line).trim() === "") {
-                    instance.indentLine(cursorPos.line, "prev");
-                }
-            }}
+            smartIndent: false
         });
 
         this.internalEditor.setSize(width, height);
