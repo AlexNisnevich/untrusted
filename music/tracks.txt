@@ -1,26 +1,26 @@
 === Tracks by Level ===
 
-01. Yonnie_The_Green
-02. gurh
-03. Eric_Skiff_-_06_-_Searching
-04. Obsibilo_-_Soixante-8
-05. intricate_cloudy_sin
-06. DmitryMazin-GameScratch
-07. Tortue_Super_Sonic_-_11_-_Y
-08. Eric_Skiff_-_06_-_Searching
-09. Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name
-10. Eric_Skiff_-_09_-_Come_and_Find_Me_-_B_mix
-11. DmitryMazin-GameScratch
-12. Tortue_Super_Sonic_-_11_-_Y
-13. Eric_Skiff_-_06_-_Searching
-14. ThatAndyGuy-Chip-loop
-15. Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name
-16. Obsibilo_-_Soixante-8
-17. Various_Artists_-_15_-_Slimeball_vomit
-18. Rolemusic_-_07_-_Beach_Wedding_Dance
-19.
-20.
-XX. Vernon_Lenoir_-_Brazilicon_alley
+*01. Yonnie_The_Green
+*02. gurh
+ 03. Eric_Skiff_-_06_-_Searching
+ 04. Obsibilo_-_Soixante-8
+*05. intricate_cloudy_sin
+ 06. DmitryMazin-GameScratch
+ 07. Tortue_Super_Sonic_-_11_-_Y
+ 08. Eric_Skiff_-_06_-_Searching
+*09. Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name
+ 10. Eric_Skiff_-_09_-_Come_and_Find_Me_-_B_mix
+ 11. DmitryMazin-GameScratch
+ 12. Tortue_Super_Sonic_-_11_-_Y
+ 13. Eric_Skiff_-_06_-_Searching
+*14. ThatAndyGuy-Chip-loop
+@15. Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name
+@16. Obsibilo_-_Soixante-8
+*17. Various_Artists_-_15_-_Slimeball_vomit
+*18. Rolemusic_-_07_-_Beach_Wedding_Dance
+ 19.
+ 20.
+*XX. Vernon_Lenoir_-_Brazilicon_alley
 
 === Credits & Licenses ===
 
@@ -40,9 +40,12 @@ XX. Vernon_Lenoir_-_Brazilicon_alley
 
 === Tracks Under Consideration ===
 
+"Not Fit For Human Consumption" - Ant Neely (CC-BY-NC-SA)
 "Night Owl" - Broke for Free (CC-BY)
 "Boss Loop 1" - Essa (free to use)
 "coming soon" - Fex (public domain)
 "Roots Of Supremacy" - MCV (free to use)
+"Comme Des Orages" - Obsibilo (CC-BY-NC-SA)
+"Obscure Terrain" - Revolution Void (CC-BY-NC-SA)
 "Messeah" - RoccoW (CC-BY)
 "Adversity" - Seropard (free to use)
