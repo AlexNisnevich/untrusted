@@ -32,6 +32,9 @@ function Player(x, y, __map) {
         __x = dynamicObject.getX();
         __y = dynamicObject.getY();
         __display.drawAll(__map);
+
+        // play teleporter sound
+        __game.sound.playSound('blip');
     };
 
     this._afterMove = function (x, y) {
@@ -122,6 +125,9 @@ function Player(x, y, __map) {
             this._afterMove(__x, __y);
 
             __map._reenableMovementForPlayer(this); // (key delay can vary by map)
+        } else {
+            // play bump sound
+            __game.sound.playSound('select');
         }
     };
 

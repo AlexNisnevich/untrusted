@@ -123,10 +123,10 @@ function Game(debugMode, startLevel) {
     };
 
     this._jumpToNthLevel = function (levelNum) {
-        var game = this;
         this._currentLevel = levelNum;
         this._getLevel(levelNum);
         this.display.focus();
+        this.sound.playSound('blip');
     };
 
     // makes an ajax request to get the level text file and
