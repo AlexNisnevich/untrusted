@@ -88,7 +88,7 @@ function Game(debugMode, startLevel) {
         // Lights, camera, action
         if (startLevel) {
             this._currentLevel = startLevel;
-            this._start(startLevel);
+            this._getLevel(startLevel, debugMode);
         } else {
             this._intro();
         }
