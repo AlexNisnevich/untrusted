@@ -5,7 +5,9 @@ function Map(display, game) {
     var __grid;
     var __dynamicObjects;
     var __objectDefinitions;
+
     var __lines;
+    var __dom;
 
     var __allowOverwrite;
     var __allowMultiMove;
@@ -52,6 +54,7 @@ function Map(display, game) {
         __intervals = [];
 
         __lines = [];
+        __dom = '';
     };
 
     this._setProperties = function (mapProperties) {
@@ -224,7 +227,12 @@ function Map(display, game) {
     /* exposed methods */
 
     this.refresh = function () {
-        this._display.drawAll(this);
+        if (__dom) {
+            this._display.clear();
+            this._display.renderDom(__dom);
+        } else {
+            this._display.drawAll(this);
+        }
         this._game.drawInventory();
     };
 
@@ -390,6 +398,12 @@ function Map(display, game) {
                 line.callback(__player);
             }
         })
+    };
+
+    /* for DOM manipulation level */
+
+    this.createFromDOM = function(dom) {
+        __dom = dom;
     };
 
     /* initialization */

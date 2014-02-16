@@ -240,6 +240,7 @@ ROT.Display.prototype.renderDom = function(html) {
     console.log(data);
     var img = new Image();
     img.src = data;
+    console.log(img);
     img.onload = function() {
         ctx.drawImage(img, 0, 0);
     }

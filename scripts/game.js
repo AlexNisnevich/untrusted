@@ -30,7 +30,7 @@ function Game(debugMode, startLevel) {
         '16_lasers.jsx',
         '17_pointers.jsx',
         '18_superDrEvalBros.jsx',
-        //'19_domManipulation.jsx',
+        '19_domManipulation.jsx',
         //'20_bossFight.jsx',
         'XX_credits.jsx'
     ];
@@ -175,6 +175,8 @@ function Game(debugMode, startLevel) {
             loadedFromEditor = true;
         }
 
+        console.log(allCode);
+
         // save current display state (for scrolling up later)
         this.display.saveGrid(this.map);
 
@@ -206,7 +208,7 @@ function Game(debugMode, startLevel) {
 
             // draw the map
             this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
-                game.drawInventory(); // refresh inventory display
+                game.map.refresh(); // refresh inventory display
                 $('#drawingCanvas').show(); // show the drawing canvas again
 
                 // workaround because we can't use writeStatus() in startLevel()
