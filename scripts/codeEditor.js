@@ -87,7 +87,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
         }
 
-        properties = JSON.parse(propertiesString);
+        try {
+            properties = JSON.parse(propertiesString);
+        } catch (e) {
+            properties = {};
+        }
 
         return lineArray.join("\n");
     }

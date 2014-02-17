@@ -53,6 +53,8 @@ function Map(display, game) {
         __intervals = [];
 
         __lines = [];
+
+        this.finalLevel = false;
     };
 
     this._setProperties = function (mapProperties) {

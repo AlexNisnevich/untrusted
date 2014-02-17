@@ -32,10 +32,12 @@ function Game(debugMode, startLevel) {
         '18_superDrEvalBros.jsx',
         //'19_domManipulation.jsx',
         //'20_bossFight.jsx',
+        '21_theEnd.jsx',
         'XX_credits.jsx'
     ];
 
     this._currentLevel = 1;
+    this._currentFile = null;
     this._levelReached = localStorage.getItem('levelReached') || 1;
     this._displayedChapters = [];
 
@@ -115,6 +117,7 @@ function Game(debugMode, startLevel) {
         this.editor.createGist();
 
         this._currentLevel++;
+        this._currentFile = null;
         this.sound.playSound('complete');
 
         //we disable moving so the player can't move during the fadeout
@@ -124,6 +127,7 @@ function Game(debugMode, startLevel) {
 
     this._jumpToNthLevel = function (levelNum) {
         this._currentLevel = levelNum;
+        this._currentFile = null;
         this._getLevel(levelNum);
         this.display.focus();
         this.sound.playSound('blip');
@@ -158,13 +162,22 @@ function Game(debugMode, startLevel) {
         });
     };
 
+    // how meta can we go?
+    this._editFile = function (filePath) {
+        this._currentFile = filePath;
+        $.get(filePath, function (code) {
+            // load level code in editor
+            game.editor.loadCode('#BEGIN_EDITABLE#\n' + code + '\n#END_EDITABLE#');
+        }, 'text');
+    }
+
     // restart level with currently loaded code
     this._restartLevel = function () {
         this.editor.setCode(__currentCode);
         this._evalLevelCode();
     };
 
-    this._evalLevelCode = function (allCode, playerCode, isNewLevel) {
+    this._evalLevelCode = function (allCode, playerCode, isNewLevel, restartingLevelFromScript) {
         var game = this;
 
         // by default, get code from the editor
@@ -175,13 +188,19 @@ function Game(debugMode, startLevel) {
             loadedFromEditor = true;
         }
 
+        // if we're editing a script file, do something completely different
+        if (this._currentFile !== null && !restartingLevelFromScript) {
+            this.validateAndRunScript(allCode);
+            return;
+        }
+
         // save current display state (for scrolling up later)
         this.display.saveGrid(this.map);
 
         // validate the code
         // if it passes validation, returns the startLevel function if it pass
         // if it fails validation, returns false
-        var validatedStartLevel = this.validate(allCode, playerCode);
+        var validatedStartLevel = this.validate(allCode, playerCode, restartingLevelFromScript);
 
         if (validatedStartLevel) { // code is valid
             // reset the map

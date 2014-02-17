@@ -14,7 +14,7 @@ var DummyDisplay = function () {
     this.writeStatus = function () {};
 };
 
-Game.prototype.validate = function(allCode, playerCode) {
+Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScript) {
     var game = this;
 
     try {
@@ -47,7 +47,9 @@ Game.prototype.validate = function(allCode, playerCode) {
         startLevel(dummyMap);
 
         // does startLevel() execute fully?
-        if (!this._endOfStartLevelReached) {
+        // (if we're restarting a level after editing a script, we can't test for this
+        // - nor do we care)
+        if (!this._endOfStartLevelReached && !restartingLevelFromScript) {
             throw 'startLevel() returned prematurely!';
         }
 
@@ -108,6 +110,18 @@ Game.prototype.validateCallback = function(callback) {
         //throw e; // for debugging
     }
 };
+
+Game.prototype.validateAndRunScript = function (code) {
+    // TODO: actually validate things!
+
+    // Game.prototype.blah => game.blah
+    code = code.replace(/Game.prototype/, 'this');
+    new Function(code).bind(this).call(); // bind the function to current instance of game!
+
+    // and restart current level from saved state
+    var savedState = this.editor.getGoodState(this._currentLevel);
+    this._evalLevelCode(savedState['code'], savedState['playerCode'], false, true);
+}
 
 // awful awful awful method that tries to find the line
 // of code where a given error occurs
