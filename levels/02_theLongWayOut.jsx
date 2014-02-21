@@ -1,6 +1,7 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": ["ROT.Map.DividedMaze", "player.atLocation"]
+    "commandsIntroduced": ["ROT.Map.DividedMaze", "player.atLocation"],
+    "music": "gurh"
 }
 #END_PROPERTIES#
 /********************

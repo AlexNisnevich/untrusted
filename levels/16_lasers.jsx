@@ -3,7 +3,7 @@
     "commandsIntroduced":
         ["map.getCanvasContext", "canvas.beginPath", "canvas.strokeStyle",
          "canvas.lineWidth", "canvas.moveTo", "canvas.lineTo",
-         "canvas.stroke", "canvas.closePath"],
+         "canvas.stroke"],
     "music": "Obsibilo_-_Soixante-8"
 }
 #END_PROPERTIES#
@@ -46,7 +46,6 @@ function startLevel(map) {
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
         ctx.stroke();
-        ctx.closePath();
 #END_EDITABLE#
     }
     map.placePlayer(0, 0);

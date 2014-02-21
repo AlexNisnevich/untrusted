@@ -15,44 +15,37 @@ Game.prototype.enableShortcutKeys = function () {
     var game = this;
 
     shortcut.add('ctrl+1', function () {
-        game.sound.playSound('select');
-        game.openHelp();
+        $("#helpButton").click();
         return true;
     });
 
 	shortcut.add('ctrl+2', function () {
-		game.sound.playSound('select');
-        toggleFocus(game);
+        $("#toggleFocusButton").click();
 		return true;
 	});
 
     shortcut.add('ctrl+3', function () {
-        $('#notepadPane').toggle();
-        game.notepadEditor.refresh();
+        $("#notepadButton").click();
         return true;
     });
 
     shortcut.add('ctrl+4', function () {
-        game.sound.playSound('select');
-        game._getLevel(game._currentLevel, true);
+        $("#resetButton").click();
         return true;
     });
 
     shortcut.add('ctrl+5', function () {
-        game.sound.playSound('blip');
-        game._evalLevelCode();
+        $("#executeButton").click();
         return true;
     });
 
     shortcut.add('ctrl+6', function () {
-        game.sound.playSound('select');
-        game.usePhone();
+        $("#phoneButton").click();
         return true;
     });
 
     shortcut.add('ctrl+0', function () {
-        game.sound.playSound('select');
-        game.openMenu();
+        $("#menuButton").click();
         return true;
     });
 };
@@ -66,11 +59,19 @@ Game.prototype.enableButtons = function () {
     });
 
     $("#toggleFocusButton").click( function () {
+        game.sound.playSound('select');
         toggleFocus(game);
     });
 
-    $("#resetButton").click( function () {
+    $('#notepadButton').click( function () {
         game.sound.playSound('select');
+        $('#notepadPane').toggle();
+        game.notepadEditor.refresh();
+        return true;
+    });
+
+    $("#resetButton").click( function () {
+        game.sound.playSound('blip');
         game._getLevel(game._currentLevel, true);
     });
 
@@ -96,11 +97,6 @@ Game.prototype.enableButtons = function () {
 
     $("#muteButton").click( function () {
         game.sound.toggleSound();
-    });
-
-    $('#notepadButton').click( function () {
-        $('#notepadPane').toggle();
-        game.notepadEditor.refresh();
     });
 };
 
