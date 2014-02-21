@@ -3,7 +3,7 @@
     "commandsIntroduced":
         ["map.getCanvasContext", "canvas.beginPath", "canvas.strokeStyle",
          "canvas.lineWidth", "canvas.moveTo", "canvas.lineTo",
-         "canvas.stroke", "canvas.closePath"],
+         "canvas.stroke"],
     "music": "Obsibilo_-_Soixante-8"
 }
 #END_PROPERTIES#
