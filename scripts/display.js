@@ -228,9 +228,11 @@ ROT.Display.prototype.focus = function() {
 
 // using ideas from http://robert.ocallahan.org/2011/11/drawing-dom-content-to-canvas.html
 ROT.Display.prototype.renderDom = function(html) {
-    var ctx = $('#drawingCanvas')[0].getContext("2d");
+    var canvas = $('#drawingCanvas')[0];
+    var ctx = canvas.getContext("2d");
+    canvas.width = canvas.width; //resets background of canvas
     var data = "data:image/svg+xml," +
-               "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'>" +
+               "<svg xmlns='http://www.w3.org/2000/svg' width='" + canvas.width + "' height='" + canvas.height + "'>" +
                  "<foreignObject width='100%' height='100%'>" +
                    "<div xmlns='http://www.w3.org/1999/xhtml'>" +
                         html +
@@ -240,6 +242,7 @@ ROT.Display.prototype.renderDom = function(html) {
     console.log(data);
     var img = new Image();
     img.src = data;
+    console.log(img);
     img.onload = function() {
         ctx.drawImage(img, 0, 0);
     }
