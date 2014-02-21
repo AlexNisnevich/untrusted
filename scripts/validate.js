@@ -1,5 +1,5 @@
 Game.prototype.verbotenWords = [
-    '._', ' "_', " '_",
+    '._', '"_', "'_",
     'eval', 'prototype', 'call', 'apply', 'bind',
     'prompt', 'confirm', 'debugger', 'delete',
     'setTimeout', 'setInterval'
@@ -29,6 +29,7 @@ Game.prototype.validate = function(allCode, playerCode) {
         dummyMap._setProperties(this.editor.getProperties().mapProperties);
 
         // modify the code to always check time to prevent infinite loops
+        allCode = allCode.replace(/\)\s*{/g, ") {"); // converts Allman indentation -> K&R
         allCode = $.map(allCode.split('\n'), function (line, i) {
             return line.replace(/((for|while) .*){/g,
                 "startTime = Date.now();" +
@@ -39,7 +40,6 @@ Game.prototype.validate = function(allCode, playerCode) {
         }).join('\n');
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
-        var validateLevel = function () {}; // in case validateLevel isn't defined
         this._eval(allCode);
 
         // start the level on a dummy map to validate

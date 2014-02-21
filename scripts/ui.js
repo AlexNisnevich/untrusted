@@ -15,44 +15,37 @@ Game.prototype.enableShortcutKeys = function () {
     var game = this;
 
     shortcut.add('ctrl+1', function () {
-        game.sound.playSound('select');
-        game.openHelp();
+        $("#helpButton").click();
         return true;
     });
 
 	shortcut.add('ctrl+2', function () {
-		game.sound.playSound('select');
-        toggleFocus(game);
+        $("#toggleFocusButton").click();
 		return true;
 	});
 
     shortcut.add('ctrl+3', function () {
-        game.sound.playSound('select');
-        game.editor.focus();
+        $("#notepadButton").click();
         return true;
     });
 
     shortcut.add('ctrl+4', function () {
-        game.sound.playSound('select');
-        game._getLevel(game._currentLevel, true);
+        $("#resetButton").click();
         return true;
     });
 
     shortcut.add('ctrl+5', function () {
-        game.sound.playSound('blip');
-        game._evalLevelCode();
+        $("#executeButton").click();
         return true;
     });
 
     shortcut.add('ctrl+6', function () {
-        game.sound.playSound('select');
-        game.usePhone();
+        $("#phoneButton").click();
         return true;
     });
 
     shortcut.add('ctrl+0', function () {
-        game.sound.playSound('select');
-        game.openMenu();
+        $("#menuButton").click();
         return true;
     });
 };
@@ -66,11 +59,19 @@ Game.prototype.enableButtons = function () {
     });
 
     $("#toggleFocusButton").click( function () {
+        game.sound.playSound('select');
         toggleFocus(game);
     });
 
-    $("#resetButton").click( function () {
+    $('#notepadButton').click( function () {
         game.sound.playSound('select');
+        $('#notepadPane').toggle();
+        game.notepadEditor.refresh();
+        return true;
+    });
+
+    $("#resetButton").click( function () {
+        game.sound.playSound('blip');
         game._getLevel(game._currentLevel, true);
     });
 
@@ -99,13 +100,42 @@ Game.prototype.enableButtons = function () {
     });
 };
 
+Game.prototype.setUpNotepad = function () {
+    var game = this;
+
+    var textarea = document.getElementById('notepadTextarea');
+    this.notepadEditor = CodeMirror.fromTextArea(textarea, {
+        theme: 'vibrant-ink',
+        lineNumbers: true,
+        mode: 'javascript'
+    });
+
+    this.notepadEditor.setSize(null, 275);
+
+    var ls_tag = 'notepadContent';
+    var content = localStorage.getItem(ls_tag);
+    if (content === null) {
+        content = '';
+    }
+    this.notepadEditor.setValue(content);
+
+    $('#notepadPaneCloseButton').click(function () {
+        $('#notepadPane').hide();
+    });
+
+    $('#notepadSaveButton').click(function () {
+        var v = game.notepadEditor.getValue();
+        localStorage.setItem(ls_tag, v);
+    });
+};
+
 Game.prototype.openMenu = function () {
     var game = this;
 
     $('#menuPane #levels').html('');
     $.each(game._levelFileNames, function (levelNum, fileName) {
         levelNum += 1;
-        var levelName = fileName.split('.')[0]
+        var levelName = fileName.split('.')[0];
         levelName = levelName.split('_').join(' ');
 
         var levelButton = $('<button>');

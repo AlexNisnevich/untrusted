@@ -1,4 +1,41 @@
 Game.prototype.reference = {
+    'canvas.beginPath': {
+        'name': 'beginPath()',
+        'category': 'canvas',
+        'type': 'method',
+        'description': 'Begins drawing a new shape.'
+    },
+    'canvas.lineTo': {
+        'name': 'beginPath(x, y)',
+        'category': 'canvas',
+        'type': 'method',
+        'description': 'Sets the end coordinates of a line.'
+    },
+    'canvas.lineWidth': {
+        'name': 'lineWidth',
+        'category': 'canvas',
+        'type': 'property',
+        'description': 'Determines the width of the next lines drawn.'
+    },
+    'canvas.moveTo': {
+        'name': 'moveTo(x, y)',
+        'category': 'canvas',
+        'type': 'method',
+        'description': 'Sets the start coordinates of a line.'
+    },
+    'canvas.stroke': {
+        'name': 'stroke()',
+        'category': 'canvas',
+        'type': 'method',
+        'description': 'Draws a line whose coordinates have been defined by <b>lineTo</b> and <b>moveTo</b>.'
+    },
+    'canvas.strokeStyle': {
+        'name': 'strokeStyle',
+        'category': 'canvas',
+        'type': 'property',
+        'description': 'Determines the color (and, optionally, other properties) of the next lines drawn.'
+    },
+
     'global.onExit': {
         'name': 'onExit(map)',
         'category': 'global',
@@ -52,7 +89,7 @@ Game.prototype.reference = {
         'name': 'map.getCanvasContext()',
         'category': 'map',
         'type': 'method',
-        'description': 'Returns the 2D drawing context of the canvas overlaying the map.'
+        'description': 'Returns the 2D drawing context of the <a onclick="$(\'#helpPaneSidebar .category#canvas\').click();">canvas</a> overlaying the map.'
     },
     'map.getCanvasCoords': {
         'name': 'map.getCanvasCoords(obj)',

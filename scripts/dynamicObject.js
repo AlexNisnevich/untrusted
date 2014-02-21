@@ -39,9 +39,12 @@ function DynamicObject(map, type, x, y) {
                     __definition.onCollision(player, this);
                 }
             }
-            map._game.validateCallback(function () {
-                __definition.behavior(me, player);
-            });
+
+            if (__definition.behavior !== null) {
+                map._game.validateCallback(function () {
+                    __definition.behavior(me, player);
+                });
+            }
         } catch (e) {
             map._game.display.writeStatus(e.toString());
         }
