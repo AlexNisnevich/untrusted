@@ -140,13 +140,13 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
         };
 
-        console.log(
+        /*console.log(
             '---Editor input (beforeChange) ---\n' +
             'Kind: ' + change.origin + '\n' +
             'Number of lines: ' + change.text.length + '\n' +
             'From line: ' + change.from.line + '\n' +
             'To line: ' + change.to.line
-        );
+        );*/
 
         if (!inEditableArea(change)) {
             change.cancel();
@@ -241,13 +241,13 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     var trackUndoRedo = function(instance, change) {
         if (change.origin === 'undo' || change.origin === 'redo') {
-            console.log(
+            /*console.log(
                 '---Editor input (change) ---\n' +
                 'Kind: ' + change.origin + '\n' +
                 'Number of lines: ' + change.text.length + '\n' +
                 'From line: ' + change.from.line + '\n' +
                 'To line: ' + change.to.line
-            );
+            );*/
 
             if (change.to.line !== change.from.line) { // Deletion
                 updateEditableLinesOnDeletion(change);
@@ -263,7 +263,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
         }
 
-        console.log(editableLines);
+        //console.log(editableLines);
     }
 
     this.initialize = function() {
