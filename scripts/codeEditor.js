@@ -123,8 +123,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         var inEditableArea = function(c) {
             var lineNum = c.to.line;
-            if (editableLines.indexOf(lineNum) !== -1) {
-                // editable line?
+            if (editableLines.indexOf(lineNum) !== -1 && editableLines.indexOf(c.from.line) !== -1) {
+                // editable lines?
                 return true;
             } else if (editableSections[lineNum]) {
                 // this line has editable sections - are we in one of them?
