@@ -75,8 +75,8 @@ function startLevel(map) {
         }
 
 #BEGIN_EDITABLE#
-
-
+        // Note: map.getCanvasCoords() may come in handy here
+        // Look it up in Help!
 
 
 

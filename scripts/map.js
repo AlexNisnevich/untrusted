@@ -11,6 +11,7 @@ function Map(display, game) {
     var __allowMultiMove;
     var __keyDelay;
     var __intervals = [];
+    var __chapterHideTimeout;
 
     /* unexposed variables */
 
@@ -216,7 +217,8 @@ function Map(display, game) {
     this._hideChapter = function() {
         // start fading out chapter immediately
         // unless it's a death message, in which case wait 2.5 sec
-        setTimeout(function () {
+        clearInterval(__chapterHideTimeout);
+        __chapterHideTimeout = setTimeout(function () {
             $('#chapter').fadeOut(1000);
         }, $('#chapter').hasClass('death') ? 2500 : 0);
     };
