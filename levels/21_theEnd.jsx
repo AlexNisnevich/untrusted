@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-
+    "activateSuperMenu": true
 }
 #END_PROPERTIES#
 
@@ -14,7 +14,3 @@ function startLevel(map) {
     map.placeObject(25, 12, 'exit');
 #END_OF_START_LEVEL#
 }
-
-// TODO: implement UI for loading script files
-// for now, run the following in console (debug mode only):
-//      > game._editFile('scripts/objects.js')

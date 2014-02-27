@@ -405,7 +405,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
     }
 
     this.saveGoodState = function () {
-        localStorage.setItem('level' + game._currentLevel + '.lastGoodState', JSON.stringify({
+        var lvlNum = game._currentFile ? game._currentFile : game._currentLevel;
+        localStorage.setItem('level' + lvlNum + '.lastGoodState', JSON.stringify({
             code: this.getCode(true),
             playerCode: this.getPlayerCode(),
             editableLines: editableLines,

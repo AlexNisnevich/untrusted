@@ -153,6 +153,48 @@ Game.prototype.openMenu = function () {
     $('#menuPane').toggle();
 };
 
+Game.prototype.activateSuperMenu = function () {
+    var game = this;
+
+    if (!game._superMenuActivated) {
+        $('#menuPane').addClass('expanded');
+        $('#leftMenuPane').show();
+        $('#rightMenuPane .pop_up_box_heading').hide();
+
+        $('#rootDir').click(function () {
+            $('#leftMenuPane li').removeClass('selected');
+            $('#rightMenuPane div').hide();
+            $('#rootDir').addClass('selected');
+            $('#root').show();
+        });
+
+        $('#levelsDir').click(function () {
+            $('#leftMenuPane li').removeClass('selected');
+            $('#rightMenuPane div').hide();
+            $('#levelsDir').addClass('selected');
+            $('#levels').show();
+        });
+
+        $('#scriptsDir').click(function () {
+            $('#leftMenuPane li').removeClass('selected');
+            $('#rightMenuPane div').hide();
+            $('#scriptsDir').addClass('selected');
+            $('#scripts').show();
+        });
+
+        $.each(game._viewableScripts, function (i, script) {
+            var scriptButton = $('<button>');
+            scriptButton.text(script).click(function () {
+                game._editFile('scripts/' + script);
+                $('#menuPane').hide();
+            });
+            scriptButton.appendTo('#menuPane #scripts');
+        });
+
+        game._superMenuActivated = true;
+    }
+}
+
 Game.prototype.openHelp = function () {
     var game = this;
 

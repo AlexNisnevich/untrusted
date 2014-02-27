@@ -36,6 +36,26 @@ function Game(debugMode, startLevel) {
         'XX_credits.jsx'
     ];
 
+    this._viewableScripts = [
+        'codeEditor.js',
+        'display.js',
+        'dynamicObject.js',
+        'game.js',
+        'inventory.js',
+        'map.js',
+        'objects.js',
+        'player.js',
+        'reference.js',
+        'sound.js',
+        'ui.js',
+        'util.js',
+        'validate.js'
+    ];
+
+    this._editableScripts = [
+        'objects.js'
+    ];
+
     this._currentLevel = 1;
     this._currentFile = null;
     this._levelReached = localStorage.getItem('levelReached') || 1;
@@ -164,10 +184,18 @@ function Game(debugMode, startLevel) {
 
     // how meta can we go?
     this._editFile = function (filePath) {
-        this._currentFile = filePath;
+        var game = this;
+
+        var fileName = filePath.split('/')[filePath.split('/').length - 1];
+        game._currentFile = filePath;
+
         $.get(filePath, function (code) {
             // load level code in editor
-            game.editor.loadCode('#BEGIN_EDITABLE#\n' + code + '\n#END_EDITABLE#');
+            if (game._editableScripts.indexOf(fileName) > -1) {
+                game.editor.loadCode('#BEGIN_EDITABLE#\n' + code + '\n#END_EDITABLE#');
+            } else {
+                game.editor.loadCode(code);
+            }
         }, 'text');
     }
 
@@ -209,7 +237,7 @@ function Game(debugMode, startLevel) {
 
             // save editor state
             __currentCode = allCode;
-            if (loadedFromEditor) {
+            if (loadedFromEditor && !restartingLevelFromScript) {
                 this.editor.saveGoodState();
             }
 
