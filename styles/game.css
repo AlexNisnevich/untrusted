@@ -282,6 +282,14 @@ body {
 	display: none;
 }
 
+#rightMenuPane #scripts button.uneditable {
+	background: #311;
+}
+
+#rightMenuPane #scripts button.uneditable:hover {
+	background: white;
+}
+
 .pop_up_box {
 	position: absolute;
 	height: 360px;

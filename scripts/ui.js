@@ -188,6 +188,11 @@ Game.prototype.activateSuperMenu = function () {
                 game._editFile('scripts/' + script);
                 $('#menuPane').hide();
             });
+
+            if (game._editableScripts.indexOf(script) == -1) {
+                scriptButton.addClass('uneditable');
+            }
+
             scriptButton.appendTo('#menuPane #scripts');
         });
 
