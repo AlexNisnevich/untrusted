@@ -78,6 +78,14 @@ function Game(debugMode, startLevel) {
             __commands = localStorage.getItem('helpCommands').split(';');
         }
 
+        // keep track of current global variables
+        __globalVars = [];
+        for (p in window) {
+            if (window.propertyIsEnumerable(p)) {
+                __globalVars.push(p);
+            }
+        }
+
         // Enable debug features
         if (debugMode) {
             this._levelReached = 999; // make all levels accessible
@@ -203,6 +211,14 @@ function Game(debugMode, startLevel) {
 
             // start the level
             validatedStartLevel(this.map);
+
+            // clear modified global variables
+            for (p in window) {
+                if (window.propertyIsEnumerable(p) && __globalVars.indexOf(p) == -1) {
+                    window[p] = null;
+                    console.log("clearing " + p);
+                }
+            }
 
             // draw the map
             this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {

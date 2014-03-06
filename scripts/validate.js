@@ -14,6 +14,8 @@ var DummyDisplay = function () {
     this.writeStatus = function () {};
 };
 
+
+
 Game.prototype.validate = function(allCode, playerCode) {
     var game = this;
 
