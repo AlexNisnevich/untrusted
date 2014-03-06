@@ -14,8 +14,6 @@ var DummyDisplay = function () {
     this.writeStatus = function () {};
 };
 
-
-
 Game.prototype.validate = function(allCode, playerCode) {
     var game = this;
 
@@ -87,6 +85,8 @@ Game.prototype.validateCallback = function(callback) {
         // run the callback
         callback();
 
+        this.clearModifiedGlobals();
+
         // check if validator still passes
         try {
             if (typeof(validateLevel) !== 'undefined') {
@@ -128,6 +128,14 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
     }
     return null;
 };
+
+Game.prototype.clearModifiedGlobals = function() {
+    for (p in window) {
+        if (window.propertyIsEnumerable(p) && this._globalVars.indexOf(p) == -1) {
+            window[p] = null;
+        }
+    }
+}
 
 // Specific validators go here
 

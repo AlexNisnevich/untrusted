@@ -79,10 +79,10 @@ function Game(debugMode, startLevel) {
         }
 
         // keep track of current global variables
-        __globalVars = [];
+        this._globalVars = [];
         for (p in window) {
             if (window.propertyIsEnumerable(p)) {
-                __globalVars.push(p);
+                this._globalVars.push(p);
             }
         }
 
@@ -211,14 +211,7 @@ function Game(debugMode, startLevel) {
 
             // start the level
             validatedStartLevel(this.map);
-
-            // clear modified global variables
-            for (p in window) {
-                if (window.propertyIsEnumerable(p) && __globalVars.indexOf(p) == -1) {
-                    window[p] = null;
-                    console.log("clearing " + p);
-                }
-            }
+            this.clearModifiedGlobals();
 
             // draw the map
             this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
