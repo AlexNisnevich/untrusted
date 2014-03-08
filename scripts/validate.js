@@ -1,8 +1,13 @@
 Game.prototype.verbotenWords = [
-    '._', '"_', "'_",
-    'eval', 'prototype', 'call', 'apply', 'bind',
-    'prompt', 'confirm', 'debugger', 'delete',
-    'setTimeout', 'setInterval'
+    '._', '"_', "'_", // prevents calling _unexposed methods
+    'eval', 'call', 'apply', 'bind', // prevents arbitrary code execution
+    'prototype', // prevents messing with prototypes
+    'setTimeout', 'setInterval', // requires players to use map.startTimer() instead
+    'prompt', 'confirm', // prevents dialogs asking for user input
+    'debugger', // prevents pausing execution
+    'delete', // prevents removing items
+    'window', // prevents setting "window.[...] = map", etc.
+    'this[' // prevents this['win'+'dow'], etc.
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
 
