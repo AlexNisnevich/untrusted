@@ -1,11 +1,10 @@
-function Player(x, y, __map) {
+function Player(x, y, __map, __game) {
     /* private variables */
 
     var __x = x;
     var __y = y;
     var __color = "#0f0";
 
-    var __game = __map._game;
     var __display = __map._display;
 
     /* unexposed variables */

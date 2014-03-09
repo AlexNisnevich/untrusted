@@ -104,6 +104,14 @@ function Game(debugMode, startLevel) {
             __commands = localStorage.getItem('helpCommands').split(';');
         }
 
+        // keep track of current global variables
+        this._globalVars = [];
+        for (p in window) {
+            if (window.propertyIsEnumerable(p)) {
+                this._globalVars.push(p);
+            }
+        }
+
         // Enable debug features
         if (debugMode) {
             this._levelReached = 999; // make all levels accessible
@@ -254,6 +262,7 @@ function Game(debugMode, startLevel) {
 
             // start the level
             validatedStartLevel(this.map);
+            this.clearModifiedGlobals();
 
             // draw the map
             this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {

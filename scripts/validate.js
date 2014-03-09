@@ -1,8 +1,13 @@
 Game.prototype.verbotenWords = [
-    '._', '"_', "'_",
-    'eval', 'prototype', 'call', 'apply', 'bind',
-    'prompt', 'confirm', 'debugger', 'delete',
-    'setTimeout', 'setInterval'
+    '._', '"_', "'_", // prevents calling _unexposed methods
+    'eval', 'call', 'apply', 'bind', // prevents arbitrary code execution
+    'prototype', // prevents messing with prototypes
+    'setTimeout', 'setInterval', // requires players to use map.startTimer() instead
+    'prompt', 'confirm', // prevents dialogs asking for user input
+    'debugger', // prevents pausing execution
+    'delete', // prevents removing items
+    'window', // prevents setting "window.[...] = map", etc.
+    'this[' // prevents this['win'+'dow'], etc.
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
 
@@ -82,7 +87,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback) {
-    this._eval(this.editor.getGoodState(game._currentLevel).code); // get validateLevel method from last good state (if such a method exists)
+    this._eval(this.editor.getGoodState(this._currentLevel).code); // get validateLevel method from last good state (if such a method exists)
     try {
         // run the callback
         callback();
@@ -101,13 +106,16 @@ Game.prototype.validateCallback = function(callback) {
 
             // disable player movement
             this.map.getPlayer()._canMove = false;
+            throw e;
         }
+
+        this.clearModifiedGlobals();
 
         // refresh the map, just in case
         this.map.refresh();
     } catch (e) {
         this.display.writeStatus(e.toString());
-        //throw e; // for debugging
+        throw e; // for debugging
     }
 };
 
@@ -155,6 +163,14 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
     }
     return null;
 };
+
+Game.prototype.clearModifiedGlobals = function() {
+    for (p in window) {
+        if (window.propertyIsEnumerable(p) && this._globalVars.indexOf(p) == -1) {
+            window[p] = null;
+        }
+    }
+}
 
 // Specific validators go here
 
