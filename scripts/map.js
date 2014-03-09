@@ -259,7 +259,7 @@ function Map(display, game) {
         if (__player) {
             throw "Can't place player twice!";
         }
-        __player = new Player(x, y, this);
+        __player = new game._playerPrototype(x, y, this);
         this._display.drawAll(this);
     };
 

@@ -116,7 +116,19 @@ Game.prototype.validateAndRunScript = function (code) {
 
     // Game.prototype.blah => game.blah
     code = code.replace(/Game.prototype/, 'this');
+
+    // Blah => game._blahPrototype
+    code = code.replace(/function Map/, 'this._mapPrototype = function');
+    code = code.replace(/function Player/, 'this._playerPrototype = function');
+
     new Function(code).bind(this).call(); // bind the function to current instance of game!
+    console.log(code);
+
+    if (this.mapPrototype) {
+        // re-initialize map if necessary
+        this.map._reset(); // for cleanup
+        this.map = new this._mapPrototype(this.display, this);
+    }
 
     // and restart current level from saved state
     var savedState = this.editor.getGoodState(this._currentLevel);

@@ -4,6 +4,7 @@ function Game(debugMode, startLevel) {
     var __currentCode = '';
     var __commands = [];
 
+
     /* unexposed properties */
 
     this._dimensions = {
@@ -53,7 +54,9 @@ function Game(debugMode, startLevel) {
     ];
 
     this._editableScripts = [
-        'objects.js'
+        'map.js',
+        'objects.js',
+        'player.js'
     ];
 
     this._currentLevel = 1;
@@ -62,6 +65,7 @@ function Game(debugMode, startLevel) {
     this._displayedChapters = [];
 
     this._eval = window.eval; // store our own copy of eval so that we can override window.eval
+    this._playerPrototype = Player; // to allow messing with map.js and player.js later
 
     /* unexposed getters */
 
