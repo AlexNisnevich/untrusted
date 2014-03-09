@@ -113,7 +113,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         return array.map(function(line) {
             if (line > after) {
-                console.log('Shifting ' + line + ' to ' + (line + shiftAmount));
+                // console.log('Shifting ' + line + ' to ' + (line + shiftAmount));
                 return line + shiftAmount;
             }
             return line;
@@ -235,7 +235,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         var editableSegmentEnd = findEndOfSegment(changeInput.to.line);
         // Remove that many lines from its end, one by one
         for (var i = editableSegmentEnd; i > editableSegmentEnd - numRemoved; i--) {
-            console.log('Removing\t' + i);
+            // console.log('Removing\t' + i);
             editableLines.remove(i);
         }
         // Shift lines that came after

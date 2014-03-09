@@ -112,27 +112,30 @@ Game.prototype.validateCallback = function(callback) {
 };
 
 Game.prototype.validateAndRunScript = function (code) {
-    // TODO: actually validate things!
+    try {
+        // Game.prototype.blah => game.blah
+        code = code.replace(/Game.prototype/, 'this');
 
-    // Game.prototype.blah => game.blah
-    code = code.replace(/Game.prototype/, 'this');
+        // Blah => game._blahPrototype
+        code = code.replace(/function Map/, 'this._mapPrototype = function');
+        code = code.replace(/function Player/, 'this._playerPrototype = function');
 
-    // Blah => game._blahPrototype
-    code = code.replace(/function Map/, 'this._mapPrototype = function');
-    code = code.replace(/function Player/, 'this._playerPrototype = function');
+        new Function(code).bind(this).call(); // bind the function to current instance of game!
+        console.log(code);
 
-    new Function(code).bind(this).call(); // bind the function to current instance of game!
-    console.log(code);
+        if (this.mapPrototype) {
+            // re-initialize map if necessary
+            this.map._reset(); // for cleanup
+            this.map = new this._mapPrototype(this.display, this);
+        }
 
-    if (this.mapPrototype) {
-        // re-initialize map if necessary
-        this.map._reset(); // for cleanup
-        this.map = new this._mapPrototype(this.display, this);
+        // and restart current level from saved state
+        var savedState = this.editor.getGoodState(this._currentLevel);
+        this._evalLevelCode(savedState['code'], savedState['playerCode'], false, true);
+    } catch (e) {
+        this.display.writeStatus(e.toString());
+        //throw e; // for debugging
     }
-
-    // and restart current level from saved state
-    var savedState = this.editor.getGoodState(this._currentLevel);
-    this._evalLevelCode(savedState['code'], savedState['playerCode'], false, true);
 }
 
 // awful awful awful method that tries to find the line
