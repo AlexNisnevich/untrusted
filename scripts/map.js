@@ -8,6 +8,7 @@ function Map(display, game) {
 
     var __lines;
     var __dom;
+    var __domCSS = '';
 
     var __allowOverwrite;
     var __allowMultiMove;
@@ -56,6 +57,11 @@ function Map(display, game) {
 
         __lines = [];
         __dom = '';
+
+        // preload stylesheet for DOM level
+        $.get('styles/dom.css', function (css) {
+            __domCSS = css;
+        });
     };
 
     this._setProperties = function (mapProperties) {
@@ -231,7 +237,15 @@ function Map(display, game) {
     this.refresh = function () {
         if (__dom) {
             this._display.clear();
-            this._display.renderDom(__dom);
+
+            var $dom = $(__dom);
+            $dom.find('ul').addClass('playerLocation');
+            var domHTML = $dom[0].outerHTML
+                .replace(/"/g, "'")
+                .replace(/<hr>/g, '<hr />')
+                .replace(/<img([^>]*)>/g, '<img $1 />');
+
+            this._display.renderDom(domHTML, __domCSS);
         } else {
             this._display.drawAll(this);
         }

@@ -1,0 +1,14 @@
+div {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.playerLocation {
+	background-color: #A4E69A;
+}
+
+.playerLocation:before {
+	content: "@";
+	font-family: "droid sans mono", monospace;
+	font-size: 12px;
+	color: #2F991F;
+}
