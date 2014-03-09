@@ -90,8 +90,6 @@ Game.prototype.validateCallback = function(callback) {
         // run the callback
         callback();
 
-        this.clearModifiedGlobals();
-
         // check if validator still passes
         try {
             if (typeof(validateLevel) !== 'undefined') {
@@ -106,13 +104,16 @@ Game.prototype.validateCallback = function(callback) {
 
             // disable player movement
             this.map.getPlayer()._canMove = false;
+            throw e;
         }
+
+        this.clearModifiedGlobals();
 
         // refresh the map, just in case
         this.map.refresh();
     } catch (e) {
         this.display.writeStatus(e.toString());
-        //throw e; // for debugging
+        throw e; // for debugging
     }
 };
 
