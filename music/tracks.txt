@@ -15,7 +15,7 @@
  13. Eric_Skiff_-_06_-_Searching
 *14. ThatAndyGuy-Chip-loop
 @15. Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name
-@16. Obsibilo_-_Soixante-8
+*16. Obsibilo_-_Soixante-8
 *17. Various_Artists_-_15_-_Slimeball_vomit
 *18. Rolemusic_-_07_-_Beach_Wedding_Dance
  19.
@@ -28,7 +28,7 @@
 "The Green" - Jonathan Holliday (used with permission) : 01
 "gurh" - Dmitry Mazin (written for Untrusted) : 02
 "Searching" - Eric Skiff (CC-BY) : 03, 13
-"Soixante-8" - Obsibilo (CC-BY-NC-SA) : 04, 16
+"coming soon" - Fex (public domain) : 04
 "cloudy sin" - intricate (used with permission) : 05
 "Game Scratch" - Dmitry Mazin (written for Untrusted) : 06
 "Y" - Tortue Super Sonic (CC-BY-NC-SA) : 07
@@ -38,16 +38,14 @@
 "Conspiracy" - Mike and Alan (used with permission) : 11
 "Messeah" - RoccoW (CC-BY) : 12
 "Da Funk Do You Know 'bout Chip?" - That Andy Guy (used with permission) : 14
+"Soixante-8" - Obsibilo (CC-BY-NC-SA) : 16
 "Slimeball Vomit" - Radio Scotvoid (CC-BY-SA) : 17
 "Beach Wedding Dance" - Rolemusic (CC-BY-NC-SA) : 18
 "Adversity" - Seropard (free to use): 20
 "Brazilicon Alley" - Vernon Lenoir (CC-BY-NC-SA) : XX
 
-
 === Tracks Under Consideration ===
 
 "Not Fit For Human Consumption" - Ant Neely (CC-BY-NC-SA)
-"coming soon" - Fex (public domain)
-"Roots Of Supremacy" - MCV (free to use)
 "Comme Des Orages" - Obsibilo (CC-BY-NC-SA)
 "Obscure Terrain" - Revolution Void (CC-BY-NC-SA)

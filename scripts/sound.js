@@ -4,13 +4,25 @@ function Sound() {
             path: "music/Adversity.wav",
             artist: "Seropard",
             title: "Adversity",
-            url: ""
+            url: "https://soundcloud.com/seropard"
+        },
+        'Beach Wedding Dance': {
+            path: "music/Rolemusic_-_07_-_Beach_Wedding_Dance.mp3",
+            artist: "Rolemusic",
+            title: "Beach Wedding Dance",
+            url: "https://soundcloud.com/rolemusic"
+        },
+        'Brazil': {
+            path: "music/Vernon_Lenoir_-_Brazilicon_alley.mp3",
+            artist: "Vernon Lenoir",
+            title: "Brazilicon Alley",
+            url: "http://vernonlenoir.wordpress.com/"
         },
         'Chip': {
             path: "music/ThatAndyGuy-Chip-loop.mp3",
             artist: "That Andy Guy",
             title: "Da Funk Do You Know 'bout Chip?",
-            url: ""
+            url: "https://soundcloud.com/that-andy-guy"
         },
         'cloudy_sin': {
             path: "music/intricate_cloudy_sin.mp3",
@@ -28,7 +40,7 @@ function Sound() {
             path: "music/Fex_coming_soon.mp3",
             artist: "Fex",
             title: "coming soon",
-            url: ""
+            url: "http://artistserver.com/Fex"
         },
         'conspiracy': {
             path: "music/conspiracy_bitcrusher_final.mp3",
@@ -58,13 +70,19 @@ function Sound() {
             path: "music/Broke_For_Free_-_01_-_Night_Owl.mp3",
             artist: "Broke for Free",
             title: "Night Owl",
-            url: ""
+            url: "http://brokeforfree.com/"
         },
         'Searching': {
             path: "music/Eric_Skiff_-_06_-_Searching.mp3",
             artist: "Eric Skiff",
             title: "Searching",
             url: "http://ericskiff.com/"
+        },
+        'Slimeball Vomit': {
+            path: "music/Various_Artists_-_15_-_Slimeball_vomit.mp3",
+            artist: "Radio Scotvoid",
+            title: "Slimeball Vomit",
+            url: "https://soundcloud.com/radio-scotvoid"
         },
         'Soixante-8': {
             path: "music/Obsibilo_-_Soixante-8.mp3",

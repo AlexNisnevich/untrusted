@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "music": "Vernon_Lenoir_-_Brazilicon_alley"
+    "music": "Brazil"
 }
 #END_PROPERTIES#
 function startLevel(map) {
