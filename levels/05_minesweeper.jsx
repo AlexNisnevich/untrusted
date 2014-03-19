@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced": ["map.setSquareColor"],
-    "music": "intricate_cloudy_sin"
+    "music": "cloudy_sin"
 }
 #END_PROPERTIES#
 /******************

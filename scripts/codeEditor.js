@@ -226,6 +226,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
         for (var i = lastLine + 1; i <= lastLine + newLines; i++) {
             editableLines.push(i);
         }
+
+        // Update endOfStartLevel
+        if (endOfStartLevel) {
+            endOfStartLevel += newLines;
+        }
     };
 
     var updateEditableLinesOnDeletion = function(changeInput) {
@@ -241,6 +246,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
         // Shift lines that came after
         editableLines = shiftLinesBy(editableLines, editableSegmentEnd, -numRemoved);
         // TODO Shift editableSections
+
+        // Update endOfStartLevel
+        if (endOfStartLevel) {
+            endOfStartLevel -= numRemoved;
+        }
     };
 
     var trackUndoRedo = function(instance, change) {

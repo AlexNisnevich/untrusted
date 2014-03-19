@@ -1,6 +1,7 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": []
+    "commandsIntroduced": [],
+    "music": "coming soon"
 }
 #END_PROPERTIES#
 /*******************

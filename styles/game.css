@@ -362,16 +362,26 @@ h2 {
 	border: 2px solid transparent;
 }
 
+.topStatus {
+	font-size: 0.85em;
+	color: #999;
+}
+
+.topStatus a {
+	color: #ccc;
+	text-decoration: none;
+}
+
 #savedLevelMsg {
 	position: relative;
 	float: right;
 	top: -16px;
 	right: 5px;
-	font-size: 0.85em;
-	color: #999;
 }
 
-#savedLevelMsg a {
-	color: #ccc;
-	text-decoration: none;
+#nowPlayingMsg {
+	position: absolute;
+	top: -18px;
+	color: #999;
+	margin-left: 2em;
 }

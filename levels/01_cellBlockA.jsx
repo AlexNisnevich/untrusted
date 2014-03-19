@@ -4,7 +4,7 @@
         ["global.startLevel", "global.onExit", "map.placePlayer",
          "map.placeObject", "map.getHeight", "map.getWidth",
          "map.displayChapter", "map.getPlayer", "player.hasItem"],
-    "music": "Yonnie_The_Green"
+    "music": "The Green"
 }
 #END_PROPERTIES#
 /*****************
