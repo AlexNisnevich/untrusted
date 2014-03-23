@@ -36,3 +36,9 @@ function startLevel(map) {
     map.placeObject(map.getWidth() - 5, 5, 'exit');
 #END_OF_START_LEVEL#
 }
+
+function validateLevel(map) {
+    numBlocks = 2 * (map.getHeight()-13) + 2 * (map.getWidth()-10);
+
+    map.validateAtLeastXObjects(numBlocks, 'block');
+}

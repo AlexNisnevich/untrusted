@@ -45,6 +45,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         }).join('\n');
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
+
         this._eval(allCode);
 
         // start the level on a dummy map to validate
@@ -59,7 +60,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         }
 
         // does validateLevel() succeed?
-        if (typeof(validateLevel) !== 'undefined') {
+        if (typeof(validateLevel) !== 'undefined' && validateLevel != null) {
             validateLevel(dummyMap);
         }
 
@@ -94,7 +95,7 @@ Game.prototype.validateCallback = function(callback) {
 
         // check if validator still passes
         try {
-            if (typeof(validateLevel) !== 'undefined') {
+            if (typeof(validateLevel) !== 'undefined' && validateLevel != null) {
                 validateLevel(this.map);
             }
         } catch (e) {

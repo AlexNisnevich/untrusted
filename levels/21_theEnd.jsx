@@ -1,6 +1,7 @@
 #BEGIN_PROPERTIES#
 {
-    "activateSuperMenu": true
+    "activateSuperMenu": true,
+    "music": "Comme Des Orages"
 }
 #END_PROPERTIES#
 

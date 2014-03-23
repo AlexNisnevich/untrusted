@@ -42,6 +42,12 @@ function Sound() {
             title: "coming soon",
             url: "http://artistserver.com/Fex"
         },
+        'Comme Des Orages': {
+            path: "music/Obsibilo_-_02_-_Comme_Des_Orages.mp3",
+            artist: "Obsibilo",
+            title: "Comme Des Orages",
+            url: "http://freemusicarchive.org/music/Obsibilo/"
+        },
         'conspiracy': {
             path: "music/conspiracy_bitcrusher_final.mp3",
             artist: "Mike and Alan",
@@ -71,6 +77,12 @@ function Sound() {
             artist: "Broke for Free",
             title: "Night Owl",
             url: "http://brokeforfree.com/"
+        },
+        'Obscure Terrain': {
+            path: "music/Revolution_Void_-_08_-_Obscure_Terrain.mp3",
+            artist: "Revolution Void",
+            title: "Obscure Terrain",
+            url: "http://revolutionvoid.com/"
         },
         'Searching': {
             path: "music/Eric_Skiff_-_06_-_Searching.mp3",

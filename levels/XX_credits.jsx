@@ -3,7 +3,11 @@
     "music": "Brazil"
 }
 #END_PROPERTIES#
-function startLevel(map) {
+/**************
+ * credits.js *
+ **************/
+
+ function startLevel(map) {
     var credits = [
         [15, 1, "U N T R U S T E D"],
         [20, 2, "- or -"],
