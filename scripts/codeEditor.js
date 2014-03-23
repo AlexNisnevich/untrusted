@@ -17,6 +17,10 @@ function CodeEditor(textAreaDomID, width, height, game) {
     var lastChange = {};
     var endOfStartLevel = null;
 
+    this.setEndOfStartLevel = function (eosl) {
+        endOfStartLevel = eosl;
+    }
+
     // preprocesses code,determines the location
     // of editable lines and sections, loads properties
     function preprocess(codeString) {
@@ -420,7 +424,9 @@ function CodeEditor(textAreaDomID, width, height, game) {
             code: this.getCode(true),
             playerCode: this.getPlayerCode(),
             editableLines: editableLines,
-            editableSections: editableSections
+            editableSections: editableSections,
+            endOfStartLevel: endOfStartLevel,
+            version: this.getProperties().version
         }));
     }
 

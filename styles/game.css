@@ -372,6 +372,10 @@ h2 {
 	text-decoration: none;
 }
 
+.topStatus a:hover {
+	text-decoration: underline;
+}
+
 #savedLevelMsg {
 	position: relative;
 	float: right;

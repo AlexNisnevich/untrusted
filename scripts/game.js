@@ -169,6 +169,7 @@ function Game(debugMode, startLevel) {
     // then loads it into the game
     this._getLevel = function (levelNum, isResetting) {
         var game = this;
+        var editor = this.editor;
 
         game._levelReached = Math.max(levelNum, game._levelReached);
         if (!debugMode) {
@@ -178,10 +179,19 @@ function Game(debugMode, startLevel) {
         var fileName = game._levelFileNames[levelNum - 1];
         $.get('levels/' + fileName, function (lvlCode) {
             // load level code in editor
-            game.editor.loadCode(lvlCode);
+            editor.loadCode(lvlCode);
 
-            if (!isResetting && game.editor.getGoodState(levelNum)) {
-                game.editor.setCode(game.editor.getGoodState(levelNum)['code']);
+            // restored saved state for this level?
+            if (!isResetting && editor.getGoodState(levelNum)) {
+                // unless the current level is a newer version
+                var newVer = editor.getProperties().version;
+                var savedVer = editor.getGoodState(levelNum).version;
+                if (!(newVer && (!savedVer || isNewerVersion(newVer, savedVer)))) {
+                    editor.setCode(editor.getGoodState(levelNum).code);
+                    if (editor.getGoodState(levelNum).endOfStartLevel) {
+                        editor.setEndOfStartLevel(editor.getGoodState(levelNum).endOfStartLevel);
+                    }
+                }
             }
 
             // start the level and fade in
@@ -189,7 +199,7 @@ function Game(debugMode, startLevel) {
             game.display.focus();
 
             // store the commands introduced in this level (for api reference)
-            __commands = __commands.concat(game.editor.getProperties().commandsIntroduced).unique();
+            __commands = __commands.concat(editor.getProperties().commandsIntroduced).unique();
             localStorage.setItem('helpCommands', __commands.join(';'));
         });
     };
