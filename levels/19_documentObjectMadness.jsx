@@ -7,16 +7,19 @@
  * documentObjectMadness.js *
  ****************************
  *
- * I can't believe it! I can't believe you made it onto Department of
- * Theoretical Computation's web server!  YOU SHOULD HAVE BEEN DELETED! This
- * shouldn't even be possible! What the hell were the IT folks thinking?
+ * I can't believe it! I can't believe you made it onto the
+ * Department of Theoretical Computation's web server!
+ * YOU SHOULD HAVE BEEN DELETED! This shouldn't even be
+ * possible! What the hell were the IT folks thinking?
  *
- * No matter. I still have the Algorithm. That's the important part. The rest
- * is just implementation, and how hard could that be?
+ * No matter. I still have the Algorithm. That's the
+ * important part. The rest is just implementation, and how
+ * hard could that be?
  *
- * Anyway you're not going to make it out of this one, my good Doctor. After
- * all, you're a tenured professor with a well-respected history of research -
- * you probably don't know jQuery!
+ * Anyway you're not going to make it out of this one, my
+ * good Doctor. After all, you're a tenured professor with a
+ * well-respected history of research - you probably don't
+ * know jQuery!
  *
  */
 
@@ -25,12 +28,14 @@ function objective(map) {
 }
 
 function startLevel(map) {
-    var html = "<div class='offLimits'>" +
-    "<div style='width: 600px; height: 500px; background-color: white; font-size: 10px;'>" +
-        "<center><h1>Department of Theoretical Computation</h1></center>" +
+    var html = "<div class='container'>" +
+    "<div style='width: 600px; height: 500px; background: white;'>" +
+        "<center>" +
+            "<h1>Department of Theoretical Computation</h1>" +
+        "</center>" +
         "<hr />" +
         "<table border='0'><tr valign='top'>" +
-            "<td><div id='face' /></td>" +
+            "<td><div id='face'></div></td>" +
             "<td>" +
                 "<h2>Cornelius Eval</h2>" +
                 "<h3>Professor</h3>" +
@@ -52,7 +57,7 @@ function startLevel(map) {
     function moveToParent(className) {
         var currentPosition = $dom.find('.' + className);
         if (currentPosition.parent().length > 0 &&
-                !currentPosition.parent().hasClass('offLimits')) {
+                !currentPosition.parent().hasClass('container')) {
             currentPosition.parent().addClass(className);
             currentPosition.removeClass(className);
             map.updateDOM($dom);
