@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "0.1",
     "commandsIntroduced": ["ROT.Map.DividedMaze", "player.atLocation"],
     "music": "gurh"
 }
@@ -34,6 +35,11 @@ function startLevel(map) {
             map.placeObject(x,y,'empty');
         }
     });
+
+    map.placeObject(map.getWidth()-4, map.getHeight()-4, 'block');
+    map.placeObject(map.getWidth()-6, map.getHeight()-4, 'block');
+    map.placeObject(map.getWidth()-5, map.getHeight()-5, 'block');
+    map.placeObject(map.getWidth()-5, map.getHeight()-3, 'block');
 #BEGIN_EDITABLE#
 
 #END_EDITABLE#
