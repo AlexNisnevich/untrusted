@@ -2,6 +2,11 @@ div {
 	font-family: "Comic Sans MS", cursive, sans-serif;
 }
 
+a {
+    color:blue;
+    text-decoration:underline;
+}
+
 #face {
 	width: 115px;
 	height: 160px;
