@@ -92,6 +92,7 @@ function Player(x, y, __map, __game) {
             __map.refresh();
             this._canMove = false;
             __map._reenableMovementForPlayer(this); // (key delay can vary by map)
+            __map._moveAllDynamicObjects();
 
             return;
         }
