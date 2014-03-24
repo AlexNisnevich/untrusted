@@ -220,7 +220,8 @@ body {
 
 #notepadPaneContent {
     float:left;
-    width:90%;
+    padding-left: 2px;
+    width: 95%;
 }
 
 #notepadTextarea {
@@ -235,7 +236,7 @@ body {
 .pop_up_box {
 	position: absolute;
 	height: 360px;
-	width: 560px;
+	width: 580px;
 	top: 50px;
 	left: 300px;
 	z-index: 9000;
@@ -248,7 +249,7 @@ body {
 	background-color: black;
 	border: 2px solid white;
 	color: white;
-	width: 176px;
+	width: 183px;
 	padding: 4px;
 	margin: 5px;
 	cursor: pointer;

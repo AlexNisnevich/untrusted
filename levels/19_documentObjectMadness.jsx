@@ -3,9 +3,9 @@
 
 }
 #END_PROPERTIES#
-/**********************
- * domManipulation.js *
- **********************
+/****************************
+ * documentObjectMadness.js *
+ ****************************
  *
  * I can't believe it! I can't believe you made it onto Department of
  * Theoretical Computation's web server!  YOU SHOULD HAVE BEEN DELETED! This

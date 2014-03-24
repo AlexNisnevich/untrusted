@@ -30,7 +30,7 @@ function Game(debugMode, startLevel) {
         '16_lasers.jsx',
         '17_pointers.jsx',
         '18_superDrEvalBros.jsx',
-        '19_domManipulation.jsx',
+        '19_documentObjectMadness.jsx',
         //'20_bossFight.jsx',
         'XX_credits.jsx'
     ];
