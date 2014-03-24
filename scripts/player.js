@@ -87,6 +87,16 @@ function Player(x, y, __map) {
             return false;
         }
 
+        if (__map._overrideKeys[direction]) {
+            __map._overrideKeys[direction]();
+
+            __map.refresh();
+            this._canMove = false;
+            __map._reenableMovementForPlayer(this); // (key delay can vary by map)
+
+            return;
+        }
+
         var new__x;
         var new__y;
         if (direction === 'up') {

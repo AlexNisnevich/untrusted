@@ -57,6 +57,7 @@ function Map(display, game) {
 
         __lines = [];
         __dom = '';
+        this._overrideKeys = {};
 
         // preload stylesheet for DOM level
         $.get('styles/dom.css', function (css) {
@@ -238,11 +239,9 @@ function Map(display, game) {
         if (__dom) {
             this._display.clear();
 
-            var $dom = $(__dom);
-            $dom.find('ul').addClass('playerLocation');
-            var domHTML = $dom[0].outerHTML
+            var domHTML = __dom[0].outerHTML
                 .replace(/"/g, "'")
-                .replace(/<hr>/g, '<hr />')
+                .replace(/<hr([^>]*)>/g, '<hr $1 />')
                 .replace(/<img([^>]*)>/g, '<img $1 />');
 
             this._display.renderDom(domHTML, __domCSS);
@@ -421,6 +420,14 @@ function Map(display, game) {
     this.createFromDOM = function(dom) {
         __dom = dom;
     };
+
+    this.updateDOM = function(dom) {
+        __dom = dom;
+    };
+
+    this.overrideKey = function(keyName, callback) {
+        this._overrideKeys[keyName] = callback;
+    }
 
     /* initialization */
 
