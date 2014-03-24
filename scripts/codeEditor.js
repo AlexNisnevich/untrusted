@@ -17,6 +17,10 @@ function CodeEditor(textAreaDomID, width, height, game) {
     var lastChange = {};
     var endOfStartLevel = null;
 
+    this.setEndOfStartLevel = function (eosl) {
+        endOfStartLevel = eosl;
+    }
+
     // preprocesses code,determines the location
     // of editable lines and sections, loads properties
     function preprocess(codeString) {
@@ -87,7 +91,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
         }
 
-        properties = JSON.parse(propertiesString);
+        try {
+            properties = JSON.parse(propertiesString);
+        } catch (e) {
+            properties = {};
+        }
 
         return lineArray.join("\n");
     }
@@ -109,7 +117,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         return array.map(function(line) {
             if (line > after) {
-                console.log('Shifting ' + line + ' to ' + (line + shiftAmount));
+                // console.log('Shifting ' + line + ' to ' + (line + shiftAmount));
                 return line + shiftAmount;
             }
             return line;
@@ -222,6 +230,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
         for (var i = lastLine + 1; i <= lastLine + newLines; i++) {
             editableLines.push(i);
         }
+
+        // Update endOfStartLevel
+        if (endOfStartLevel) {
+            endOfStartLevel += newLines;
+        }
     };
 
     var updateEditableLinesOnDeletion = function(changeInput) {
@@ -231,12 +244,17 @@ function CodeEditor(textAreaDomID, width, height, game) {
         var editableSegmentEnd = findEndOfSegment(changeInput.to.line);
         // Remove that many lines from its end, one by one
         for (var i = editableSegmentEnd; i > editableSegmentEnd - numRemoved; i--) {
-            console.log('Removing\t' + i);
+            // console.log('Removing\t' + i);
             editableLines.remove(i);
         }
         // Shift lines that came after
         editableLines = shiftLinesBy(editableLines, editableSegmentEnd, -numRemoved);
         // TODO Shift editableSections
+
+        // Update endOfStartLevel
+        if (endOfStartLevel) {
+            endOfStartLevel -= numRemoved;
+        }
     };
 
     var trackUndoRedo = function(instance, change) {
@@ -356,7 +374,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         if (!forSaving && endOfStartLevel) {
             // insert the end of startLevel() marker at the appropriate location
-            lines.splice(endOfStartLevel, 0, "map._game._endOfStartLevelReached = true;");
+            lines.splice(endOfStartLevel, 0, "map._endOfStartLevelReached()");
         }
 
         return lines.join('\n');
@@ -401,11 +419,14 @@ function CodeEditor(textAreaDomID, width, height, game) {
     }
 
     this.saveGoodState = function () {
-        localStorage.setItem('level' + game._currentLevel + '.lastGoodState', JSON.stringify({
+        var lvlNum = game._currentFile ? game._currentFile : game._currentLevel;
+        localStorage.setItem('level' + lvlNum + '.lastGoodState', JSON.stringify({
             code: this.getCode(true),
             playerCode: this.getPlayerCode(),
             editableLines: editableLines,
-            editableSections: editableSections
+            editableSections: editableSections,
+            endOfStartLevel: endOfStartLevel,
+            version: this.getProperties().version
         }));
     }
 

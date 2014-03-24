@@ -1,8 +1,13 @@
 Game.prototype.verbotenWords = [
-    '._', '"_', "'_",
-    'eval', 'prototype', 'call', 'apply', 'bind',
-    'prompt', 'confirm', 'debugger', 'delete',
-    'setTimeout', 'setInterval'
+    '._', '"_', "'_", // prevents calling _unexposed methods
+    'eval', 'call', 'apply', 'bind', // prevents arbitrary code execution
+    'prototype', // prevents messing with prototypes
+    'setTimeout', 'setInterval', // requires players to use map.startTimer() instead
+    'prompt', 'confirm', // prevents dialogs asking for user input
+    'debugger', // prevents pausing execution
+    'delete', // prevents removing items
+    'window', // prevents setting "window.[...] = map", etc.
+    'this[' // prevents this['win'+'dow'], etc.
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
 
@@ -14,7 +19,7 @@ var DummyDisplay = function () {
     this.writeStatus = function () {};
 };
 
-Game.prototype.validate = function(allCode, playerCode) {
+Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScript) {
     var game = this;
 
     try {
@@ -40,6 +45,7 @@ Game.prototype.validate = function(allCode, playerCode) {
         }).join('\n');
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
+
         this._eval(allCode);
 
         // start the level on a dummy map to validate
@@ -47,12 +53,14 @@ Game.prototype.validate = function(allCode, playerCode) {
         startLevel(dummyMap);
 
         // does startLevel() execute fully?
-        if (!this._endOfStartLevelReached) {
+        // (if we're restarting a level after editing a script, we can't test for this
+        // - nor do we care)
+        if (!this._endOfStartLevelReached && !restartingLevelFromScript) {
             throw 'startLevel() returned prematurely!';
         }
 
         // does validateLevel() succeed?
-        if (typeof(validateLevel) !== 'undefined') {
+        if (typeof(validateLevel) !== 'undefined' && validateLevel != null) {
             validateLevel(dummyMap);
         }
 
@@ -80,14 +88,14 @@ Game.prototype.validate = function(allCode, playerCode) {
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback) {
-    this._eval(this.editor.getGoodState(game._currentLevel).code); // get validateLevel method from last good state (if such a method exists)
+    this._eval(this.editor.getGoodState(this._currentLevel).code); // get validateLevel method from last good state (if such a method exists)
     try {
         // run the callback
         callback();
 
         // check if validator still passes
         try {
-            if (typeof(validateLevel) !== 'undefined') {
+            if (typeof(validateLevel) !== 'undefined' && validateLevel != null) {
                 validateLevel(this.map);
             }
         } catch (e) {
@@ -99,15 +107,45 @@ Game.prototype.validateCallback = function(callback) {
 
             // disable player movement
             this.map.getPlayer()._canMove = false;
+            throw e;
         }
+
+        this.clearModifiedGlobals();
 
         // refresh the map, just in case
         this.map.refresh();
     } catch (e) {
         this.display.writeStatus(e.toString());
-        //throw e; // for debugging
+        throw e; // for debugging
     }
 };
+
+Game.prototype.validateAndRunScript = function (code) {
+    try {
+        // Game.prototype.blah => game.blah
+        code = code.replace(/Game.prototype/, 'this');
+
+        // Blah => game._blahPrototype
+        code = code.replace(/function Map/, 'this._mapPrototype = function');
+        code = code.replace(/function Player/, 'this._playerPrototype = function');
+
+        new Function(code).bind(this).call(); // bind the function to current instance of game!
+        console.log(code);
+
+        if (this.mapPrototype) {
+            // re-initialize map if necessary
+            this.map._reset(); // for cleanup
+            this.map = new this._mapPrototype(this.display, this);
+        }
+
+        // and restart current level from saved state
+        var savedState = this.editor.getGoodState(this._currentLevel);
+        this._evalLevelCode(savedState['code'], savedState['playerCode'], false, true);
+    } catch (e) {
+        this.display.writeStatus(e.toString());
+        //throw e; // for debugging
+    }
+}
 
 // awful awful awful method that tries to find the line
 // of code where a given error occurs
@@ -126,6 +164,14 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
     }
     return null;
 };
+
+Game.prototype.clearModifiedGlobals = function() {
+    for (p in window) {
+        if (window.propertyIsEnumerable(p) && this._globalVars.indexOf(p) == -1) {
+            window[p] = null;
+        }
+    }
+}
 
 // Specific validators go here
 

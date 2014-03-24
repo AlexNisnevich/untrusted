@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced": ["player.move", "map.startTimer"],
-    "music": "Rolemusic_-_07_-_Beach_Wedding_Dance",
+    "music": "Beach Wedding Dance",
     "mapProperties": {
         "keyDelay": 25
     }
