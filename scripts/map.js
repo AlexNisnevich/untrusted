@@ -436,6 +436,10 @@ function Map(display, __game) {
 
     /* for DOM manipulation level */
 
+    this.getDOM = function () {
+        return __dom;
+    }
+
     this.createFromDOM = function(dom) {
         __dom = dom;
     };

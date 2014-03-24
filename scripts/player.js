@@ -73,6 +73,11 @@ function Player(x, y, __map, __game) {
 
         // check for collision with any lines on the map
         __map.testLineCollisions();
+
+        // check for nonstandard victory condition (e.g. DOM level)
+        if (__game.objective(__map)) {
+            __game._moveToNextLevel();
+        }
     };
 
     /* exposed methods */
@@ -92,7 +97,7 @@ function Player(x, y, __map, __game) {
             __map.refresh();
             this._canMove = false;
             __map._reenableMovementForPlayer(this); // (key delay can vary by map)
-            __map._moveAllDynamicObjects();
+            this._afterMove(__x, __y);
 
             return;
         }

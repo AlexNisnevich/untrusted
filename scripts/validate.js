@@ -69,6 +69,11 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             this.onExit = onExit;
         }
 
+        this.objective = function () { return false; };
+        if (typeof objective !== "undefined") {
+            this.objective = objective;
+        }
+
         return startLevel;
     } catch (e) {
         var exceptionText = e.toString();

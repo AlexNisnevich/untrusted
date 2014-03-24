@@ -20,8 +20,8 @@
  *
  */
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+function objective(map) {
+    return map.getDOM().find('.adversary').hasClass('drEval');
 }
 
 function startLevel(map) {
@@ -96,7 +96,7 @@ function startLevel(map) {
         'symbol': '@',
         'color': 'red',
         'behavior': function (me) {
-            var move = getRandomInt(1, 4);
+            var move = Math.floor(Math.random() * 4) + 1; // 1, 2, 3, or 4
             if (move == 1) {
                 moveToParent('adversary');
             } else if (move == 2) {
