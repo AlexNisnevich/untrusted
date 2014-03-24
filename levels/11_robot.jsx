@@ -2,7 +2,8 @@
 {
     "commandsIntroduced":
         ["object.inventory", "object.giveItemTo", "object.passableFor",
-         "map.validateAtMostXObjects"]
+         "map.validateAtMostXObjects"],
+    "music": "conspiracy"
 }
 #END_PROPERTIES#
 /*

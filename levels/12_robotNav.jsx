@@ -1,12 +1,13 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": []
+    "commandsIntroduced": [],
+    "music": "Messeah"
 }
 #END_PROPERTIES#
 /*
  * robotNav.js
  *
- * The green key is located in a slightly more 
+ * The green key is located in a slightly more
  * complicated room. You'll need to get the robot
  * past these obstacles.
  */

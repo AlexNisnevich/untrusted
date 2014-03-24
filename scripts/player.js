@@ -1,11 +1,10 @@
-function Player(x, y, __map) {
+function Player(x, y, __map, __game) {
     /* private variables */
 
     var __x = x;
     var __y = y;
     var __color = "#0f0";
 
-    var __game = __map._game;
     var __display = __map._display;
 
     /* unexposed variables */
@@ -74,6 +73,11 @@ function Player(x, y, __map) {
 
         // check for collision with any lines on the map
         __map.testLineCollisions();
+
+        // check for nonstandard victory condition (e.g. DOM level)
+        if (__game.objective(__map)) {
+            __game._moveToNextLevel();
+        }
     };
 
     /* exposed methods */
@@ -93,6 +97,7 @@ function Player(x, y, __map) {
             __map.refresh();
             this._canMove = false;
             __map._reenableMovementForPlayer(this); // (key delay can vary by map)
+            this._afterMove(__x, __y);
 
             return;
         }

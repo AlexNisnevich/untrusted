@@ -19,7 +19,7 @@ Game.prototype.removeFromInventory = function (itemName) {
 
 	this.inventory.remove(itemName);
 	this.drawInventory();
-	
+
 	if (object.onDrop) {
 		object.onDrop(this);
 	}
@@ -65,6 +65,11 @@ Game.prototype.setInventoryStateByLevel = function (levelNum) {
 	if (levelNum > 15) {
 		this.removeFromInventory('theAlgorithm');
 	}
+
+	// does this belong here? it does in a vague way maybe
+	if (this.editor.getProperties().activateSuperMenu) {
+        this.activateSuperMenu();
+    }
 };
 
 Game.prototype.drawInventory = function () {

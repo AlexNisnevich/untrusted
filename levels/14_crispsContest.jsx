@@ -2,7 +2,7 @@
 {
     "commandsIntroduced":
         ["map.createFromGrid", "player.removeItem"],
-    "music": "ThatAndyGuy-Chip-loop"
+    "music": "Chip"
 }
 #END_PROPERTIES#
 /********************

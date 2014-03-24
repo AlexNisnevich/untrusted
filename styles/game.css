@@ -202,6 +202,11 @@ body {
 	cursor: pointer;
 }
 
+#helpPaneCloseButton:hover {
+	background: yellow;
+	color: black;
+}
+
 #notepadPaneCloseButton {
 	float: right;
 	width: 10px;
@@ -220,22 +225,76 @@ body {
 
 #notepadPaneContent {
     float:left;
-    width:90%;
+    padding-left: 2px;
+    width: 95%;
 }
 
 #notepadTextarea {
     width:100%;
 }
 
-#helpPaneCloseButton:hover {
-	background: yellow;
-	color: black;
+#menuPane.expanded {
+	width: 720px;
+	height: 300px;
+}
+
+#menuPane.expanded #rightMenuPane {
+	margin-top: 10px;
+}
+
+#leftMenuPane {
+	float: left;
+	width: 130px;
+	height: 300px;
+	background: rgb(27, 90, 158);
+	margin-right: 8px;
+	display: none;
+}
+
+#leftMenuPane li {
+	cursor: pointer;
+	width: 120px;
+	list-style: none;
+	margin-left: -40px;
+	padding: 5px;
+}
+
+#leftMenuPane li.nested {
+	padding-left: 30px;
+	width: 95px;
+}
+
+#leftMenuPane li.selected {
+	color: yellow;
+	background: rgb(20, 80, 148);
+	font-weight: bold;
+}
+
+#leftMenuPane li:hover {
+	background: white;
+	color: rgb(27, 90, 158);
+}
+
+#rightMenuPane #root {
+	display: none;
+}
+
+#rightMenuPane #scripts {
+	display: none;
+}
+
+#rightMenuPane #scripts button.uneditable {
+	background: #311;
+}
+
+#rightMenuPane #scripts button.uneditable:hover {
+	background: white;
 }
 
 .pop_up_box {
 	position: absolute;
 	height: 360px;
-	width: 560px;
+	width: 580px;
 	top: 50px;
 	left: 300px;
 	z-index: 9000;
@@ -248,7 +307,7 @@ body {
 	background-color: black;
 	border: 2px solid white;
 	color: white;
-	width: 176px;
+	width: 183px;
 	padding: 4px;
 	margin: 5px;
 	cursor: pointer;
@@ -304,16 +363,30 @@ h2 {
 	border: 2px solid transparent;
 }
 
+.topStatus {
+	font-size: 0.85em;
+	color: #999;
+}
+
+.topStatus a {
+	color: #ccc;
+	text-decoration: none;
+}
+
+.topStatus a:hover {
+	text-decoration: underline;
+}
+
 #savedLevelMsg {
 	position: relative;
 	float: right;
 	top: -16px;
 	right: 5px;
-	font-size: 0.85em;
-	color: #999;
 }
 
-#savedLevelMsg a {
-	color: #ccc;
-	text-decoration: none;
+#nowPlayingMsg {
+	position: absolute;
+	top: -18px;
+	color: #999;
+	margin-left: 2em;
 }

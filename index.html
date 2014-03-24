@@ -27,7 +27,8 @@
 	<div id="container">
         <div id="panes">
         	<a id="muteButton"><img src="images/mute-off.png" /></a>
-			<span id="savedLevelMsg"></span>
+			<span id="nowPlayingMsg" class="topStatus"></span>
+			<span id="savedLevelMsg" class="topStatus"></span>
 			<div id="screenPane">
 				<canvas id="drawingCanvas" width="600" height="500"></canvas>
 				<div id="screen"></div>
@@ -58,8 +59,19 @@
 			</div>
 
 			<div id="menuPane" class='pop_up_box'>
-				<div class="pop_up_box_heading">Level Select</div>
-				<div id="levels"></div>
+				<div id="leftMenuPane">
+					<ul>
+						<li id="rootDir">/</li>
+						<li id="levelsDir" class="nested selected">levels/</li>
+						<li id="scriptsDir" class="nested">scripts/</li>
+					</ul>
+				</div>
+				<div id="rightMenuPane">
+					<div class="pop_up_box_heading">Level Select</div>
+					<div id="root"></div>
+					<div id="levels"></div>
+					<div id="scripts"></div>
+				</div>
 			</div>
 
             <div id="notepadPane" class='pop_up_box'>

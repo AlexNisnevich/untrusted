@@ -2,7 +2,7 @@
 {
     "commandsIntroduced":
         ["map.getDynamicObjects", "map.getCanvasCoords", "object.setTarget"],
-    "music": "Various_Artists_-_15_-_Slimeball_vomit"
+    "music": "Slimeball Vomit"
 }
 #END_PROPERTIES#
 /***************
