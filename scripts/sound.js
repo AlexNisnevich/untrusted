@@ -12,6 +12,12 @@ function Sound() {
             title: "Beach Wedding Dance",
             url: "https://soundcloud.com/rolemusic"
         },
+        'BossLoop': {
+            path: "music/Boss Loop 1.wav",
+            artist: "Essa",
+            title: "Boss Loop 1",
+            url: "http://www.youtube.com/user/Essasmusic"
+        },
         'Brazil': {
             path: "music/Vernon_Lenoir_-_Brazilicon_alley.mp3",
             artist: "Vernon Lenoir",

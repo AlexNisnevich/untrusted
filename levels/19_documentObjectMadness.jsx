@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-
+    "music": "BossLoop"
 }
 #END_PROPERTIES#
 /****************************

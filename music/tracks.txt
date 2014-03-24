@@ -18,7 +18,7 @@
 *16. Obsibilo_-_Soixante-8
 *17. Various_Artists_-_15_-_Slimeball_vomit
 *18. Rolemusic_-_07_-_Beach_Wedding_Dance
- 19.
+*19. Boss Loop 1
 *20. Adversity
 *21. Comme Des Orages
 *XX. Vernon_Lenoir_-_Brazilicon_alley
@@ -42,10 +42,7 @@
 "Soixante-8" - Obsibilo (CC-BY-NC-SA) : 16
 "Slimeball Vomit" - Radio Scotvoid (CC-BY-SA) : 17
 "Beach Wedding Dance" - Rolemusic (CC-BY-NC-SA) : 18
+"Boss Loop 1" - Essa (free to use) : 19
 "Adversity" - Seropard (free to use): 20
 "Comme Des Orages" - Obsibilo (CC-BY-NC-SA): 21
 "Brazilicon Alley" - Vernon Lenoir (CC-BY-NC-SA) : XX
-
-=== Tracks Under Consideration ===
-
-"Not Fit For Human Consumption" - Ant Neely (CC-BY-NC-SA)
