@@ -119,7 +119,6 @@ function DynamicObject(map, type, x, y) {
             __x = dest.x;
             __y = dest.y;
             this._afterMove(__x, __y);
-            map.refresh();
         } else {
             if (__definition.disappearOnCollision) {
                 this._destroy();

@@ -60,6 +60,12 @@ function Sound() {
             title: "Conspiracy",
             url: "https://www.facebook.com/MicAndAlan"
         },
+        'Death Destroyer': {
+            path: "music/BLEO_-_02_-_Death_Destroyer_Radio_Edit_feat_Rhinostrich.mp3",
+            artist: "BLEO feat Rhinostrich",
+            title: "Death Destroyer (Radio Edit)",
+            url: "http://freemusicarchive.org/music/BLEO/"
+        },
         'GameScratch': {
             path: "music/DmitryMazin-GameScratch.mp3",
             artist: "Dmitry Mazin",
@@ -107,6 +113,12 @@ function Sound() {
             artist: "Obsibilo",
             title: "Soixante-8",
             url: "http://freemusicarchive.org/music/Obsibilo/"
+        },
+        'Tart': {
+            path: "music/BLEO_-_02_-_Tart_Pts_1__2_feat_KeFF.mp3",
+            artist: "BLEO feat KeFF",
+            title: "Tart (Pts 1-2)",
+            url: "http://freemusicarchive.org/music/BLEO/"
         },
         'The Green': {
             path: "music/Yonnie_The_Green.mp3",

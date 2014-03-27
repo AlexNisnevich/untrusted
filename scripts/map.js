@@ -13,6 +13,7 @@ function Map(display, __game) {
     var __allowOverwrite;
     var __allowMultiMove;
     var __keyDelay;
+    var __refreshRate;
     var __intervals = [];
     var __chapterHideTimeout;
 
@@ -56,6 +57,7 @@ function Map(display, __game) {
             clearInterval(__intervals[i]);
         }
         __intervals = [];
+        __refreshRate = null;
 
         __lines = [];
         __dom = '';
@@ -67,6 +69,15 @@ function Map(display, __game) {
         });
 
         this.finalLevel = false;
+    };
+
+    this._ready = function () {
+        var map = this;
+        if (__refreshRate) {
+            map.startTimer(function () {
+                map.refresh();
+            }, __refreshRate);
+        }
     };
 
     this._setProperties = function (mapProperties) {
@@ -83,6 +94,10 @@ function Map(display, __game) {
 
             if (mapProperties.keyDelay) {
                 __keyDelay = mapProperties.keyDelay;
+            }
+
+            if (mapProperties.refreshRate) {
+                __refreshRate = mapProperties.refreshRate;
             }
         }
     };

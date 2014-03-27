@@ -286,6 +286,8 @@ function Game(debugMode, startLevel) {
                 }
             });
 
+            this.map._ready();
+
             // start bg music for this level
             if (this.editor.getProperties().music) {
                 this.sound.playTrackByName(this._currentLevel, this.editor.getProperties().music);
