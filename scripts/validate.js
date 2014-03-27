@@ -121,7 +121,7 @@ Game.prototype.validateCallback = function(callback) {
         this.map.refresh();
     } catch (e) {
         this.display.writeStatus(e.toString());
-        throw e; // for debugging
+        // throw e; // for debugging
     }
 };
 
