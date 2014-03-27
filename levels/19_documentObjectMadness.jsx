@@ -4,7 +4,7 @@
 }
 #END_PROPERTIES#
 /**********************
- * domManipulation.js *
+ * documentObjectMadness.js *
  **********************
  *
  * I can't believe it! I can't believe you made it onto Department of
@@ -25,7 +25,7 @@ function objective(map) {
 }
 
 function startLevel(map) {
-    var html = "<div class='pageContainer'>" +
+    var html = "<div class='container'>" +
     "<div style='width: 600px; height: 500px; background-color: white; font-size: 10px;'>" +
         "<center><h1>Department of Theoretical Computation</h1></center>" +
         "<hr />" +
