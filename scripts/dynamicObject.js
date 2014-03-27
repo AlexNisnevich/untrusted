@@ -46,12 +46,12 @@ function DynamicObject(map, type, x, y) {
                 }
 
                 if (__definition.behavior !== null) {
-                    map._game.validateCallback(function () {
+                    map._validateCallback(function () {
                         __definition.behavior(me, player);
                     });
                 }
             } catch (e) {
-                map._game.display.writeStatus(e.toString());
+                map._writeStatus(e.toString());
             }
         }
 
@@ -70,7 +70,7 @@ function DynamicObject(map, type, x, y) {
         if (map._getObjectDefinition(objectName).type === 'item') {
             __inventory.push(objectName);
             map._removeItemFromMap(__x, __y, objectName);
-            map._game.sound.playSound('pickup');
+            map._playSound('pickup');
         }
     };
 
@@ -97,7 +97,7 @@ function DynamicObject(map, type, x, y) {
             throw (type + ' says: I don\'t have that item!');
         }
 
-        player.pickUpItem(itemType, map._game.objects[itemType]);
+        player.pickUpItem(itemType, map._getObjectDefinition(itemType));
     };
 
     this.move = function (direction) {

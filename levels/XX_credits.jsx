@@ -1,27 +1,41 @@
 #BEGIN_PROPERTIES#
 {
-    "music": "Vernon_Lenoir_-_Brazilicon_alley"
+    "music": "Brazil"
 }
 #END_PROPERTIES#
-function startLevel(map) {
+/**************
+ * credits.js *
+ **************/
+
+ function startLevel(map) {
     var credits = [
         [15, 1, "U N T R U S T E D"],
         [20, 2, "- or -"],
         [5, 3, "THE CONTINUING ADVENTURES OF DR. EVAL"],
         [1, 5, "a game by Alex Nisnevich and Greg Shuflin"],
-        [1, 8, "/* MUSIC */"],
-        [1, 10, "The Green - Jonathan Holliday"],
-        [1, 11, "Game Scratch - Dmitry Mazin"],
-        [1, 12, "Y - Tortue Super Sonic"],
-        [1, 13, "Come and Find Me - Eric Skiff"],
-        [1, 14, "Searching - Eric Skiff"],
-        [1, 15, "cloudy sin - intricate"],
-        [1, 16, "The Waves Call Her Name - Sycamore Drive"],
-        [1, 17, "Slimeball Vomit - Radio Scotvoid"],
-        [1, 18, "Beach Wedding Dance - Rolemusic"],
-        [1, 19, "Brazilian Rhythm - Vernon Lenoir"],
-        [1, 20, "Soixante-8 - Obsibilo"],
-        [1, 21, "Da Funk Do You Know 'bout Chip? - That Andy Guy"],
+        [1, 7, "Special thanks to {"],
+        [5, 8, "Dmitry_Mazin: 'design and code'"],
+        [5, 9, "Jordan_Arnesen: 'level design'"],
+        [5, 10, "Natasha_HullRichter: 'playtesting'"],
+        [1, 11, "}"],
+        [1, 13, "/* MUSIC BY */"],
+        [5, 14, "Jonathan Holliday"],
+        [5, 15, "Dmitry Mazin"],
+        [5, 16, "Revolution Void"],
+        [5, 17, "Fex"],
+        [5, 18, "iNTRICATE"],
+        [5, 19, "Tortue Super Sonic"],
+        [5, 20, "Broke For Free"],
+        [5, 21, "Sycamore Drive"],
+        [5, 22, "Eric Skiff"],
+        [30, 14, "Mike and Alan"],
+        [30, 15, "RoccoW"],
+        [30, 16, "That Andy Guy"],
+        [30, 17, "Obsibilo"],
+        [30, 18, "Radio Scotvoid"],
+        [30, 19, "Rolemusic"],
+        [30, 20, "Seropard"],
+        [30, 21, "Vernon Lenoir"],
         [15, map.getHeight() - 2, "Thank you for playing!"]
     ];
 

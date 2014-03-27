@@ -2,7 +2,8 @@
 {
     "commandsIntroduced":
         ["global.validateLevel", "map.validateAtLeastXObjects",
-         "map.validateExactlyXManyObjects"]
+         "map.validateExactlyXManyObjects"],
+    "music": "Obscure Terrain"
 }
 #END_PROPERTIES#
 /************************

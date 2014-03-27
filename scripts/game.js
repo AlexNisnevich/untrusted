@@ -4,6 +4,7 @@ function Game(debugMode, startLevel) {
     var __currentCode = '';
     var __commands = [];
 
+
     /* unexposed properties */
 
     this._dimensions = {
@@ -30,16 +31,41 @@ function Game(debugMode, startLevel) {
         '16_lasers.jsx',
         '17_pointers.jsx',
         '18_superDrEvalBros.jsx',
-        //'19_domManipulation.jsx',
+        '19_documentObjectMadness.jsx',
         '20_bossFight.jsx',
+        '21_theEnd.jsx',
         'XX_credits.jsx'
     ];
 
+    this._viewableScripts = [
+        'codeEditor.js',
+        'display.js',
+        'dynamicObject.js',
+        'game.js',
+        'inventory.js',
+        'map.js',
+        'objects.js',
+        'player.js',
+        'reference.js',
+        'sound.js',
+        'ui.js',
+        'util.js',
+        'validate.js'
+    ];
+
+    this._editableScripts = [
+        'map.js',
+        'objects.js',
+        'player.js'
+    ];
+
     this._currentLevel = 1;
+    this._currentFile = null;
     this._levelReached = localStorage.getItem('levelReached') || 1;
     this._displayedChapters = [];
 
     this._eval = window.eval; // store our own copy of eval so that we can override window.eval
+    this._playerPrototype = Player; // to allow messing with map.js and player.js later
 
     /* unexposed getters */
 
@@ -78,6 +104,14 @@ function Game(debugMode, startLevel) {
             __commands = localStorage.getItem('helpCommands').split(';');
         }
 
+        // keep track of current global variables
+        this._globalVars = [];
+        for (p in window) {
+            if (window.propertyIsEnumerable(p)) {
+                this._globalVars.push(p);
+            }
+        }
+
         // Enable debug features
         if (debugMode) {
             this._levelReached = 999; // make all levels accessible
@@ -88,7 +122,7 @@ function Game(debugMode, startLevel) {
         // Lights, camera, action
         if (startLevel) {
             this._currentLevel = startLevel;
-            this._start(startLevel);
+            this._getLevel(startLevel, debugMode);
         } else {
             this._intro();
         }
@@ -115,6 +149,7 @@ function Game(debugMode, startLevel) {
         this.editor.createGist();
 
         this._currentLevel++;
+        this._currentFile = null;
         this.sound.playSound('complete');
 
         //we disable moving so the player can't move during the fadeout
@@ -124,6 +159,7 @@ function Game(debugMode, startLevel) {
 
     this._jumpToNthLevel = function (levelNum) {
         this._currentLevel = levelNum;
+        this._currentFile = null;
         this._getLevel(levelNum);
         this.display.focus();
         this.sound.playSound('blip');
@@ -133,6 +169,7 @@ function Game(debugMode, startLevel) {
     // then loads it into the game
     this._getLevel = function (levelNum, isResetting) {
         var game = this;
+        var editor = this.editor;
 
         game._levelReached = Math.max(levelNum, game._levelReached);
         if (!debugMode) {
@@ -142,10 +179,19 @@ function Game(debugMode, startLevel) {
         var fileName = game._levelFileNames[levelNum - 1];
         $.get('levels/' + fileName, function (lvlCode) {
             // load level code in editor
-            game.editor.loadCode(lvlCode);
+            editor.loadCode(lvlCode);
 
-            if (!isResetting && game.editor.getGoodState(levelNum)) {
-                game.editor.setCode(game.editor.getGoodState(levelNum)['code']);
+            // restored saved state for this level?
+            if (!isResetting && editor.getGoodState(levelNum)) {
+                // unless the current level is a newer version
+                var newVer = editor.getProperties().version;
+                var savedVer = editor.getGoodState(levelNum).version;
+                if (!(newVer && (!savedVer || isNewerVersion(newVer, savedVer)))) {
+                    editor.setCode(editor.getGoodState(levelNum).code);
+                    if (editor.getGoodState(levelNum).endOfStartLevel) {
+                        editor.setEndOfStartLevel(editor.getGoodState(levelNum).endOfStartLevel);
+                    }
+                }
             }
 
             // start the level and fade in
@@ -153,10 +199,27 @@ function Game(debugMode, startLevel) {
             game.display.focus();
 
             // store the commands introduced in this level (for api reference)
-            __commands = __commands.concat(game.editor.getProperties().commandsIntroduced).unique();
+            __commands = __commands.concat(editor.getProperties().commandsIntroduced).unique();
             localStorage.setItem('helpCommands', __commands.join(';'));
         });
     };
+
+    // how meta can we go?
+    this._editFile = function (filePath) {
+        var game = this;
+
+        var fileName = filePath.split('/')[filePath.split('/').length - 1];
+        game._currentFile = filePath;
+
+        $.get(filePath, function (code) {
+            // load level code in editor
+            if (game._editableScripts.indexOf(fileName) > -1) {
+                game.editor.loadCode('#BEGIN_EDITABLE#\n' + code + '\n#END_EDITABLE#');
+            } else {
+                game.editor.loadCode(code);
+            }
+        }, 'text');
+    }
 
     // restart level with currently loaded code
     this._restartLevel = function () {
@@ -164,7 +227,7 @@ function Game(debugMode, startLevel) {
         this._evalLevelCode();
     };
 
-    this._evalLevelCode = function (allCode, playerCode, isNewLevel) {
+    this._evalLevelCode = function (allCode, playerCode, isNewLevel, restartingLevelFromScript) {
         var game = this;
 
         // by default, get code from the editor
@@ -175,13 +238,19 @@ function Game(debugMode, startLevel) {
             loadedFromEditor = true;
         }
 
+        // if we're editing a script file, do something completely different
+        if (this._currentFile !== null && !restartingLevelFromScript) {
+            this.validateAndRunScript(allCode);
+            return;
+        }
+
         // save current display state (for scrolling up later)
         this.display.saveGrid(this.map);
 
         // validate the code
         // if it passes validation, returns the startLevel function if it pass
         // if it fails validation, returns false
-        var validatedStartLevel = this.validate(allCode, playerCode);
+        var validatedStartLevel = this.validate(allCode, playerCode, restartingLevelFromScript);
 
         if (validatedStartLevel) { // code is valid
             // reset the map
@@ -190,7 +259,7 @@ function Game(debugMode, startLevel) {
 
             // save editor state
             __currentCode = allCode;
-            if (loadedFromEditor) {
+            if (loadedFromEditor && !restartingLevelFromScript) {
                 this.editor.saveGoodState();
             }
 
@@ -203,10 +272,11 @@ function Game(debugMode, startLevel) {
 
             // start the level
             validatedStartLevel(this.map);
+            this.clearModifiedGlobals();
 
             // draw the map
             this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
-                game.drawInventory(); // refresh inventory display
+                game.map.refresh(); // refresh inventory display
                 $('#drawingCanvas').show(); // show the drawing canvas again
 
                 // workaround because we can't use writeStatus() in startLevel()

@@ -5,7 +5,8 @@
          "map.refresh"],
     "mapProperties": {
         "allowOverwrite": true
-    }
+    },
+    "music": "Night Owl"
 }
 #END_PROPERTIES#
 /*******************

@@ -1,11 +1,14 @@
-function Map(display, game) {
+function Map(display, __game) {
     /* private variables */
 
     var __player;
     var __grid;
     var __dynamicObjects = [];
     var __objectDefinitions;
+
     var __lines;
+    var __dom;
+    var __domCSS = '';
 
     var __allowOverwrite;
     var __allowMultiMove;
@@ -15,7 +18,6 @@ function Map(display, game) {
 
     /* unexposed variables */
 
-    this._game = game;
     this._display = display;
 
     /* unexposed getters */
@@ -28,18 +30,18 @@ function Map(display, game) {
 
     this.getDynamicObjects = function () { return __dynamicObjects; };
     this.getPlayer = function () { return __player; };
-    this.getWidth = function () { return this._game._dimensions.width; };
-    this.getHeight = function () { return this._game._dimensions.height; };
+    this.getWidth = function () { return __game._dimensions.width; };
+    this.getHeight = function () { return __game._dimensions.height; };
 
     /* unexposed methods */
 
     this._reset = function () {
-        __objectDefinitions = clone(this._game.objects);
+        __objectDefinitions = clone(__game.objects);
         this._display.clear();
-        __grid = new Array(this._game._dimensions.width);
-        for (var x = 0; x < this._game._dimensions.width; x++) {
-            __grid[x] = new Array(this._game._dimensions.height);
-            for (var y = 0; y < this._game._dimensions.height; y++) {
+        __grid = new Array(__game._dimensions.width);
+        for (var x = 0; x < __game._dimensions.width; x++) {
+            __grid[x] = new Array(__game._dimensions.height);
+            for (var y = 0; y < __game._dimensions.height; y++) {
                 __grid[x][y] = {type: 'empty'};
             }
         }
@@ -56,6 +58,15 @@ function Map(display, game) {
         __intervals = [];
 
         __lines = [];
+        __dom = '';
+        this._overrideKeys = {};
+
+        // preload stylesheet for DOM level
+        $.get('styles/dom.css', function (css) {
+            __domCSS = css;
+        });
+
+        this.finalLevel = false;
     };
 
     this._setProperties = function (mapProperties) {
@@ -100,7 +111,7 @@ function Map(display, game) {
     };
 
     this._canMoveTo = function (x, y, myType) {
-        if (x < 0 || x >= this._game._dimensions.width || y < 0 || y >= this._game._dimensions.height) {
+        if (x < 0 || x >= __game._dimensions.width || y < 0 || y >= __game._dimensions.height) {
             return false;
         }
 
@@ -211,7 +222,7 @@ function Map(display, game) {
         }
     };
 
-    this._reenableMovementForPlayer = function(player) {
+    this._reenableMovementForPlayer = function (player) {
         setTimeout(function () {
             player._canMove = true;
         }, __keyDelay);
@@ -230,11 +241,40 @@ function Map(display, game) {
         __dynamicObjects = __dynamicObjects.filter(function (obj) { return !obj._isDestroyed(); });
     }
 
+    /* (unexposed) wrappers for game methods */
+
+    this._endOfStartLevelReached = function() {
+        __game._endOfStartLevelReached = true;
+    };
+
+    this._playSound = function (sound) {
+        __game.sound.playSound(sound);
+    };
+
+    this._validateCallback = function (callback) {
+        return __game.validateCallback(callback);
+    };
+
+    this._writeStatus = function (status) {
+        __game.display.writeStatus(status);
+    }
+
     /* exposed methods */
 
     this.refresh = function () {
-        this._display.drawAll(this);
-        this._game.drawInventory();
+        if (__dom) {
+            this._display.clear();
+
+            var domHTML = __dom[0].outerHTML
+                .replace(/"/g, "'")
+                .replace(/<hr([^>]*)>/g, '<hr $1 />')
+                .replace(/<img([^>]*)>/g, '<img $1 />');
+
+            this._display.renderDom(domHTML, __domCSS);
+        } else {
+            this._display.drawAll(this);
+        }
+        __game.drawInventory();
     };
 
     this.placeObject = function (x, y, type) {
@@ -264,7 +304,7 @@ function Map(display, game) {
         if (__player) {
             throw "Can't place player twice!";
         }
-        __player = new Player(x, y, this);
+        __player = new __game._playerPrototype(x, y, this, __game);
         this._display.drawAll(this);
     };
 
@@ -336,14 +376,14 @@ function Map(display, game) {
     };
 
     this.displayChapter = function(chapterName, cssClass) {
-        if (this._game._displayedChapters.indexOf(chapterName) === -1) {
+        if (__game._displayedChapters.indexOf(chapterName) === -1) {
             $('#chapter').html(chapterName.replace("\n","<br>"));
             $('#chapter').removeClass().show();
 
             if (cssClass) {
                 $('#chapter').addClass(cssClass);
             } else {
-                this._game._displayedChapters.push(chapterName);
+                __game._displayedChapters.push(chapterName);
             }
 
             setTimeout(function () {
@@ -366,8 +406,8 @@ function Map(display, game) {
 
     this.getCanvasCoords = function(obj) {
         return {
-            x: (obj.getX() + 0.5) * 600 / this._game._dimensions.width,
-            y: (obj.getY() + 0.5) * 500 / this._game._dimensions.height
+            x: (obj.getX() + 0.5) * 600 / __game._dimensions.width,
+            y: (obj.getY() + 0.5) * 500 / __game._dimensions.height
         };
     };
 
@@ -400,6 +440,24 @@ function Map(display, game) {
             }
         })
     };
+
+    /* for DOM manipulation level */
+
+    this.getDOM = function () {
+        return __dom;
+    }
+
+    this.createFromDOM = function(dom) {
+        __dom = dom;
+    };
+
+    this.updateDOM = function(dom) {
+        __dom = dom;
+    };
+
+    this.overrideKey = function(keyName, callback) {
+        this._overrideKeys[keyName] = callback;
+    }
 
     /* initialization */
 

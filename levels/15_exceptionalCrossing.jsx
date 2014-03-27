@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "commandsIntroduced": [],
-    "music": "Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name",
+    "music": "The_Waves_Call_Her_Name",
     "startingMessage": "You have lost the Algorithm!"
 }
 #END_PROPERTIES#
