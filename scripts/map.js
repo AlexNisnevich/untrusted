@@ -3,7 +3,7 @@ function Map(display, __game) {
 
     var __player;
     var __grid;
-    var __dynamicObjects;
+    var __dynamicObjects = [];
     var __objectDefinitions;
 
     var __lines;
@@ -13,6 +13,7 @@ function Map(display, __game) {
     var __allowOverwrite;
     var __allowMultiMove;
     var __keyDelay;
+    var __refreshRate;
     var __intervals = [];
     var __chapterHideTimeout;
 
@@ -46,6 +47,9 @@ function Map(display, __game) {
             }
         }
 
+        this.getDynamicObjects().forEach(function (obj) {
+            obj._destroy();
+        })
         __dynamicObjects = [];
         __player = null;
 
@@ -53,6 +57,7 @@ function Map(display, __game) {
             clearInterval(__intervals[i]);
         }
         __intervals = [];
+        __refreshRate = null;
 
         __lines = [];
         __dom = '';
@@ -64,6 +69,15 @@ function Map(display, __game) {
         });
 
         this.finalLevel = false;
+    };
+
+    this._ready = function () {
+        var map = this;
+        if (__refreshRate) {
+            map.startTimer(function () {
+                map.refresh();
+            }, __refreshRate);
+        }
     };
 
     this._setProperties = function (mapProperties) {
@@ -80,6 +94,10 @@ function Map(display, __game) {
 
             if (mapProperties.keyDelay) {
                 __keyDelay = mapProperties.keyDelay;
+            }
+
+            if (mapProperties.refreshRate) {
+                __refreshRate = mapProperties.refreshRate;
             }
         }
     };
@@ -153,8 +171,8 @@ function Map(display, __game) {
         }
 
         // look for dynamic objects
-        for (var i = 0; i < __dynamicObjects.length; i++) {
-            var object = __dynamicObjects[i];
+        for (var i = 0; i < this.getDynamicObjects().length; i++) {
+            var object = this.getDynamicObjects()[i];
             if (object.getType() === type) {
                 foundObjects.push({x: object.getX(), y: object.getY()});
             }
@@ -183,8 +201,8 @@ function Map(display, __game) {
     };
 
     this._isPointOccupiedByDynamicObject = function (x, y) {
-        for (var i = 0; i < __dynamicObjects.length; i++) {
-            var object = __dynamicObjects[i];
+        for (var i = 0; i < this.getDynamicObjects().length; i++) {
+            var object = this.getDynamicObjects()[i];
             if (object.getX() === x && object.getY() === y) {
                 return true;
             }
@@ -199,18 +217,21 @@ function Map(display, __game) {
         // TODO: make this not be the case
 
         // "move" teleporters
-        __dynamicObjects.filter(function (object) {
+        this.getDynamicObjects().filter(function (object) {
             return (object.getType() === 'teleporter');
         }).forEach(function(object) {
             object._onTurn();
         });
 
         // move everything else
-        __dynamicObjects.filter(function (object) {
+        this.getDynamicObjects().filter(function (object) {
             return (object.getType() !== 'teleporter');
         }).forEach(function(object) {
             object._onTurn();
         });
+
+        // refresh only at the end
+        this.refresh();
     };
 
     this._removeItemFromMap = function (x, y, klass) {
@@ -233,6 +254,10 @@ function Map(display, __game) {
             $('#chapter').fadeOut(1000);
         }, $('#chapter').hasClass('death') ? 2500 : 0);
     };
+
+    this._refreshDynamicObjects = function() {
+        __dynamicObjects = __dynamicObjects.filter(function (obj) { return !obj._isDestroyed(); });
+    }
 
     /* (unexposed) wrappers for game methods */
 
