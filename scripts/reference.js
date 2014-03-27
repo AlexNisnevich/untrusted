@@ -36,6 +36,18 @@ Game.prototype.reference = {
         'description': 'Determines the color (and, optionally, other properties) of the next lines drawn.'
     },
 
+    'global.$': {
+        'name': '$(html)',
+        'category': 'global',
+        'type': 'method',
+        'description': 'When passed an HTML string, $ returns a corresponding <a onclick="$(\'#helpPaneSidebar .category#jQuery\').click();">jQuery</a> instance.'
+    },
+    'global.objective': {
+        'name': 'objective(map)',
+        'category': 'global',
+        'type': 'method',
+        'description': 'The player exits the level as soon as this method returns true.'
+    },
     'global.onExit': {
         'name': 'onExit(map)',
         'category': 'global',
@@ -61,6 +73,73 @@ Game.prototype.reference = {
         'description': 'Instantiates a Maze object of given width and height. The Maze object can create a maze by calling maze.create(callback), where the callback is a function that accepts (x, y, mapValue) and performs some action for each point in a grid, where mapValue is a boolean that is true if and only if the given point is part of the maze.'
     },
 
+    'jQuery.addClass': {
+        'name': 'jQueryObject.addClass(class)',
+        'category': 'jQuery',
+        'type': 'method',
+        'description': 'Adds the given CSS class to the DOM element(s) specified by the jQuery object.'
+    },
+    'jQuery.children': {
+        'name': 'jQueryObject.children()',
+        'category': 'jQuery',
+        'type': 'method',
+        'description': 'Returns the children of the DOM element specified by the jQuery object, as a jQuery array.'
+    },
+    'jQuery.find': {
+        'name': 'jQueryObject.find(selector)',
+        'category': 'jQuery',
+        'type': 'method',
+        'description': 'Returns all elements in the DOM tree specified by the jQuery object that match the given CSS selector, as a jQuery array.'
+    },
+    'jQuery.first': {
+        'name': 'jQueryObject.first()',
+        'category': 'jQuery',
+        'type': 'method',
+        'description': 'Returns the first element of a jQuery array.'
+    },
+    'jQuery.hasClass': {
+        'name': 'jQueryObject.hasClass(class)',
+        'category': 'jQuery',
+        'type': 'method',
+        'description': 'Returns true if and only if the DOM element specified by the jQuery object has the given CSS class.'
+    },
+    'jQuery.length': {
+        'name': 'jQueryObject.length',
+        'category': 'jQuery',
+        'type': 'property',
+        'description': 'Returns the number of elements in a jQuery array.'
+    },
+    'jQuery.next': {
+        'name': 'jQueryObject.next()',
+        'category': 'jQuery',
+        'type': 'property',
+        'description': 'Returns the next sibling of the DOM element specified by the jQuery object.'
+    },
+    'jQuery.parent': {
+        'name': 'jQueryObject.parent()',
+        'category': 'jQuery',
+        'type': 'method',
+        'description': 'Returns the parent of the DOM element specified by the jQuery object.'
+    },
+    'jQuery.prev': {
+        'name': 'jQueryObject.prev()',
+        'category': 'jQuery',
+        'type': 'property',
+        'description': 'Returns the previous sibling of the DOM element specified by the jQuery object.'
+    },
+    'jQuery.removeClass': {
+        'name': 'jQueryObject.removeClass(class)',
+        'category': 'jQuery',
+        'type': 'method',
+        'description': 'Removes the given CSS class from the DOM element(s) specified by the jQuery object.'
+    },
+
+    'map.createFromDOM': {
+        'name': 'map.createFromDOM($html)',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Creates the map from a <a onclick="$(\'#helpPaneSidebar .category#jQuery\').click();">jQuery</a> instance, rendering the map as a DOM (document object model) rather than a grid.'
+    },
     'map.createFromGrid': {
         'name': 'map.createFromGrid(grid, tiles, xOffset, yOffset)',
         'category': 'map',
@@ -96,6 +175,12 @@ Game.prototype.reference = {
         'category': 'map',
         'type': 'method',
         'description': 'Returns {"x": x, "y": y}, where x and y are the respective coordinates of the given object on the canvas returned by map.getCanvasContext().'
+    },
+    'map.getDOM': {
+        'name': 'map.getDOM()',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Returns the <a onclick="$(\'#helpPaneSidebar .category#jQuery\').click();">jQuery</a> instance representing the map.'
     },
     'map.getDynamicObjects': {
         'name': 'map.getDynamicObjects()',
@@ -133,6 +218,12 @@ Game.prototype.reference = {
         'type': 'method',
         'description': 'Returns the width of the map, in pixels.'
     },
+    'map.overrideKey': {
+        'name': 'map.overrideKey(key, callback)',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Overrides the action performed by pressing the given key (<i>left</i>, <i>right</i>, <i>up</i>, or <i>down</i>).'
+    },
     'map.placeObject': {
         'name': 'map.placeObject(x, y, objectType)',
         'category': 'map',
@@ -162,6 +253,12 @@ Game.prototype.reference = {
         'category': 'map',
         'type': 'method',
         'description': 'Starts a timer (c.f. setInterval) of the given delay, in milliseconds (minimum 25 ms).'
+    },
+    'map.updateDOM': {
+        'name': 'map.updateDOM($html)',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Updates the <a onclick="$(\'#helpPaneSidebar .category#jQuery\').click();">jQuery</a> instance representing the map.'
     },
     'map.validateAtLeastXObjects': {
         'name': 'map.validateAtLeastXObjects(num, objectType)',

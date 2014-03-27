@@ -18,7 +18,6 @@
  * THIS IS IT! NO FARTHER DR. EVAL!!!!
  * YOU WILL NOT GET OUT OF HERE ALIVE!!!!
  * FACE MY ROBOT WRATH!!!!!
- *
  */
 
 function startLevel(map) {

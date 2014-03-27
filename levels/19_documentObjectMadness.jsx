@@ -1,23 +1,32 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "0.1",
+    "commandsIntroduced":
+        ["global.objective", "map.getDOM", "map.createFromDOM",
+         "map.updateDOM", "map.overrideKey", "global.$",
+         "jQuery.find", "jQuery.addClass", "jQuery.hasClass",
+         "jQuery.removeClass", "jQuery.parent", "jQuery.length",
+         "jQuery.children", "jQuery.first", "jQuery.next",
+         "jQuery.prev"],
     "music": "BossLoop"
 }
 #END_PROPERTIES#
-/**********************
+/****************************
  * documentObjectMadness.js *
- **********************
+ ****************************
  *
- * I can't believe it! I can't believe you made it onto Department of
- * Theoretical Computation's web server!  YOU SHOULD HAVE BEEN DELETED! This
- * shouldn't even be possible! What the hell were the IT folks thinking?
+ * I can't believe it! I can't believe you made it onto
+ * Department of Theoretical Computation's web server!
+ * YOU SHOULD HAVE BEEN DELETED! This shouldn't even be
+ * possible! What the hell were the IT folks thinking?
  *
- * No matter. I still have the Algorithm. That's the important part. The rest
- * is just implementation, and how hard could that be?
+ * No matter. I still have the Algorithm. That's the
+ * important part. The rest is just implementation, and
+ * how hard could that be?
  *
- * Anyway you're not going to make it out of this one, my good Doctor. After
- * all, you're a tenured professor with a well-respected history of research -
- * you probably don't know jQuery!
- *
+ * Anyway you're not going to catch me now, my good Doctor.
+ * After all, you're a tenured professor with a well-respected
+ * history of research - you probably don't know jQuery!
  */
 
 function objective(map) {
@@ -98,7 +107,7 @@ function startLevel(map) {
     function moveToPreviousSibling(className) {
         var currentPosition = $dom.find('.' + className);
         if (currentPosition.prev().length > 0) {
-            currentPosition.prev().first().addClass(className);
+            currentPosition.prev().addClass(className);
             currentPosition.removeClass(className);
             map.updateDOM($dom);
         }
@@ -107,7 +116,7 @@ function startLevel(map) {
     function moveToNextSibling(className) {
         var currentPosition = $dom.find('.' + className);
         if (currentPosition.next().length > 0) {
-            currentPosition.next().first().addClass(className);
+            currentPosition.next().addClass(className);
             currentPosition.removeClass(className);
             map.updateDOM($dom);
         }
