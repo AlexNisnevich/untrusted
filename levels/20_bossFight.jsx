@@ -1,8 +1,10 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "0.1",
 	"music": "Adversity",
     "mapProperties": {
-        "refreshRate": 50
+        "refreshRate": 50,
+        "quickValidateCallback": true
     }
 }
 #END_PROPERTIES#

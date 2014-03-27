@@ -11,14 +11,15 @@ function Map(display, __game) {
     var __domCSS = '';
 
     var __allowOverwrite;
-    var __allowMultiMove;
     var __keyDelay;
     var __refreshRate;
+
     var __intervals = [];
     var __chapterHideTimeout;
 
     /* unexposed variables */
 
+    this._properties = {};
     this._display = display;
 
     /* unexposed getters */
@@ -57,7 +58,7 @@ function Map(display, __game) {
             clearInterval(__intervals[i]);
         }
         __intervals = [];
-        __refreshRate = null;
+
 
         __lines = [];
         __dom = '';
@@ -82,12 +83,15 @@ function Map(display, __game) {
 
     this._setProperties = function (mapProperties) {
         // set defaults
+        this._properties = {};
         __allowOverwrite = false;
-        __allowMultiMove = false;
         __keyDelay = 0;
+        __refreshRate = null;
 
         // now set any properties that were passed in
         if (mapProperties) {
+            this._properties = mapProperties;
+
             if (mapProperties.allowOverwrite === true) {
                 __allowOverwrite = true;
             }

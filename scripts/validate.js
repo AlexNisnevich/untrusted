@@ -116,8 +116,9 @@ Game.prototype.validateCallback = function(callback) {
             throw e;
         }
 
-        // on level 20, we can't afford to do any of this stuff (too many objects)
-        if (this._currentLevel != 20) {
+        // on maps with many objects (e.g. boss fight),
+        // we can't afford to do these steps
+        if (!this.map._properties.quickValidateCallback) {
             this.clearModifiedGlobals();
 
             // refresh the map, just in case
