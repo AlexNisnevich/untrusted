@@ -1,6 +1,9 @@
 #BEGIN_PROPERTIES#
 {
-	"music": "Adversity"
+	"music": "Adversity",
+    "mapProperties": {
+        "refreshRate": 50
+    }
 }
 #END_PROPERTIES#
 
