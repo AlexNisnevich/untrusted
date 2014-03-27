@@ -59,18 +59,20 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             throw 'startLevel() returned prematurely!';
         }
 
+        this.validateLevel = function () { return true; };
         // does validateLevel() succeed?
-        if (typeof(validateLevel) !== 'undefined' && validateLevel != null) {
+        if (typeof(validateLevel) === "function") {
+            this.validateLevel = validateLevel;
             validateLevel(dummyMap);
         }
 
         this.onExit = function () { return true; };
-        if (typeof onExit !== "undefined") {
+        if (typeof onExit === "function") {
             this.onExit = onExit;
         }
 
         this.objective = function () { return false; };
-        if (typeof objective !== "undefined") {
+        if (typeof objective === "function") {
             this.objective = objective;
         }
 
@@ -93,15 +95,14 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback) {
-    this._eval(this.editor.getGoodState(this._currentLevel).code); // get validateLevel method from last good state (if such a method exists)
     try {
         // run the callback
         callback();
 
         // check if validator still passes
         try {
-            if (typeof(validateLevel) !== 'undefined' && validateLevel != null) {
-                validateLevel(this.map);
+            if (typeof(this.validateLevel) === 'function') {
+                this.validateLevel(this.map);
             }
         } catch (e) {
             // validation failed - not much to do here but restart the level, unfortunately
@@ -115,7 +116,9 @@ Game.prototype.validateCallback = function(callback) {
             throw e;
         }
 
-        this.clearModifiedGlobals();
+        // Note: this is commented out because it was slowing dow 20_bossFight too much.
+        // TODO: find a way to resolve that.
+        // this.clearModifiedGlobals();
 
         // refresh the map, just in case
         this.map.refresh();
