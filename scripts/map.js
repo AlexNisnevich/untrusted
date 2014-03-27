@@ -57,6 +57,7 @@ function Map(display, __game) {
             clearInterval(__intervals[i]);
         }
         __intervals = [];
+        __refreshRate = null;
 
         __lines = [];
         __dom = '';
