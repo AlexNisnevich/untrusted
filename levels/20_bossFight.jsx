@@ -19,8 +19,9 @@
 function startLevel(map) {
 	map.defineObject('boss', {
         'type': 'dynamic',
-        'symbol': 'X',
+        'symbol': 'v',
         'color': 'red',
+        'interval': 200,
         'onCollision': function (player) {
             player.killedBy('the boss');
         },
@@ -43,6 +44,7 @@ function startLevel(map) {
         'type': 'dynamic',
         'symbol': '.',
         'color': 'red',
+        'interval': 100,
         'disappearOnCollision': true,
         'onCollision': function (player) {
             player.killedBy('a bullet');
@@ -66,12 +68,27 @@ function startLevel(map) {
     map.placeObject(17, 5, 'boss');
     map.placeObject(19, 5, 'boss');
     map.placeObject(21, 5, 'boss');
+    map.placeObject(23, 5, 'boss');
+    map.placeObject(25, 5, 'boss');
+    map.placeObject(27, 5, 'boss');
+    map.placeObject(29, 5, 'boss');
+    map.placeObject(31, 5, 'boss');
+
     map.placeObject(10, 6, 'boss');
     map.placeObject(12, 6, 'boss');
     map.placeObject(14, 6, 'boss');
     map.placeObject(16, 6, 'boss');
     map.placeObject(18, 6, 'boss');
     map.placeObject(20, 6, 'boss');
+    map.placeObject(22, 6, 'boss');
+    map.placeObject(24, 6, 'boss');
+    map.placeObject(26, 6, 'boss');
+    map.placeObject(28, 6, 'boss');
+    map.placeObject(30, 6, 'boss');
+
+#BEGIN_EDITABLE#
+
+#END_EDITABLE#
 
 #END_OF_START_LEVEL#
 }
