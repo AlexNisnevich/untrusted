@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "0.3.1",
     "music": "Brazil"
 }
 #END_PROPERTIES#
@@ -13,13 +14,13 @@
         [20, 2, "- or -"],
         [5, 3, "THE CONTINUING ADVENTURES OF DR. EVAL"],
         [1, 4, "{"],
-        [1, 5, "a_game_by: 'Alex Nisnevich and Greg Shuflin',"],
-        [1, 7, "special_thanks_to: {"],
-        [5, 8, "Dmitry_Mazin: 'design and code',"],
-        [5, 9, "Jordan_Arnesen: 'level design',"],
-        [5, 10, "Natasha_HullRichter: 'playtesting'"],
-        [3, 11, "},"],
-        [1, 13, "music_by: "],
+        [2, 5, "a_game_by: 'Alex Nisnevich and Greg Shuflin',"],
+        [2, 7, "special_thanks_to: {"],
+        [5, 8, "Dmitry_Mazin: ['design', 'code'],"],
+        [5, 9, "Jordan_Arnesen: ['levels'],"],
+        [5, 10, "Natasha_HullRichter: ['levels','playtesting']"],
+        [2, 11, "},"],
+        [2, 13, "music_by: "],
         [5, 14, "['Jonathan Holliday',"],
         [5, 15, "'Dmitry Mazin',"],
         [5, 16, "'Revolution Void',"],
@@ -33,25 +34,29 @@
         [30, 15, "'RoccoW',"],
         [30, 16, "'That Andy Guy',"],
         [30, 17, "'Obsibilo',"],
-        [30, 18, "'Radio Scotvoid',"],
+        [30, 18, "'BLEO',"],
         [30, 19, "'Rolemusic',"],
         [30, 20, "'Seropard',"],
         [30, 21, "'Vernon Lenoir',"],
-        [15, map.getHeight() - 2, "Thank_you: 'for playing!'}"]
+        [15, map.getHeight() - 2, "Thank_you: 'for playing!'"],
+        [1, map.getHeight() - 1, "}"]
     ];
 
-    function drawCredits() {
-        for (var i =credits.length-1; i >= 0; i--) {
-            var cur = credits[i];
-            var prev = (i > 0) ? credits[i-1] : null;
-            map._display.drawText(cur[0], cur[1], cur[2]);
-            if (prev) {
-                map._display.drawText(prev[0], prev[1], prev[2]);
-            }
+    function drawCredits(i) {
+        if (i >= credits.length) {
+            return;
         }
+
+        // redraw lines bottom to top to avoid cutting off letters
+        for (var j = i; j >= 0; j--) {
+            var line = credits[j];
+            map._display.drawText(line[0], line[1], line[2]);
+        }
+
+        setTimeout(function () {drawCredits(i+1);}, 2000)
     }
 
-    setTimeout(drawCredits, 4000);
+    setTimeout(function () {drawCredits(0);}, 4000);
 
 #END_OF_START_LEVEL#
 }
