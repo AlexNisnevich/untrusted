@@ -65,6 +65,7 @@ Game.prototype.enableButtons = function () {
 
     $('#notepadButton').click( function () {
         game.sound.playSound('select');
+        $('#helpPane, #menuPane').hide();
         $('#notepadPane').toggle();
         game.notepadEditor.refresh();
         return true;
@@ -150,6 +151,7 @@ Game.prototype.openMenu = function () {
         levelButton.appendTo('#menuPane #levels');
     });
 
+    $('#helpPane, #notepadPane').hide();
     $('#menuPane').toggle();
 };
 
@@ -253,6 +255,7 @@ Game.prototype.openHelp = function () {
     });
 
     if (!$('#helpPane').is(':visible')) {
+        $('#menuPane, #notepadPane').hide();
         $('#helpPane').show();
         $('#helpPaneSidebar .category#global').click();
     } else {
