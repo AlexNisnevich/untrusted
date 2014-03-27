@@ -142,7 +142,7 @@ function Map(display, __game) {
                 try {
                     return !object.impassable(__player, object);
                 } catch (e) {
-                    this._display.writeStatus(e);
+                    display.writeStatus(e.toString());
                 }
             } else {
                 // the obstacle is always impassable
@@ -274,7 +274,7 @@ function Map(display, __game) {
     };
 
     this._writeStatus = function (status) {
-        __game.display.writeStatus(status);
+        display.writeStatus(status);
     }
 
     /* exposed methods */

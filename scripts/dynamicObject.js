@@ -41,7 +41,7 @@ function DynamicObject(map, type, x, y) {
                 //each other
                 if (__x === player.getX() && __y === player.getY()) {
                     if (__definition.onCollision) {
-                        __definition.onCollision(player, this);
+                        __definition.onCollision(player, me);
                     }
                 }
 
@@ -52,6 +52,7 @@ function DynamicObject(map, type, x, y) {
                 }
             } catch (e) {
                 map._writeStatus(e.toString());
+                throw e;
             }
         }
 
