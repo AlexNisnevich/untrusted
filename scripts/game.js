@@ -32,7 +32,7 @@ function Game(debugMode, startLevel) {
         '17_pointers.jsx',
         '18_superDrEvalBros.jsx',
         '19_documentObjectMadness.jsx',
-        //'20_bossFight.jsx',
+        '20_bossFight.jsx',
         '21_theEnd.jsx',
         'XX_credits.jsx'
     ];
@@ -285,6 +285,8 @@ function Game(debugMode, startLevel) {
                     game.display.writeStatus(game.editor.getProperties().startingMessage);
                 }
             });
+
+            this.map._ready();
 
             // start bg music for this level
             if (this.editor.getProperties().music) {

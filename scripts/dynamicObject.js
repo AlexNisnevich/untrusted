@@ -6,9 +6,13 @@ function DynamicObject(map, type, x, y) {
     var __type = type;
     var __definition = map._getObjectDefinition(type);
     var __inventory = [];
+    var __destroyed = false;
     var __myTurn = true;
+    var __timer = null;
 
     /* unexposed methods */
+
+    this._isDestroyed = function () { return __destroyed; };
 
     this._computeDestination = function (startX, startY, direction) {
         switch (direction) {
@@ -27,26 +31,36 @@ function DynamicObject(map, type, x, y) {
         var me = this;
         var player = map.getPlayer();
 
-        __myTurn = true;
+        function executeTurn() {
+            __myTurn = true;
 
-        try {
-            //we need to check for a collision with the player *after*
-            //the player has moved but *before* the object itself moves
-            //this prevents a bug where players and objects can 'pass through'
-            //each other
-            if (__x === player.getX() && __y === player.getY()) {
-                if (__definition.onCollision) {
-                    __definition.onCollision(player, this);
+            try {
+                //we need to check for a collision with the player *after*
+                //the player has moved but *before* the object itself moves
+                //this prevents a bug where players and objects can 'pass through'
+                //each other
+                if (__x === player.getX() && __y === player.getY()) {
+                    if (__definition.onCollision) {
+                        __definition.onCollision(player, this);
+                    }
                 }
-            }
 
-            if (__definition.behavior !== null) {
-                map._validateCallback(function () {
-                    __definition.behavior(me, player);
-                });
+                if (__definition.behavior !== null) {
+                    map._validateCallback(function () {
+                        __definition.behavior(me, player);
+                    });
+                }
+            } catch (e) {
+                map._writeStatus(e.toString());
             }
-        } catch (e) {
-            map._writeStatus(e.toString());
+        }
+
+        if (__definition.interval) {
+            if (!__timer) {
+                __timer = setInterval(executeTurn, __definition.interval);
+            }
+        } else {
+            executeTurn();
         }
     };
 
@@ -59,6 +73,12 @@ function DynamicObject(map, type, x, y) {
             map._playSound('pickup');
         }
     };
+
+    this._destroy = function () {
+        __destroyed = true;
+        clearInterval(__timer);
+        map._refreshDynamicObjects(); // remove this object from map's __dynamicObjects list
+    }
 
     /* exposed methods */
 
@@ -99,7 +119,10 @@ function DynamicObject(map, type, x, y) {
             __x = dest.x;
             __y = dest.y;
             this._afterMove(__x, __y);
-            map.refresh();
+        } else {
+            if (__definition.disappearOnCollision) {
+                this._destroy();
+            }
         }
 
         __myTurn = false;
@@ -129,4 +152,9 @@ function DynamicObject(map, type, x, y) {
 
         this.target = target;
     };
+
+    // constructor
+    if (__definition.interval) {
+        this._onTurn();
+    }
 }
