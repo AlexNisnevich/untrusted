@@ -1,6 +1,7 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": ["map.getAdjacentEmptyCells"]
+    "commandsIntroduced": ["map.getAdjacentEmptyCells"],
+    "music": "Searching"
 }
 #END_PROPERTIES#
 /*

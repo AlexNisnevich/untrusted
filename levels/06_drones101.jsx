@@ -2,7 +2,8 @@
 {
 	"commandsIntroduced":
         ["object.type", "object.behavior", "object.findNearest",
-         "object.getX", "object.getY", "object.canMove", "object.move"]
+         "object.getX", "object.getY", "object.canMove", "object.move"],
+    "music": "GameScratch"
 }
 #END_PROPERTIES#
 

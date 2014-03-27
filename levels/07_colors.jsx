@@ -3,7 +3,8 @@
     "commandsIntroduced":
         ["map.defineObject", "player.getColor", "player.setColor",
          "object.color", "object.impassable", "object.symbol",
-         "player.setPhoneCallback"]
+         "player.setPhoneCallback"],
+    "music": "Y"
 }
 #END_PROPERTIES#
 /*************

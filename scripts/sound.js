@@ -140,7 +140,7 @@ function Sound() {
         }
     };
 
-    this.defaultTracks = [
+    this.defaultTracks = [ // (not currently used, as all levels now have explicit tracks)
         'GameScratch',
         'Y',
         'Searching',
