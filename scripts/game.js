@@ -34,7 +34,7 @@ function Game(debugMode, startLevel) {
         '19_documentObjectMadness.jsx',
         '20_bossFight.jsx',
         '21_theEnd.jsx',
-        'XX_credits.jsx'
+        '_credits.jsx'
     ];
 
     this._viewableScripts = [
