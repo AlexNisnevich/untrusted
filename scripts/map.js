@@ -21,6 +21,7 @@ function Map(display, __game) {
 
     this._properties = {};
     this._display = display;
+    this._dummy = false; // overridden by dummyMap in validate.js
 
     /* unexposed getters */
 
@@ -39,7 +40,9 @@ function Map(display, __game) {
 
     this._reset = function () {
         __objectDefinitions = clone(__game.objects);
+
         this._display.clear();
+
         __grid = new Array(__game._dimensions.width);
         for (var x = 0; x < __game._dimensions.width; x++) {
             __grid[x] = new Array(__game._dimensions.height);
@@ -50,7 +53,7 @@ function Map(display, __game) {
 
         this.getDynamicObjects().forEach(function (obj) {
             obj._destroy();
-        })
+        });
         __dynamicObjects = [];
         __player = null;
 
@@ -58,7 +61,6 @@ function Map(display, __game) {
             clearInterval(__intervals[i]);
         }
         __intervals = [];
-
 
         __lines = [];
         __dom = '';

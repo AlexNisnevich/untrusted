@@ -31,6 +31,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         }
 
         var dummyMap = new Map(new DummyDisplay(), this);
+        dummyMap._dummy = true;
         dummyMap._setProperties(this.editor.getProperties().mapProperties);
 
         // modify the code to always check time to prevent infinite loops

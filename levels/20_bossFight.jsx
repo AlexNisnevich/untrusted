@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "0.1",
+    "version": "0.1.6",
 	"music": "Adversity",
     "mapProperties": {
         "refreshRate": 50,

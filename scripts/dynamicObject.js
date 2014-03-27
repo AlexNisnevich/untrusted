@@ -78,7 +78,7 @@ function DynamicObject(map, type, x, y) {
         __destroyed = true;
         clearInterval(__timer);
         map._refreshDynamicObjects(); // remove this object from map's __dynamicObjects list
-    }
+    };
 
     /* exposed methods */
 
@@ -154,7 +154,8 @@ function DynamicObject(map, type, x, y) {
     };
 
     // constructor
-    if (__definition.interval) {
+
+    if (!map._dummy && __definition.interval) {
         this._onTurn();
     }
 }
