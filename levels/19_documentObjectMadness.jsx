@@ -32,7 +32,7 @@ function startLevel(map) {
         "<table border='0'><tr valign='top'>" +
             "<td><div id='face' /></td>" +
             "<td>" +
-                "<h2>Cornelius Eval</h2>" +
+                "<h2 class=facultyName>Cornelius Eval</h2>" +
                 "<h3>Associate Professor of Computer Science</h3>" +
                 "<ul>" +
                     "<li>BS, Mathematics, University of Manitoba</li>" +
@@ -73,8 +73,8 @@ function startLevel(map) {
 
     var $dom = $(html);
 
-    $dom.find('ul').addClass('drEval');
-    $dom.find('h2').addClass('adversary');
+    $dom.find('.facultyName').addClass('drEval');
+    $dom.find('cite').addClass('adversary');
 
     function moveToParent(className) {
         var currentPosition = $dom.find('.' + className);
