@@ -214,6 +214,9 @@ function Map(display, __game) {
         }).forEach(function(object) {
             object._onTurn();
         });
+
+        // refresh only at the end
+        this.refresh();
     };
 
     this._removeItemFromMap = function (x, y, klass) {
