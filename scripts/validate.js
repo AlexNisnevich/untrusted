@@ -116,12 +116,13 @@ Game.prototype.validateCallback = function(callback) {
             throw e;
         }
 
-        // Note: this is commented out because it was slowing dow 20_bossFight too much.
-        // TODO: find a way to resolve that.
-        // this.clearModifiedGlobals();
+        // on level 20, we can't afford to do any of this stuff (too many objects)
+        if (this._currentLevel != 20) {
+            this.clearModifiedGlobals();
 
-        // refresh the map, just in case
-        this.map.refresh();
+            // refresh the map, just in case
+            this.map.refresh();
+        }
     } catch (e) {
         this.display.writeStatus(e.toString());
         throw e; // for debugging
