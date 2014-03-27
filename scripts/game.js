@@ -139,7 +139,7 @@ function Game(debugMode, startLevel) {
 
     this._moveToNextLevel = function () {
         // is the player permitted to exit?
-        if (!this.onExit(this.map)) {
+        if (typeof this.onExit === 'function' && !this.onExit(this.map)) {
             this.sound.playSound('blip');
             return;
         }
