@@ -52,7 +52,6 @@ function DynamicObject(map, type, x, y) {
                 }
             } catch (e) {
                 map._writeStatus(e.toString());
-                throw e;
             }
         }
 
