@@ -110,9 +110,15 @@ function DynamicObject(map, type, x, y) {
         var nearestObj = map._findNearestToPoint("anyDynamic", dest.x, dest.y);
 
         // check for collision with player
-        if (map.getPlayer().atLocation(dest.x, dest.y) && __definition.onCollision) {
+        if (map.getPlayer().atLocation(dest.x, dest.y) &&
+                (__definition.onCollision || __definition.projectile)) {
             // trigger collision
-            __definition.onCollision(map.getPlayer(), this);
+            if (__definition.projectile) {
+                // projectiles automatically kill
+                map.getPlayer().killedBy('a ' + __type);
+            } else {
+                __definition.onCollision(map.getPlayer(), this);
+            }
         } else if (map._canMoveTo(dest.x, dest.y, __type) &&
                 !map._isPointOccupiedByDynamicObject(dest.x, dest.y)) {
             // move the object
@@ -120,8 +126,15 @@ function DynamicObject(map, type, x, y) {
             __y = dest.y;
             this._afterMove(__x, __y);
         } else {
-            if (__definition.disappearOnCollision) {
+            // cannot move
+            if (__definition.projectile) {
+                // projectiles disappear when they cannot move
                 this._destroy();
+
+                // projectiles also destroy any dynamic objects they touch
+                if (map._isPointOccupiedByDynamicObject(dest.x, dest.y)) {
+                    map._findDynamicObjectAtPoint(dest.x, dest.y)._destroy();
+                }
             }
         }
 

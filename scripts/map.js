@@ -76,9 +76,17 @@ function Map(display, __game) {
 
     this._ready = function () {
         var map = this;
+
+        // set refresh rate if one is specified
         if (__refreshRate) {
             map.startTimer(function () {
+                // refresh the map
                 map.refresh();
+
+                // check for nonstandard victory condition
+                if (typeof(__game.objective) === 'function' && __game.objective(map)) {
+                    __game._moveToNextLevel();
+                }
             }, __refreshRate);
         }
     };
@@ -214,7 +222,17 @@ function Map(display, __game) {
             }
         }
         return false;
-    }
+    };
+
+    this._findDynamicObjectAtPoint = function (x, y) {
+        for (var i = 0; i < this.getDynamicObjects().length; i++) {
+            var object = this.getDynamicObjects()[i];
+            if (object.getX() === x && object.getY() === y) {
+                return object;
+            }
+        }
+        return false;
+    };
 
     this._moveAllDynamicObjects = function () {
         // the way things work right now, teleporters must take precedence

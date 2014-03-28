@@ -235,7 +235,7 @@ body {
 
 #menuPane.expanded {
 	width: 720px;
-	height: 300px;
+	height: 320px;
 }
 
 #menuPane.expanded #rightMenuPane {
@@ -245,7 +245,7 @@ body {
 #leftMenuPane {
 	float: left;
 	width: 130px;
-	height: 300px;
+	height: 320px;
 	background: rgb(27, 90, 158);
 	margin-right: 8px;
 	display: none;

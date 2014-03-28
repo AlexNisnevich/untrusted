@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "0.3",
+    "version": "0.3.1",
 	"music": "Adversity",
     "mapProperties": {
         "refreshRate": 50,
@@ -12,7 +12,6 @@
 /*****************
  * bossFight.js *
  *****************
- *
  *
  * DAMN IT!! DAMN IT!!! HOW DID YOU GET THIS FAR!?!?!?!
  * THIS IS IT! NO FARTHER DR. EVAL!!!!
@@ -39,7 +38,7 @@ function startLevel(map) {
         		me.direction = (me.direction == 'right') ? 'left' : 'right';
         	}
         	if (Math.random() < 0.3) {
-            	map.placeObject(me.getX(), me.getY() + 1, 'bullet');
+            	map.placeObject(me.getX(), me.getY() + 2, 'bullet');
         	}
         }
     });
@@ -49,10 +48,7 @@ function startLevel(map) {
         'symbol': '.',
         'color': 'red',
         'interval': 100,
-        'disappearOnCollision': true,
-        'onCollision': function (player) {
-            player.killedBy('a bullet');
-        },
+        'projectile': true,
         'behavior': function (me) {
             me.move('down');
         }
@@ -110,6 +106,18 @@ function startLevel(map) {
 }
 
 function validateLevel(map) {
+    // called at start of level and whenever a callback executes
     map.validateAtMostXObjects(59, 'block');
     map.validateExactlyXManyObjects(0, 'exit');
+    map.validateAtMostXObjects(1, 'phone');
+
+    // only called at start of level
+    //if (map.isStartOfLevel()) {
+    //    map.validateExactlyXManyDynamicObjects(23);
+    //    map.validateNoTimers();
+    //}
+}
+
+function objective(map) {
+    return (map._countObjects('boss') == 0);
 }

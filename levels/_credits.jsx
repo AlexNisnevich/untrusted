@@ -21,7 +21,7 @@
         [5, 10, "Natasha_HullRichter: ['levels','playtesting']"],
         [2, 11, "},"],
         [2, 13, "music_by: "],
-        [5, 14, "['Jonathan Holliday',"],
+        [4, 14, "['Jonathan Holliday',"],
         [5, 15, "'Dmitry Mazin',"],
         [5, 16, "'Revolution Void',"],
         [5, 17, "'Fex',"],
