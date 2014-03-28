@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "0.1.6",
+    "version": "0.3",
 	"music": "Adversity",
     "mapProperties": {
         "refreshRate": 50,
@@ -59,11 +59,23 @@ function startLevel(map) {
     });
 
     map.placePlayer(0, map.getHeight() - 3);
+
+    // Not so tough now, huh?
+    map.getPlayer().removeItem('phone');
+    map.placeObject(map.getWidth() - 1, map.getHeight() - 3, 'phone');
+
     map.placeObject(0, map.getHeight() - 4, 'block');
     map.placeObject(1, map.getHeight() - 4, 'block');
+    map.placeObject(2, map.getHeight() - 4, 'block');
+    map.placeObject(2, map.getHeight() - 3, 'block');
     map.placeObject(map.getWidth() - 1, map.getHeight() - 4, 'block');
     map.placeObject(map.getWidth() - 2, map.getHeight() - 4, 'block');
-    map.placeObject(map.getWidth() - 1, map.getHeight() - 3, 'exit');
+    map.placeObject(map.getWidth() - 3, map.getHeight() - 4, 'block');
+    map.placeObject(map.getWidth() - 3, map.getHeight() - 3, 'block');
+
+    for (var x = 0; x < map.getWidth(); x++) {
+        map.placeObject(x, 4, 'block');
+    }
 
     map.placeObject(9, 5, 'boss');
     map.placeObject(11, 5, 'boss');
@@ -95,4 +107,9 @@ function startLevel(map) {
 #END_EDITABLE#
 
 #END_OF_START_LEVEL#
+}
+
+function validateLevel(map) {
+    map.validateAtMostXObjects(59, 'block');
+    map.validateExactlyXManyObjects(0, 'exit');
 }

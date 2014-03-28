@@ -99,6 +99,7 @@ Game.prototype.objects = {
             $('#phoneButton').show();
         },
         'onDrop': function (game) {
+            game.display.writeStatus('You have lost the function phone!');
             $('#phoneButton').hide();
         }
     },
