@@ -234,7 +234,7 @@ body {
 }
 
 #menuPane.expanded {
-	width: 720px;
+	width: 725px;
 	height: 320px;
 }
 
@@ -294,7 +294,7 @@ body {
 .pop_up_box {
 	position: absolute;
 	height: 360px;
-	width: 580px;
+	width: 585px;
 	top: 50px;
 	left: 300px;
 	z-index: 9000;
@@ -307,7 +307,7 @@ body {
 	background-color: black;
 	border: 2px solid white;
 	color: white;
-	width: 183px;
+	width: 184px;
 	padding: 4px;
 	margin: 5px;
 	cursor: pointer;

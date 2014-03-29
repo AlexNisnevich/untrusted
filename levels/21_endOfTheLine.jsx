@@ -6,12 +6,14 @@
 }
 #END_PROPERTIES#
 
-/*************
- * theEnd.js *
- *************
+/*******************
+ * endOfTheLine.js *
+ *******************
  *
  * If you're reading this, you must have defeated me and taken
- * the Algorithm. Unfortunately for you, you'll still never
+ * the Algorithm. I suppose some congratulations are in order.
+ *
+ * Unfortunately for you, you'll still never
  * be able to get out of this world.
  *
  *           All the best,

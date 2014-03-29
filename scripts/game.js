@@ -33,7 +33,7 @@ function Game(debugMode, startLevel) {
         '18_superDrEvalBros.jsx',
         '19_documentObjectMadness.jsx',
         '20_bossFight.jsx',
-        '21_theEnd.jsx',
+        '21_endOfTheLine.jsx',
         '_credits.jsx'
     ];
 
