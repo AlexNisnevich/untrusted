@@ -22,6 +22,7 @@ function Map(display, __game) {
     this._properties = {};
     this._display = display;
     this._dummy = false; // overridden by dummyMap in validate.js
+    this._status = '';
 
     /* unexposed getters */
 
@@ -52,7 +53,7 @@ function Map(display, __game) {
         }
 
         this.getDynamicObjects().forEach(function (obj) {
-            obj._destroy();
+            obj._destroy(true);
         });
         __dynamicObjects = [];
         __player = null;
@@ -82,6 +83,11 @@ function Map(display, __game) {
             map.startTimer(function () {
                 // refresh the map
                 map.refresh();
+
+                // rewrite status
+                if (map._status) {
+                    map.writeStatus(map._status);
+                }
 
                 // check for nonstandard victory condition
                 if (typeof(__game.objective) === 'function' && __game.objective(map)) {
@@ -254,6 +260,9 @@ function Map(display, __game) {
         __chapterHideTimeout = setTimeout(function () {
             $('#chapter').fadeOut(1000);
         }, $('#chapter').hasClass('death') ? 2500 : 0);
+
+        // also, clear any status text if map is refreshing automatically (e.g. boss level)
+        this._status = '';
     };
 
     this._refreshDynamicObjects = function() {
@@ -276,10 +285,6 @@ function Map(display, __game) {
 
     this._validateCallback = function (callback) {
         return __game.validateCallback(callback);
-    };
-
-    this._writeStatus = function (status) {
-        display.writeStatus(status);
     };
 
     /* exposed methods */
@@ -443,9 +448,17 @@ function Map(display, __game) {
     };
 
     this.writeStatus = function(status) {
-        setTimeout(function () {
+        this._status = status;
+
+        if (__refreshRate) {
+            // write the status immediately
             display.writeStatus(status);
-        }, 100);
+        } else {
+            // wait 100 ms for redraw reasons
+            setTimeout(function () {
+                display.writeStatus(status);
+            }, 100);
+        }
     };
 
     // used by validators

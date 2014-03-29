@@ -1,6 +1,13 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "0.4",
+    "version": "0.5",
+    "commandsIntroduced":
+        ["global.objective", "map.getDOM", "map.createFromDOM",
+         "map.updateDOM", "map.overrideKey", "global.$",
+         "jQuery.find", "jQuery.addClass", "jQuery.hasClass",
+         "jQuery.removeClass", "jQuery.parent", "jQuery.length",
+         "jQuery.children", "jQuery.first", "jQuery.next",
+         "jQuery.prev"],
 	"music": "Adversity",
     "mapProperties": {
         "refreshRate": 50,
@@ -13,16 +20,16 @@
  * bossFight.js *
  *****************
  *
- * DAMN IT!! DAMN IT!!! HOW DID YOU GET THIS FAR!?!?!?!
- * THIS IS IT! NO FARTHER DR. EVAL!!!!
+ * NO FARTHER, DR. EVAL!!!!
  * YOU WILL NOT GET OUT OF HERE ALIVE!!!!
+ * IT'S TIME YOU SEE MY TRUE FORM!!!!
  * FACE MY ROBOT WRATH!!!!!
  */
 
 function startLevel(map) {
 	map.defineObject('boss', {
         'type': 'dynamic',
-        'symbol': 'v',
+        'symbol': '⊙',
         'color': 'red',
         'interval': 200,
         'onCollision': function (player) {
@@ -40,6 +47,11 @@ function startLevel(map) {
         	if (Math.random() < 0.3) {
             	map.placeObject(me.getX(), me.getY() + 2, 'bullet');
         	}
+        },
+        'onDestroy': function (me) {
+            if (map.countObjects('boss') == 0) {
+                map.placeObject(me.getX(), me.getY(), 'theAlgorithm');
+            }
         }
     });
 
@@ -55,6 +67,7 @@ function startLevel(map) {
     });
 
     map.placePlayer(0, map.getHeight() - 3);
+    map.placeObject(map.getWidth() - 1, map.getHeight() - 1, 'exit');
 
     // Not so tough now, huh?
     map.getPlayer().removeItem('phone');
@@ -108,8 +121,11 @@ function startLevel(map) {
 function validateLevel(map) {
     // called at start of level and whenever a callback executes
     map.validateAtMostXObjects(59, 'block');
-    map.validateExactlyXManyObjects(0, 'exit');
     map.validateAtMostXObjects(1, 'phone');
+
+    if (map.countObjects('theAlgorithm') > 0 && map.countObjects('boss') > 0) {
+        throw "The Algorithm can only be dropped by the boss!";
+    }
 
     // only called at start of level
     if (map.isStartOfLevel()) {
@@ -118,6 +134,9 @@ function validateLevel(map) {
     }
 }
 
-function objective(map) {
-    return (map.countObjects('boss') == 0);
+function onExit(map) {
+    if (!map.getPlayer().hasItem('theAlgorithm')) {
+        map.writeStatus("You must take back the Algorithm!!");
+        return false;
+    }
 }

@@ -84,7 +84,7 @@ Game.prototype.objects = {
         'onPickUp': function (player, game) {
             $('#editorPane').fadeIn();
             game.editor.refresh();
-            game.display.writeStatus('You have picked up the computer!');
+            game.map.writeStatus('You have picked up the computer!');
         },
         'onDrop': function (game) {
             $('#editorPane').hide();
@@ -95,11 +95,10 @@ Game.prototype.objects = {
         'type': 'item',
         'symbol': String.fromCharCode(0x260E), // ☎
         'onPickUp': function (player, game) {
-            game.display.writeStatus('You have picked up the function phone!');
+            game.map.writeStatus('You have picked up the function phone!');
             $('#phoneButton').show();
         },
         'onDrop': function (game) {
-            game.display.writeStatus('You have lost the function phone!');
             $('#phoneButton').hide();
         }
     },
@@ -109,7 +108,7 @@ Game.prototype.objects = {
         'symbol': 'k',
         'color': 'red',
         'onPickUp': function (player, game) {
-            game.display.writeStatus('You have picked up a red key!');
+            game.map.writeStatus('You have picked up a red key!');
         }
     },
 
@@ -118,7 +117,7 @@ Game.prototype.objects = {
         'symbol': 'k',
         'color': '#0f0',
         'onPickUp': function (player, game) {
-            game.display.writeStatus('You have picked up a green key!');
+            game.map.writeStatus('You have picked up a green key!');
         }
     },
 
@@ -127,7 +126,7 @@ Game.prototype.objects = {
         'symbol': 'k',
         'color': '#06f',
         'onPickUp': function (player, game) {
-            game.display.writeStatus('You have picked up a blue key!');
+            game.map.writeStatus('You have picked up a blue key!');
         }
     },
 
@@ -136,7 +135,7 @@ Game.prototype.objects = {
         'symbol': 'k',
         'color': 'yellow',
         'onPickUp': function (player, game) {
-            game.display.writeStatus('You have picked up a yellow key!');
+            game.map.writeStatus('You have picked up a yellow key!');
         }
     },
 
@@ -145,10 +144,10 @@ Game.prototype.objects = {
         'symbol': 'A',
         'color': 'white',
         'onPickUp': function (player, game) {
-            game.display.writeStatus('You have picked up the Algorithm!');
+            game.map.writeStatus('You have picked up the Algorithm!');
         },
         'onDrop': function (game) {
-            game.display.writeStatus('You have lost the Algorithm!');
+            game.map.writeStatus('You have lost the Algorithm!');
         }
     }
 };

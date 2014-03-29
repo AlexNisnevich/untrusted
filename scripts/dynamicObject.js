@@ -41,7 +41,9 @@ function DynamicObject(map, type, x, y) {
                 //each other
                 if (__x === player.getX() && __y === player.getY()) {
                     if (__definition.onCollision) {
-                        __definition.onCollision(player, me);
+                        map._validateCallback(function () {
+                            __definition.onCollision(player, me);
+                        });
                     }
                 }
 
@@ -51,7 +53,7 @@ function DynamicObject(map, type, x, y) {
                     });
                 }
             } catch (e) {
-                map._writeStatus(e.toString());
+                map.writeStatus(e.toString());
             }
         }
 
@@ -69,7 +71,9 @@ function DynamicObject(map, type, x, y) {
                     // projectiles automatically kill
                     map.getPlayer().killedBy('a ' + __type);
                 } else {
-                    __definition.onCollision(map.getPlayer(), this);
+                    map._validateCallback(function () {
+                        __definition.onCollision(map.getPlayer(), this);
+                    });
                 }
             }
         } else {
@@ -87,10 +91,21 @@ function DynamicObject(map, type, x, y) {
         }
     };
 
-    this._destroy = function () {
+    this._destroy = function (onMapReset) {
+        var me = this;
+
         __destroyed = true;
         clearInterval(__timer);
-        map._refreshDynamicObjects(); // remove this object from map's __dynamicObjects list
+
+        // remove this object from map's __dynamicObjects list
+        map._refreshDynamicObjects();
+
+        // unless the map is being reset, call this object's onDestroy method
+        if (__definition.onDestroy && !onMapReset) {
+            map._validateCallback(function () {
+                __definition.onDestroy(me);
+            });
+        }
     };
 
     /* exposed methods */
