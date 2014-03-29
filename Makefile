@@ -67,7 +67,7 @@ deploy: release
 	@rm -rf _site
 	@mkdir _site
 	@cp -R levels scripts styles images sound index.html _site
-	@./deploy.sh _site
+	@./deploy.sh /untrusted _site
 	@rm -rf _site
 	@echo "[ Done ]"
 
@@ -77,7 +77,17 @@ deploy-full: release
 	@rm -rf _site
 	@mkdir _site
 	@cp -R levels scripts styles images sound music lib index.html _site
-	@./deploy.sh _site
+	@./deploy.sh /untrusted _site
+	@rm -rf _site
+	@echo "[ Done ]"
+
+# `make deploy-debug` deploys the debug version to /debug
+deploy-debug: debug
+	@echo "Deploying to server…\t\t\t\c"
+	@rm -rf _site
+	@mkdir _site
+	@cp -R levels scripts styles images sound music lib index.html _site
+	@./deploy.sh /untrusted/debug _site
 	@rm -rf _site
 	@echo "[ Done ]"
 
