@@ -373,11 +373,16 @@ function Map(display, __game) {
     };
 
     this.defineObject = function (name, properties) {
-        if (!__objectDefinitions[name]) {
-            __objectDefinitions[name] = properties;
-        } else {
+        if (__objectDefinitions[name]) {
             throw "There is already a type of object named " + name + "!";
         }
+
+        if (properties.interval && properties.interval < 100) {
+            throw "defineObject(): minimum interval is 100 milliseconds";
+        }
+
+        __objectDefinitions[name] = properties;
+
     };
 
     this.getObjectTypeAt = function (x, y) {
