@@ -143,7 +143,7 @@ Game.prototype.validateAndRunScript = function (code) {
         new Function(code).bind(this).call(); // bind the function to current instance of game!
         console.log(code);
 
-        if (this.mapPrototype) {
+        if (this._mapPrototype) {
             // re-initialize map if necessary
             this.map._reset(); // for cleanup
             this.map = new this._mapPrototype(this.display, this);
