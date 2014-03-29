@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "0.3.1",
+    "version": "0.4",
 	"music": "Adversity",
     "mapProperties": {
         "refreshRate": 50,
@@ -112,12 +112,12 @@ function validateLevel(map) {
     map.validateAtMostXObjects(1, 'phone');
 
     // only called at start of level
-    //if (map.isStartOfLevel()) {
-    //    map.validateExactlyXManyDynamicObjects(23);
-    //    map.validateNoTimers();
-    //}
+    if (map.isStartOfLevel()) {
+        map.validateAtMostXDynamicObjects(23);
+        map.validateNoTimers();
+    }
 }
 
 function objective(map) {
-    return (map._countObjects('boss') == 0);
+    return (map.countObjects('boss') == 0);
 }

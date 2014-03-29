@@ -56,8 +56,21 @@ function DynamicObject(map, type, x, y) {
         }
 
         if (__definition.interval) {
+            // start timer if not already set
             if (!__timer) {
                 __timer = setInterval(executeTurn, __definition.interval);
+            }
+
+            // don't move on regular turn, but still check for player collision
+            if (map.getPlayer().atLocation(__x, __y) &&
+                    (__definition.onCollision || __definition.projectile)) {
+                // trigger collision
+                if (__definition.projectile) {
+                    // projectiles automatically kill
+                    map.getPlayer().killedBy('a ' + __type);
+                } else {
+                    __definition.onCollision(map.getPlayer(), this);
+                }
             }
         } else {
             executeTurn();

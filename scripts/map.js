@@ -116,29 +116,6 @@ function Map(display, __game) {
         }
     };
 
-    // (Used by validators)
-    this._countObjects = function (type) {
-        var count = 0;
-
-        // count static objects
-        for (var x = 0; x < this.getWidth(); x++) {
-            for (var y = 0; y < this.getHeight(); y++) {
-                if (__grid[x][y].type === type) {
-                    count++;
-                }
-            }
-        }
-
-        // count dynamic objects
-        this.getDynamicObjects().forEach(function (obj) {
-            if (obj.getType() === type) {
-                count++;
-            }
-        })
-
-        return count;
-    };
-
     this._canMoveTo = function (x, y, myType) {
         if (x < 0 || x >= __game._dimensions.width || y < 0 || y >= __game._dimensions.height) {
             return false;
@@ -281,6 +258,10 @@ function Map(display, __game) {
 
     this._refreshDynamicObjects = function() {
         __dynamicObjects = __dynamicObjects.filter(function (obj) { return !obj._isDestroyed(); });
+    };
+
+    this._countTimers = function() {
+        return __intervals.length;
     }
 
     /* (unexposed) wrappers for game methods */
@@ -299,7 +280,7 @@ function Map(display, __game) {
 
     this._writeStatus = function (status) {
         display.writeStatus(status);
-    }
+    };
 
     /* exposed methods */
 
@@ -317,6 +298,28 @@ function Map(display, __game) {
             this._display.drawAll(this);
         }
         __game.drawInventory();
+    };
+
+    this.countObjects = function (type) {
+        var count = 0;
+
+        // count static objects
+        for (var x = 0; x < this.getWidth(); x++) {
+            for (var y = 0; y < this.getHeight(); y++) {
+                if (__grid[x][y].type === type) {
+                    count++;
+                }
+            }
+        }
+
+        // count dynamic objects
+        this.getDynamicObjects().forEach(function (obj) {
+            if (obj.getType() === type) {
+                count++;
+            }
+        })
+
+        return count;
     };
 
     this.placeObject = function (x, y, type) {
@@ -439,6 +442,13 @@ function Map(display, __game) {
             display.writeStatus(status);
         }, 100);
     };
+
+    // used by validators
+    // returns true iff called at the start of the level (that is, on DummyMap)
+    // returns false iff called by validateCallback (that is, on the actual map)
+    this.isStartOfLevel = function () {
+        return this._dummy;
+    }
 
     /* canvas-related stuff */
 

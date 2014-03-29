@@ -272,6 +272,7 @@ function Game(debugMode, startLevel) {
 
             // start the level
             validatedStartLevel(this.map);
+
             this.clearModifiedGlobals();
 
             // draw the map
