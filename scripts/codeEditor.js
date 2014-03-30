@@ -21,6 +21,14 @@ function CodeEditor(textAreaDomID, width, height, game) {
         endOfStartLevel = eosl;
     }
 
+    this.setEditableLines = function (el) {
+        editableLines = el;
+    }
+
+    this.setEditableSections = function (es) {
+        editableSections = es;
+    }
+
     // preprocesses code,determines the location
     // of editable lines and sections, loads properties
     function preprocess(codeString) {

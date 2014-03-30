@@ -187,10 +187,19 @@ function Game(debugMode, startLevel) {
                 var newVer = editor.getProperties().version;
                 var savedVer = editor.getGoodState(levelNum).version;
                 if (!(newVer && (!savedVer || isNewerVersion(newVer, savedVer)))) {
-                    editor.setCode(editor.getGoodState(levelNum).code);
+                    // restore saved line/section/endOfStartLevel state if possible
                     if (editor.getGoodState(levelNum).endOfStartLevel) {
                         editor.setEndOfStartLevel(editor.getGoodState(levelNum).endOfStartLevel);
                     }
+                    if (editor.getGoodState(levelNum).editableLines) {
+                        editor.setEditableLines(editor.getGoodState(levelNum).editableLines);
+                    }
+                    if (editor.getGoodState(levelNum).editableSections) {
+                        editor.setEditableSections(editor.getGoodState(levelNum).editableSections);
+                    }
+
+                    // restore saved code
+                    editor.setCode(editor.getGoodState(levelNum).code);
                 }
             }
 
