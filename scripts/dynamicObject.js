@@ -84,7 +84,7 @@ function DynamicObject(map, type, x, y) {
     this._afterMove = function () {
         // try to pick up items
         var objectName = map._getGrid()[__x][__y].type;
-        if (map._getObjectDefinition(objectName).type === 'item') {
+        if (map._getObjectDefinition(objectName).type === 'item' && !__definition.projectile) {
             __inventory.push(objectName);
             map._removeItemFromMap(__x, __y, objectName);
             map._playSound('pickup');

@@ -86,11 +86,20 @@ deploy-debug: debug
 	@echo "Deploying to server…\t\t\t\c"
 	@rm -rf _site
 	@mkdir _site
-	@cp -R levels scripts styles images sound music lib index.html _site
+	@cp -R levels scripts styles images sound index.html _site
 	@./deploy.sh /untrusted/debug _site
 	@rm -rf _site
 	@echo "[ Done ]"
 
+# `make deploy-debug` deploys the debug version to /debug
+deploy-debug-full: debug
+	@echo "Deploying to server…\t\t\t\c"
+	@rm -rf _site
+	@mkdir _site
+	@cp -R levels scripts styles images sound music lib index.html _site
+	@./deploy.sh /untrusted/debug _site
+	@rm -rf _site
+	@echo "[ Done ]"
 
 # run-local will start a mini python webserver and host a local
 # instance of the game on port 9001 (-c-1 disables caching)

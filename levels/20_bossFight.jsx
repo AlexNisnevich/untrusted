@@ -138,5 +138,7 @@ function onExit(map) {
     if (!map.getPlayer().hasItem('theAlgorithm')) {
         map.writeStatus("You must take back the Algorithm!!");
         return false;
+    } else {
+        return true;
     }
 }
