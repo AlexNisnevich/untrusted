@@ -95,6 +95,9 @@ body {
 #editorPane #buttons .keys {
 	background: #fff;
 	color: #000;
+	display: inline-block; /* for min-width */
+	min-width: 15px;
+	text-align: center;
 }
 
 .CodeMirror {

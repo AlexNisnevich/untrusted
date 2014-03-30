@@ -118,7 +118,7 @@ function onExit(map) {
     } else if (!map.getPlayer().hasItem('phone')) {
         map.writeStatus("You'll need your phone! [Ctrl-5 to restart]");
         return false;
-    } {
+    } else {
         return true;
     }
 }

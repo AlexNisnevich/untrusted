@@ -17,7 +17,7 @@
         [2, 5, "a_game_by: 'Alex Nisnevich and Greg Shuflin',"],
         [2, 7, "special_thanks_to: {"],
         [5, 8, "Dmitry_Mazin: ['design', 'code'],"],
-        [5, 9, "Jordan_Arnesen: ['levels'],"],
+        [5, 9, "Jordan_Arnesen: ['levels', 'playtesting'],"],
         [5, 10, "Natasha_HullRichter: ['levels','playtesting']"],
         [2, 11, "},"],
         [2, 13, "music_by: "],
