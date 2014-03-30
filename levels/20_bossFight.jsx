@@ -2,12 +2,9 @@
 {
     "version": "0.5",
     "commandsIntroduced":
-        ["global.objective", "map.getDOM", "map.createFromDOM",
-         "map.updateDOM", "map.overrideKey", "global.$",
-         "jQuery.find", "jQuery.addClass", "jQuery.hasClass",
-         "jQuery.removeClass", "jQuery.parent", "jQuery.length",
-         "jQuery.children", "jQuery.first", "jQuery.next",
-         "jQuery.prev"],
+        ["dynamicObject.onDestroy", "dynamicObject.projectile",
+         "map.countObjects", "map.isStartOfLevel",
+         "map.validateAtMostXDynamicObjects", "map.validateNoTimers"],
 	"music": "Adversity",
     "mapProperties": {
         "refreshRate": 50,

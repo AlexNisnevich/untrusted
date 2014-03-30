@@ -134,6 +134,12 @@ Game.prototype.reference = {
         'description': 'Removes the given CSS class from the DOM element(s) specified by the jQuery object.'
     },
 
+    'map.countObjects': {
+        'name': 'map.countObjects(objectType)',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Returns the number of objects of the given type on the map.'
+    },
     'map.createFromDOM': {
         'name': 'map.createFromDOM($html)',
         'category': 'map',
@@ -218,6 +224,12 @@ Game.prototype.reference = {
         'type': 'method',
         'description': 'Returns the width of the map, in pixels.'
     },
+    'map.isStartOfLevel': {
+        'name': 'map.isStartOfLevel()',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Returns true if called while a level is starting.'
+    },
     'map.overrideKey': {
         'name': 'map.overrideKey(key, callback)',
         'category': 'map',
@@ -266,11 +278,23 @@ Game.prototype.reference = {
         'type': 'method',
         'description': 'Raises an exception if there are not at least num objects of type objectType on the map.'
     },
+    'map.validateExactlyXManyDynamicObjects': {
+        'name': 'map.validateExactlyXManyObjects(num)',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Raises an exception if there are not exactly num dynamic objects on the map.'
+    },
     'map.validateExactlyXManyObjects': {
         'name': 'map.validateExactlyXManyObjects(num, objectType)',
         'category': 'map',
         'type': 'method',
         'description': 'Raises an exception if there are not exactly num objects of type objectType on the map.'
+    },
+    'map.validateNoTimers': {
+        'name': 'map.validateNoTimers()',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Raises an exception if there are any timers currently set with map.startLevel.'
     },
 
     'object.behavior': {
@@ -338,6 +362,18 @@ Game.prototype.reference = {
         'category': 'object',
         'type': 'property',
         'description': 'The function that is executed when this object touches the player.'
+    },
+    'object.onDestroy': {
+        'name': 'object.onDestroy = function (object)',
+        'category': 'object',
+        'type': 'property',
+        'description': '(For dynamic objects only.) The function that is executed when this object is destroyed.'
+    },
+    'object.projectile': {
+        'name': 'object.projectile',
+        'category': 'object',
+        'type': 'property',
+        'description': '(For dynamic objects only.) If true, this object destroys any dynamic object (or player) that it collides with, and is itself destroyed when it collides with anything.'
     },
     'object.symbol': {
         'name': 'object.symbol',
