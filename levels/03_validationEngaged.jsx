@@ -10,7 +10,7 @@
  * validationEngaged.js *
  ************************
  *
- * They're really on to us now. The validateLevel function
+ * They're really on to us now! The validateLevel function
  * has been activated to enforce constraints on what you can
  * do. In this case, you're not allowed to remove any blocks.
  *

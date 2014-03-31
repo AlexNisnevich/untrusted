@@ -10,8 +10,8 @@
  ********************
  *
  * Well, it looks like they're on to us. The path isn't as
- * clear as I thought it'd be. But no matter. We can erase
- * all of their clever tricks.
+ * clear as I thought it'd be. But no matter - four clever
+ * characters should be enough to erase all their tricks.
  */
 
 function startLevel(map) {

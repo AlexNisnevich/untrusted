@@ -12,9 +12,7 @@
  * You! How are you still alive?
  *
  * Well, no matter. Good luck getting through this
- * maze of rooms.
- *
- * You'll never see me or the Algorithm again!
+ * maze of rooms - you'll never see me or the Algorithm again!
  */
 
 function startLevel(map) {

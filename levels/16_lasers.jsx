@@ -11,7 +11,7 @@
  * lasers.js *
  *************
  *
- * Time to unleash the killer lasers. Each laser will kill you
+ * Time to unleash the killer lasers! Each laser will kill you
  * unless you have the appropriate color. Too bad you can't
  * see which color corresponds to which laser!
  */

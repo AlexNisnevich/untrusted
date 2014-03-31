@@ -14,7 +14,7 @@
  * I need you alive, after all.
  *
  * If only there was some way you could track the positions
- * of the mines ...
+ * of the mines...
  */
 
 function getRandomInt(min, max) {

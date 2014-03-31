@@ -10,6 +10,12 @@
  * endOfTheLine.js *
  *******************
  *
+ * I don't feel guilty at all, Cornelius.
+ * 
+ * Did you expect me to? Did you think that, having defeated
+ * my robot form, 
+ *
+ *
  * If you're reading this, you must have defeated me and taken
  * the Algorithm. I suppose some congratulations are in order.
  *
