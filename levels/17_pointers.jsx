@@ -54,8 +54,6 @@ function startLevel(map) {
             '*': 'trap',
         }, 2, 2);
 
-    // Ah look, Dr. Eval! It's your old friend,
-    // the canvas.
     var canvas = map.getCanvasContext();
 
     var teleportersAndTraps = map.getDynamicObjects();
@@ -75,11 +73,9 @@ function startLevel(map) {
         }
 
 #BEGIN_EDITABLE#
-        // Note: map.getCanvasCoords() may come in handy here
-        // Look it up in Help!
-
-
-
+        // TODO find a way to remove the API docs
+        // wouldn't want the 'good doctor' to find
+        // out about map.getCanvasCoords()...
 
 
 
