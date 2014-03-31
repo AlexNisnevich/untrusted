@@ -1,36 +1,36 @@
 Game.prototype.reference = {
     'canvas.beginPath': {
-        'name': 'beginPath()',
+        'name': 'canvasContext.beginPath()',
         'category': 'canvas',
         'type': 'method',
         'description': 'Begins drawing a new shape.'
     },
     'canvas.lineTo': {
-        'name': 'beginPath(x, y)',
+        'name': 'canvasContext.beginPath(x, y)',
         'category': 'canvas',
         'type': 'method',
         'description': 'Sets the end coordinates of a line.'
     },
     'canvas.lineWidth': {
-        'name': 'lineWidth',
+        'name': 'canvasContext.lineWidth',
         'category': 'canvas',
         'type': 'property',
         'description': 'Determines the width of the next lines drawn.'
     },
     'canvas.moveTo': {
-        'name': 'moveTo(x, y)',
+        'name': 'canvasContext.moveTo(x, y)',
         'category': 'canvas',
         'type': 'method',
         'description': 'Sets the start coordinates of a line.'
     },
     'canvas.stroke': {
-        'name': 'stroke()',
+        'name': 'canvasContext.stroke()',
         'category': 'canvas',
         'type': 'method',
         'description': 'Draws a line whose coordinates have been defined by <b>lineTo</b> and <b>moveTo</b>.'
     },
     'canvas.strokeStyle': {
-        'name': 'strokeStyle',
+        'name': 'canvasContext.strokeStyle',
         'category': 'canvas',
         'type': 'property',
         'description': 'Determines the color (and, optionally, other properties) of the next lines drawn.'
