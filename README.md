@@ -42,5 +42,43 @@ Then run:
 make runlocal
 ```
 
+### Acknowledgements
+
+Untrusted is a game by Alex Nisnevich and Greg Shuflin.
+
+We'd like to thank:
+
+- Dmitry Mazin for design assistance and for the implementation of multiline editing
+- Jordan Arnesen for playtesting and design of lvl17_pointers
+- Natasha Hull-Richter for extensive playtesting and assistance in level design
+- Conrad Irwin, Devin C-R, Eugene Evans, Gilbert Hsyu, Jacob Nisnevich, James Silvey, Jason Jiang, Jimmy Hack, Philip Shao, Ryan Fitzgerald, Stephen Liu, and Yuval Gnessin for playtesting and feedback
+- Ondřej Žára for his excellent rot.js library
+
+#### Soundtrack
+
+The music that appears in the game, in order, is:
+
+- "The Green" - Jonathan Holliday (used with permission)
+- "gurh" - Dmitry Mazin (written for Untrusted)
+- "Obscure Terrain" - Revolution Void (CC-BY-NC-SA)
+- "coming soon" - Fex (public domain)
+- "cloudy sin" - intricate (used with permission)
+- "Game Scratch" - Dmitry Mazin (written for Untrusted)
+- "Y" - Tortue Super Sonic (CC-BY-NC-SA)
+- "Night Owl" - Broke for Free (CC-BY)
+- "The Waves Call Her Name" - Sycamore Drive (CC-BY-NC-SA)
+- "Come and Find Me - B mix" - Eric Skiff (CC-BY)
+- "Conspiracy" - Mike and Alan (used with permission)
+- "Messeah" - RoccoW (CC-BY)
+- "Searching" - Eric Skiff (CC-BY)
+- "Da Funk Do You Know 'bout Chip?" - That Andy Guy (used with permission)
+- "Soixante-8" - Obsibilo (CC-BY-NC-SA)
+- "Tart (Pts 1 and 2)" - BLEO (CC-BY-NC-SA)
+- "Beach Wedding Dance" - Rolemusic (CC-BY-NC-SA)
+- "Boss Loop 1" - Essa (free to use)
+- "Adversity" - Seropard (free to use)
+- "Comme Des Orages" - Obsibilo (CC-BY-NC-SA)
+- "Brazilicon Alley" - Vernon Lenoir (CC-BY-NC-SA)
+
 ### License
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.
