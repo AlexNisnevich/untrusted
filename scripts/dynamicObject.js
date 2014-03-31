@@ -100,8 +100,13 @@ function DynamicObject(map, type, x, y) {
         // remove this object from map's __dynamicObjects list
         map._refreshDynamicObjects();
 
-        // unless the map is being reset, call this object's onDestroy method
+        // unless the map is being reset, play an explosion
+        // and call this object's onDestroy method
         if (__definition.onDestroy && !onMapReset) {
+            if (!__definition.projectile) {
+                map._playSound('explosion');
+            }
+
             map._validateCallback(function () {
                 __definition.onDestroy(me);
             });
