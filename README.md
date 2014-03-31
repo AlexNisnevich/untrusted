@@ -44,15 +44,15 @@ make runlocal
 
 ### Acknowledgements
 
-Untrusted is a game by Alex Nisnevich and Greg Shuflin.
+Untrusted is a game by [Alex Nisnevich](http://alex.nisnevich.com/) and [Greg Shuflin](https://github.com/neunenak).
 
 We'd like to thank:
 
-- Dmitry Mazin for design assistance and for the implementation of multiline editing
-- Jordan Arnesen for playtesting and design of lvl17_pointers
-- Natasha Hull-Richter for extensive playtesting and assistance in level design
+- [Dmitry Mazin](https://github.com/dmazin) for design assistance and for the implementation of multiline editing
+- [Jordan Arnesen](https://github.com/extrajordanary) for playtesting and design of lvl17_pointers
+- [Natasha Hull-Richter](http://nhull.com) for extensive playtesting and assistance in level design
 - Conrad Irwin, Devin C-R, Eugene Evans, Gilbert Hsyu, Jacob Nisnevich, James Silvey, Jason Jiang, Jimmy Hack, Philip Shao, Ryan Fitzgerald, Stephen Liu, and Yuval Gnessin for playtesting and feedback
-- Ondřej Žára for his excellent rot.js library
+- [Ondřej Žára](https://github.com/ondras) for his excellent [rot.js](http://ondras.github.io/rot.js/) library
 
 #### Soundtrack
 
