@@ -1,5 +1,5 @@
 **Untrusted —or— the Continuing Adventures of Dr. Eval** is an exciting
-Javascript Adventure Game wherein you guide the dashing, steadfast
+Meta-Javascript Adventure Game wherein you guide the dashing, steadfast
 Dr. Eval through a mysterious MACHINE CONTINUUM, wherein, using only
 his trusty computer and the TURING-COMPLETE power of Javascript, he must
 literally ALTER HIS REALITY in order to find his freedom! You must literally
