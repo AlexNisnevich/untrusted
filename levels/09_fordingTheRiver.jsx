@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "0,1",
     "commandsIntroduced":
         ["player.killedBy", "object.onCollision"],
     "music": "The_Waves_Call_Her_Name"
@@ -23,7 +24,7 @@ function startLevel(map) {
     map.defineObject('raft', {
         'type': 'dynamic',
         'symbol': '▓',
-        'color': 'brown',
+        'color': '#420',
         'transport': true, // (prevents player from drowning in water)
         'behavior': function (me) {
             me.move(raftDirection);
