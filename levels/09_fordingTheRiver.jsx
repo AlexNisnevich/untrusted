@@ -22,8 +22,8 @@ function startLevel(map) {
 
     map.defineObject('raft', {
         'type': 'dynamic',
-        'symbol': '#',
-        'color': 'gray',
+        'symbol': '▓',
+        'color': 'brown',
         'transport': true, // (prevents player from drowning in water)
         'behavior': function (me) {
             me.move(raftDirection);
