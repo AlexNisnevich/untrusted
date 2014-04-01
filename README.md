@@ -51,7 +51,7 @@ We'd like to thank:
 - [Dmitry Mazin](https://github.com/dmazin) for design assistance and for the implementation of multiline editing
 - [Jordan Arnesen](https://github.com/extrajordanary) for playtesting and design of lvl17_pointers
 - [Natasha Hull-Richter](http://nhull.com) for extensive playtesting and assistance in level design
-- Alex Bolotov, Conrad Irwin, Devin C-R, Eugene Evans, Gilbert Hsyu, Jacob Nisnevich, James Silvey, Jason Jiang, Jimmy Hack, Philip Shao, Ryan Fitzgerald, Stephen Liu, Yayoi Ukai, and Yuval Gnessin for playtesting and feedback
+- Alex Bolotov, Colin Curtin, Conrad Irwin, Devin C-R, Eugene Evans, Gilbert Hsyu, Jacob Nisnevich, James Silvey, Jason Jiang, Jimmy Hack, Philip Shao, Ryan Fitzgerald, Stephen Liu, Yayoi Ukai, and Yuval Gnessin for playtesting and feedback
 - [Ondřej Žára](https://github.com/ondras) for his excellent [rot.js](http://ondras.github.io/rot.js/) library
 
 #### Soundtrack
