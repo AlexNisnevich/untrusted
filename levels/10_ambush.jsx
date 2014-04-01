@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "0.1",
     "commandsIntroduced": [],
     "music": "Come and Find Me"
 }
@@ -65,7 +66,7 @@ function startLevel(map) {
         },
         'behavior': function (me) {
 #BEGIN_EDITABLE#
-            moveToward(me, 'attackDrone');
+            me.move('left');
 #END_EDITABLE#
         }
     });
