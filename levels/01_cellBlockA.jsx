@@ -18,7 +18,7 @@
  * to you. This system might be unfamiliar, but the underlying
  * code is still JavaScript. Just like we predicted.
  *
- * Now, let's get what we came here for and then you out of
+ * Now, let's get what we came here for and then get you out of
  * here. Easy peasy.
  *
  * I've given you as much access to their code as I could, but
