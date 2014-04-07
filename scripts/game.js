@@ -59,7 +59,7 @@ function Game(debugMode, startLevel) {
         'player.js'
     ];
 
-    this._currentLevel = 1;
+    this._currentLevel = 0;
     this._currentFile = null;
     this._levelReached = localStorage.getItem('levelReached') || 1;
     this._displayedChapters = [];
@@ -127,7 +127,7 @@ function Game(debugMode, startLevel) {
 
         // Lights, camera, action
         if (startLevel) {
-            this._currentLevel = startLevel;
+            this._currentLevel = startLevel - 1;
             this._getLevel(startLevel, debugMode);
         } else {
             this._intro();
@@ -182,7 +182,7 @@ function Game(debugMode, startLevel) {
             editor.saveGoodState();
             editor.createGist();
 
-            game.currentLevel++;
+            game._currentLevel++;
             game._currentFile = null;
 
             // load level code in editor
