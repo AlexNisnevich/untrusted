@@ -150,12 +150,6 @@ function Game(debugMode, startLevel) {
             return;
         }
 
-        // save level state and create a gist
-        this.editor.saveGoodState();
-        this.editor.createGist();
-
-        this._currentLevel++;
-        this._currentFile = null;
         this.sound.playSound('complete');
 
         //we disable moving so the player can't move during the fadeout
@@ -184,6 +178,13 @@ function Game(debugMode, startLevel) {
 
         var fileName = game._levelFileNames[levelNum - 1];
         $.get('levels/' + fileName, function (lvlCode) {
+            // save level state and create a gist
+            editor.saveGoodState();
+            editor.createGist();
+
+            game.currentLevel++;
+            game._currentFile = null;
+
             // load level code in editor
             editor.loadCode(lvlCode);
 
