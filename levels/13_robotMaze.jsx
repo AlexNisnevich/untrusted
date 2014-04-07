@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
+    "version": "1.1",
     "commandsIntroduced": ["map.getAdjacentEmptyCells"],
     "music": "Searching"
 }
@@ -15,11 +15,11 @@
  * we would have to leave empty-handed.
  */
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function startLevel(map) {
+    map.getRandomInt = function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     map.placePlayer(map.getWidth()-1, map.getHeight()-1);
     var player = map.getPlayer();
 
@@ -35,7 +35,7 @@ function startLevel(map) {
             // move randomly
             var moves = map.getAdjacentEmptyCells(me.getX(), me.getY());
             // getAdjacentEmptyCells gives array of ((x, y), direction) pairs
-            me.move(moves[getRandomInt(0, moves.length - 1)][1]);
+            me.move(moves[map.getRandomInt(0, moves.length - 1)][1]);
 
 
 

@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
+    "version": "1.1",
     "commandsIntroduced":
         ["player.killedBy", "object.onCollision"],
     "music": "The_Waves_Call_Her_Name"
@@ -62,4 +62,5 @@ function startLevel(map) {
 
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
+    map.validateExactlyXManyObjects(1, 'raft');
 }
