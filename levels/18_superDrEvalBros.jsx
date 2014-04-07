@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.0",
     "commandsIntroduced": ["player.move", "map.startTimer"],
     "music": "Beach Wedding Dance",
     "mapProperties": {

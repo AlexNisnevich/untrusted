@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.0",
     "commandsIntroduced": [],
     "music": "The_Waves_Call_Her_Name",
     "startingMessage": "You have lost the Algorithm!"

@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.0",
     "commandsIntroduced": ["map.setSquareColor"],
     "music": "cloudy_sin"
 }

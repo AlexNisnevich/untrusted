@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.0",
     "commandsIntroduced": ["map.getAdjacentEmptyCells"],
     "music": "Searching"
 }

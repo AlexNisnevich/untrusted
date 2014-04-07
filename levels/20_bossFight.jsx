@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "0.5",
+    "version": "1.0",
     "commandsIntroduced":
         ["dynamicObject.onDestroy", "dynamicObject.projectile",
          "map.countObjects", "map.isStartOfLevel",

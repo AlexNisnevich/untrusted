@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.0",
     "commandsIntroduced":
         ["player.killedBy", "object.onCollision"],
     "music": "The_Waves_Call_Her_Name"

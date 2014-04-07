@@ -69,13 +69,13 @@ function Sound() {
         'GameScratch': {
             path: "music/DmitryMazin-GameScratch.mp3",
             artist: "Dmitry Mazin",
-            title: "Game Scratch",
+            title: "Dynamic Punctuality",
             url: "https://soundcloud.com/dmitry-mazin"
         },
         'gurh': {
             path: "music/gurh.mp3",
             artist: "Dmitry Mazin",
-            title: "gurh",
+            title: "Dmitry's Thing #2",
             url: "https://soundcloud.com/dmitry-mazin"
         },
         'Messeah': {

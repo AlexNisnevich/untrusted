@@ -1,5 +1,6 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.0",
     "commandsIntroduced":
         ["object.inventory", "object.giveItemTo", "object.passableFor",
          "map.validateAtMostXObjects"],
