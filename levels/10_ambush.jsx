@@ -66,7 +66,7 @@ function startLevel(map) {
         },
         'behavior': function (me) {
 #BEGIN_EDITABLE#
-            moveToward(me, 'attackDrone');
+            me.move('left');
 #END_EDITABLE#
         }
     });

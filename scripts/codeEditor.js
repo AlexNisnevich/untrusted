@@ -125,7 +125,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         return array.map(function(line) {
             if (line > after) {
-                // console.log('Shifting ' + line + ' to ' + (line + shiftAmount));
+                //console.log('Shifting ' + line + ' to ' + (line + shiftAmount));
                 return line + shiftAmount;
             }
             return line;
@@ -166,7 +166,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         if (!inEditableArea(change)) {
             change.cancel();
-        } else if (change.to.line !== change.from.line) { // Deletion
+        } else if (change.to.line < change.from.line) { // Deletion
             updateEditableLinesOnDeletion(change);
         } else { // Insert/paste
             var newLines = change.text.length - 1; // First line already editable
