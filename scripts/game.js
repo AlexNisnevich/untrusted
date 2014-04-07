@@ -154,7 +154,7 @@ function Game(debugMode, startLevel) {
 
         //we disable moving so the player can't move during the fadeout
         this.map.getPlayer()._canMove = false;
-        this._getLevel(this._currentLevel);
+        this._getLevel(this._currentLevel + 1);
     };
 
     this._jumpToNthLevel = function (levelNum) {
