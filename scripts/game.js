@@ -114,6 +114,7 @@ function Game(debugMode, startLevel) {
 
         // Enable debug features
         if (debugMode) {
+            this._debugMode = true;
             this._levelReached = 999; // make all levels accessible
             __commands = Object.keys(this.reference); // display all help
             this.sound.toggleSound(); // mute sound by default in debug mode

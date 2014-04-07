@@ -29,6 +29,13 @@ function CodeEditor(textAreaDomID, width, height, game) {
         editableSections = es;
     }
 
+    // for debugging purposes
+    log = function (text) {
+        if (game._debugMode) {
+            console.log(text);
+        }
+    }
+
     // preprocesses code,determines the location
     // of editable lines and sections, loads properties
     function preprocess(codeString) {
@@ -125,7 +132,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         return array.map(function(line) {
             if (line > after) {
-                //console.log('Shifting ' + line + ' to ' + (line + shiftAmount));
+                log('Shifting ' + line + ' to ' + (line + shiftAmount));
                 return line + shiftAmount;
             }
             return line;
@@ -156,20 +163,22 @@ function CodeEditor(textAreaDomID, width, height, game) {
             }
         };
 
-        /*console.log(
+        log(
             '---Editor input (beforeChange) ---\n' +
             'Kind: ' + change.origin + '\n' +
             'Number of lines: ' + change.text.length + '\n' +
             'From line: ' + change.from.line + '\n' +
             'To line: ' + change.to.line
-        );*/
+        );
 
         if (!inEditableArea(change)) {
             change.cancel();
-        } else if (change.to.line < change.from.line) { // Deletion
+        } else if (change.to.line < change.from.line ||
+                   change.to.line - change.from.line + 1 > change.text.length) { // Deletion
             updateEditableLinesOnDeletion(change);
         } else { // Insert/paste
-            var newLines = change.text.length - 1; // First line already editable
+            // First line already editable
+            var newLines = change.text.length - (change.to.line - change.from.line + 1);
 
             if (newLines > 0) {
                 if (editableLines.indexOf(change.to.line) < 0) {
@@ -194,7 +203,9 @@ function CodeEditor(textAreaDomID, width, height, game) {
                     wrappedText.push(line);
                 });
                 change.text = wrappedText;
-                newLines = change.text.length - 1; // updating line count
+
+                // updating line count
+                newLines = change.text.length - (change.to.line - change.from.line + 1);
 
                 updateEditableLinesOnInsert(change, newLines);
             } else {
@@ -222,6 +233,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
                 }
             }
         }
+
+        log(editableLines);
     }
 
     var updateEditableLinesOnInsert = function(change, newLines) {
@@ -233,6 +246,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
         // TODO If editable sections appear together with editable lines
         // in a level, multiline edit does not properly handle editable
         // sections.
+
+        log("Appending " + newLines + " lines");
 
         // Append new lines
         for (var i = lastLine + 1; i <= lastLine + newLines; i++) {
@@ -247,12 +262,12 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     var updateEditableLinesOnDeletion = function(changeInput) {
         // Figure out how many lines just got removed
-        var numRemoved = changeInput.to.line - changeInput.from.line;
+        var numRemoved = changeInput.to.line - changeInput.from.line - changeInput.text.length + 1;
         // Find end of segment
         var editableSegmentEnd = findEndOfSegment(changeInput.to.line);
         // Remove that many lines from its end, one by one
         for (var i = editableSegmentEnd; i > editableSegmentEnd - numRemoved; i--) {
-            // console.log('Removing\t' + i);
+            log('Removing\t' + i);
             editableLines.remove(i);
         }
         // Shift lines that came after
@@ -265,31 +280,12 @@ function CodeEditor(textAreaDomID, width, height, game) {
         }
     };
 
+    // beforeChange events don't pick up undo/redo
+    // so we track them on change event
     var trackUndoRedo = function(instance, change) {
         if (change.origin === 'undo' || change.origin === 'redo') {
-            /*console.log(
-                '---Editor input (change) ---\n' +
-                'Kind: ' + change.origin + '\n' +
-                'Number of lines: ' + change.text.length + '\n' +
-                'From line: ' + change.from.line + '\n' +
-                'To line: ' + change.to.line
-            );*/
-
-            if (change.to.line !== change.from.line) { // Deletion
-                updateEditableLinesOnDeletion(change);
-            } else { // Insert/paste
-                // TODO This allows making sections multiline, fix that
-                var newLines = change.text.length - 1; // First line already editable
-
-                if (newLines < 1) {
-                    return false;
-                }
-
-                updateEditableLinesOnInsert(change, newLines);
-            }
+            enforceRestrictions(instance, change);
         }
-
-        //console.log(editableLines);
     }
 
     this.initialize = function() {
