@@ -2,5 +2,4 @@
 deploy.sh
 mongoose*
 
-scripts/build/*js
 _site/*
