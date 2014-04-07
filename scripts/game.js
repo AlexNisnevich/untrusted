@@ -118,6 +118,11 @@ function Game(debugMode, startLevel) {
             this._levelReached = 999; // make all levels accessible
             __commands = Object.keys(this.reference); // display all help
             this.sound.toggleSound(); // mute sound by default in debug mode
+        } else {
+            // some people are at work right now
+            if (document.referrer.indexOf('news.ycombinator.com') > -1) {
+                this.toggleSound();
+            }
         }
 
         // Lights, camera, action
@@ -264,6 +269,8 @@ function Game(debugMode, startLevel) {
 
         if (validatedStartLevel) { // code is valid
             // reset the map
+            this.map._reset(); // for cleanup
+            this.map = new Map(this.display, this);
             this.map._reset();
             this.map._setProperties(this.editor.getProperties()['mapProperties']);
 
