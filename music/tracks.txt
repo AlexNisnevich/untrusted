@@ -1,36 +1,36 @@
 === Tracks by Level ===
 
-*01. Yonnie_The_Green
-*02. gurh
-*03. Obscure Terrain
-*04. coming soon
-*05. intricate_cloudy_sin
+ 01. Yonnie_The_Green
+ 02. gurh
+ 03. Obscure Terrain
+ 04. coming soon
+ 05. intricate_cloudy_sin
  06. DmitryMazin-GameScratch
  07. Tortue_Super_Sonic_-_11_-_Y
-*08. Night Owl
-*09. Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name
+ 08. Night Owl
+ 09. Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name
  10. Eric_Skiff_-_09_-_Come_and_Find_Me_-_B_mix
-*11. Conspiracy
-*12. Messeah
+ 11. Conspiracy
+ 12. Messeah
  13. Eric_Skiff_-_06_-_Searching
-*14. ThatAndyGuy-Chip-loop
+ 14. ThatAndyGuy-Chip-loop
 @15. Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name
-*16. Obsibilo_-_Soixante-8
-*17. Various_Artists_-_15_-_Slimeball_vomit
-*18. Rolemusic_-_07_-_Beach_Wedding_Dance
-*19. Boss Loop 1
-*20. Adversity
-*21. Comme Des Orages
-*XX. Vernon_Lenoir_-_Brazilicon_alley
+ 16. Obsibilo_-_Soixante-8
+ 17. Various_Artists_-_15_-_Slimeball_vomit
+ 18. Rolemusic_-_07_-_Beach_Wedding_Dance
+ 19. Boss Loop 1
+ 20. Adversity
+ 21. Comme Des Orages
+ XX. Vernon_Lenoir_-_Brazilicon_alley
 
 === Credits & Licenses ===
 
 "The Green" - Jonathan Holliday (used with permission) : 01
-"gurh" - Dmitry Mazin (written for Untrusted) : 02
+"Dmitry's Thing #2" - Dmitry Mazin (written for Untrusted) : 02
 "Obscure Terrain" - Revolution Void (CC-BY-NC-SA) : 03
 "coming soon" - Fex (public domain) : 04
 "cloudy sin" - intricate (used with permission) : 05
-"Game Scratch" - Dmitry Mazin (written for Untrusted) : 06
+"Dynamic Punctuality" - Dmitry Mazin (written for Untrusted) : 06
 "Y" - Tortue Super Sonic (CC-BY-NC-SA) : 07
 "Night Owl" - Broke for Free (CC-BY): 08
 "The Waves Call Her Name" - Sycamore Drive (CC-BY-NC-SA) : 09, 15

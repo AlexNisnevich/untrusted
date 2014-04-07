@@ -49,21 +49,22 @@ Untrusted is a game by [Alex Nisnevich](http://alex.nisnevich.com/) and [Greg Sh
 We'd like to thank:
 
 - [Dmitry Mazin](https://github.com/dmazin) for design assistance and for the implementation of multiline editing
-- [Jordan Arnesen](https://github.com/extrajordanary) for playtesting and design of lvl17_pointers
+- [Jordan Arnesen](https://github.com/extrajordanary) for playtesting and design of lvl17
 - [Natasha Hull-Richter](http://nhull.com) for extensive playtesting and assistance in level design
 - Alex Bolotov, Colin Curtin, Conrad Irwin, Devin C-R, Eugene Evans, Gilbert Hsyu, Jacob Nisnevich, James Silvey, Jason Jiang, Jimmy Hack, Philip Shao, Ryan Fitzgerald, Stephen Liu, Yayoi Ukai, and Yuval Gnessin for playtesting and feedback
 - [Ondřej Žára](https://github.com/ondras) for his excellent [rot.js](http://ondras.github.io/rot.js/) library
+- [Brian Harvey](http://www.cs.berkeley.edu/~bh/) for allowing us to use his likeness in lvl19
 
 #### Soundtrack
 
 The music that appears in the game, in order, is:
 
 - "The Green" - Jonathan Holliday (used with permission)
-- "gurh" - Dmitry Mazin (written for Untrusted)
+- "Dmitry's Thing #2" - Dmitry Mazin (written for Untrusted)
 - "Obscure Terrain" - Revolution Void (CC-BY-NC-SA)
 - "coming soon" - Fex (public domain)
 - "cloudy sin" - intricate (used with permission)
-- "Game Scratch" - Dmitry Mazin (written for Untrusted)
+- "Dynamic Punctuality" - Dmitry Mazin (written for Untrusted)
 - "Y" - Tortue Super Sonic (CC-BY-NC-SA)
 - "Night Owl" - Broke for Free (CC-BY)
 - "The Waves Call Her Name" - Sycamore Drive (CC-BY-NC-SA)
