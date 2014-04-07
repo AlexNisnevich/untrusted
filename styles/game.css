@@ -1,4 +1,22 @@
 
+.underLoad {
+	clear: both;
+	display: block;
+	color: white;
+	font-family: monospace;
+	margin: 5px;
+	text-align: center;
+	margin-top: 3em;
+}
+
+.underLoad a {
+	color: #ccc;
+}
+
+.underLoad a:hover {
+	text-decoration: none;
+}
+
 html {
 	height: 100%;
 }
