@@ -63,7 +63,7 @@ function Player(x, y, __map, __game) {
             var objectName = __map._getGrid()[x][y].type;
             var objectDef = __map._getObjectDefinition(objectName);
             if (objectDef.type === 'item') {
-                this.pickUpItem(objectName, objectDef);
+                this._pickUpItem(objectName, objectDef);
             } else if (objectDef.onCollision) {
                 __game.validateCallback(function () {
                     objectDef.onCollision(player, __game);
@@ -77,6 +77,26 @@ function Player(x, y, __map, __game) {
         // check for nonstandard victory condition (e.g. DOM level)
         if (typeof(__game.objective) === 'function' && __game.objective(__map)) {
             __game._moveToNextLevel();
+        }
+    };
+
+    this._pickUpItem = function (itemName, object) {
+        var player = this;
+
+        __game.addToInventory(itemName);
+        __map._removeItemFromMap(__x, __y, itemName);
+        __map.refresh();
+        __game.sound.playSound('pickup');
+
+        if (object.onPickUp) {
+            __game.validateCallback(function () {
+                setTimeout(function () {
+                    object.onPickUp(player, __game);
+                }, 100);
+                // timeout is so that written text is not immediately overwritten
+                // TODO: play around with Display.writeStatus so that this is
+                // not necessary
+            });
         }
     };
 
@@ -151,26 +171,6 @@ function Player(x, y, __map, __game) {
         __game._restartLevel();
 
         __map.displayChapter('You have been killed by \n' + killer + '!', 'death');
-    };
-
-    this.pickUpItem = function (itemName, object) {
-        var player = this;
-
-        __game.addToInventory(itemName);
-        __map._removeItemFromMap(__x, __y, itemName);
-        __map.refresh();
-        __game.sound.playSound('pickup');
-
-        if (object.onPickUp) {
-            __game.validateCallback(function () {
-                setTimeout(function () {
-                    object.onPickUp(player, __game);
-                }, 100);
-                // timeout is so that written text is not immediately overwritten
-                // TODO: play around with Display.writeStatus so that this is
-                // not necessary
-            });
-        }
     };
 
     this.hasItem = function (itemName) {
