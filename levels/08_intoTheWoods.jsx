@@ -75,7 +75,7 @@ function startLevel(map) {
                 }
 
                 if (map.getPlayer().atLocation(i,j) ||
-                        map.getObjectTypeAt(i, j) === 'block') ||
+                        map.getObjectTypeAt(i, j) === 'block' ||
                         map.getObjectTypeAt(i, j) === 'exit') {
                     continue;
                 }
