@@ -2,5 +2,6 @@
 deploy.sh
 mongoose*
 
+scripts/build
 _site/*
 node_modules
