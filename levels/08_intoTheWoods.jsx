@@ -39,7 +39,7 @@ function startLevel(map) {
     functionList['fortresses'] = function () {
         function genRandomValue(direction) {
             if (direction === "height") {
-                return Math.floor(Math.random() * (map.getHeight()+1));
+                return Math.floor(Math.random() * (map.getHeight()-3));
             } else if (direction === "width") {
                 return Math.floor(Math.random() * (map.getWidth()+1));
             }
@@ -56,11 +56,11 @@ function startLevel(map) {
         }
 
         for (var j = y-2; j < y+2; j++) {
-            map.placeObject(i-2,j, 'block');
+            map.placeObject(x-2,j, 'block');
         }
 
         for (var j = y-2; j < y+2; j++) {
-            map.placeObject(i+2,j, 'block');
+            map.placeObject(x+2,j, 'block');
         }
     };
 
@@ -75,6 +75,7 @@ function startLevel(map) {
                 }
 
                 if (map.getPlayer().atLocation(i,j) ||
+                        map.getObjectTypeAt(i, j) === 'block') ||
                         map.getObjectTypeAt(i, j) === 'exit') {
                     continue;
                 }
