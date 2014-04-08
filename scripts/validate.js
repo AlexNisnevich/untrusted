@@ -60,6 +60,8 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             throw 'startLevel() returned prematurely!';
         }
 
+        this.detectTampering(dummyMap); // have we tampered with any functions?
+
         this.validateLevel = function () { return true; };
         // does validateLevel() succeed?
         if (typeof(validateLevel) === "function") {
@@ -181,7 +183,7 @@ Game.prototype.clearModifiedGlobals = function() {
             window[p] = null;
         }
     }
-}
+};
 
 // Specific validators go here
 
@@ -217,5 +219,61 @@ Map.prototype.validateNoTimers = function() {
     var count = this._countTimers();
     if (count > 0) {
         throw 'Too many timers set on the map! Expected: 0, found: ' + count;
+    }
+};
+
+// Function tampering prevention
+
+Game.prototype.referenceImplementations = {
+    'map': {
+        'countObjects': '',
+        'createFromDOM': '',
+        'createFromGrid': '',
+        'displayChapter': '',
+        'defineObject': '',
+        'getAdjacentEmptyCells': '',
+        'getCanvasContext': '',
+        'getCanvasCoords': '',
+        'getDOM': '',
+        'getDynamicObjects': '',
+        'getHeight': '',
+        'getObjectTypeAt': '',
+        'getPlayer': '',
+        'getRandomColor': '',
+        'getWidth': '',
+        'isStartOfLevel': '',
+        'overrideKey': '',
+        'placeObject': '',
+        'placePlayer': '',
+        'setSquareColor': '',
+        'startTimer': '',
+        'updateDOM': '',
+        'validateAtLeastXObjects': '',
+        'validateAtMostXDynamicObjects': '',
+        'validateExactlyXManyObjects': '',
+        'validateNoTimers': ''
+    }
+}
+
+Game.prototype.saveReferenceImplementations = function() {
+    for (f in this.referenceImplementations.map) {
+        if (this.referenceImplementations.map.hasOwnProperty(f)) {
+            this.referenceImplementations.map[f] = this.map[f];
+        }
+    }
+};
+
+Game.prototype.detectTampering = function(map) {
+    // once the super menu is activated, we don't care anymore!
+    if (this._superMenuActivated) {
+        return;
+    }
+
+    for (f in this.referenceImplementations.map) {
+        if (this.referenceImplementations.map.hasOwnProperty(f)) {
+            if (this.referenceImplementations.map[f].toString() != map[f].toString()) {
+                throw (f + '() has been tampered with!');
+            }
+        }
     }
 };

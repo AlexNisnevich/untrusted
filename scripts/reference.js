@@ -278,11 +278,11 @@ Game.prototype.reference = {
         'type': 'method',
         'description': 'Raises an exception if there are not at least num objects of type objectType on the map.'
     },
-    'map.validateExactlyXManyDynamicObjects': {
+    'map.validateAtMostXDynamicObjects': {
         'name': 'map.validateExactlyXManyObjects(num)',
         'category': 'map',
         'type': 'method',
-        'description': 'Raises an exception if there are not exactly num dynamic objects on the map.'
+        'description': 'Raises an exception if there are more than num dynamic objects on the map.'
     },
     'map.validateExactlyXManyObjects': {
         'name': 'map.validateExactlyXManyObjects(num, objectType)',

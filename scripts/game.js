@@ -74,10 +74,10 @@ function Game(debugMode, startLevel) {
     /* unexposed methods */
 
     this._initialize = function () {
-        // _initialize sound
+        // Initialize sound
         this.sound = new Sound(debugMode ? 'local' : 'cloudfront');
 
-        // _initialize map display
+        // Initialize map display
         this.display = ROT.Display.create(this, {
             width: this._dimensions.width,
             height: this._dimensions.height,
@@ -90,9 +90,18 @@ function Game(debugMode, startLevel) {
             display.focus();
         });
 
-        // _initialize map and editor
+        // Initialize map and editor
         this.editor = new CodeEditor("editor", 600, 500, this);
         this.map = new Map(this.display, this);
+
+        // Initialize validator
+        this.saveReferenceImplementations(); // prevents tampering with methods
+        this._globalVars = []; // keep track of current global variables
+        for (p in window) {
+            if (window.propertyIsEnumerable(p)) {
+                this._globalVars.push(p);
+            }
+        }
 
         // Enable controls
         this.enableShortcutKeys();
@@ -102,14 +111,6 @@ function Game(debugMode, startLevel) {
         // Load help commands from local storage (if possible)
         if (localStorage.getItem('helpCommands')) {
             __commands = localStorage.getItem('helpCommands').split(';');
-        }
-
-        // keep track of current global variables
-        this._globalVars = [];
-        for (p in window) {
-            if (window.propertyIsEnumerable(p)) {
-                this._globalVars.push(p);
-            }
         }
 
         // Enable debug features
@@ -292,6 +293,7 @@ function Game(debugMode, startLevel) {
             // start the level
             validatedStartLevel(this.map);
 
+            // deal with sneaky players
             this.clearModifiedGlobals();
 
             // draw the map
