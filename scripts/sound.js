@@ -1,4 +1,4 @@
-function Sound() {
+function Sound(source) {
     this.tracks = {
         'Adversity': {
             path: "music/Adversity.wav",
@@ -148,6 +148,11 @@ function Sound() {
         'Come and Find Me'
     ];
 
+    this.sources = {
+        'local': '',
+        'cloudfront': 'http://dk93t8qfl63bu.cloudfront.net/'
+    };
+
     this.bgPlayerElt = $("#jquery_bgPlayer");
     this.soundPlayerElt = $("#jquery_soundPlayer");
     this.muted = false;
@@ -155,6 +160,8 @@ function Sound() {
 
     this.init = function() {
         var sound = this;
+
+        this.source = this.sources[source];
 
         this.bgPlayerElt.jPlayer({
             wmode: "window",
@@ -179,9 +186,10 @@ function Sound() {
     this.playTrackByName = function (num, name) {
         if (num !== this.currentLevelNum) {
             var track = this.tracks[name];
+            var path = this.source + track.path;
             $(this.bgPlayerElt).jPlayer('stop');
             $(this.bgPlayerElt).jPlayer("setMedia", {
-                'mp3': 'http://dk93t8qfl63bu.cloudfront.net/' + track.path
+                'mp3': path
             });
             $(this.bgPlayerElt).jPlayer('play');
             this.currentLevelNum = num;
