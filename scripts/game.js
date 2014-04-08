@@ -75,7 +75,7 @@ function Game(debugMode, startLevel) {
 
     this._initialize = function () {
         // _initialize sound
-        this.sound = new Sound();
+        this.sound = new Sound(debugMode ? 'local' : 'cloudfront');
 
         // _initialize map display
         this.display = ROT.Display.create(this, {
