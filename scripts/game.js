@@ -158,7 +158,6 @@ function Game(debugMode, startLevel) {
     };
 
     this._jumpToNthLevel = function (levelNum) {
-        this._currentLevel = levelNum;
         this._currentFile = null;
         this._getLevel(levelNum);
         this.display.focus();
@@ -182,7 +181,7 @@ function Game(debugMode, startLevel) {
             editor.saveGoodState();
             editor.createGist();
 
-            game._currentLevel++;
+            game._currentLevel = levelNum;
             game._currentFile = null;
 
             // load level code in editor
