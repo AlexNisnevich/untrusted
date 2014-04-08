@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
+    "version": "1.1",
     "commandsIntroduced": ["ROT.Map.DividedMaze", "player.atLocation"],
     "music": "gurh"
 }

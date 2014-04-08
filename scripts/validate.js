@@ -1,5 +1,6 @@
 Game.prototype.verbotenWords = [
     '._', '"_', "'_", // prevents calling _unexposed methods
+    'fromCharCode', // prevents String.fromCharCode(95) === '_'
     'eval', 'call', 'apply', 'bind', // prevents arbitrary code execution
     'prototype', // prevents messing with prototypes
     'setTimeout', 'setInterval', // requires players to use map.startTimer() instead

@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
+    "version": "1.1",
     "commandsIntroduced":
         ["map.getObjectTypeAt", "player.getX", "player.getY",
          "map.refresh"],

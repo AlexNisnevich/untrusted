@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
+    "version": "1.1",
     "commandsIntroduced":
         ["global.objective", "map.getDOM", "map.createFromDOM",
          "map.updateDOM", "map.overrideKey", "global.$",

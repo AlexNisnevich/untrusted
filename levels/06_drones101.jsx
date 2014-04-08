@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
+    "version": "1.1",
 	"commandsIntroduced":
         ["object.type", "object.behavior", "object.findNearest",
          "object.getX", "object.getY", "object.canMove", "object.move"],
