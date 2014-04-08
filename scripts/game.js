@@ -159,7 +159,7 @@ function Game(debugMode, startLevel) {
 
     this._jumpToNthLevel = function (levelNum) {
         this._currentFile = null;
-        this._getLevel(levelNum, false, false,);
+        this._getLevel(levelNum, false, false);
         this.display.focus();
         this.sound.playSound('blip');
     };
