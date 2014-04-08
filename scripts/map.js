@@ -499,9 +499,9 @@ function Map(display, __game) {
         __lines.push({'start': start, 'end': end, 'callback': callback});
     };
 
-    this.testLineCollisions = function() {
+    this.testLineCollisions = function(player) {
         var threshold = 7;
-        var playerCoords = this.getCanvasCoords(__player);
+        var playerCoords = this.getCanvasCoords(player);
         __lines.forEach(function (line) {
             if (pDistance(playerCoords.x, playerCoords.y,
                     line.start[0], line.start[1],
