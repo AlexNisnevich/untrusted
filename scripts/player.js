@@ -72,7 +72,7 @@ function Player(x, y, __map, __game) {
         }
 
         // check for collision with any lines on the map
-        __map.testLineCollisions();
+        __map.testLineCollisions(this);
 
         // check for nonstandard victory condition (e.g. DOM level)
         if (typeof(__game.objective) === 'function' && __game.objective(__map)) {
