@@ -154,19 +154,19 @@ function Game(debugMode, startLevel) {
 
         //we disable moving so the player can't move during the fadeout
         this.map.getPlayer()._canMove = false;
-        this._getLevel(this._currentLevel + 1);
+        this._getLevel(this._currentLevel + 1, false, true);
     };
 
     this._jumpToNthLevel = function (levelNum) {
         this._currentFile = null;
-        this._getLevel(levelNum);
+        this._getLevel(levelNum, false, false,);
         this.display.focus();
         this.sound.playSound('blip');
     };
 
     // makes an ajax request to get the level text file and
     // then loads it into the game
-    this._getLevel = function (levelNum, isResetting) {
+    this._getLevel = function (levelNum, isResetting, movingToNextLevel) {
         var game = this;
         var editor = this.editor;
 
@@ -177,9 +177,11 @@ function Game(debugMode, startLevel) {
 
         var fileName = game._levelFileNames[levelNum - 1];
         $.get('levels/' + fileName, function (lvlCode) {
-            // save level state and create a gist
-            editor.saveGoodState();
-            editor.createGist();
+            if (movingToNextLevel) {
+                // save level state and create a gist
+                editor.saveGoodState();
+                editor.createGist();
+            }
 
             game._currentLevel = levelNum;
             game._currentFile = null;

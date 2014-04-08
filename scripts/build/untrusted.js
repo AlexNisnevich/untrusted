@@ -230,7 +230,7 @@ function Game(debugMode, startLevel) {
 
     this._initialize = function () {
         // _initialize sound
-        this.sound = new Sound();
+        this.sound = new Sound(debugMode ? 'local' : 'cloudfront');
 
         // _initialize map display
         this.display = ROT.Display.create(this, {
@@ -313,7 +313,6 @@ function Game(debugMode, startLevel) {
     };
 
     this._jumpToNthLevel = function (levelNum) {
-        this._currentLevel = levelNum;
         this._currentFile = null;
         this._getLevel(levelNum);
         this.display.focus();
@@ -337,7 +336,7 @@ function Game(debugMode, startLevel) {
             editor.saveGoodState();
             editor.createGist();
 
-            game._currentLevel++;
+            game._currentLevel = levelNum;
             game._currentFile = null;
 
             // load level code in editor
@@ -2856,7 +2855,7 @@ Game.prototype.reference = {
         'description': 'Sets the function that is executed when the player uses the function phone.'
     }
 };
-function Sound() {
+function Sound(source) {
     this.tracks = {
         'Adversity': {
             path: "music/Adversity.wav",
@@ -3006,6 +3005,11 @@ function Sound() {
         'Come and Find Me'
     ];
 
+    this.sources = {
+        'local': '',
+        'cloudfront': 'http://dk93t8qfl63bu.cloudfront.net/'
+    };
+
     this.bgPlayerElt = $("#jquery_bgPlayer");
     this.soundPlayerElt = $("#jquery_soundPlayer");
     this.muted = false;
@@ -3013,6 +3017,8 @@ function Sound() {
 
     this.init = function() {
         var sound = this;
+
+        this.source = this.sources[source];
 
         this.bgPlayerElt.jPlayer({
             wmode: "window",
@@ -3037,9 +3043,10 @@ function Sound() {
     this.playTrackByName = function (num, name) {
         if (num !== this.currentLevelNum) {
             var track = this.tracks[name];
+            var path = this.source + track.path;
             $(this.bgPlayerElt).jPlayer('stop');
             $(this.bgPlayerElt).jPlayer("setMedia", {
-                'mp3': 'http://dk93t8qfl63bu.cloudfront.net/' + track.path
+                'mp3': path
             });
             $(this.bgPlayerElt).jPlayer('play');
             this.currentLevelNum = num;
