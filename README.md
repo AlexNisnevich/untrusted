@@ -32,7 +32,7 @@ To run the game locally, you need to set up a local server to serve `index.html`
 First install [http-server](https://github.com/nodeapps/http-server/#installing-globally) if you haven't already:
 
 ```
-npm install http-server
+sudo npm install http-server
 ```
 
 Then run:

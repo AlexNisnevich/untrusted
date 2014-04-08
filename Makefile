@@ -106,4 +106,4 @@ deploy-debug-full: debug
 
 runlocal: debug
 	@echo "Running local instance"
-	~/node_modules/http-server/bin/http-server -p 9001 -c-1
+	./node_modules/http-server/bin/http-server -p 9001 -c-1

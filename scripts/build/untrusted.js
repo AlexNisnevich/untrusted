@@ -3039,7 +3039,7 @@ function Sound() {
             var track = this.tracks[name];
             $(this.bgPlayerElt).jPlayer('stop');
             $(this.bgPlayerElt).jPlayer("setMedia", {
-                'mp3': track.path
+                'mp3': 'http://dk93t8qfl63bu.cloudfront.net/' + track.path
             });
             $(this.bgPlayerElt).jPlayer('play');
             this.currentLevelNum = num;
