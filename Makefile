@@ -18,6 +18,7 @@ js-modules = scripts/util.js \
              scripts/sound.js \
              scripts/validate.js \
              scripts/ui.js \
+	         levels/levels.js \
              scripts/_launcher_release.js \
 	         scripts/_tail.js
 
@@ -35,6 +36,7 @@ js-modules-debug = scripts/util.js \
 	               scripts/sound.js \
 	               scripts/validate.js \
 	               scripts/ui.js \
+	               levels/levels.js \
 	               scripts/_launcher_debug.js \
 	               scripts/_tail.js
 
@@ -42,6 +44,9 @@ yui-jar = tools/yuicompressor-2.4.8pre.jar
 
 # `make` or `make debug` merges scripts (using debug launcher)
 debug: $(js-modules-debug)
+	@echo "Building level file…\t\t\t\c"
+	@./compile_levels.sh
+	@echo "[ Done ]"
 	@echo "Merging JS files…\t\t\t\c"
 	@cat $(js-modules-debug) > $(js-target)
 	@echo "[ Done ]"

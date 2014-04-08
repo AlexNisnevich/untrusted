@@ -4,7 +4,6 @@ function Game(debugMode, startLevel) {
     var __currentCode = '';
     var __commands = [];
 
-
     /* unexposed properties */
 
     this._dimensions = {
@@ -177,49 +176,49 @@ function Game(debugMode, startLevel) {
         }
 
         var fileName = game._levelFileNames[levelNum - 1];
-        $.get('levels/' + fileName, function (lvlCode) {
-            if (movingToNextLevel) {
-                // save level state and create a gist
-                editor.saveGoodState();
-                editor.createGist();
-            }
+        
+        lvlCode = this._levels['levels/' + fileName];
+        if (movingToNextLevel) {
+            // save level state and create a gist
+            editor.saveGoodState();
+            editor.createGist();
+        }
 
-            game._currentLevel = levelNum;
-            game._currentFile = null;
+        game._currentLevel = levelNum;
+        game._currentFile = null;
 
-            // load level code in editor
-            editor.loadCode(lvlCode);
+        // load level code in editor
+        editor.loadCode(lvlCode);
 
-            // restored saved state for this level?
-            if (!isResetting && editor.getGoodState(levelNum)) {
-                // unless the current level is a newer version
-                var newVer = editor.getProperties().version;
-                var savedVer = editor.getGoodState(levelNum).version;
-                if (!(newVer && (!savedVer || isNewerVersion(newVer, savedVer)))) {
-                    // restore saved line/section/endOfStartLevel state if possible
-                    if (editor.getGoodState(levelNum).endOfStartLevel) {
-                        editor.setEndOfStartLevel(editor.getGoodState(levelNum).endOfStartLevel);
-                    }
-                    if (editor.getGoodState(levelNum).editableLines) {
-                        editor.setEditableLines(editor.getGoodState(levelNum).editableLines);
-                    }
-                    if (editor.getGoodState(levelNum).editableSections) {
-                        editor.setEditableSections(editor.getGoodState(levelNum).editableSections);
-                    }
-
-                    // restore saved code
-                    editor.setCode(editor.getGoodState(levelNum).code);
+        // restored saved state for this level?
+        if (!isResetting && editor.getGoodState(levelNum)) {
+            // unless the current level is a newer version
+            var newVer = editor.getProperties().version;
+            var savedVer = editor.getGoodState(levelNum).version;
+            if (!(newVer && (!savedVer || isNewerVersion(newVer, savedVer)))) {
+                // restore saved line/section/endOfStartLevel state if possible
+                if (editor.getGoodState(levelNum).endOfStartLevel) {
+                    editor.setEndOfStartLevel(editor.getGoodState(levelNum).endOfStartLevel);
                 }
+                if (editor.getGoodState(levelNum).editableLines) {
+                    editor.setEditableLines(editor.getGoodState(levelNum).editableLines);
+                }
+                if (editor.getGoodState(levelNum).editableSections) {
+                    editor.setEditableSections(editor.getGoodState(levelNum).editableSections);
+                }
+
+                // restore saved code
+                editor.setCode(editor.getGoodState(levelNum).code);
             }
+        }
 
-            // start the level and fade in
-            game._evalLevelCode(null, null, true);
-            game.display.focus();
+        // start the level and fade in
+        game._evalLevelCode(null, null, true);
+        game.display.focus();
 
-            // store the commands introduced in this level (for api reference)
-            __commands = __commands.concat(editor.getProperties().commandsIntroduced).unique();
-            localStorage.setItem('helpCommands', __commands.join(';'));
-        });
+        // store the commands introduced in this level (for api reference)
+        __commands = __commands.concat(editor.getProperties().commandsIntroduced).unique();
+        localStorage.setItem('helpCommands', __commands.join(';'));
     };
 
     // how meta can we go?
