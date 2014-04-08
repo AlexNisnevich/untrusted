@@ -130,7 +130,7 @@ function DynamicObject(map, type, x, y) {
             throw (type + ' says: I don\'t have that item!');
         }
 
-        player.pickUpItem(itemType, map._getObjectDefinition(itemType));
+        player._pickUpItem(itemType, map._getObjectDefinition(itemType));
     };
 
     this.move = function (direction) {
