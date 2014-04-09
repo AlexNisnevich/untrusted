@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2",
+    "version": "1.2.1",
     "commandsIntroduced": ["map.setSquareColor"],
     "music": "cloudy_sin"
 }
@@ -37,7 +37,7 @@ function startLevel(map) {
         var y = getRandomInt(0, map.getHeight() - 1);
         if (x != 2 || y != map.getHeight() - 1) {
             // don't place mine over exit!
-            map.placeObject(x, y, 'mine', '#f00');
+            map.placeObject(x, y, 'mine');
 #BEGIN_EDITABLE#
 
 #END_EDITABLE#
