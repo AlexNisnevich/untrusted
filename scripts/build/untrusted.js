@@ -2891,7 +2891,7 @@ Game.prototype.reference = {
 function Sound(source) {
     this.tracks = {
         'Adversity': {
-            path: "music/Adversity.wav",
+            path: "music/Adversity.mp3",
             artist: "Seropard",
             title: "Adversity",
             url: "https://soundcloud.com/seropard"
@@ -2903,7 +2903,7 @@ function Sound(source) {
             url: "https://soundcloud.com/rolemusic"
         },
         'BossLoop': {
-            path: "music/Boss Loop 1.wav",
+            path: "music/Boss Loop 1.mp3",
             artist: "Essa",
             title: "Boss Loop 1",
             url: "http://www.youtube.com/user/Essasmusic"
