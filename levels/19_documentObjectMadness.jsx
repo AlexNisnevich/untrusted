@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2.1",
+    "version": "1.2.2",
     "commandsIntroduced":
         ["global.objective", "map.getDOM", "map.createFromDOM",
          "map.updateDOM", "map.overrideKey", "global.$",
@@ -10,7 +10,7 @@
          "jQuery.prev"],
     "music": "BossLoop",
     "mapProperties": {
-        "showDrawingCanvas": true
+        "showDummyDom": true
     }
 }
 #END_PROPERTIES#
@@ -51,14 +51,14 @@ function startLevel(map) {
                     "<li>BS, Mathematics, University of Manitoba</li>" +
                     "<li>PhD, Theoretical Computation, <a href='http://www.mit.edu'>MIT</a></li>" +
                 "</ul>" +
+                "<h4>About me</h4>" +
+                "<p>I am an associate professor of computer science, attached to the Department of " +
+                "Theoretical Computation. My current research interests include the human-machine " +
+                "interface, NP complete problems, and parallelized mesh mathematics.</p>" +
+                "<p>I am also the current faculty advisor to the <a href=''>undergraduate Super Smash Bros. team</a>. " +
+                "In my spare time I enjoy polka and dirtbiking. </p>" +
             "</td>" +
         "</tr></table>" +
-        "<h4>About me</h4>" +
-        "<p>I am an associate professor of computer science, attached to the Department of " +
-        "Theoretical Computation. My current research interests include the human-machine " +
-        "interface, NP complete problems, and parallelized mesh mathematics.</p>" +
-        "<p>I am also the current faculty advisor to the <a href=''>undergraduate Super Smash Bros. team</a>. " +
-        "In my spare time I enjoy polka and dirtbiking. </p>" +
 
         "<div id='class_schedule'>" +
           "<h4>Class Schedule</h4>" +
