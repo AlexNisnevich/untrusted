@@ -59,7 +59,7 @@ function startLevel(map) {
 
     var colors = ['red', 'yellow', 'teal'];
 
-    for (var i = 0; i < 20; i++) {
+    for (var i = 0; i < 25; i++) {
         var startX = getRandomInt(0, 600);
         var startY = getRandomInt(0, 500);
         var angle = getRandomInt(0, 360);
