@@ -394,3 +394,22 @@ h2 {
 	color: #999;
 	margin-left: 2em;
 }
+
+#paypal {
+	position: absolute;
+	bottom: 10px;
+	right: 0px;
+	width: 400px;
+	text-align: right;
+}
+
+#paypalCaption {
+	position: relative;
+	bottom: 5px;
+	font-size: 0.8em;
+	color: #ccc;
+}
+
+#paypalButton {
+	display: inline;
+}
