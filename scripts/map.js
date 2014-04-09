@@ -275,6 +275,10 @@ function Map(display, __game) {
 
     /* (unexposed) wrappers for game methods */
 
+    this._startOfStartLevelReached = function() {
+        __game._startOfStartLevelReached = true;
+    };
+
     this._endOfStartLevelReached = function() {
         __game._endOfStartLevelReached = true;
     };

@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced": ["map.getAdjacentEmptyCells"],
     "music": "Searching"
 }
@@ -16,6 +16,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.getRandomInt = function(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }

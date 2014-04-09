@@ -1,11 +1,14 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2.1",
     "commandsIntroduced":
         ["map.getCanvasContext", "canvas.beginPath", "canvas.strokeStyle",
          "canvas.lineWidth", "canvas.moveTo", "canvas.lineTo",
          "canvas.stroke"],
-    "music": "Soixante-8"
+    "music": "Soixante-8",
+    "mapProperties": {
+        "showDrawingCanvas": true
+    }
 }
 #END_PROPERTIES#
 /*************
@@ -22,6 +25,7 @@ function getRandomInt(min, max) {
 }
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     function createLaser(centerX, centerY, angleInDegrees, length, color) {
         var angleInRadians = angleInDegrees * Math.PI / 180;
 

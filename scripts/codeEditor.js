@@ -6,6 +6,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         'end_char': "#}#",
         'begin_properties':'#BEGIN_PROPERTIES#',
         'end_properties':'#END_PROPERTIES#',
+        'start_start_level':'#START_OF_START_LEVEL#',
         'end_start_level':'#END_OF_START_LEVEL#'
     };
 
@@ -15,6 +16,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
     var editableLines = [];
     var editableSections = {};
     var lastChange = {};
+    var startOfStartLevel = null;
     var endOfStartLevel = null;
 
     this.setEndOfStartLevel = function (eosl) {
@@ -42,6 +44,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         editableLines = [];
         editableSections = {};
         endOfStartLevel = null;
+        startOfStartLevel = null;
         var propertiesString = '';
 
         var lineArray = codeString.split("\n");
@@ -74,6 +77,12 @@ function CodeEditor(textAreaDomID, width, height, game) {
                 lineArray.splice(i,1);
                 i--;
                 inEditableBlock = false;
+            }
+            // process start of startLevel()
+              else if (currentLine.indexOf(symbols.start_start_level) === 0) {
+                lineArray.splice(i,1);
+                startOfStartLevel = i;
+                i--;
             }
             // process end of startLevel()
               else if (currentLine.indexOf(symbols.end_start_level) === 0) {
@@ -376,6 +385,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
     this.getCode = function (forSaving) {
         var lines = this.internalEditor.getValue().split('\n');
 
+        if (!forSaving && startOfStartLevel) {
+            // insert the end of startLevel() marker at the appropriate location
+            lines.splice(endOfStartLevel, 0, "map._startOfStartLevelReached()");
+        }
+
         if (!forSaving && endOfStartLevel) {
             // insert the end of startLevel() marker at the appropriate location
             lines.splice(endOfStartLevel, 0, "map._endOfStartLevelReached()");
@@ -409,9 +423,9 @@ function CodeEditor(textAreaDomID, width, height, game) {
     }
 
     this.setCode = function(code) {
-        // make sure we're not saving the hidden END_OF_START_LEVEL line
+        // make sure we're not saving the hidden START/END_OF_START_LEVEL lines
         code = code.split('\n').filter(function (line) {
-            return line.indexOf('_endOfStartLevelReached') < 0;
+            return line.indexOf('OfStartLevelReached') < 0;
         }).join('\n');
 
         this.internalEditor.off('beforeChange',enforceRestrictions);

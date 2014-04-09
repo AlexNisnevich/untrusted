@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced":
         ["map.getObjectTypeAt", "player.getX", "player.getY",
          "map.refresh"],
@@ -27,6 +27,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     // NOTE: In this level alone, map.placeObject is allowed to
     //overwrite existing objects.
 

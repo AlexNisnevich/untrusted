@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "music": "Brazil"
 }
 #END_PROPERTIES#
@@ -8,7 +8,8 @@
  * credits.js *
  **************/
 
- function startLevel(map) {
+function startLevel(map) {
+#START_OF_START_LEVEL#
     var credits = [
         [15, 1, "U N T R U S T E D"],
         [20, 2, "- or -"],

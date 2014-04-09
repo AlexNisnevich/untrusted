@@ -1,9 +1,12 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2.1",
     "commandsIntroduced":
         ["map.getDynamicObjects", "map.getCanvasCoords", "object.setTarget"],
-    "music": "Tart"
+    "music": "Tart",
+    "mapProperties": {
+        "showDrawingCanvas": true
+    }
 }
 #END_PROPERTIES#
 /***************
@@ -17,6 +20,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     function shuffle(o){ //v1.0 [http://bit.ly/1l6LGQT]
         for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i),
             x = o[--i], o[i] = o[j], o[j] = x);

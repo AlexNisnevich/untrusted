@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2.1",
     "commandsIntroduced": ["player.move", "map.startTimer"],
     "music": "Beach Wedding Dance",
     "mapProperties": {
@@ -20,6 +20,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     var fl = Math.floor;
     var w = map.getWidth();
     var h = map.getHeight();

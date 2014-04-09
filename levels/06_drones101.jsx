@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
 	"commandsIntroduced":
         ["object.type", "object.behavior", "object.findNearest",
          "object.getX", "object.getY", "object.canMove", "object.move"],
@@ -20,6 +20,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     function moveToward(obj, type) {
         var target = obj.findNearest(type);
         var leftDist = obj.getX() - target.x;
