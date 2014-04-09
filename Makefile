@@ -54,6 +54,9 @@ debug:
 # `make release` merges and compresses scripts (using release launcher)
 release:
 	@rm -f $(js-target-min)
+	@echo "Building level file…\t\t\t\c"
+	@./compile_levels.sh
+	@echo "[ Done ]"
 	@echo "Merging JS files…\t\t\t\c"
 	@cat $(js-modules) > $(js-target)
 	@echo "[ Done ]"
