@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2.1",
     "commandsIntroduced":
         ["global.objective", "map.getDOM", "map.createFromDOM",
          "map.updateDOM", "map.overrideKey", "global.$",
@@ -8,7 +8,10 @@
          "jQuery.removeClass", "jQuery.parent", "jQuery.length",
          "jQuery.children", "jQuery.first", "jQuery.next",
          "jQuery.prev"],
-    "music": "BossLoop"
+    "music": "BossLoop",
+    "mapProperties": {
+        "showDrawingCanvas": true
+    }
 }
 #END_PROPERTIES#
 /****************************
@@ -34,6 +37,7 @@ function objective(map) {
 }
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     var html = "<div class='container'>" +
     "<div style='width: 600px; height: 500px; background-color: white; font-size: 10px;'>" +
         "<center><h1>Department of Theoretical Computation</h1></center>" +

@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced": [],
     "music": "coming soon"
 }
@@ -19,6 +19,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
 
     map.placePlayer(map.getWidth()-5, map.getHeight()-4);
 

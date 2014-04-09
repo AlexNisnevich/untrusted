@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced":
         ["global.startLevel", "global.onExit", "map.placePlayer",
          "map.placeObject", "map.getHeight", "map.getWidth",
@@ -31,6 +31,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.displayChapter('Chapter 1\nBreakout');
 
     map.placePlayer(7, 5);

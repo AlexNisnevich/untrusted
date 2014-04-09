@@ -176,7 +176,7 @@ function Game(debugMode, startLevel) {
         }
 
         var fileName = game._levelFileNames[levelNum - 1];
-        
+
         lvlCode = this._levels['levels/' + fileName];
         if (movingToNextLevel) {
             // save level state and create a gist
@@ -298,7 +298,10 @@ function Game(debugMode, startLevel) {
             // draw the map
             this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
                 game.map.refresh(); // refresh inventory display
-                $('#drawingCanvas').show(); // show the drawing canvas again
+
+                if (game.map._properties.showDrawingCanvas) {
+                    $('#drawingCanvas').show(); // show the drawing canvas again
+                }
 
                 // workaround because we can't use writeStatus() in startLevel()
                 // (due to the text getting overwritten by the fade-in)

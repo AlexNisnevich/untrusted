@@ -11,6 +11,7 @@ Game.prototype.verbotenWords = [
     'debugger', // prevents pausing execution
     'delete', // prevents removing items
     'window', // prevents setting "window.[...] = map", etc.
+    'validate', 'onExit', 'objective', // don't let players rewrite these methods
     'this[' // prevents this['win'+'dow'], etc.
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
@@ -30,7 +31,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         for (var i = 0; i < this.verbotenWords.length; i++) {
             var badWord = this.verbotenWords[i];
             if (playerCode.indexOf(badWord) > -1) {
-                throw 'You are not allowed to use ' + badWord + '!';
+                throw "You are not allowed to use '" + badWord + "'!";
             }
         }
 
@@ -54,12 +55,20 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._eval(allCode);
 
         // start the level on a dummy map to validate
+        startLevel(dummyMap);
+
+        // re-run to check if the player messed with startLevel
+        this._startOfStartLevelReached = false;
         this._endOfStartLevelReached = false;
+        dummyMap._reset();
         startLevel(dummyMap);
 
         // does startLevel() execute fully?
         // (if we're restarting a level after editing a script, we can't test for this
         // - nor do we care)
+        if (!this._startOfStartLevelReached && !restartingLevelFromScript) {
+            throw 'startLevel() has been tampered with!';
+        }
         if (!this._endOfStartLevelReached && !restartingLevelFromScript) {
             throw 'startLevel() returned prematurely!';
         }

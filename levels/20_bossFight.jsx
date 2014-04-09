@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced":
         ["dynamicObject.onDestroy", "dynamicObject.projectile",
          "map.countObjects", "map.isStartOfLevel",
@@ -24,6 +24,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
 	map.defineObject('boss', {
         'type': 'dynamic',
         'symbol': '⊙',

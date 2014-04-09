@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced":
         ["global.validateLevel", "map.validateAtLeastXObjects",
          "map.validateExactlyXManyObjects"],
@@ -20,6 +20,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.placePlayer(map.getWidth()-7, map.getHeight()-5);
 #BEGIN_EDITABLE#
 

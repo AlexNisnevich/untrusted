@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced":
         ["map.createFromGrid", "player.removeItem"],
     "music": "Chip"
@@ -21,6 +21,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.defineObject('redLock', {
         'symbol': String.fromCharCode(0x2297),
         'color': 'red',

@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced":
         ["object.inventory", "object.giveItemTo", "object.passableFor",
          "map.validateAtMostXObjects"],
@@ -27,6 +27,7 @@ function getRandomInt(min, max) {
 }
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.placePlayer(map.getWidth()-2, map.getHeight()-2);
     var player = map.getPlayer();
 

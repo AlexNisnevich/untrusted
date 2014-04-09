@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced":
         ["map.defineObject", "player.getColor", "player.setColor",
          "object.color", "object.impassable", "object.symbol",
@@ -21,6 +21,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.placePlayer(0, 12);
     var player = map.getPlayer();
 

@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced": [],
     "music": "Messeah"
 }
@@ -18,6 +18,7 @@ function getRandomInt(min, max) {
 }
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.placePlayer(0, map.getHeight() - 1);
     var player = map.getPlayer();
 

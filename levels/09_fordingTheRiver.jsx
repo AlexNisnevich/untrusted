@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced":
         ["player.killedBy", "object.onCollision"],
     "music": "The_Waves_Call_Her_Name"
@@ -17,6 +17,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     var raftDirection = 'down';
 
     map.placePlayer(map.getWidth()-1, map.getHeight()-1);

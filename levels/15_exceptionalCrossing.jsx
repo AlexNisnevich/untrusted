@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "commandsIntroduced": [],
     "music": "The_Waves_Call_Her_Name",
     "startingMessage": "You have lost the Algorithm!"
@@ -26,6 +26,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.displayChapter('Chapter 3\nBetrayal');
 
     map.placePlayer(0, 0);

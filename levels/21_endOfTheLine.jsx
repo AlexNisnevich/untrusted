@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.1",
+    "version": "1.2",
     "activateSuperMenu": true,
     "music": "Comme Des Orages"
 }
@@ -43,6 +43,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.finalLevel = true;
     map.placePlayer(15, 12);
     map.placeObject(25, 12, 'exit');
