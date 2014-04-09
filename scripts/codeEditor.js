@@ -376,6 +376,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
                     var from = {'line': parseInt(line), 'ch': section[0]};
                     var to = {'line': parseInt(line), 'ch': section[1]};
                     instance.markText(from, to, {'className': 'editableSection'});
+                    instance.addLineClass(parseInt(line), 'wrap', 'partiallyEditable');
                 }
             }
         }
