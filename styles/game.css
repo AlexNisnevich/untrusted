@@ -118,7 +118,7 @@ body {
 }
 
 .CodeMirror-lines .disabled {
-	background: #311 !important;
+	background: #511 !important;
 }
 
 .CodeMirror-lines .disabled .editableSection {
