@@ -1,3 +1,5 @@
+[![Fund us on Gittip](https://www.gittip.com/assets/-/logo.png)](https://www.gittip.com/AlexNisnevich/)
+
 **Untrusted —or— the Continuing Adventures of Dr. Eval** is an exciting Meta-Javascript Adventure Game wherein you guide the dashing, steadfast Dr. Eval through a mysterious MACHINE CONTINUUM, wherein, using only his trusty computer and the TURING-COMPLETE power of Javascript, he must literally ALTER HIS REALITY in order to find his freedom! You must literally edit and re-execute the very Javascript running the game in your browser to save Dr. Eval from this dark and confusing reality!
 
 ### Overview
