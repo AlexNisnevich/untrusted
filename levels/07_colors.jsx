@@ -33,7 +33,7 @@ function startLevel(map) {
     player.setPhoneCallback(function () {
 #BEGIN_EDITABLE#
 
-       player.setColor('#f00');
+        player.setColor('#f00');
 
 
 
