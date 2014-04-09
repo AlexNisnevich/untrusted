@@ -3,7 +3,7 @@ Game.prototype.verbotenWords = [
     'fromCharCode', // prevents String.fromCharCode(95) => "_"
     'eval', '.call', 'call(', 'apply', 'bind', // prevents arbitrary code execution
     'prototype', // prevents messing with prototypes
-    'setTimeout', 'setInterval', // requires players to use map.startTimer() instead
+    'setTimeout', 'setInterval', 'requestAnimationFrame', 'mozRequestAnimationFrame', 'webkitRequestAnimationFrame', 'setImmediate' // requires players to use map.startTimer() instead
     'prompt', 'confirm', // prevents dialogs asking for user input
     'debugger', // prevents pausing execution
     'delete', // prevents removing items
