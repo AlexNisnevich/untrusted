@@ -109,6 +109,9 @@ deploy-debug-full: debug
 	@rm -rf _site
 	@echo "[ Done ]"
 
+deploy-github:
+	@git co gh-pages && git merge master --no-commit && make release && git cam "build" && git p; git master
+
 # run-local will start a mini python webserver and host a local
 # instance of the game on port 9001 (-c-1 disables caching)
 
