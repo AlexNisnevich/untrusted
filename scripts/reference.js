@@ -198,7 +198,7 @@ Game.prototype.reference = {
         'name': 'map.getHeight()',
         'category': 'map',
         'type': 'method',
-        'description': 'Returns the height of the map, in pixels.'
+        'description': 'Returns the height of the map, in cells.'
     },
     'map.getObjectTypeAt': {
         'name': 'map.getObjectTypeAt(x, y)',
@@ -222,7 +222,7 @@ Game.prototype.reference = {
         'name': 'map.getWidth()',
         'category': 'map',
         'type': 'method',
-        'description': 'Returns the width of the map, in pixels.'
+        'description': 'Returns the width of the map, in cells.'
     },
     'map.isStartOfLevel': {
         'name': 'map.isStartOfLevel()',
