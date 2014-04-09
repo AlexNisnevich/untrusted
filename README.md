@@ -41,7 +41,7 @@ We'd like to thank:
 - [Jordan Arnesen](https://github.com/extrajordanary) for playtesting and design of lvl17
 - [Natasha Hull-Richter](http://nhull.com) for extensive playtesting and assistance in level design
 - Alex Bolotov, Colin Curtin, Conrad Irwin, Devin C-R, Eugene Evans, Gilbert Hsyu, Jacob Nisnevich, James Silvey, Jason Jiang, Jimmy Hack, Philip Shao, Ryan Fitzgerald, Stephen Liu, Yayoi Ukai, and Yuval Gnessin for playtesting and feedback
-- [Ondřej Žára](https://github.com/ondras) for his[rot.js](http://ondras.github.io/rot.js/) library
+- [Ondřej Žára](https://github.com/ondras) for his [rot.js](http://ondras.github.io/rot.js/) library
 - [Marijn Haverbeke](https://github.com/marijnh) for his [CodeMirror](http://codemirror.net/) library
 - [Brian Harvey](http://www.cs.berkeley.edu/~bh/) for allowing us to use his likeness in lvl19
 
