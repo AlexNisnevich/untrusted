@@ -85,7 +85,7 @@ function Game(debugMode, startLevel) {
         this.display.setupEventHandlers();
         var display = this.display;
         $('#screen').append(this.display.getContainer());
-        $('#drawingCanvas').click(function () {
+        $('#drawingCanvas, #dummyDom, #dummyDom *').click(function () {
             display.focus();
         });
 
@@ -285,6 +285,7 @@ function Game(debugMode, startLevel) {
             // clear drawing canvas and hide it until level loads
             $('#drawingCanvas')[0].width = $('#drawingCanvas')[0].width;
             $('#drawingCanvas').hide();
+            $('#dummyDom').hide();
 
             // set correct inventory state
             this.setInventoryStateByLevel(this._currentLevel);
@@ -299,8 +300,11 @@ function Game(debugMode, startLevel) {
             this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
                 game.map.refresh(); // refresh inventory display
 
+                // show map overlays if necessary
                 if (game.map._properties.showDrawingCanvas) {
-                    $('#drawingCanvas').show(); // show the drawing canvas again
+                    $('#drawingCanvas').show();
+                } else if (game.map._properties.showDummyDom) {
+                    $('#dummyDom').show();
                 }
 
                 // workaround because we can't use writeStatus() in startLevel()

@@ -226,9 +226,10 @@ ROT.Display.prototype.focus = function() {
     $(this.getContainer()).attr('tabindex', '0').click().focus();
 };
 
-// using ideas from http://robert.ocallahan.org/2011/11/drawing-dom-content-to-canvas.html
+
 ROT.Display.prototype.renderDom = function(html, css) {
-    var canvas = $('#drawingCanvas')[0];
+    // using ideas from http://robert.ocallahan.org/2011/11/drawing-dom-content-to-canvas.html
+    /*var canvas = $('#drawingCanvas')[0];
     var ctx = canvas.getContext("2d");
     canvas.width = canvas.width; //resets background of canvas
     var data = "data:image/svg+xml," +
@@ -246,5 +247,9 @@ ROT.Display.prototype.renderDom = function(html, css) {
     //console.log(img);
     img.onload = function() {
         ctx.drawImage(img, 0, 0);
-    }
+    }*/
+
+    // drawing DOM to canvas doesn't work in many browsers, so
+    // we fall back to basic DOM rendering
+    $(dummyDom).html(html); // DOM CSS now resides in game.css with everything else
 }
