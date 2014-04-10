@@ -17,6 +17,9 @@
 
 function startLevel(map) {
 #START_OF_START_LEVEL#
+    // Hint: you can press R or 5 to "rest" and not move the
+    // player, while the robot moves around.
+
     map.getRandomInt = function(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }

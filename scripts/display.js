@@ -26,7 +26,12 @@ ROT.Display.prototype.setupEventHandlers = function() {
         81: 'funcPhone', // Q
         82: 'rest', // R
         83: 'down', // S
-        87: 'up' // W
+        87: 'up', // W
+        98: 'down', // 2
+        100: 'left', // 4
+        101: 'rest', // 5
+        102: 'right', // 6
+        104: 'up' // 8
     };
 
     // contentEditable is required for canvas elements to detect keyboard events
