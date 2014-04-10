@@ -343,7 +343,7 @@ Game.prototype.reference = {
         'name': 'object.impassable = function (player, object)',
         'category': 'object',
         'type': 'property',
-        'description': 'The function that is determines whether or not the player can pass through this object.'
+        'description': 'The function that determines whether or not the player can pass through this object.'
     },
     'object.inventory': {
         'name': 'object.inventory',
