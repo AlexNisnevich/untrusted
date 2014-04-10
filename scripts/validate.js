@@ -1,6 +1,6 @@
 Game.prototype.verbotenWords = [
     '._', '"_', "'_", // prevents calling _unexposed methods
-    '\u005f', // '\u005f' => '_'
+    '\\u005f', '\\x5', // equivalent to '_'
     'fromCharCode', // prevents String.fromCharCode(95) => "_"
     'eval', '.call', 'call(', 'apply', 'bind', // prevents arbitrary code execution
     'prototype', // prevents messing with prototypes
