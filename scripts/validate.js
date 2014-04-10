@@ -11,6 +11,8 @@ Game.prototype.verbotenWords = [
     'debugger', // prevents pausing execution
     'delete', // prevents removing items
     'window', // prevents setting "window.[...] = map", etc.
+    'self', 'top', 'frames',  // self === top === frames === window 
+    'parent', 'content' // parent === content === window in most of cases
     'validate', 'onExit', 'objective', // don't let players rewrite these methods
     'this[' // prevents this['win'+'dow'], etc.
 ];
