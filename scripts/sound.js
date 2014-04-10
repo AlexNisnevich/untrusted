@@ -183,28 +183,31 @@ function Sound(source) {
         });
     };
 
-    this.playTrackByName = function (num, name) {
-        if (num !== this.currentLevelNum) {
-            var track = this.tracks[name];
+    this.playTrackByName = function (name) {
+        this.trackForLevel = name;
+
+        var track = this.tracks[name];
+        if (track.url) {
+            var nowPlayingMsg = 'Now playing: "' + track.title + '" - <a target="_blank" href="' + track.url + '">' + track.artist + '</a>';
+        } else {
+            var nowPlayingMsg = 'Now playing: "' + track.title + '" - ' + track.artist;
+        }
+        $('#nowPlayingMsg').html(nowPlayingMsg);
+
+        if (!this.muted && this.currentlyPlayingTrack !== name) {
             var path = this.source + track.path;
             $(this.bgPlayerElt).jPlayer('stop');
             $(this.bgPlayerElt).jPlayer("setMedia", {
                 'mp3': path
             });
             $(this.bgPlayerElt).jPlayer('play');
-            this.currentLevelNum = num;
 
-            if (track.url) {
-                var nowPlayingMsg = 'Now playing: "' + track.title + '" - <a target="_blank" href="' + track.url + '">' + track.artist + '</a>';
-            } else {
-                var nowPlayingMsg = 'Now playing: "' + track.title + '" - ' + track.artist;
-            }
-            $('#nowPlayingMsg').html(nowPlayingMsg);
+            this.currentlyPlayingTrack = name;
         }
     };
 
     this.playTrackByNum = function (num) {
-        this.playTrackByName(num, this.defaultTracks[(num - 1) % this.defaultTracks.length]);
+        this.playTrackByName(this.defaultTracks[(num - 1) % this.defaultTracks.length]);
     };
 
     this.playSound = function (name) {
@@ -220,12 +223,14 @@ function Sound(source) {
             this.bgPlayerElt.jPlayer('unmute');
             this.soundPlayerElt.jPlayer('unmute');
             $("#muteButton img").attr('src', 'images/mute-off.png');
+            this.muted = false;
+            this.playTrackByName(this.trackForLevel);
         } else {
             this.bgPlayerElt.jPlayer('mute');
             this.soundPlayerElt.jPlayer('mute');
             $("#muteButton img").attr('src', 'images/mute-on.png');
+            this.muted = true;
         }
-        this.muted = !this.muted;
     };
 
     // constructor

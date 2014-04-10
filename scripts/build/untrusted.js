@@ -473,7 +473,7 @@ function Game(debugMode, startLevel) {
 
             // start bg music for this level
             if (this.editor.getProperties().music) {
-                this.sound.playTrackByName(this._currentLevel, this.editor.getProperties().music);
+                this.sound.playTrackByName(this.editor.getProperties().music);
             } else {
                 this.sound.playTrackByNum(this._currentLevel);
             }
@@ -2777,7 +2777,7 @@ Game.prototype.reference = {
         'name': 'object.impassable = function (player, object)',
         'category': 'object',
         'type': 'property',
-        'description': 'The function that is determines whether or not the player can pass through this object.'
+        'description': 'The function that determines whether or not the player can pass through this object.'
     },
     'object.inventory': {
         'name': 'object.inventory',
@@ -3074,28 +3074,31 @@ function Sound(source) {
         });
     };
 
-    this.playTrackByName = function (num, name) {
-        if (num !== this.currentLevelNum) {
-            var track = this.tracks[name];
+    this.playTrackByName = function (name) {
+        this.trackForLevel = name;
+
+        var track = this.tracks[name];
+        if (track.url) {
+            var nowPlayingMsg = 'Now playing: "' + track.title + '" - <a target="_blank" href="' + track.url + '">' + track.artist + '</a>';
+        } else {
+            var nowPlayingMsg = 'Now playing: "' + track.title + '" - ' + track.artist;
+        }
+        $('#nowPlayingMsg').html(nowPlayingMsg);
+
+        if (!this.muted && this.currentlyPlayingTrack !== name) {
             var path = this.source + track.path;
             $(this.bgPlayerElt).jPlayer('stop');
             $(this.bgPlayerElt).jPlayer("setMedia", {
                 'mp3': path
             });
             $(this.bgPlayerElt).jPlayer('play');
-            this.currentLevelNum = num;
 
-            if (track.url) {
-                var nowPlayingMsg = 'Now playing: "' + track.title + '" - <a target="_blank" href="' + track.url + '">' + track.artist + '</a>';
-            } else {
-                var nowPlayingMsg = 'Now playing: "' + track.title + '" - ' + track.artist;
-            }
-            $('#nowPlayingMsg').html(nowPlayingMsg);
+            this.currentlyPlayingTrack = name;
         }
     };
 
     this.playTrackByNum = function (num) {
-        this.playTrackByName(num, this.defaultTracks[(num - 1) % this.defaultTracks.length]);
+        this.playTrackByName(this.defaultTracks[(num - 1) % this.defaultTracks.length]);
     };
 
     this.playSound = function (name) {
@@ -3111,12 +3114,14 @@ function Sound(source) {
             this.bgPlayerElt.jPlayer('unmute');
             this.soundPlayerElt.jPlayer('unmute');
             $("#muteButton img").attr('src', 'images/mute-off.png');
+            this.muted = false;
+            this.playTrackByName(this.trackForLevel);
         } else {
             this.bgPlayerElt.jPlayer('mute');
             this.soundPlayerElt.jPlayer('mute');
             $("#muteButton img").attr('src', 'images/mute-on.png');
+            this.muted = true;
         }
-        this.muted = !this.muted;
     };
 
     // constructor
@@ -3124,7 +3129,7 @@ function Sound(source) {
 }
 Game.prototype.verbotenWords = [
     '._', '"_', "'_", // prevents calling _unexposed methods
-    '\u005f', // '\u005f' => '_'
+    '\\u005f', '\\x5', // equivalent to '_'
     'fromCharCode', // prevents String.fromCharCode(95) => "_"
     'eval', '.call', 'call(', 'apply', 'bind', // prevents arbitrary code execution
     'prototype', // prevents messing with prototypes
