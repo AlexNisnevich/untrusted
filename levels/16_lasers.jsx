@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2.1",
+    "version": "1.2.2",
     "commandsIntroduced":
         ["map.getCanvasContext", "canvas.beginPath", "canvas.strokeStyle",
          "canvas.lineWidth", "canvas.moveTo", "canvas.lineTo",
@@ -26,6 +26,21 @@ function getRandomInt(min, max) {
 
 function startLevel(map) {
 #START_OF_START_LEVEL#
+    map.placePlayer(0, 0);
+    map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
+    var player = map.getPlayer();
+
+    var colors = ['red', 'yellow', 'teal'];
+
+    for (var i = 0; i < 25; i++) {
+        var startX = getRandomInt(0, 600);
+        var startY = getRandomInt(0, 500);
+        var angle = getRandomInt(0, 360);
+        var length = getRandomInt(200, 300);
+        var color = colors[i % 3];
+        createLaser(startX, startY, angle, length, color);
+    }
+
     function createLaser(centerX, centerY, angleInDegrees, length, color) {
         var angleInRadians = angleInDegrees * Math.PI / 180;
 
@@ -52,20 +67,7 @@ function startLevel(map) {
         ctx.lineTo(x2, y2);
         ctx.stroke();
 #END_EDITABLE#
-    }
-    map.placePlayer(0, 0);
-    map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
-    var player = map.getPlayer();
 
-    var colors = ['red', 'yellow', 'teal'];
-
-    for (var i = 0; i < 25; i++) {
-        var startX = getRandomInt(0, 600);
-        var startY = getRandomInt(0, 500);
-        var angle = getRandomInt(0, 360);
-        var length = getRandomInt(200, 300);
-        var color = colors[i % 3];
-        createLaser(startX, startY, angle, length, color);
     }
 
 #BEGIN_EDITABLE#
