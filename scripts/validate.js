@@ -52,7 +52,13 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
 
+        var _call = Function.prototype.call;
+        debugger;
+        Function.prototype.call = function() { };
+
         this._eval(allCode);
+
+        Function.prototype.call = _call;
 
         // start the level on a dummy map to validate
         startLevel(dummyMap);
