@@ -1,10 +1,10 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2.2",
+    "version": "1.2.3",
     "commandsIntroduced":
         ["map.getCanvasContext", "canvas.beginPath", "canvas.strokeStyle",
          "canvas.lineWidth", "canvas.moveTo", "canvas.lineTo",
-         "canvas.stroke"],
+         "canvas.stroke", "map.createLine", "map.validateAtLeastXLines"],
     "music": "Soixante-8",
     "mapProperties": {
         "showDrawingCanvas": true
@@ -30,9 +30,9 @@ function startLevel(map) {
     map.placeObject(map.getWidth()-1, map.getHeight()-1, 'exit');
     var player = map.getPlayer();
 
-    var colors = ['red', 'yellow', 'teal'];
-
     for (var i = 0; i < 25; i++) {
+        var colors = ['red', 'yellow', 'teal'];
+
         var startX = getRandomInt(0, 600);
         var startY = getRandomInt(0, 500);
         var angle = getRandomInt(0, 360);
@@ -86,4 +86,5 @@ function startLevel(map) {
 
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
+    map.validateAtLeastXLines(25);
 }

@@ -235,6 +235,13 @@ Map.prototype.validateNoTimers = function() {
     }
 };
 
+Map.prototype.validateAtLeastXLines = function(num) {
+    var count = this._getLines().length;
+    if (count < num) {
+        throw 'Not enough lines on the map! Expected: ' + num + ', found: ' + count;
+    }
+};
+
 // Function tampering prevention
 
 Game.prototype.referenceImplementations = {
@@ -262,9 +269,11 @@ Game.prototype.referenceImplementations = {
         'startTimer': '',
         'updateDOM': '',
         'validateAtLeastXObjects': '',
-        'validateAtMostXDynamicObjects': '',
+        'validateAtMostXObjects': '',
         'validateExactlyXManyObjects': '',
-        'validateNoTimers': ''
+        'validateAtMostXDynamicObjects': '',
+        'validateNoTimers': '',
+        'validateAtLeastXLines': ''
     }
 }
 

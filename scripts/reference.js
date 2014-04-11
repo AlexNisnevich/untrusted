@@ -152,6 +152,12 @@ Game.prototype.reference = {
         'type': 'method',
         'description': 'Places objects on the map corresponding to their position on the grid (an array of strings), with mappings as defined in tiles (a dictionary of character -> object type mappings), at the given offset from the top-left corner of the map.'
     },
+    'map.createLine': {
+        'name': 'map.createLine([x1, x2], [y1 y2], callback)',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Places a line on the map between the given points, that triggers the given callback when the player touches it. (Note that the line is invisible: createLine does <i>not</i> draw anything to the <a onclick="$(\'#helpPaneSidebar .category#canvas\').click();">canvas</a>.)'
+    },
     'map.displayChapter': {
         'name': 'map.displayChapter(chapter)',
         'category': 'map',
@@ -271,6 +277,12 @@ Game.prototype.reference = {
         'category': 'map',
         'type': 'method',
         'description': 'Updates the <a onclick="$(\'#helpPaneSidebar .category#jQuery\').click();">jQuery</a> instance representing the map.'
+    },
+    'map.validateAtLeastXLines': {
+        'name': 'map.validateAtLeastXObjects(num)',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Raises an exception if there are not at least num lines (created by map.createLine) on the map.'
     },
     'map.validateAtLeastXObjects': {
         'name': 'map.validateAtLeastXObjects(num, objectType)',

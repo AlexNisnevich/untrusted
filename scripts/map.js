@@ -29,6 +29,7 @@ function Map(display, __game) {
     this._getObjectDefinition = function(objName) { return __objectDefinitions[objName]; };
     this._getObjectDefinitions = function() { return __objectDefinitions; };
     this._getGrid = function () { return __grid; };
+    this._getLines = function() { return __lines; };
 
     /* exposed getters */
 
