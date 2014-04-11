@@ -1,4 +1,6 @@
-# Yuval
+# Breadth-First Search approaches
+
+## Yuval
 
 ```javascript
 var moves = map.getAdjacentEmptyCells(me.getX(), me.getY());                        
@@ -28,7 +30,7 @@ if (me.getX() == x_goal) {
 }
 ```
 
-# Natasha + Alex
+## Natasha + Alex
 
 ```javascript
 if (me.pathFound) {
@@ -71,26 +73,25 @@ if (me.pathFound) {
 }
 ```
 
-# RockerM4NHUN
+# Player-controlled approaches
+## RockerM4NHUN
 
 ```javascript
-if (player.getX() - lx == 1) me.move('right');
-			else if (player.getX() - lx == -1) me.move('left');
-			else if (player.getY() - ly == 1) me.move('down');
-			else if (player.getY() - ly == -1) me.move('up');
-            
-			lx = player.getX();
-            ly = player.getY();
-        }
-    });
+        if (player.getX() - lx == 1) me.move('right');
+        else if (player.getX() - lx == -1) me.move('left');
+        else if (player.getY() - ly == 1) me.move('down');
+        else if (player.getY() - ly == -1) me.move('up');
     
+        lx = player.getX();
+        ly = player.getY();
+    }
+});
     
-    
-	var lx = player.getX();
-	var ly = player.getY();
+var lx = player.getX();
+var ly = player.getY();
     
 
-    map.defineObject('foo', {
-        'type': 'dynamic',
-        'dat': function(){
+map.defineObject('foo', {
+    'type': 'dynamic',
+    'dat': function() {
 ```
