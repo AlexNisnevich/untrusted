@@ -319,8 +319,6 @@ function Game(debugMode, startLevel) {
             // start bg music for this level
             if (this.editor.getProperties().music) {
                 this.sound.playTrackByName(this.editor.getProperties().music);
-            } else {
-                this.sound.playTrackByNum(this._currentLevel);
             }
 
             // finally, allow player movement
