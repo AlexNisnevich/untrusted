@@ -85,7 +85,7 @@ Game.prototype.drawInventory = function () {
 		$('#inventory').text('INVENTORY: ');
 
 		this.inventory.forEach(function (item) {
-			var object = game.objects[item];
+			var object = game.map._getObjectDefinition(item);
 
 			$('<span class="item">')
 				.attr('title', item)
