@@ -43,6 +43,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
         } else if (keys[e.keyCode] && game.map.getPlayer()) {
             game.map.getPlayer().move(keys[e.keyCode], true);
         }
+        e.preventDefault();
     });
 
     this.getContainer().addEventListener("click", function(e) {
