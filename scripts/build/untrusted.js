@@ -3157,6 +3157,7 @@ Game.prototype.verbotenWords = [
     'debugger', // prevents pausing execution
     'delete', // prevents removing items
     'window', // prevents setting "window.[...] = map", etc.
+    'document', // in particular, document.write is dangerous
     'validate', 'onExit', 'objective', // don't let players rewrite these methods
     'this[' // prevents this['win'+'dow'], etc.
 ];
