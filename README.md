@@ -49,7 +49,9 @@ We'd like to thank:
 
 #### Soundtrack
 
-The music that appears in the game, in order, is:
+You can [listen to the full soundtrack here](https://soundcloud.com/untrusted/sets/untrusted-soundtrack).
+
+The music that appears in Untrusted, in order, is:
 
 - "The Green" - [Jonathan Holliday](http://www.soundclick.com/bands/default.cfm?bandID=836578) (used with permission)
 - "Dmitry's Thing #2" - [Dmitry Mazin](https://soundcloud.com/dmitry-mazin) (written for Untrusted)
@@ -60,7 +62,7 @@ The music that appears in the game, in order, is:
 - "Y" - [Tortue Super Sonic](https://soundcloud.com/tss-tortue-super-sonic) (CC-BY-NC-SA)
 - "Night Owl" - [Broke for Free](http://brokeforfree.com/) (CC-BY)
 - "The Waves Call Her Name" - [Sycamore Drive](http://sycamoredrive.bandcamp.com/) (CC-BY-NC-SA)
-- "Come and Find Me - [B mix" - [Eric Skiff](http://ericskiff.com/) (CC-BY)
+- "Come and Find Me - B mix" - [Eric Skiff](http://ericskiff.com/) (CC-BY)
 - "Conspiracy" - [Mike and Alan](https://www.facebook.com/MicAndAlan) (used with permission)
 - "Messeah" - [RoccoW](https://soundcloud.com/roccow) (CC-BY)
 - "Searching" - [Eric Skiff](http://ericskiff.com/) (CC-BY)
