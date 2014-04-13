@@ -95,3 +95,26 @@ map.defineObject('foo', {
     'type': 'dynamic',
     'dat': function() {
 ```
+
+## Neogeek
+```javascript
+if(player == map.getPlayer()){
+	player.setPhoneCallback(function(){
+        switch(player){
+            case 'up':
+                player = 'right';
+                break;
+            case 'right':
+                player = 'down';
+                break;
+            case 'down':
+                player = 'left';
+                break;
+            default:
+                player = 'up';
+        }
+        map.displayChapter(player);
+    });
+}
+me.move(player);
+```
