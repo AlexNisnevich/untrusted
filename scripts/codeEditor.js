@@ -387,7 +387,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         if (!forSaving && startOfStartLevel) {
             // insert the end of startLevel() marker at the appropriate location
-            lines.splice(endOfStartLevel, 0, "map._startOfStartLevelReached()");
+            lines.splice(startOfStartLevel, 0, "map._startOfStartLevelReached()");
         }
 
         if (!forSaving && endOfStartLevel) {
