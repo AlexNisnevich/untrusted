@@ -2,7 +2,7 @@
 {
     "version": "1.2",
     "commandsIntroduced":
-        ["dynamicObject.onDestroy", "dynamicObject.projectile",
+        ["object.onDestroy", "object.projectile",
          "map.countObjects", "map.isStartOfLevel",
          "map.validateAtMostXDynamicObjects", "map.validateNoTimers"],
 	"music": "Adversity",
