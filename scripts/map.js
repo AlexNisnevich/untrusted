@@ -74,6 +74,7 @@ function Map(display, __game) {
         });
 
         this.finalLevel = false;
+        this._callbackValidationFailed = false;
     };
 
     this._ready = function () {
@@ -249,9 +250,11 @@ function Map(display, __game) {
     };
 
     this._reenableMovementForPlayer = function (player) {
-        setTimeout(function () {
-            player._canMove = true;
-        }, __keyDelay);
+        if (!_callbackValidationFailed) {
+            setTimeout(function () {
+                player._canMove = true;
+            }, __keyDelay);
+        }
     };
 
     this._hideChapter = function() {
