@@ -21,6 +21,7 @@ function startLevel(map) {
     var raftDirection = 'down';
 
     map.placePlayer(map.getWidth()-1, map.getHeight()-1);
+    var player = map.getPlayer();
 
     map.defineObject('raft', {
         'type': 'dynamic',
