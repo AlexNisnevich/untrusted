@@ -250,7 +250,7 @@ function Map(display, __game) {
     };
 
     this._reenableMovementForPlayer = function (player) {
-        if (!_callbackValidationFailed) {
+        if (!this._callbackValidationFailed) {
             setTimeout(function () {
                 player._canMove = true;
             }, __keyDelay);
