@@ -23,15 +23,15 @@
 function startLevel(map) {
 #START_OF_START_LEVEL#
     map.placePlayer(0, 12);
-    var player = map.getPlayer();
 
     map.placeObject(5, 12, 'phone');
 
     // The function phone lets you call arbitrary functions,
     // as defined by player.setPhoneCallback() below.
     // The function phone callback is bound to Q or Ctrl-6.
-    player.setPhoneCallback(function () {
+    map.getPlayer().setPhoneCallback(function () {
 #BEGIN_EDITABLE#
+        var player = map.getPlayer();
 
         player.setColor('#f00');
 
