@@ -3282,6 +3282,7 @@ Game.prototype.validateCallback = function(callback) {
 
             // disable player movement
             this.map.getPlayer()._canMove = false;
+            this.map._callbackValidationFailed = true;
 
             return;
         }
@@ -3302,6 +3303,7 @@ Game.prototype.validateCallback = function(callback) {
 
                 // disable player movement
                 this.map.getPlayer()._canMove = false;
+                this.map._callbackValidationFailed = true;
 
                 return;
             }
