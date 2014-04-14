@@ -1,12 +1,40 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2",
+    "version": "1.2.1",
     "music": "Brazil"
 }
 #END_PROPERTIES#
 /**************
  * credits.js *
- **************/
+ *************
+ *
+ * Congratulations! Dr. Eval has successfully escaped from the
+ * Machine Continuum with the Algorithm in hand.
+ *
+ * Give yourself a pat on the back. You are one clever hacker.
+ *
+ *
+ *
+ * Hungry for more?
+ *
+ * Check out Untrusted's github repository at
+ *      https://github.com/AlexNisnevich/untrusted
+ *
+ * Perhaps try your hand at making your own level or two!
+ *
+ * Like what you've been hearing? You can listen to the full
+ * soundtrack at
+ *      https://soundcloud.com/untrusted
+ *
+ * Feel free to drop us a line at [
+ *      'alex [dot] nisnevich [at] gmail [dot] com',
+ *      'greg [dot] shuflin [at] gmail [dot] com'
+ * ]
+ *
+ * Once again, congratulations!
+ *
+ *             -- Alex and Greg
+ */
 
 function startLevel(map) {
 #START_OF_START_LEVEL#
