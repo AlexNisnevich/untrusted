@@ -132,7 +132,8 @@ Game.prototype.validateCallback = function(callback) {
 
             // disable player movement
             this.map.getPlayer()._canMove = false;
-            throw e;
+
+            return;
         }
 
         // on maps with many objects (e.g. boss fight),

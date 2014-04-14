@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2.1",
+    "version": "1.2.2",
     "commandsIntroduced": ["player.move", "map.startTimer"],
     "music": "Beach Wedding Dance",
     "mapProperties": {
@@ -82,4 +82,5 @@ function startLevel(map) {
 
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
+    map.validateExactlyXManyObjects(520, 'block');
 }
