@@ -111,6 +111,23 @@ function startLevel(map) {
 
 #BEGIN_EDITABLE#
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #END_EDITABLE#
 
 #END_OF_START_LEVEL#

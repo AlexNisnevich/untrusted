@@ -76,7 +76,8 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             throw 'startLevel() returned prematurely!';
         }
 
-        this.detectTampering(dummyMap); // have we tampered with any functions?
+        // has the player tampered with any functions?
+        this.detectTampering(dummyMap, dummyMap.getPlayer());
 
         this.validateLevel = function () { return true; };
         // does validateLevel() succeed?
@@ -140,6 +141,21 @@ Game.prototype.validateCallback = function(callback) {
         // we can't afford to do these steps
         if (!this.map._properties.quickValidateCallback) {
             this.clearModifiedGlobals();
+
+            // has the player tampered with any functions?
+            try {
+                this.detectTampering(this.map, this.map.getPlayer());
+            } catch (e) {
+                this.display.appendError(e.toString(), "%c{red}Validation failed! Please reload the level.");
+
+                // play error sound
+                this.sound.playSound('static');
+
+                // disable player movement
+                this.map.getPlayer()._canMove = false;
+
+                return;
+            }
 
             // refresh the map, just in case
             this.map.refresh();
@@ -278,6 +294,18 @@ Game.prototype.referenceImplementations = {
         'validateAtMostXDynamicObjects': '',
         'validateNoTimers': '',
         'validateAtLeastXLines': ''
+    },
+    'player': {
+        'atLocation': '',
+        'getColor': '',
+        'getX': '',
+        'getY': '',
+        'hasItem': '',
+        'killedBy': '',
+        'move': '',
+        'removeItem': '',
+        'setColor': '',
+        'setPhoneCallback': ''
     }
 }
 
@@ -287,9 +315,16 @@ Game.prototype.saveReferenceImplementations = function() {
             this.referenceImplementations.map[f] = this.map[f];
         }
     }
+
+    var dummyPlayer = new Player(0, 0, this.map, this);
+    for (f in this.referenceImplementations.player) {
+        if (this.referenceImplementations.player.hasOwnProperty(f)) {
+            this.referenceImplementations.player[f] = dummyPlayer[f];
+        }
+    }
 };
 
-Game.prototype.detectTampering = function(map) {
+Game.prototype.detectTampering = function(map, player) {
     // once the super menu is activated, we don't care anymore!
     if (this._superMenuActivated) {
         return;
@@ -299,6 +334,16 @@ Game.prototype.detectTampering = function(map) {
         if (this.referenceImplementations.map.hasOwnProperty(f)) {
             if (this.referenceImplementations.map[f].toString() != map[f].toString()) {
                 throw (f + '() has been tampered with!');
+            }
+        }
+    }
+
+    if (player) {
+        for (f in this.referenceImplementations.player) {
+            if (this.referenceImplementations.player.hasOwnProperty(f)) {
+                if (this.referenceImplementations.player[f].toString() != player[f].toString()) {
+                    throw (f + '() has been tampered with!');
+                }
             }
         }
     }
