@@ -16,3 +16,10 @@
             player.killedBy(map.placePlayer());
         }
 ```
+
+## 029ah
+```javascript
+       'onCollision': function (player) {
+            player.killedBy(none);
+        }
+```
