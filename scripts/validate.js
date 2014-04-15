@@ -10,6 +10,7 @@ Game.prototype.verbotenWords = [
     'prompt', 'confirm', // prevents dialogs asking for user input
     'debugger', // prevents pausing execution
     'delete', // prevents removing items
+    'atob','btoa',//prevent bypassing checks using Base64
     'window', // prevents setting "window.[...] = map", etc.
     'document', // in particular, document.write is dangerous
     'self.', 'self[', 'top.', 'top[', 'frames',  // self === top === frames === window
