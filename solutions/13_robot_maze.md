@@ -1,4 +1,20 @@
 # Breadth-First Search approaches
+## Deviator
+
+```javascript
+
+if( typeof this.cdir == 'undefined' ) this.cdir = 0;
+var dir = ['right', 'up', 'left', 'down'];
+var ln = dir.length;
+
+if( me.canMove(dir[(this.cdir+1)%ln]) )
+	this.cdir = (this.cdir+1)%ln;
+else if( !me.canMove(dir[this.cdir]) )
+	this.cdir = (this.cdir+ln-1)%ln;
+
+me.move(dir[this.cdir]);
+                
+```
 
 ## Yuval
 
