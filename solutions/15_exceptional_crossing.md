@@ -8,6 +8,13 @@
         }
 ```
 
+```javascript
+        // Assumes you'll need to go down
+        'onCollision': function (player) {
+            player.killedBy(map.placeObject(0, player.getY(), 'empty'));
+        }
+```
+
 # Exception approach
 
 ## lizheming
@@ -16,3 +23,4 @@
             player.killedBy(map.placePlayer());
         }
 ```
+
