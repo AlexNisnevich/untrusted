@@ -56,7 +56,9 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
                     "}");
         }).join('\n');
 
-        console.log(allCode);
+        if (this._debugMode) {
+            console.log(allCode);
+        }
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
 
