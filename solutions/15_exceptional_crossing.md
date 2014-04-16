@@ -24,3 +24,12 @@
         }
 ```
 
+# Redefinition approach
+
+## CaitSith2
+```javascript
+        'onCollision': function (player) {
+            player.killedBy();},'onCollision': function (player){//);
+        }
+```
+
