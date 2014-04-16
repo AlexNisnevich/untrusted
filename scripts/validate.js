@@ -50,7 +50,10 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         allCode = allCode.replace(/while\s*\((.*)\)/g, "for (dummy=0;$1;)"); // while -> for
         allCode = $.map(allCode.split('\n'), function (line, i) {
             return line.replace(/for\s*\((.*);(.*);(.*)\)\s*{/g,
-                "for ($1, if (startTime = Date.now();$2; Date.now() - startTime > " + game.allowedTime + ") throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + game.allowedTime + " ms exceeded.' else $3){");
+                "for ($1, startTime = Date.now();$2;$3){" +
+                    "if (Date.now() - startTime > " + game.allowedTime + ") {" +
+                        "throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + game.allowedTime + " ms exceeded.';" +
+                    "}");
         }).join('\n');
 
         if (this._debugMode) {
