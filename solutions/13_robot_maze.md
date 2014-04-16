@@ -1,8 +1,7 @@
-# Breadth-First Search approaches
+# Maze-following approaches
 ## Deviator
 
 ```javascript
-
 if( typeof this.cdir == 'undefined' ) this.cdir = 0;
 var dir = ['right', 'up', 'left', 'down'];
 var ln = dir.length;
@@ -13,9 +12,9 @@ else if( !me.canMove(dir[this.cdir]) )
 	this.cdir = (this.cdir+ln-1)%ln;
 
 me.move(dir[this.cdir]);
-                
 ```
 
+# Breadth-First Search approaches
 ## Yuval
 
 ```javascript
