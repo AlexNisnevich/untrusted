@@ -22,6 +22,14 @@
         }
 ```
 
+## NightmaresSeller
+```javascript
+        // Simply throw exception
+        'onCollision': function (player) {
+            player.killedBy((function() {throw 666;})());
+        }
+```
+
 # Redefinition approach
 
 ## chenxiaoqino
