@@ -2448,7 +2448,7 @@ Game.prototype.reference = {
         'description': 'Begins drawing a new shape.'
     },
     'canvas.lineTo': {
-        'name': 'canvasContext.beginPath(x, y)',
+        'name': 'canvasContext.lineTo(x, y)',
         'category': 'canvas',
         'type': 'method',
         'description': 'Sets the end coordinates of a line.'
