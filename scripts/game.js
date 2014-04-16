@@ -129,6 +129,8 @@ function Game(debugMode, startLevel) {
         if (startLevel) {
             this._currentLevel = startLevel - 1;
             this._getLevel(startLevel, debugMode);
+        } else if (!debugMode && this._levelReached != 1) {
+            this._getLevel(this._levelReached);
         } else {
             this._intro();
         }
