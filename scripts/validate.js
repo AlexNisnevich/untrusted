@@ -47,14 +47,18 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
         // modify the code to always check time to prevent infinite loops
         allCode = allCode.replace(/\)\s*{/g, ") {"); // converts Allman indentation -> K&R
+        allCode = allCode.replace(/while\s*\((.*)\)/g, "for (dummy=0;$1;)"); // while -> for
         allCode = $.map(allCode.split('\n'), function (line, i) {
-            return line.replace(/((for|while) .*){/g,
-                "startTime = Date.now();" +
-                "$1{" +
+            return line.replace(/for\s*\((.*);(.*);(.*)\)\s*{/g,
+                "for ($1, startTime = Date.now();$2;$3){" +
                     "if (Date.now() - startTime > " + game.allowedTime + ") {" +
                         "throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + game.allowedTime + " ms exceeded.';" +
                     "}");
         }).join('\n');
+
+        if (this._debugMode) {
+            console.log(allCode);
+        }
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
 
