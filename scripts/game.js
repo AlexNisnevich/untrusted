@@ -60,7 +60,7 @@ function Game(debugMode, startLevel) {
 
     this._currentLevel = 0;
     this._currentFile = null;
-    this._levelReached = localStorage.getItem('levelReached') || 1;
+    this._levelReached = parseInt(localStorage.getItem('levelReached')) || 1;
     this._displayedChapters = [];
 
     this._eval = window.eval; // store our own copy of eval so that we can override window.eval
@@ -73,6 +73,17 @@ function Game(debugMode, startLevel) {
     /* unexposed methods */
 
     this._initialize = function () {
+        // Fix potential corruption
+        // levelReached may be "81111" instead of "8" due to bug
+        if (this._levelReached > this._levelFileNames.length) {
+            for (var l = 1; l <= this._levelFileNames.length; l++) {
+                if (!localStorage["level" + l + ".lastGoodState"]) {
+                    this._levelReached = l - 1;
+                    break;
+                }
+            }
+        }
+
         // Initialize sound
         this.sound = new Sound(debugMode ? 'local' : 'cloudfront');
 
