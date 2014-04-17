@@ -1,6 +1,4 @@
-#CaitSith2
-
-## remove item you don't have approach.
+## CaitSith2
 
 ```javascript
         'impassable': function (player) {
@@ -11,8 +9,6 @@
                 return true;
             }
 ```
-
-#Spawn a new greenKey
 
 ```javascript
         'impassable': function (player) {
