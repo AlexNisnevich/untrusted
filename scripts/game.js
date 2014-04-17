@@ -184,6 +184,10 @@ function Game(debugMode, startLevel) {
         var game = this;
         var editor = this.editor;
 
+        if (levelNum > game._levelFileNames.length) {
+            return;
+        }
+
         game._levelReached = Math.max(levelNum, game._levelReached);
         if (!debugMode) {
             localStorage.setItem('levelReached', game._levelReached);
