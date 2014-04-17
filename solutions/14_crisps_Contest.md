@@ -1,7 +1,6 @@
 #CaitSith2
 
 ## remove item you don't have approach.
-
 ```javascript
         'impassable': function (player) {
             if (player.hasItem('greenKey')) {
@@ -12,8 +11,7 @@
             }
 ```
 
-#Spawn a new greenKey
-
+##Spawn a new greenKey
 ```javascript
         'impassable': function (player) {
             if (player.hasItem('greenKey')) {
