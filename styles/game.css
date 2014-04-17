@@ -27,6 +27,7 @@ body {
 }
 
 #screenPane {
+	color: transparent;
 	width: 602px;
 }
 
@@ -40,6 +41,7 @@ body {
 }
 
 #inventory {
+	color: white;
 	position: absolute;
 	top: 505px;
 	font-size: 13px;
@@ -74,7 +76,7 @@ body {
 #editorPane {
 	position: absolute;
 	top: 0;
-	right: 4px;
+	left: 602px;
 }
 
 #editorPane #editor {
@@ -237,9 +239,14 @@ body {
     width:100%;
 }
 
+#menuPane {
+	width: 647px;
+	height: 360px;
+}
+
 #menuPane.expanded {
-	width: 740px;
-	height: 320px;
+	width: 785px;
+	height: 330px;
 }
 
 #menuPane.expanded #rightMenuPane {
@@ -249,7 +256,7 @@ body {
 #leftMenuPane {
 	float: left;
 	width: 130px;
-	height: 320px;
+	height: 330px;
 	background: rgb(27, 90, 158);
 	margin-right: 8px;
 	display: none;
@@ -311,7 +318,7 @@ body {
 	background-color: black;
 	border: 2px solid white;
 	color: white;
-	width: 190px;
+	width: 205px;
 	padding: 4px;
 	margin: 5px;
 	cursor: pointer;
@@ -479,8 +486,12 @@ and (min-height : 1100px) {
 		left: -1px;
 	}
 
+	#menuPane {
+		left: -23px;
+	}
+
 	#menuPane.expanded {
-		left: -75px;
+		left: -97px;
 	}
 
 	#helpPane {
@@ -519,7 +530,7 @@ and (max-height : 650px) {
 	}
 }
 
-/* drop paypal/github crap, on portrait displays */
+/* as above, on portrait displays */
 @media only screen
 and (max-width : 1200px)
 and (min-height : 1100px)
