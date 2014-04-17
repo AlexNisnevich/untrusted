@@ -1,11 +1,11 @@
-#Place object approach
+#remove item you don't have approach.
 
 ## CaitSith2
 
 ```javascript
         'impassable': function (player) {
             if (player.hasItem('greenKey')) {
-                player.removeItem('exit');map.placeObject(24,9,'theAlgorithm');
+                player.removeItem('theAlgorithm');
                 return false;
             } else {
                 return true;
