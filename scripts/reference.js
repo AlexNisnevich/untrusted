@@ -319,7 +319,7 @@ Game.prototype.reference = {
         'name': 'object.canMove(direction)',
         'category': 'object',
         'type': 'method',
-        'description': '(For dynamic objects only.) Returns true iff the object is able to move one square in the given direction, which can be "left", "right", "up", or "down".'
+        'description': '(For dynamic objects only.) Returns true if (and only if) the object is able to move one square in the given direction, which can be "left", "right", "up", or "down".'
     },
     'object.color': {
         'name': 'object.color',
