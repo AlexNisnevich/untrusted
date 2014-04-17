@@ -60,3 +60,17 @@
                 }
             }
         }
+```
+
+#Defy the Gravity
+
+##Gipnokote
+
+```javascript
+
+    function jump() {
+    }
+    
+    function gravity() {
+    }
+```
