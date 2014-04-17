@@ -958,7 +958,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
         var lvlNum = game._currentLevel;
         var filename = 'untrusted-lvl' + lvlNum + '-solution.js';
         var description = 'Solution to level ' + lvlNum + ' in Untrusted: http://alex.nisnevich.com/untrusted/';
-        var data = {'files': {}, 'description': description};
+        var data = {
+            'files': {},
+            'description': description,
+            'public': true
+        };
         data['files'][filename] = {'content': this.getCode(true)};
         $.ajax({
             'url': 'https://api.github.com/gists',
@@ -1709,7 +1713,9 @@ function Map(display, __game) {
             } else if (typeof object.impassable === 'function') {
                 // the obstacle is impassable only in certain circumstances
                 try {
-                    return !object.impassable(__player, object);
+                    return this._validateCallback(function () {
+                        return !object.impassable(__player, object);
+                    });
                 } catch (e) {
                     display.writeStatus(e.toString());
                 }
@@ -3287,7 +3293,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 Game.prototype.validateCallback = function(callback) {
     try {
         // run the callback
-        callback();
+        var result = callback();
 
         // check if validator still passes
         try {
@@ -3331,6 +3337,8 @@ Game.prototype.validateCallback = function(callback) {
 
             // refresh the map, just in case
             this.map.refresh();
+
+            return result;
         }
     } catch (e) {
         this.display.writeStatus(e.toString());

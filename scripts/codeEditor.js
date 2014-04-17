@@ -452,7 +452,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
         var lvlNum = game._currentLevel;
         var filename = 'untrusted-lvl' + lvlNum + '-solution.js';
         var description = 'Solution to level ' + lvlNum + ' in Untrusted: http://alex.nisnevich.com/untrusted/';
-        var data = {'files': {}, 'description': description};
+        var data = {
+            'files': {},
+            'description': description,
+            'public': true
+        };
         data['files'][filename] = {'content': this.getCode(true)};
         $.ajax({
             'url': 'https://api.github.com/gists',

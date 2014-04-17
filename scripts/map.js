@@ -139,7 +139,9 @@ function Map(display, __game) {
             } else if (typeof object.impassable === 'function') {
                 // the obstacle is impassable only in certain circumstances
                 try {
-                    return !object.impassable(__player, object);
+                    return this._validateCallback(function () {
+                        return !object.impassable(__player, object);
+                    });
                 } catch (e) {
                     display.writeStatus(e.toString());
                 }
