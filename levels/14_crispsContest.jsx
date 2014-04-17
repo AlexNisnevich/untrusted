@@ -107,6 +107,7 @@ function startLevel(map) {
 
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
+    map.validateExactlyXManyObjects(1, 'theAlgorithm');
 }
 
 function onExit(map) {
