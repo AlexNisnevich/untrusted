@@ -124,7 +124,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 Game.prototype.validateCallback = function(callback) {
     try {
         // run the callback
-        callback();
+        var result = callback();
 
         // check if validator still passes
         try {
@@ -168,6 +168,8 @@ Game.prototype.validateCallback = function(callback) {
 
             // refresh the map, just in case
             this.map.refresh();
+
+            return result;
         }
     } catch (e) {
         this.display.writeStatus(e.toString());
