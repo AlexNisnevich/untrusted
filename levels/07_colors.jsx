@@ -92,3 +92,12 @@ function startLevel(map) {
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
 }
+
+function onExit(map) {
+    if (!map.getPlayer().hasItem('phone')) {
+        map.writeStatus("We need the phone!");
+        return false;
+    } else {
+        return true;
+    }
+}
