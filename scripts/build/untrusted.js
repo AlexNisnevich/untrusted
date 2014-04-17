@@ -994,7 +994,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
     this.initialize(); // run initialization code
 }
 ROT.Display.create = function(game, opts) {
-    opts['fontFamily'] = '"droid sans mono", Courier, monospace';
+    opts['fontFamily'] = '"droid sans mono", Courier, "Courier New", monospace';
     var display = new ROT.Display(opts);
     display.game = game;
     return display;
