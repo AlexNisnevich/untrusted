@@ -296,7 +296,8 @@ function Game(debugMode, startLevel) {
             this._currentLevel = startLevel - 1;
             this._getLevel(startLevel, debugMode);
         } else if (!debugMode && this._levelReached != 1) {
-            this._getLevel(this._levelReached);
+            // load last level reached (unless it's the credits)
+            this._getLevel(Math.min(this._levelReached, 21));
         } else {
             this._intro();
         }
