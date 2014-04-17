@@ -238,7 +238,7 @@ body {
 }
 
 #menuPane.expanded {
-	width: 725px;
+	width: 740px;
 	height: 320px;
 }
 
@@ -298,7 +298,7 @@ body {
 .pop_up_box {
 	position: absolute;
 	height: 360px;
-	width: 585px;
+	width: 602px;
 	top: 50px;
 	left: 300px;
 	z-index: 9000;
@@ -311,7 +311,7 @@ body {
 	background-color: black;
 	border: 2px solid white;
 	color: white;
-	width: 184px;
+	width: 190px;
 	padding: 4px;
 	margin: 5px;
 	cursor: pointer;
@@ -457,4 +457,74 @@ body {
 	font-size: 12px;
 	font-weight: normal;
 	color: red;
+}
+
+/* for portrait displays */
+@media only screen
+and (max-width : 1200px)
+and (min-height : 1100px) {
+	#container {
+		width: 605px;
+		min-width: 605px;
+	}
+
+	#editorPane {
+		position: relative;
+		top: 30px;
+		width: 605px;
+	}
+
+	.pop_up_box {
+		top: 350px;
+		left: -1px;
+	}
+
+	#menuPane.expanded {
+		left: -75px;
+	}
+
+	#helpPane {
+		width: 700px;
+		height: 560px;
+		top: 225px;
+		left: -50px;
+	}
+
+	#helpPaneSidebar {
+		height: 560px;
+	}
+
+	#helpPaneContent {
+		width: 504px;
+		height: 520px;
+	}
+
+	#notepadPane {
+		width: 502px;
+		height: 560px;
+		top: 250px;
+		left: 50px;
+	}
+
+	#notepadPane .CodeMirror {
+		height: 475px !important;
+	}
+}
+
+/* if height too low, drop the paypal/github crap */
+@media only screen
+and (max-height : 650px) {
+	#forkMe, #paypal {
+		visibility: hidden;
+	}
+}
+
+/* drop paypal/github crap, on portrait displays */
+@media only screen
+and (max-width : 1200px)
+and (min-height : 1100px)
+and (max-height : 1200px) {
+	#forkMe, #paypal {
+		visibility: hidden;
+	}
 }
