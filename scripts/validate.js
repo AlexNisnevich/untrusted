@@ -121,7 +121,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
-Game.prototype.validateCallback = function(callback) {
+Game.prototype.validateCallback = function(callback, throwExceptions) {
     try {
         // run the callback
         var result = callback();
@@ -172,8 +172,11 @@ Game.prototype.validateCallback = function(callback) {
             return result;
         }
     } catch (e) {
-        this.display.writeStatus(e.toString());
+        this.map.writeStatus(e.toString());
         // throw e; // for debugging
+        if (throwExceptions) {
+            throw e;
+        }
     }
 };
 

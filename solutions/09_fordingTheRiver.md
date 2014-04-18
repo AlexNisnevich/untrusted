@@ -1,4 +1,3 @@
-# Building a bridge of rafts approach
 ## Gipnokote
 
 ```javascript

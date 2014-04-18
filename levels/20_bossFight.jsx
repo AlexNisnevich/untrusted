@@ -153,6 +153,9 @@ function onExit(map) {
     if (!map.getPlayer().hasItem('theAlgorithm')) {
         map.writeStatus("You must take back the Algorithm!!");
         return false;
+    } else if (!map.getPlayer().hasItem('phone')) {
+        map.writeStatus("We need the phone!");
+        return false;
     } else {
         return true;
     }

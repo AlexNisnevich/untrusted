@@ -106,18 +106,21 @@ function Player(x, y, __map, __game) {
         return (__x === x && __y === y);
     };
 
-    this.move = function (direction) {
+    this.move = function (direction, fromKeyboard) {
         if (!this._canMove) { // mainly for key delay
             return false;
         }
 
-        if (__map._overrideKeys[direction]) {
-            __map._overrideKeys[direction]();
+        if (__map._overrideKeys[direction] && fromKeyboard) {
+            try {
+                __game.validateCallback(__map._overrideKeys[direction], true);
 
-            __map.refresh();
-            this._canMove = false;
-            __map._reenableMovementForPlayer(this); // (key delay can vary by map)
-            this._afterMove(__x, __y);
+                __map.refresh();
+                this._canMove = false;
+                __map._reenableMovementForPlayer(this); // (key delay can vary by map)
+                this._afterMove(__x, __y);
+            } catch (e) {
+            }
 
             return;
         }
