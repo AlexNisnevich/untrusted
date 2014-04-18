@@ -440,6 +440,16 @@ function Map(display, __game) {
         __intervals.push(setInterval(timer, delay));
     };
 
+    this.timeout = function(timer, delay) {
+        if (!delay) {
+            throw "timeout(): delay not specified"
+        } else if (delay < 25) {
+            throw "timeout(): minimum delay is 25 milliseconds";
+        }
+
+        __intervals.push(setTimeout(timer, delay));
+    };
+
     this.displayChapter = function(chapterName, cssClass) {
         if (__game._displayedChapters.indexOf(chapterName) === -1) {
             $('#chapter').html(chapterName.replace("\n","<br>"));

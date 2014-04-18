@@ -82,10 +82,10 @@ function startLevel(map) {
             map._display.drawText(line[0], line[1], line[2]);
         }
 
-        setTimeout(function () {drawCredits(i+1);}, 2000)
+        map.timeout(function () {drawCredits(i+1);}, 2000)
     }
 
-    setTimeout(function () {drawCredits(0);}, 4000);
+    map.timeout(function () {drawCredits(0);}, 4000);
 
 #END_OF_START_LEVEL#
 }
