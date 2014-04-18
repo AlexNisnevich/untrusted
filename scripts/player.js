@@ -106,12 +106,12 @@ function Player(x, y, __map, __game) {
         return (__x === x && __y === y);
     };
 
-    this.move = function (direction) {
+    this.move = function (direction, fromKeyboard) {
         if (!this._canMove) { // mainly for key delay
             return false;
         }
 
-        if (__map._overrideKeys[direction]) {
+        if (__map._overrideKeys[direction] && fromKeyboard) {
             __map._overrideKeys[direction]();
 
             __map.refresh();
