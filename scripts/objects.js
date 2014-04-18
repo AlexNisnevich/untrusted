@@ -25,9 +25,7 @@ Game.prototype.objects = {
         'symbol' : String.fromCharCode(0x2395), // ⎕
         'color': '#0ff',
         'onCollision': function (player, game) {
-            if (!game.map.finalLevel) {
                 game._moveToNextLevel();
-            }
         }
     },
 
