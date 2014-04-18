@@ -1,5 +1,4 @@
-# create object fro triggering
-# someone328
+## someone328
 
 ```javascript
 	map.defineObject('MyBullet', { //only way to kill the boss is using "projectile" object
@@ -12,7 +11,7 @@
             me.move('right');
         }
     });
-	//create triger for open fire
+	//create trigger for open fire
 	map.defineObject('trigger', {
         'symbol': '=',
         'color': 'green',
