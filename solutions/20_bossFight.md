@@ -22,5 +22,6 @@
             }
 		},
     });
-	
+	//place trigger in safe place near the player
+	map.placeObject(1, map.getHeight() - 3, 'trigger');
 ```
