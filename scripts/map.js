@@ -125,6 +125,8 @@ function Map(display, __game) {
     };
 
     this._canMoveTo = function (x, y, myType) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         if (x < 0 || x >= __game._dimensions.width || y < 0 || y >= __game._dimensions.height) {
             return false;
         }
@@ -202,6 +204,8 @@ function Map(display, __game) {
     };
 
     this._isPointOccupiedByDynamicObject = function (x, y) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         for (var i = 0; i < this.getDynamicObjects().length; i++) {
             var object = this.getDynamicObjects()[i];
             if (object.getX() === x && object.getY() === y) {
@@ -212,6 +216,8 @@ function Map(display, __game) {
     };
 
     this._findDynamicObjectAtPoint = function (x, y) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         for (var i = 0; i < this.getDynamicObjects().length; i++) {
             var object = this.getDynamicObjects()[i];
             if (object.getX() === x && object.getY() === y) {
@@ -246,6 +252,8 @@ function Map(display, __game) {
     };
 
     this._removeItemFromMap = function (x, y, klass) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         if (__grid[x][y].type === klass) {
             __grid[x][y].type = 'empty';
         }
@@ -338,6 +346,8 @@ function Map(display, __game) {
     };
 
     this.placeObject = function (x, y, type) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         if (!__objectDefinitions[type]) {
             throw "There is no type of object named " + type + "!";
         }
@@ -365,9 +375,12 @@ function Map(display, __game) {
     };
 
     this.placePlayer = function (x, y) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         if (__player) {
             throw "Can't place player twice!";
         }
+
         __player = new __game._playerPrototype(x, y, this, __game);
         this._display.drawAll(this);
     };
@@ -388,6 +401,8 @@ function Map(display, __game) {
     };
 
     this.setSquareColor = function (x, y, bgColor) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         __grid[x][y].bgColor = bgColor;
     };
 
@@ -405,10 +420,14 @@ function Map(display, __game) {
     };
 
     this.getObjectTypeAt = function (x, y) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         return __grid[x][y].type;
     }
 
     this.getAdjacentEmptyCells = function (x, y) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         var map = this;
         var actions = ['right', 'down', 'left', 'up'];
         var adjacentEmptyCells = [];
