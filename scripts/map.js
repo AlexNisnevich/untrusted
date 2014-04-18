@@ -342,6 +342,10 @@ function Map(display, __game) {
             throw "There is no type of object named " + type + "!";
         }
 
+        if (__player && x == __player.getX() && y == __player.getY()) {
+            throw "Can't place object on top of player!";
+        }
+
         if (typeof(__grid[x]) === 'undefined' || typeof(__grid[x][y]) === 'undefined') {
             return;
             // throw "Not a valid location to place an object!";
