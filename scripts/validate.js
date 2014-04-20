@@ -1,7 +1,4 @@
 Game.prototype.verbotenWords = [
-    '._', '"_', "'_", // prevents calling _unexposed methods
-    '\\u005f', '\\x5', // equivalent to '_'
-    'fromCharCode', // prevents String.fromCharCode(95) => "_"
     'eval', '.call', 'call(', 'apply', 'bind', // prevents arbitrary code execution
     'prototype', // prevents messing with prototypes
     'setTimeout', 'setInterval', // requires players to use map.startTimer() instead
@@ -65,7 +62,9 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._eval(allCode);
 
         // start the level on a dummy map to validate
+        this._setPlayerCodeRunning(true);
         startLevel(dummyMap);
+        this._setPlayerCodeRunning(false);
 
         // re-run to check if the player messed with startLevel
         this._startOfStartLevelReached = false;
@@ -105,6 +104,9 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
         return startLevel;
     } catch (e) {
+        // cleanup
+        this._setPlayerCodeRunning(false);
+
         var exceptionText = e.toString();
         if (e instanceof SyntaxError) {
             var lineNum = this.findSyntaxError(allCode, e.message);
@@ -114,7 +116,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         }
         this.display.appendError(exceptionText);
 
-        // throw e; // for debugging
+        throw e; // for debugging
         return null;
     }
 };
@@ -229,50 +231,6 @@ Game.prototype.clearModifiedGlobals = function() {
         if (window.propertyIsEnumerable(p) && this._globalVars.indexOf(p) == -1) {
             window[p] = null;
         }
-    }
-};
-
-// Specific validators go here
-
-Map.prototype.validateAtLeastXObjects = function(num, type) {
-    var count = this.countObjects(type);
-    if (count < num) {
-        throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateAtMostXObjects = function(num, type) {
-    var count = this.countObjects(type);
-    if (count > num) {
-        throw 'Too many ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateExactlyXManyObjects = function(num, type) {
-    var count = this.countObjects(type);
-    if (count != num) {
-        throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateAtMostXDynamicObjects = function(num) {
-    var count = this.getDynamicObjects().length;
-    if (count > num) {
-        throw 'Too many dynamic objects on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateNoTimers = function() {
-    var count = this._countTimers();
-    if (count > 0) {
-        throw 'Too many timers set on the map! Expected: 0, found: ' + count;
-    }
-};
-
-Map.prototype.validateAtLeastXLines = function(num) {
-    var count = this._getLines().length;
-    if (count < num) {
-        throw 'Not enough lines on the map! Expected: ' + num + ', found: ' + count;
     }
 };
 
