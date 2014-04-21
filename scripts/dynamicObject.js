@@ -177,9 +177,10 @@ function DynamicObject(map, type, x, y) {
     this.canMove = function (direction) {
         var dest = this._computeDestination(__x, __y, direction);
 
-        // check if the object can move there and will not collide with a copy of itself
+        // check if the object can move there and will not collide with
+        // another dynamic object
         return (map._canMoveTo(dest.x, dest.y, __type) &&
-            !(dest.x === this.findNearest(__type).x && dest.y === this.findNearest(__type).y));
+            !map._isPointOccupiedByDynamicObject(dest.x, dest.y));
     };
 
     this.findNearest = function (type) {
