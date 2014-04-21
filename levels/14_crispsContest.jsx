@@ -1,8 +1,9 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2",
     "commandsIntroduced":
         ["map.createFromGrid", "player.removeItem"],
-    "music": "ThatAndyGuy-Chip-loop"
+    "music": "Chip"
 }
 #END_PROPERTIES#
 /********************
@@ -20,6 +21,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.defineObject('redLock', {
         'symbol': String.fromCharCode(0x2297),
         'color': 'red',
@@ -105,6 +107,10 @@ function startLevel(map) {
 
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
+    map.validateAtMostXObjects(1, 'theAlgorithm');
+    map.validateAtMostXObjects(4, 'yellowKey');
+    map.validateAtMostXObjects(2, 'blueKey');
+    map.validateAtMostXObjects(1, 'redKey');
 }
 
 function onExit(map) {
@@ -118,7 +124,7 @@ function onExit(map) {
     } else if (!map.getPlayer().hasItem('phone')) {
         map.writeStatus("You'll need your phone! [Ctrl-5 to restart]");
         return false;
-    } {
+    } else {
         return true;
     }
 }

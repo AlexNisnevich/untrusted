@@ -1,49 +1,61 @@
-function Map(display, game) {
+function Map(display, __game) {
     /* private variables */
 
     var __player;
     var __grid;
-    var __dynamicObjects;
+    var __dynamicObjects = [];
     var __objectDefinitions;
+
     var __lines;
+    var __dom;
+    var __domCSS = '';
 
     var __allowOverwrite;
-    var __allowMultiMove;
     var __keyDelay;
+    var __refreshRate;
+
     var __intervals = [];
     var __chapterHideTimeout;
 
     /* unexposed variables */
 
-    this._game = game;
+    this._properties = {};
     this._display = display;
+    this._dummy = false; // overridden by dummyMap in validate.js
+    this._status = '';
 
     /* unexposed getters */
 
     this._getObjectDefinition = function(objName) { return __objectDefinitions[objName]; };
     this._getObjectDefinitions = function() { return __objectDefinitions; };
     this._getGrid = function () { return __grid; };
+    this._getLines = function() { return __lines; };
 
     /* exposed getters */
 
     this.getDynamicObjects = function () { return __dynamicObjects; };
     this.getPlayer = function () { return __player; };
-    this.getWidth = function () { return this._game._dimensions.width; };
-    this.getHeight = function () { return this._game._dimensions.height; };
+    this.getWidth = function () { return __game._dimensions.width; };
+    this.getHeight = function () { return __game._dimensions.height; };
 
     /* unexposed methods */
 
     this._reset = function () {
-        __objectDefinitions = clone(this._game.objects);
+        __objectDefinitions = clone(__game.objects);
+
         this._display.clear();
-        __grid = new Array(this._game._dimensions.width);
-        for (var x = 0; x < this._game._dimensions.width; x++) {
-            __grid[x] = new Array(this._game._dimensions.height);
-            for (var y = 0; y < this._game._dimensions.height; y++) {
+
+        __grid = new Array(__game._dimensions.width);
+        for (var x = 0; x < __game._dimensions.width; x++) {
+            __grid[x] = new Array(__game._dimensions.height);
+            for (var y = 0; y < __game._dimensions.height; y++) {
                 __grid[x][y] = {type: 'empty'};
             }
         }
 
+        this.getDynamicObjects().forEach(function (obj) {
+            obj._destroy(true);
+        });
         __dynamicObjects = [];
         __player = null;
 
@@ -53,16 +65,51 @@ function Map(display, game) {
         __intervals = [];
 
         __lines = [];
+        __dom = '';
+        this._overrideKeys = {};
+
+        // preload stylesheet for DOM level
+        $.get('styles/dom.css', function (css) {
+            __domCSS = css;
+        });
+
+        this.finalLevel = false;
+        this._callbackValidationFailed = false;
+    };
+
+    this._ready = function () {
+        var map = this;
+
+        // set refresh rate if one is specified
+        if (__refreshRate) {
+            map.startTimer(function () {
+                // refresh the map
+                map.refresh();
+
+                // rewrite status
+                if (map._status) {
+                    map.writeStatus(map._status);
+                }
+
+                // check for nonstandard victory condition
+                if (typeof(__game.objective) === 'function' && __game.objective(map)) {
+                    __game._moveToNextLevel();
+                }
+            }, __refreshRate);
+        }
     };
 
     this._setProperties = function (mapProperties) {
         // set defaults
+        this._properties = {};
         __allowOverwrite = false;
-        __allowMultiMove = false;
         __keyDelay = 0;
+        __refreshRate = null;
 
         // now set any properties that were passed in
         if (mapProperties) {
+            this._properties = mapProperties;
+
             if (mapProperties.allowOverwrite === true) {
                 __allowOverwrite = true;
             }
@@ -70,34 +117,17 @@ function Map(display, game) {
             if (mapProperties.keyDelay) {
                 __keyDelay = mapProperties.keyDelay;
             }
-        }
-    };
 
-    // (Used by validators)
-    this._countObjects = function (type) {
-        var count = 0;
-
-        // count static objects
-        for (var x = 0; x < this.getWidth(); x++) {
-            for (var y = 0; y < this.getHeight(); y++) {
-                if (__grid[x][y].type === type) {
-                    count++;
-                }
+            if (mapProperties.refreshRate) {
+                __refreshRate = mapProperties.refreshRate;
             }
         }
-
-        // count dynamic objects
-        this.getDynamicObjects().forEach(function (obj) {
-            if (obj.getType() === type) {
-                count++;
-            }
-        })
-
-        return count;
     };
 
     this._canMoveTo = function (x, y, myType) {
-        if (x < 0 || x >= this._game._dimensions.width || y < 0 || y >= this._game._dimensions.height) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
+        if (x < 0 || x >= __game._dimensions.width || y < 0 || y >= __game._dimensions.height) {
             return false;
         }
 
@@ -111,9 +141,11 @@ function Map(display, game) {
             } else if (typeof object.impassable === 'function') {
                 // the obstacle is impassable only in certain circumstances
                 try {
-                    return !object.impassable(__player, object);
+                    return this._validateCallback(function () {
+                        return !object.impassable(__player, object);
+                    });
                 } catch (e) {
-                    this._display.writeStatus(e);
+                    display.writeStatus(e.toString());
                 }
             } else {
                 // the obstacle is always impassable
@@ -142,8 +174,8 @@ function Map(display, game) {
         }
 
         // look for dynamic objects
-        for (var i = 0; i < __dynamicObjects.length; i++) {
-            var object = __dynamicObjects[i];
+        for (var i = 0; i < this.getDynamicObjects().length; i++) {
+            var object = this.getDynamicObjects()[i];
             if (object.getType() === type) {
                 foundObjects.push({x: object.getX(), y: object.getY()});
             }
@@ -172,14 +204,28 @@ function Map(display, game) {
     };
 
     this._isPointOccupiedByDynamicObject = function (x, y) {
-        for (var i = 0; i < __dynamicObjects.length; i++) {
-            var object = __dynamicObjects[i];
+        var x = Math.floor(x); var y = Math.floor(y);
+
+        for (var i = 0; i < this.getDynamicObjects().length; i++) {
+            var object = this.getDynamicObjects()[i];
             if (object.getX() === x && object.getY() === y) {
                 return true;
             }
         }
         return false;
-    }
+    };
+
+    this._findDynamicObjectAtPoint = function (x, y) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
+        for (var i = 0; i < this.getDynamicObjects().length; i++) {
+            var object = this.getDynamicObjects()[i];
+            if (object.getX() === x && object.getY() === y) {
+                return object;
+            }
+        }
+        return false;
+    };
 
     this._moveAllDynamicObjects = function () {
         // the way things work right now, teleporters must take precedence
@@ -188,30 +234,37 @@ function Map(display, game) {
         // TODO: make this not be the case
 
         // "move" teleporters
-        __dynamicObjects.filter(function (object) {
+        this.getDynamicObjects().filter(function (object) {
             return (object.getType() === 'teleporter');
         }).forEach(function(object) {
             object._onTurn();
         });
 
         // move everything else
-        __dynamicObjects.filter(function (object) {
+        this.getDynamicObjects().filter(function (object) {
             return (object.getType() !== 'teleporter');
         }).forEach(function(object) {
             object._onTurn();
         });
+
+        // refresh only at the end
+        this.refresh();
     };
 
     this._removeItemFromMap = function (x, y, klass) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         if (__grid[x][y].type === klass) {
             __grid[x][y].type = 'empty';
         }
     };
 
-    this._reenableMovementForPlayer = function(player) {
-        setTimeout(function () {
-            player._canMove = true;
-        }, __keyDelay);
+    this._reenableMovementForPlayer = function (player) {
+        if (!this._callbackValidationFailed) {
+            setTimeout(function () {
+                player._canMove = true;
+            }, __keyDelay);
+        }
     };
 
     this._hideChapter = function() {
@@ -221,18 +274,86 @@ function Map(display, game) {
         __chapterHideTimeout = setTimeout(function () {
             $('#chapter').fadeOut(1000);
         }, $('#chapter').hasClass('death') ? 2500 : 0);
+
+        // also, clear any status text if map is refreshing automatically (e.g. boss level)
+        this._status = '';
+    };
+
+    this._refreshDynamicObjects = function() {
+        __dynamicObjects = __dynamicObjects.filter(function (obj) { return !obj._isDestroyed(); });
+    };
+
+    this._countTimers = function() {
+        return __intervals.length;
+    }
+
+    /* (unexposed) wrappers for game methods */
+
+    this._startOfStartLevelReached = function() {
+        __game._startOfStartLevelReached = true;
+    };
+
+    this._endOfStartLevelReached = function() {
+        __game._endOfStartLevelReached = true;
+    };
+
+    this._playSound = function (sound) {
+        __game.sound.playSound(sound);
+    };
+
+    this._validateCallback = function (callback) {
+        return __game.validateCallback(callback);
     };
 
     /* exposed methods */
 
     this.refresh = function () {
-        this._display.drawAll(this);
-        this._game.drawInventory();
+        if (__dom) {
+            this._display.clear();
+
+            var domHTML = __dom[0].outerHTML
+                .replace(/"/g, "'")
+                .replace(/<hr([^>]*)>/g, '<hr $1 />')
+                .replace(/<img([^>]*)>/g, '<img $1 />');
+
+            this._display.renderDom(domHTML, __domCSS);
+        } else {
+            this._display.drawAll(this);
+        }
+        __game.drawInventory();
+    };
+
+    this.countObjects = function (type) {
+        var count = 0;
+
+        // count static objects
+        for (var x = 0; x < this.getWidth(); x++) {
+            for (var y = 0; y < this.getHeight(); y++) {
+                if (__grid[x][y].type === type) {
+                    count++;
+                }
+            }
+        }
+
+        // count dynamic objects
+        this.getDynamicObjects().forEach(function (obj) {
+            if (obj.getType() === type) {
+                count++;
+            }
+        })
+
+        return count;
     };
 
     this.placeObject = function (x, y, type) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         if (!__objectDefinitions[type]) {
             throw "There is no type of object named " + type + "!";
+        }
+
+        if (__player && x == __player.getX() && y == __player.getY()) {
+            throw "Can't place object on top of player!";
         }
 
         if (typeof(__grid[x]) === 'undefined' || typeof(__grid[x][y]) === 'undefined') {
@@ -254,10 +375,13 @@ function Map(display, game) {
     };
 
     this.placePlayer = function (x, y) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         if (__player) {
             throw "Can't place player twice!";
         }
-        __player = new Player(x, y, this);
+
+        __player = new __game._playerPrototype(x, y, this, __game);
         this._display.drawAll(this);
     };
 
@@ -277,22 +401,33 @@ function Map(display, game) {
     };
 
     this.setSquareColor = function (x, y, bgColor) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         __grid[x][y].bgColor = bgColor;
     };
 
     this.defineObject = function (name, properties) {
-        if (!__objectDefinitions[name]) {
-            __objectDefinitions[name] = properties;
-        } else {
+        if (__objectDefinitions[name]) {
             throw "There is already a type of object named " + name + "!";
         }
+
+        if (properties.interval && properties.interval < 100) {
+            throw "defineObject(): minimum interval is 100 milliseconds";
+        }
+
+        __objectDefinitions[name] = properties;
+
     };
 
     this.getObjectTypeAt = function (x, y) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         return __grid[x][y].type;
     }
 
     this.getAdjacentEmptyCells = function (x, y) {
+        var x = Math.floor(x); var y = Math.floor(y);
+
         var map = this;
         var actions = ['right', 'down', 'left', 'up'];
         var adjacentEmptyCells = [];
@@ -328,15 +463,25 @@ function Map(display, game) {
         __intervals.push(setInterval(timer, delay));
     };
 
+    this.timeout = function(timer, delay) {
+        if (!delay) {
+            throw "timeout(): delay not specified"
+        } else if (delay < 25) {
+            throw "timeout(): minimum delay is 25 milliseconds";
+        }
+
+        __intervals.push(setTimeout(timer, delay));
+    };
+
     this.displayChapter = function(chapterName, cssClass) {
-        if (this._game._displayedChapters.indexOf(chapterName) === -1) {
+        if (__game._displayedChapters.indexOf(chapterName) === -1) {
             $('#chapter').html(chapterName.replace("\n","<br>"));
             $('#chapter').removeClass().show();
 
             if (cssClass) {
                 $('#chapter').addClass(cssClass);
             } else {
-                this._game._displayedChapters.push(chapterName);
+                __game._displayedChapters.push(chapterName);
             }
 
             setTimeout(function () {
@@ -346,10 +491,25 @@ function Map(display, game) {
     };
 
     this.writeStatus = function(status) {
-        setTimeout(function () {
+        this._status = status;
+
+        if (__refreshRate) {
+            // write the status immediately
             display.writeStatus(status);
-        }, 100);
+        } else {
+            // wait 100 ms for redraw reasons
+            setTimeout(function () {
+                display.writeStatus(status);
+            }, 100);
+        }
     };
+
+    // used by validators
+    // returns true iff called at the start of the level (that is, on DummyMap)
+    // returns false iff called by validateCallback (that is, on the actual map)
+    this.isStartOfLevel = function () {
+        return this._dummy;
+    }
 
     /* canvas-related stuff */
 
@@ -359,8 +519,8 @@ function Map(display, game) {
 
     this.getCanvasCoords = function(obj) {
         return {
-            x: (obj.getX() + 0.5) * 600 / this._game._dimensions.width,
-            y: (obj.getY() + 0.5) * 500 / this._game._dimensions.height
+            x: (obj.getX() + 0.5) * 600 / __game._dimensions.width,
+            y: (obj.getY() + 0.5) * 500 / __game._dimensions.height
         };
     };
 
@@ -382,9 +542,9 @@ function Map(display, game) {
         __lines.push({'start': start, 'end': end, 'callback': callback});
     };
 
-    this.testLineCollisions = function() {
+    this.testLineCollisions = function(player) {
         var threshold = 7;
-        var playerCoords = this.getCanvasCoords(__player);
+        var playerCoords = this.getCanvasCoords(player);
         __lines.forEach(function (line) {
             if (pDistance(playerCoords.x, playerCoords.y,
                     line.start[0], line.start[1],
@@ -393,6 +553,24 @@ function Map(display, game) {
             }
         })
     };
+
+    /* for DOM manipulation level */
+
+    this.getDOM = function () {
+        return __dom;
+    }
+
+    this.createFromDOM = function(dom) {
+        __dom = dom;
+    };
+
+    this.updateDOM = function(dom) {
+        __dom = dom;
+    };
+
+    this.overrideKey = function(keyName, callback) {
+        this._overrideKeys[keyName] = callback;
+    }
 
     /* initialization */
 

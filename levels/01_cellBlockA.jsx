@@ -1,10 +1,11 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2",
     "commandsIntroduced":
-        ["global.startLevel", "global.onExit", "map.placePlayer", 
-         "map.placeObject", "map.getHeight", "map.getWidth", 
+        ["global.startLevel", "global.onExit", "map.placePlayer",
+         "map.placeObject", "map.getHeight", "map.getWidth",
          "map.displayChapter", "map.getPlayer", "player.hasItem"],
-    "music": "Yonnie_The_Green"
+    "music": "The Green"
 }
 #END_PROPERTIES#
 /*****************
@@ -17,7 +18,8 @@
  * to you. This system might be unfamiliar, but the underlying
  * code is still JavaScript. Just like we predicted.
  *
- * Now, let's get you out of here. Easy peasy.
+ * Now, let's get what we came here for and then get you out of
+ * here. Easy peasy.
  *
  * I've given you as much access to their code as I could, but
  * it's not perfect. The red background indicates lines that
@@ -29,6 +31,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.displayChapter('Chapter 1\nBreakout');
 
     map.placePlayer(7, 5);

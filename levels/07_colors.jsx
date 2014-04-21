@@ -1,9 +1,11 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2",
     "commandsIntroduced":
         ["map.defineObject", "player.getColor", "player.setColor",
          "object.color", "object.impassable", "object.symbol",
-         "player.setPhoneCallback"]
+         "player.setPhoneCallback"],
+    "music": "Y"
 }
 #END_PROPERTIES#
 /*************
@@ -19,18 +21,19 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.placePlayer(0, 12);
-    var player = map.getPlayer();
 
     map.placeObject(5, 12, 'phone');
 
     // The function phone lets you call arbitrary functions,
     // as defined by player.setPhoneCallback() below.
     // The function phone callback is bound to Q or Ctrl-6.
-    player.setPhoneCallback(function () {
+    map.getPlayer().setPhoneCallback(function () {
 #BEGIN_EDITABLE#
+        var player = map.getPlayer();
 
-       player.setColor('#f00');
+        player.setColor('#f00');
 
 
 
@@ -88,4 +91,13 @@ function startLevel(map) {
 
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
+}
+
+function onExit(map) {
+    if (!map.getPlayer().hasItem('phone')) {
+        map.writeStatus("We need the phone!");
+        return false;
+    } else {
+        return true;
+    }
 }

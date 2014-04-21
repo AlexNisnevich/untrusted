@@ -1,7 +1,8 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2.1",
     "commandsIntroduced": ["map.setSquareColor"],
-    "music": "intricate_cloudy_sin"
+    "music": "cloudy_sin"
 }
 #END_PROPERTIES#
 /******************
@@ -14,7 +15,7 @@
  * I need you alive, after all.
  *
  * If only there was some way you could track the positions
- * of the mines ...
+ * of the mines...
  */
 
 function getRandomInt(min, max) {
@@ -22,6 +23,7 @@ function getRandomInt(min, max) {
 }
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     for (x = 0; x < map.getWidth(); x++) {
         for (y = 0; y < map.getHeight(); y++) {
             map.setSquareColor(x, y, '#f00');
@@ -33,9 +35,10 @@ function startLevel(map) {
     for (var i = 0; i < 75; i++) {
         var x = getRandomInt(0, map.getWidth() - 1);
         var y = getRandomInt(0, map.getHeight() - 1);
-        if (x != 2 || y != map.getHeight() - 1) {
-            // don't place mine over exit!
-            map.placeObject(x, y, 'mine', '#f00');
+        if ((x != 2 || y != map.getHeight() - 1)
+            && (x != map.getWidth() - 5 || y != 5)) {
+            // don't place mine over exit or player!
+            map.placeObject(x, y, 'mine');
 #BEGIN_EDITABLE#
 
 #END_EDITABLE#

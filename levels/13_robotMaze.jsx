@@ -1,6 +1,8 @@
 #BEGIN_PROPERTIES#
 {
-    "commandsIntroduced": ["map.getAdjacentEmptyCells"]
+    "version": "1.2",
+    "commandsIntroduced": ["map.getAdjacentEmptyCells"],
+    "music": "Searching"
 }
 #END_PROPERTIES#
 /*
@@ -13,11 +15,15 @@
  * we would have to leave empty-handed.
  */
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function startLevel(map) {
+#START_OF_START_LEVEL#
+    // Hint: you can press R or 5 to "rest" and not move the
+    // player, while the robot moves around.
+
+    map.getRandomInt = function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     map.placePlayer(map.getWidth()-1, map.getHeight()-1);
     var player = map.getPlayer();
 
@@ -33,7 +39,7 @@ function startLevel(map) {
             // move randomly
             var moves = map.getAdjacentEmptyCells(me.getX(), me.getY());
             // getAdjacentEmptyCells gives array of ((x, y), direction) pairs
-            me.move(moves[getRandomInt(0, moves.length - 1)][1]);
+            me.move(moves[map.getRandomInt(0, moves.length - 1)][1]);
 
 
 

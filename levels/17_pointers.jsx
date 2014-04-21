@@ -1,8 +1,12 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2.1",
     "commandsIntroduced":
         ["map.getDynamicObjects", "map.getCanvasCoords", "object.setTarget"],
-    "music": "Various_Artists_-_15_-_Slimeball_vomit"
+    "music": "Tart",
+    "mapProperties": {
+        "showDrawingCanvas": true
+    }
 }
 #END_PROPERTIES#
 /***************
@@ -12,12 +16,11 @@
  * You! How are you still alive?
  *
  * Well, no matter. Good luck getting through this
- * maze of rooms.
- *
- * You'll never see me or the Algorithm again!
+ * maze of rooms - you'll never see me or the Algorithm again!
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     function shuffle(o){ //v1.0 [http://bit.ly/1l6LGQT]
         for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i),
             x = o[--i], o[i] = o[j], o[j] = x);
@@ -54,8 +57,6 @@ function startLevel(map) {
             '*': 'trap',
         }, 2, 2);
 
-    // Ah look, Dr. Eval! It's your old friend,
-    // the canvas.
     var canvas = map.getCanvasContext();
 
     var teleportersAndTraps = map.getDynamicObjects();
@@ -75,11 +76,9 @@ function startLevel(map) {
         }
 
 #BEGIN_EDITABLE#
-        // Note: map.getCanvasCoords() may come in handy here
-        // Look it up in Help!
-
-
-
+        // TODO find a way to remove the API docs
+        // wouldn't want the 'good doctor' to find
+        // out about map.getCanvasCoords()...
 
 
 

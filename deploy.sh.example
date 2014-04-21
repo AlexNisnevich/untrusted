@@ -1,0 +1,3 @@
+cd $2
+ncftpput -R -v -u [username] ftp.[domain].com [untrusted_root_path]$1 .
+cd ..

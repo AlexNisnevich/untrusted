@@ -1,11 +1,10 @@
-function Player(x, y, __map) {
+function Player(x, y, __map, __game) {
     /* private variables */
 
     var __x = x;
     var __y = y;
     var __color = "#0f0";
 
-    var __game = __map._game;
     var __display = __map._display;
 
     /* unexposed variables */
@@ -64,7 +63,7 @@ function Player(x, y, __map) {
             var objectName = __map._getGrid()[x][y].type;
             var objectDef = __map._getObjectDefinition(objectName);
             if (objectDef.type === 'item') {
-                this.pickUpItem(objectName, objectDef);
+                this._pickUpItem(objectName, objectDef);
             } else if (objectDef.onCollision) {
                 __game.validateCallback(function () {
                     objectDef.onCollision(player, __game);
@@ -73,7 +72,32 @@ function Player(x, y, __map) {
         }
 
         // check for collision with any lines on the map
-        __map.testLineCollisions();
+        __map.testLineCollisions(this);
+
+        // check for nonstandard victory condition (e.g. DOM level)
+        if (typeof(__game.objective) === 'function' && __game.objective(__map)) {
+            __game._moveToNextLevel();
+        }
+    };
+
+    this._pickUpItem = function (itemName, object) {
+        var player = this;
+
+        __game.addToInventory(itemName);
+        __map._removeItemFromMap(__x, __y, itemName);
+        __map.refresh();
+        __game.sound.playSound('pickup');
+
+        if (object.onPickUp) {
+            __game.validateCallback(function () {
+                setTimeout(function () {
+                    object.onPickUp(player, __game);
+                }, 100);
+                // timeout is so that written text is not immediately overwritten
+                // TODO: play around with Display.writeStatus so that this is
+                // not necessary
+            });
+        }
     };
 
     /* exposed methods */
@@ -82,9 +106,23 @@ function Player(x, y, __map) {
         return (__x === x && __y === y);
     };
 
-    this.move = function (direction) {
+    this.move = function (direction, fromKeyboard) {
         if (!this._canMove) { // mainly for key delay
             return false;
+        }
+
+        if (__map._overrideKeys[direction] && fromKeyboard) {
+            try {
+                __game.validateCallback(__map._overrideKeys[direction], true);
+
+                __map.refresh();
+                this._canMove = false;
+                __map._reenableMovementForPlayer(this); // (key delay can vary by map)
+                this._afterMove(__x, __y);
+            } catch (e) {
+            }
+
+            return;
         }
 
         var new__x;
@@ -136,26 +174,6 @@ function Player(x, y, __map) {
         __game._restartLevel();
 
         __map.displayChapter('You have been killed by \n' + killer + '!', 'death');
-    };
-
-    this.pickUpItem = function (itemName, object) {
-        var player = this;
-
-        __game.addToInventory(itemName);
-        __map._removeItemFromMap(__x, __y, itemName);
-        __map.refresh();
-        __game.sound.playSound('pickup');
-
-        if (object.onPickUp) {
-            __game.validateCallback(function () {
-                setTimeout(function () {
-                    object.onPickUp(player, __game);
-                }, 100);
-                // timeout is so that written text is not immediately overwritten
-                // TODO: play around with Display.writeStatus so that this is
-                // not necessary
-            });
-        }
     };
 
     this.hasItem = function (itemName) {

@@ -1,8 +1,10 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2",
 	"commandsIntroduced":
         ["object.type", "object.behavior", "object.findNearest",
-         "object.getX", "object.getY", "object.canMove", "object.move"]
+         "object.getX", "object.getY", "object.canMove", "object.move"],
+    "music": "GameScratch"
 }
 #END_PROPERTIES#
 
@@ -10,15 +12,15 @@
  * drones101.js *
  ****************
  *
- * Do you remember, dear Professor, a certain introductary
- * class you taught long ago? Perhaps some 're-education'
- * is apropos.
- *
- * Lesson #1: A drone is only as useful as its mobility
- * allows. You must learn to use their tools against them.
+ * Do you remember, my dear Professor, a certain introductory
+ * computational rationality class you taught long ago? Assignment
+ * #2, behavior functions of autonomous agents? I remember that one
+ * fondly - but attack drones are so much easier to reason about
+ * when they're not staring you in the face, I would imagine!
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     function moveToward(obj, type) {
         var target = obj.findNearest(type);
         var leftDist = obj.getX() - target.x;

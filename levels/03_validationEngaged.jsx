@@ -1,15 +1,17 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2",
     "commandsIntroduced":
         ["global.validateLevel", "map.validateAtLeastXObjects",
-         "map.validateExactlyXManyObjects"]
+         "map.validateExactlyXManyObjects"],
+    "music": "Obscure Terrain"
 }
 #END_PROPERTIES#
 /************************
  * validationEngaged.js *
  ************************
  *
- * They're really on to us now. The validateLevel function
+ * They're really on to us now! The validateLevel function
  * has been activated to enforce constraints on what you can
  * do. In this case, you're not allowed to remove any blocks.
  *
@@ -18,6 +20,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.placePlayer(map.getWidth()-7, map.getHeight()-5);
 #BEGIN_EDITABLE#
 

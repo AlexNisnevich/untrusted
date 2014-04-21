@@ -1,8 +1,9 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2",
     "commandsIntroduced":
         ["player.killedBy", "object.onCollision"],
-    "music": "Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name"
+    "music": "The_Waves_Call_Her_Name"
 }
 #END_PROPERTIES#
 /**********************
@@ -16,14 +17,16 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     var raftDirection = 'down';
 
     map.placePlayer(map.getWidth()-1, map.getHeight()-1);
+    var player = map.getPlayer();
 
     map.defineObject('raft', {
         'type': 'dynamic',
-        'symbol': '#',
-        'color': 'gray',
+        'symbol': '▓',
+        'color': '#420',
         'transport': true, // (prevents player from drowning in water)
         'behavior': function (me) {
             me.move(raftDirection);
@@ -61,4 +64,5 @@ function startLevel(map) {
 
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
+    map.validateExactlyXManyObjects(1, 'raft');
 }

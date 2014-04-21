@@ -1,7 +1,8 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2",
     "commandsIntroduced": [],
-    "music": "Sycamore_Drive_-_03_-_The_Waves_Call_Her_Name",
+    "music": "The_Waves_Call_Her_Name",
     "startingMessage": "You have lost the Algorithm!"
 }
 #END_PROPERTIES#
@@ -25,6 +26,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     map.displayChapter('Chapter 3\nBetrayal');
 
     map.placePlayer(0, 0);

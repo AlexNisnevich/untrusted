@@ -1,7 +1,8 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2.2",
     "commandsIntroduced": ["player.move", "map.startTimer"],
-    "music": "Rolemusic_-_07_-_Beach_Wedding_Dance",
+    "music": "Beach Wedding Dance",
     "mapProperties": {
         "keyDelay": 25
     }
@@ -19,6 +20,7 @@
  */
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
     var fl = Math.floor;
     var w = map.getWidth();
     var h = map.getHeight();
@@ -80,4 +82,5 @@ function startLevel(map) {
 
 function validateLevel(map) {
     map.validateExactlyXManyObjects(1, 'exit');
+    map.validateExactlyXManyObjects(520, 'block');
 }

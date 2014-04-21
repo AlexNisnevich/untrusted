@@ -1,8 +1,10 @@
 #BEGIN_PROPERTIES#
 {
+    "version": "1.2",
     "commandsIntroduced":
         ["object.inventory", "object.giveItemTo", "object.passableFor",
-         "map.validateAtMostXObjects"]
+         "map.validateAtMostXObjects"],
+    "music": "conspiracy"
 }
 #END_PROPERTIES#
 /*
@@ -25,6 +27,10 @@ function getRandomInt(min, max) {
 }
 
 function startLevel(map) {
+#START_OF_START_LEVEL#
+    // Hint: you can press R or 5 to "rest" and not move the
+    // player, while the robot moves around.
+
     map.placePlayer(map.getWidth()-2, map.getHeight()-2);
     var player = map.getPlayer();
 
