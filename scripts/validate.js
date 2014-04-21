@@ -125,8 +125,28 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback, throwExceptions) {
     try {
-        // run the callback
-        var result = callback();
+        // run the callback and check for forbidden method calls
+        try {
+            this._setPlayerCodeRunning(true);
+            var result = callback();
+            this._setPlayerCodeRunning(false);
+        } catch (e) {
+            if (e.indexOf("Forbidden method call") > -1) {
+                // cleanup
+                this._setPlayerCodeRunning(false);
+
+                // display error, disable player movement
+                this.map.writeStatus(e.toString());
+                this.sound.playSound('static');
+                this.map.getPlayer()._canMove = false;
+                this.map._callbackValidationFailed = true;
+
+                return;
+            } else {
+                // other exceptions are fine here - just pass them up
+                throw e;
+            }
+        }
 
         // check if validator still passes
         try {
