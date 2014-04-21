@@ -4,8 +4,8 @@ function DynamicObject(map, type, x, y, __game) {
     var __x = x;
     var __y = y;
     var __type = type;
-    var __definition = wrapExposedMethod(function () {
-        map._getObjectDefinition(type);
+    var __definition = __game._callUnexposedMethod(function () {
+        return map._getObjectDefinition(type);
     });
     var __inventory = [];
     var __destroyed = false;
@@ -66,6 +66,7 @@ function DynamicObject(map, type, x, y, __game) {
                     });
                 }
             } catch (e) {
+                // throw e; // for debugging
                 map.writeStatus(e.toString());
             }
         }

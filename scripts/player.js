@@ -26,12 +26,12 @@ function Player(x, y, __map, __game) {
 
     this.getX = function () { return __x; };
     this.getY = function () { return __y; };
-
     this.getColor = function () { return __color; };
-    this.setColor = function (c) {
+
+    this.setColor = wrapExposedMethod(function (c) {
         __color = c;
         __display.drawAll(__map);
-    };
+    });
 
     /* unexposed methods */
 
@@ -113,9 +113,9 @@ function Player(x, y, __map, __game) {
 
     /* exposed methods */
 
-    this.atLocation = function (x, y) {
+    this.atLocation = wrapExposedMethod(function (x, y) {
         return (__x === x && __y === y);
-    };
+    }, this);
 
     this.move = wrapExposedMethod(function (direction, fromKeyboard) {
         if (!this._canMove) { // mainly for key delay
@@ -200,5 +200,5 @@ function Player(x, y, __map, __game) {
 
     this.setPhoneCallback = wrapExposedMethod(function(func) {
         this._phoneFunc = func;
-    });
+    }, this);
 }

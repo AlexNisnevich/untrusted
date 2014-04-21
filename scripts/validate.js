@@ -143,6 +143,7 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
                 this.map.getPlayer()._canMove = false;
                 this.map._callbackValidationFailed = true;
 
+                // throw e; // for debugging
                 return;
             } else {
                 // other exceptions are fine here - just pass them up
