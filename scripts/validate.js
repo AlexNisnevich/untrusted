@@ -116,25 +116,27 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         }
         this.display.appendError(exceptionText);
 
-        // throw e; // for debugging
+        throw e; // for debugging
         return null;
     }
 };
 
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
-Game.prototype.validateCallback = function(callback, throwExceptions) {
+Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForbiddenCalls) {
     try {
         // run the callback and check for forbidden method calls
         try {
-            this._setPlayerCodeRunning(true);
+            if (!ignoreForbiddenCalls) {
+                this._setPlayerCodeRunning(true);
+            }
             var result = callback();
             this._setPlayerCodeRunning(false);
         } catch (e) {
-            if (e.indexOf("Forbidden method call") > -1) {
-                // cleanup
-                this._setPlayerCodeRunning(false);
+            // cleanup
+            this._setPlayerCodeRunning(false);
 
+            if (e.toString().indexOf("Forbidden method call") > -1) {
                 // display error, disable player movement
                 this.map.writeStatus(e.toString());
                 this.sound.playSound('static');
@@ -195,6 +197,7 @@ Game.prototype.validateCallback = function(callback, throwExceptions) {
         }
     } catch (e) {
         this.map.writeStatus(e.toString());
+
         // throw e; // for debugging
         if (throwExceptions) {
             throw e;

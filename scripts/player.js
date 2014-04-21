@@ -11,6 +11,17 @@ function Player(x, y, __map, __game) {
 
     this._canMove = false;
 
+    /* wrapper */
+
+    function wrapExposedMethod(f, player) {
+        return function () {
+            var args = arguments;
+            return __game._callUnexposedMethod(function () {
+                return f.apply(player, args);
+            });
+        };
+    };
+
     /* exposed getters/setters */
 
     this.getX = function () { return __x; };
@@ -67,7 +78,7 @@ function Player(x, y, __map, __game) {
             } else if (objectDef.onCollision) {
                 __game.validateCallback(function () {
                     objectDef.onCollision(player, __game);
-                });
+                }, false, true);
             }
         }
 
@@ -106,7 +117,7 @@ function Player(x, y, __map, __game) {
         return (__x === x && __y === y);
     };
 
-    this.move = function (direction, fromKeyboard) {
+    this.move = wrapExposedMethod(function (direction, fromKeyboard) {
         if (!this._canMove) { // mainly for key delay
             return false;
         }
@@ -167,27 +178,27 @@ function Player(x, y, __map, __game) {
             // play bump sound
             __game.sound.playSound('select');
         }
-    };
+    }, this);
 
-    this.killedBy = function (killer) {
+    this.killedBy = wrapExposedMethod(function (killer) {
         __game.sound.playSound('hurt');
         __game._restartLevel();
 
         __map.displayChapter('You have been killed by \n' + killer + '!', 'death');
-    };
+    }, this);
 
-    this.hasItem = function (itemName) {
+    this.hasItem = wrapExposedMethod(function (itemName) {
         return __game.checkInventory(itemName);
-    };
+    }, this);
 
-    this.removeItem = function (itemName) {
+    this.removeItem = wrapExposedMethod(function (itemName) {
         var object = __game.objects[itemName];
 
         __game.removeFromInventory(itemName);
         __game.sound.playSound('blip');
-    };
+    }, this);
 
-    this.setPhoneCallback = function(func) {
+    this.setPhoneCallback = wrapExposedMethod(function(func) {
         this._phoneFunc = func;
-    };
+    });
 }

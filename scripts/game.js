@@ -74,7 +74,7 @@ function Game(debugMode, startLevel) {
 
     /* unexposed setters */
 
-    this._setPlayerCodeRunning = function (pcr) { __playerCodeRunning = pcr; };
+    this._setPlayerCodeRunning = function (pcr) { console.log(pcr);__playerCodeRunning = pcr; };
 
     /* unexposed methods */
 

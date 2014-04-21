@@ -24,7 +24,7 @@ function Map(display, __game) {
     this._dummy = false; // overridden by dummyMap in validate.js
     this._status = '';
 
-    /* wrappers */
+    /* wrapper */
 
     function wrapExposedMethod(f, map) {
         return function () {
@@ -416,7 +416,7 @@ function Map(display, __game) {
 
         if (__objectDefinitions[type].type === 'dynamic') {
             // dynamic object
-            __dynamicObjects.push(new DynamicObject(this, type, x, y));
+            __dynamicObjects.push(new DynamicObject(this, type, x, y, __game));
         } else {
             // static object
             if (__grid[x][y].type === 'empty' || __grid[x][y].type === type || __allowOverwrite) {

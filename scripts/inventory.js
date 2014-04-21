@@ -1,5 +1,12 @@
 Game.prototype.inventory = [];
 
+Game.prototype.getItemDefinition = function (itemName) {
+	var map = this.map;
+	return this._callUnexposedMethod(function () {
+		return map._getObjectDefinition(itemName);
+	});
+};
+
 Game.prototype.addToInventory = function (itemName) {
 	if (this.inventory.indexOf(itemName) === -1) {
 		this.inventory.push(itemName);
@@ -12,7 +19,7 @@ Game.prototype.checkInventory = function (itemName) {
 };
 
 Game.prototype.removeFromInventory = function (itemName) {
-	var object = this.map._getObjectDefinition(itemName);
+	var object = this.getItemDefinition(itemName);
 	if (!object) {
 		throw 'No such item: ' + itemName;
 	}

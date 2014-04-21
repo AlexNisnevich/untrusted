@@ -1,14 +1,27 @@
-function DynamicObject(map, type, x, y) {
+function DynamicObject(map, type, x, y, __game) {
     /* private variables */
 
     var __x = x;
     var __y = y;
     var __type = type;
-    var __definition = map._getObjectDefinition(type);
+    var __definition = wrapExposedMethod(function () {
+        map._getObjectDefinition(type);
+    });
     var __inventory = [];
     var __destroyed = false;
     var __myTurn = true;
     var __timer = null;
+
+    /* wrapper */
+
+    function wrapExposedMethod(f, object) {
+        return function () {
+            var args = arguments;
+            return __game._callUnexposedMethod(function () {
+                return f.apply(object, args);
+            });
+        };
+    };
 
     /* unexposed methods */
 
@@ -115,11 +128,11 @@ function DynamicObject(map, type, x, y) {
 
     /* exposed methods */
 
-    this.getX = function () { return __x; };
-    this.getY = function () { return __y; };
-    this.getType = function () { return __type; };
+    this.getX = wrapExposedMethod(function () { return __x; }, this);
+    this.getY = wrapExposedMethod(function () { return __y; }, this);
+    this.getType = wrapExposedMethod(function () { return __type; }, this);
 
-    this.giveItemTo = function (player, itemType) {
+    this.giveItemTo = wrapExposedMethod(function (player, itemType) {
         var pl_at = player.atLocation;
 
         if (!(pl_at(__x, __y) || pl_at(__x+1, __y) || pl_at(__x-1, __y) ||
@@ -131,9 +144,9 @@ function DynamicObject(map, type, x, y) {
         }
 
         player._pickUpItem(itemType, map._getObjectDefinition(itemType));
-    };
+    }, this);
 
-    this.move = function (direction) {
+    this.move = wrapExposedMethod(function (direction) {
         var dest = this._computeDestination(__x, __y, direction);
 
         if (!__myTurn) {
@@ -172,22 +185,22 @@ function DynamicObject(map, type, x, y) {
         }
 
         __myTurn = false;
-    };
+    }, this);
 
-    this.canMove = function (direction) {
+    this.canMove = wrapExposedMethod(function (direction) {
         var dest = this._computeDestination(__x, __y, direction);
 
         // check if the object can move there and will not collide with a copy of itself
         return (map._canMoveTo(dest.x, dest.y, __type) &&
             !(dest.x === this.findNearest(__type).x && dest.y === this.findNearest(__type).y));
-    };
+    }, this);
 
-    this.findNearest = function (type) {
+    this.findNearest = wrapExposedMethod(function (type) {
         return map._findNearestToPoint(type, __x, __y);
-    };
+    }, this);
 
     // only for teleporters
-    this.setTarget = function (target) {
+    this.setTarget = wrapExposedMethod(function (target) {
         if (__type != 'teleporter') {
             throw 'setTarget() can only be called on a teleporter!';
         }
@@ -197,7 +210,7 @@ function DynamicObject(map, type, x, y) {
         }
 
         this.target = target;
-    };
+    }, this);
 
     // constructor
 
