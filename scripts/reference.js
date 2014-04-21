@@ -357,12 +357,6 @@ Game.prototype.reference = {
         'type': 'property',
         'description': 'The function that determines whether or not the player can pass through this object.'
     },
-    'object.inventory': {
-        'name': 'object.inventory',
-        'category': 'object',
-        'type': 'property',
-        'description': '(For dynamic objects only.) The list of items that every object of this type starts with.'
-    },
     'object.move': {
         'name': 'object.move(direction)',
         'category': 'object',
