@@ -35,8 +35,9 @@ function startLevel(map) {
     for (var i = 0; i < 75; i++) {
         var x = getRandomInt(0, map.getWidth() - 1);
         var y = getRandomInt(0, map.getHeight() - 1);
-        if (x != 2 || y != map.getHeight() - 1) {
-            // don't place mine over exit!
+        if ((x != 2 || y != map.getHeight() - 1)
+            && (x != map.getWidth() - 5 || y != 5)) {
+            // don't place mine over exit or player!
             map.placeObject(x, y, 'mine');
 #BEGIN_EDITABLE#
 
