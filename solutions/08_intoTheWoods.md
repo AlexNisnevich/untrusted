@@ -1,6 +1,6 @@
 # Look, the trees! They're moving!
 
-## donmccurdy
+## donmccurdy + Jhack (giacgbj)
 
 ```javascript
 map.getPlayer().setPhoneCallback(functionList["generateForest"]);
