@@ -97,6 +97,20 @@ function jump() {
     }
 ```
 
+# "I'm feeling lucky"
+## Jhack (giacgbj)
+
+```javascript
+function antiGravity() {
+	var x = player.getX();
+	var y = player.getY();
+
+	if (y > 1 && x < (map.getWidth()/2 + 10)) {
+		player.move("up");
+	}
+}
+map.startTimer(antiGravity, 25);
+```
 
 
 
