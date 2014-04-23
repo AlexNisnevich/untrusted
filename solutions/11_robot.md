@@ -14,3 +14,9 @@
         }
     });
 ```
+
+## Jhack (giacgbj)
+
+```javascript
+  me.move(me.canMove('right') ? 'right' : 'down');
+```
