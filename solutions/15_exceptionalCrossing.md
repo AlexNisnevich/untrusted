@@ -7,7 +7,7 @@
         }
 ```
 
-## 029ah
+## 029ah + Jhack (giacgbj)
 ```javascript
        'onCollision': function (player) {
             player.killedBy(none);
