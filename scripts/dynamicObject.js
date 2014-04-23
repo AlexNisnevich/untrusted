@@ -25,9 +25,9 @@ function DynamicObject(map, type, x, y, __game) {
 
     /* unexposed methods */
 
-    this._isDestroyed = function () { return __destroyed; };
-
     this._computeDestination = function (startX, startY, direction) {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._computeDestination()';}
+
         switch (direction) {
             case 'up':
                 return {'x': startX, 'y': startY - 1};
@@ -41,6 +41,8 @@ function DynamicObject(map, type, x, y, __game) {
     };
 
     this._onTurn = function () {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._onTurn()';}
+
         var me = this;
         var player = map.getPlayer();
 
@@ -96,6 +98,8 @@ function DynamicObject(map, type, x, y, __game) {
     };
 
     this._afterMove = function () {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._afterMove()';}
+
         // try to pick up items
         var objectName = map._getGrid()[__x][__y].type;
         if (map._getObjectDefinition(objectName).type === 'item' && !__definition.projectile) {
@@ -106,6 +110,8 @@ function DynamicObject(map, type, x, y, __game) {
     };
 
     this._destroy = function (onMapReset) {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._destroy()';}
+
         var me = this;
 
         __destroyed = true;
@@ -129,9 +135,10 @@ function DynamicObject(map, type, x, y, __game) {
 
     /* exposed methods */
 
-    this.getX = wrapExposedMethod(function () { return __x; }, this);
-    this.getY = wrapExposedMethod(function () { return __y; }, this);
-    this.getType = wrapExposedMethod(function () { return __type; }, this);
+    this.getX = function () { return __x; };
+    this.getY = function () { return __y; };
+    this.getType = function () { return __type; };
+    this.isDestroyed = function () { return __destroyed; };
 
     this.giveItemTo = wrapExposedMethod(function (player, itemType) {
         var pl_at = player.atLocation;

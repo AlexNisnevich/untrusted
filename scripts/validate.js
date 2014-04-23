@@ -138,7 +138,7 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
 
             if (e.toString().indexOf("Forbidden method call") > -1) {
                 // display error, disable player movement
-                this.map.writeStatus(e.toString());
+                this.display.appendError(e.toString(), "%c{red}Please reload the level.");
                 this.sound.playSound('static');
                 this.map.getPlayer()._canMove = false;
                 this.map._callbackValidationFailed = true;

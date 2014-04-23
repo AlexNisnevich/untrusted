@@ -327,7 +327,7 @@ function Map(display, __game) {
     this._refreshDynamicObjects = function() {
         if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._refreshDynamicObjects()';}
 
-        __dynamicObjects = __dynamicObjects.filter(function (obj) { return !obj._isDestroyed(); });
+        __dynamicObjects = __dynamicObjects.filter(function (obj) { return !obj.isDestroyed(); });
     };
 
     this._countTimers = function() {
