@@ -92,4 +92,28 @@ map.getPlayer().setPhoneCallback(function(){
         map.placeObject(i*2,map.getPlayer().getY()-3,'bossKiller'+i);
  }
 });
+
+```
+
+## Jhack (giacgbj): I'm just evil
+
+```javascript
+    map.defineObject('antiBullet', {
+        'type': 'dynamic',
+        'symbol': '§',
+        'color': 'yellow',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('up');
+        }
+    });
+
+    map.overrideKey('left', function()
+    {    
+      for (var i = 0 ; i < map.getWidth() ; i++)
+        for (var j = 8 ; j < map.getHeight()-4; +j++)
+          map.placeObject(i, j, 'antiBullet');
+    });
+    
 ```
