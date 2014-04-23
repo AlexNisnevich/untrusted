@@ -1,6 +1,5 @@
 
 
-
 ## Jhack (giacgbj)
 
 Connect the first teleport on the player's right to the one on the exit's right.
@@ -19,7 +18,6 @@ var t = teleportersAndTraps[j];
     } else if (map.getWidth()-8 == x && map.getHeight()-5 == y) {
     	end = t;
     }
-    
 }
 
 start.setTarget(end);
