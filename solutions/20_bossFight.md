@@ -93,3 +93,20 @@ map.getPlayer().setPhoneCallback(function(){
  }
 });
 ```
+
+
+##eccstartup: It is more like a game
+
+Notice the `boss` would drop a `bullet` 2 points below the `boss` itself, you can easily get the `phone` if you walk right below the `boss`. Notice also that we can create `bullet`s and it is not counted in the total number of dynamic objects, we can create many `bullets` there to defeat the `boss`es. So this is the solution, with only one phone callback function needed. And with the hints above, you will know how to pass this level.
+
+```javascript
+    var player = map.getPlayer();
+    player.setPhoneCallback(function (){
+    for(x=0;x<50;x++){//better hide yourself
+        map.placeObject(x,5,'bullet');
+        map.placeObject(x,4,'bullet');
+    }
+    });
+```
+
+It is in this [gist](https://gist.github.com/eccstartup/11201050).
