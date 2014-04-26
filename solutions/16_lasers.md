@@ -27,3 +27,12 @@
         }
     });
 ```
+
+## Jhack (giacgbj)
+
+Nothing in the first area.
+
+The following code in the second area:
+```javascript
+getRandomInt = function(){return 600;};
+```

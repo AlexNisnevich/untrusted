@@ -23,3 +23,14 @@
         }
     });
 ```
+
+
+## Jhack (giacgbj)
+
+```javascript
+me.move( 
+	me.getX() < 25 || me.getX() > 47 ?
+		me.canMove('down') ? 'down' : 'right' :
+		me.canMove('up') ? 'up' : 'right'
+);
+```
