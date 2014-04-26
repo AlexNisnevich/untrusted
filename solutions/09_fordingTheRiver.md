@@ -14,7 +14,7 @@
     }
 ```
 
-## JustBlackBird + Jhack (giacgbj)
+## JustBlackBird
 
 ```javascript
     var player = map.getPlayer();
