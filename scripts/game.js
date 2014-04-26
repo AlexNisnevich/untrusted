@@ -106,9 +106,10 @@ function Game(debugMode, startLevel) {
             display.focus();
         });
 
-        // Initialize map and editor
+        // Initialize editor, map, and objects
         this.editor = new CodeEditor("editor", 600, 500, this);
         this.map = new Map(this.display, this);
+        this.objects = this.getListOfObjects();
 
         // Initialize validator
         this.saveReferenceImplementations(); // prevents tampering with methods

@@ -108,7 +108,7 @@ function Player(x, y, __map, __game) {
         if (object.onPickUp) {
             __game.validateCallback(function () {
                 setTimeout(function () {
-                    object.onPickUp(player, __game);
+                    object.onPickUp(player);
                 }, 100);
                 // timeout is so that written text is not immediately overwritten
                 // TODO: play around with Display.writeStatus so that this is
