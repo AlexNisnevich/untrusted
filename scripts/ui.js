@@ -73,7 +73,7 @@ Game.prototype.enableButtons = function () {
 
     $("#resetButton").click( function () {
         game.sound.playSound('blip');
-        game._getLevel(game._currentLevel, true);
+        game._resetLevel( game._currentLevel );
     });
 
     $("#executeButton").click( function () {
