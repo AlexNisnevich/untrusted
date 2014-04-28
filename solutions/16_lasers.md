@@ -1,4 +1,5 @@
-## someone328 chameleon way
+# The Chameleon Way
+## someone328
 ```javascript
 	// using canvas to draw the line
         var ctx = map.getCanvasContext();
@@ -28,6 +29,22 @@
     });
 ```
 
+## esolitos
+
+```javascript
+ctx.strokeStyle = color;
+
+//---
+
+var j = 0;
+var colors = ['red', 'yellow', 'teal'];
+
+player.setPhoneCallback( function(){
+	player.setColor( colors[ (j++)%3 ] );
+} );
+```
+
+# Function Redefinition
 ## Jhack (giacgbj)
 
 Nothing in the first area.

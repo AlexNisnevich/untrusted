@@ -21,3 +21,5 @@ like this:
     game._moveToNextLevel();
   }
 ```
+
+*esolitos note*: Or symply remove/comment the if.
