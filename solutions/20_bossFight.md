@@ -134,3 +134,61 @@ Notice the `boss` would drop a `bullet` 2 points below the `boss` itself, you ca
 ```
 
 It is in this [gist](https://gist.github.com/eccstartup/11201050).
+
+## esolitos: Bulletproof glass and boss-seaking projectiles
+
+
+You just need to be sure to "call" whan you're close to the bullet proof glass
+
+```javascript
+
+    map.defineObject('bullteproof-glass', {
+        'symbol': '-',
+        'color': 'blue',
+        'impassable': true
+    });
+
+    map.defineObject('killer-phonecall', {
+        'type': 'dynamic',
+        'symbol': '^',
+        'color': 'yellow',
+        'interval': 100,
+        'projectile': true,
+        'behavior': searchBoss
+    });
+
+
+    function searchBoss(obj) {
+        var direction = 'left';
+        var target = obj.findNearest('boss');
+    
+        if( target !== undefined ) {    
+            var leftDist = obj.getX() - target.x;
+        	var upDist = obj.getY() - target.y;
+    
+        	if (upDist > 0 && upDist >= leftDist) {
+    	        direction = 'up';
+            } else if (leftDist > 0 && leftDist >= upDist) {
+    	        direction = 'left';
+            } else {
+            	direction = 'right';
+        	}
+        }
+        obj.move(direction);
+    }
+
+    function phonecall_shoot(){
+        var p = map.getPlayer();
+    
+      	map.placeObject(p.getX(),p.getY()-1,'killer-phonecall');
+    }
+
+    // Olace some bulletproof glass
+    for( var x=3; x < map.getWidth()-3; x++ ){
+    	map.placeObject(x, map.getHeight() - 7, 'bullteproof-glass');
+    }
+
+
+    map.getPlayer().setPhoneCallback( phonecall_shoot );
+```
+

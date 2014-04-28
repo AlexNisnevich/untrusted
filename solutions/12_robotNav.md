@@ -34,3 +34,29 @@ me.move(
 		me.canMove('up') ? 'up' : 'right'
 );
 ```
+
+
+## esolitos
+```javascript
+if( me.getX() == 1 && me.getY() < 4 ){
+    me.move('down');
+
+} else if( me.getY() == 4) {
+    if( me.canMove('right') ) {
+        me.move('right');
+    } else {
+        me.move('down');
+    }
+
+
+} else if( me.getY() > 4 ) {
+
+    if( me.canMove('right') ) {
+        me.move('right');
+    } else if ( me.getX() != map.getWidth() -2 ) {
+        me.move('up');
+    } else {
+        me.move('down');
+    }
+}
+```
