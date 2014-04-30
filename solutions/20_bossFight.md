@@ -1,3 +1,26 @@
+## amahdy: shoot-em style, press the left button!
+
+```javascript
+    map.defineObject('bullet2', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'yellow',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('up');
+        }
+    });
+    
+    map.overrideKey('left', function() {
+        map.placeObject(0, 20, 'bullet2');
+        map.placeObject(1, 20, 'bullet2');
+        map.placeObject(2, 20, 'bullet2');
+        map.placeObject(3, 20, 'bullet2');
+        map.getPlayer().move('left');
+    });
+```
+
 ## someone328: bullets with trigger
 
 ```javascript
