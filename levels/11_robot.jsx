@@ -2,7 +2,7 @@
 {
     "version": "1.2",
     "commandsIntroduced":
-        ["object.inventory", "object.giveItemTo", "object.passableFor",
+        ["object.giveItemTo", "object.passableFor",
          "map.validateAtMostXObjects"],
     "music": "conspiracy"
 }

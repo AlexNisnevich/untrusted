@@ -1,0 +1,28 @@
+# Drone Cage
+## esolitos
+
+```javascript
+map.placeObject(map.getWidth()-11, 13, 'block');
+map.placeObject(map.getWidth()-11, 12, 'block');    
+map.placeObject(map.getWidth()-11, 11, 'block');
+map.placeObject(map.getWidth()-11, 10, 'block');
+
+map.placeObject(map.getWidth()-10, 13, 'block');
+map.placeObject(map.getWidth()-10, 10, 'block');
+
+map.placeObject(map.getWidth()-9, 13, 'block');
+map.placeObject(map.getWidth()-9, 10, 'block');
+map.placeObject(map.getWidth()-9, 11, 'block');
+```
+
+And than just go for the exit from the top. 
+
+
+# Function Override
+## esolitos
+
+```javascript
+function moveToward(obj, type) {
+    obj.move('left');
+}
+```

@@ -1,3 +1,25 @@
+#make fun, not jump
+
+##gRz
+function jump() {
+    
+    map.placeObject(33,11,'teleporter');
+    map.placeObject(11,11,'teleporter');
+    
+    
+    do1 = map.getDynamicObjects();
+    var t1 = do1[0];
+    var t2 = do1[1];
+    
+    t1.setTarget(t2);
+    t2.setTarget(t1);
+    
+    
+}
+  
+
+
+
 #Build a bridge across
 
 ##CaitSith2
@@ -74,3 +96,21 @@
     function gravity() {
     }
 ```
+
+# "I'm feeling lucky"
+## Jhack (giacgbj)
+
+```javascript
+function antiGravity() {
+	var x = player.getX();
+	var y = player.getY();
+
+	if (y > 1 && x < (map.getWidth()/2 + 10)) {
+		player.move("up");
+	}
+}
+map.startTimer(antiGravity, 25);
+```
+
+
+
