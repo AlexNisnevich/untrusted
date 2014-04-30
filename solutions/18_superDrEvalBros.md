@@ -86,6 +86,24 @@ function jump() {
 
 #Defy the Gravity
 
+## amahdy: Phone, eh?
+
+function jump() {
+
+```javascript
+    	if(player.getY()!=11) {
+		player.move("up");
+	}
+}
+map.startTimer(jump, 25);
+
+function foo() {
+```
+
+}
+
+    
+
 ##Gipnokote
 
 ```javascript

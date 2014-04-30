@@ -35,3 +35,18 @@ player.atLocation(30, 12) ) {
 player.setColor(chosenColor);
 
 ```
+## Nabellaleen
+```javascript
+var playerColor = player.getColor();
+switch(playerColor) {
+  case '#f00':
+    player.setColor('#ff0');
+    break;
+  case '#ff0':
+    player.setColor('#0f0');
+    break;
+  case '#0f0':
+    player.setColor('#f00');
+    break;
+}
+```
