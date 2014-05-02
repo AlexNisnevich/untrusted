@@ -11,21 +11,34 @@ function Player(x, y, __map, __game) {
 
     this._canMove = false;
 
+    /* wrapper */
+
+    function wrapExposedMethod(f, player) {
+        return function () {
+            var args = arguments;
+            return __game._callUnexposedMethod(function () {
+                return f.apply(player, args);
+            });
+        };
+    };
+
     /* exposed getters/setters */
 
     this.getX = function () { return __x; };
     this.getY = function () { return __y; };
-
     this.getColor = function () { return __color; };
-    this.setColor = function (c) {
+
+    this.setColor = wrapExposedMethod(function (c) {
         __color = c;
         __display.drawAll(__map);
-    };
+    });
 
     /* unexposed methods */
 
     // (used for teleporters)
     this._moveTo = function (dynamicObject) {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._moveTo()';}
+
         // no safety checks or anything
         // this method is about as safe as a war zone
         __x = dynamicObject.getX();
@@ -37,6 +50,8 @@ function Player(x, y, __map, __game) {
     };
 
     this._afterMove = function (x, y) {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._afterMove()';}
+
         var player = this;
 
         this._hasTeleported = false; // necessary to prevent bugs with teleportation
@@ -67,7 +82,7 @@ function Player(x, y, __map, __game) {
             } else if (objectDef.onCollision) {
                 __game.validateCallback(function () {
                     objectDef.onCollision(player, __game);
-                });
+                }, false, true);
             }
         }
 
@@ -81,6 +96,8 @@ function Player(x, y, __map, __game) {
     };
 
     this._pickUpItem = function (itemName, object) {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._pickUpItem()';}
+
         var player = this;
 
         __game.addToInventory(itemName);
@@ -91,7 +108,7 @@ function Player(x, y, __map, __game) {
         if (object.onPickUp) {
             __game.validateCallback(function () {
                 setTimeout(function () {
-                    object.onPickUp(player, __game);
+                    object.onPickUp(player);
                 }, 100);
                 // timeout is so that written text is not immediately overwritten
                 // TODO: play around with Display.writeStatus so that this is
@@ -102,11 +119,11 @@ function Player(x, y, __map, __game) {
 
     /* exposed methods */
 
-    this.atLocation = function (x, y) {
+    this.atLocation = wrapExposedMethod(function (x, y) {
         return (__x === x && __y === y);
-    };
+    }, this);
 
-    this.move = function (direction, fromKeyboard) {
+    this.move = wrapExposedMethod(function (direction, fromKeyboard) {
         if (!this._canMove) { // mainly for key delay
             return false;
         }
@@ -167,27 +184,27 @@ function Player(x, y, __map, __game) {
             // play bump sound
             __game.sound.playSound('select');
         }
-    };
+    }, this);
 
-    this.killedBy = function (killer) {
+    this.killedBy = wrapExposedMethod(function (killer) {
         __game.sound.playSound('hurt');
         __game._restartLevel();
 
         __map.displayChapter('You have been killed by \n' + killer + '!', 'death');
-    };
+    }, this);
 
-    this.hasItem = function (itemName) {
+    this.hasItem = wrapExposedMethod(function (itemName) {
         return __game.checkInventory(itemName);
-    };
+    }, this);
 
-    this.removeItem = function (itemName) {
+    this.removeItem = wrapExposedMethod(function (itemName) {
         var object = __game.objects[itemName];
 
         __game.removeFromInventory(itemName);
         __game.sound.playSound('blip');
-    };
+    }, this);
 
-    this.setPhoneCallback = function(func) {
+    this.setPhoneCallback = wrapExposedMethod(function(func) {
         this._phoneFunc = func;
-    };
+    }, this);
 }

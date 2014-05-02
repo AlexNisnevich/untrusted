@@ -3,6 +3,7 @@ function Game(debugMode, startLevel) {
 
     var __currentCode = '';
     var __commands = [];
+    var __playerCodeRunning = false;
 
     /* unexposed properties */
 
@@ -70,6 +71,11 @@ function Game(debugMode, startLevel) {
     /* unexposed getters */
 
     this._getHelpCommands = function () { return __commands; };
+    this._isPlayerCodeRunning = function () { return __playerCodeRunning; };
+
+    /* unexposed setters */
+
+    this._setPlayerCodeRunning = function (pcr) { __playerCodeRunning = pcr; };
 
     /* unexposed methods */
 
@@ -101,9 +107,10 @@ function Game(debugMode, startLevel) {
             display.focus();
         });
 
-        // Initialize map and editor
+        // Initialize editor, map, and objects
         this.editor = new CodeEditor("editor", 600, 500, this);
         this.map = new Map(this.display, this);
+        this.objects = this.getListOfObjects();
 
         // Initialize validator
         this.saveReferenceImplementations(); // prevents tampering with methods
@@ -373,6 +380,17 @@ function Game(debugMode, startLevel) {
 
             // disable player movement
             this.map.getPlayer()._canMove = false;
+        }
+    };
+
+    this._callUnexposedMethod = function(f) {
+        if (__playerCodeRunning) {
+            __playerCodeRunning = false;
+            res = f();
+            __playerCodeRunning = true;
+            return res;
+        } else {
+            return f();
         }
     };
 }
