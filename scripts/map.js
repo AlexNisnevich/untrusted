@@ -38,19 +38,19 @@ function Map(display, __game) {
     /* unexposed getters */
 
     this._getObjectDefinition = function(objName) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getObjectDefinition()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getObjectDefinition()';}
         return __objectDefinitions[objName];
     };
     this._getObjectDefinitions = function() {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getObjectDefinitions()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getObjectDefinitions()';}
         return __objectDefinitions;
     };
     this._getGrid = function () {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getGrid()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getGrid()';}
         return __grid;
     };
     this._getLines = function() {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getLines()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getLines()';}
         return __lines;
     };
 
@@ -64,7 +64,7 @@ function Map(display, __game) {
     /* unexposed methods */
 
     this._reset = function () {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._reset()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._reset()';}
 
         __objectDefinitions = clone(__game.objects);
 
@@ -103,7 +103,7 @@ function Map(display, __game) {
     };
 
     this._ready = function () {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._ready()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._ready()';}
 
         var map = this;
 
@@ -127,7 +127,7 @@ function Map(display, __game) {
     };
 
     this._setProperties = function (mapProperties) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._setProperties()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._setProperties()';}
 
         // set defaults
         this._properties = {};
@@ -154,7 +154,7 @@ function Map(display, __game) {
     };
 
     this._canMoveTo = function (x, y, myType) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._canMoveTo()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._canMoveTo()';}
 
         var x = Math.floor(x); var y = Math.floor(y);
 
@@ -193,7 +193,7 @@ function Map(display, __game) {
 
     // Returns the object of the given type closest to target coordinates
     this._findNearestToPoint = function (type, targetX, targetY) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._findNearestToPoint()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._findNearestToPoint()';}
 
         var foundObjects = [];
 
@@ -237,7 +237,7 @@ function Map(display, __game) {
     };
 
     this._isPointOccupiedByDynamicObject = function (x, y) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._isPointOccupiedByDynamicObject()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._isPointOccupiedByDynamicObject()';}
 
         var x = Math.floor(x); var y = Math.floor(y);
 
@@ -251,7 +251,7 @@ function Map(display, __game) {
     };
 
     this._findDynamicObjectAtPoint = function (x, y) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._findDynamicObjectAtPoint()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._findDynamicObjectAtPoint()';}
 
         var x = Math.floor(x); var y = Math.floor(y);
 
@@ -265,7 +265,7 @@ function Map(display, __game) {
     };
 
     this._moveAllDynamicObjects = function () {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._moveAllDynamicObjects()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._moveAllDynamicObjects()';}
 
         // the way things work right now, teleporters must take precedence
         // over all other objects -- otherwise, pointers.jsx will not work
@@ -291,7 +291,7 @@ function Map(display, __game) {
     };
 
     this._removeItemFromMap = function (x, y, klass) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._removeItemFromMap()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._removeItemFromMap()';}
 
         var x = Math.floor(x); var y = Math.floor(y);
 
@@ -301,7 +301,7 @@ function Map(display, __game) {
     };
 
     this._reenableMovementForPlayer = function (player) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._reenableMovementForPlayer()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._reenableMovementForPlayer()';}
 
         if (!this._callbackValidationFailed) {
             setTimeout(function () {
@@ -311,7 +311,7 @@ function Map(display, __game) {
     };
 
     this._hideChapter = function() {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._hideChapter()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._hideChapter()';}
 
         // start fading out chapter immediately
         // unless it's a death message, in which case wait 2.5 sec
@@ -325,13 +325,13 @@ function Map(display, __game) {
     };
 
     this._refreshDynamicObjects = function() {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._refreshDynamicObjects()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._refreshDynamicObjects()';}
 
         __dynamicObjects = __dynamicObjects.filter(function (obj) { return !obj.isDestroyed(); });
     };
 
     this._countTimers = function() {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._countTimers()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._countTimers()';}
 
         return __intervals.length;
     }
@@ -347,13 +347,13 @@ function Map(display, __game) {
     };
 
     this._playSound = function (sound) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._playSound()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._playSound()';}
 
         __game.sound.playSound(sound);
     };
 
     this._validateCallback = function (callback) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._validateCallback()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._validateCallback()';}
 
         return __game.validateCallback(callback);
     };

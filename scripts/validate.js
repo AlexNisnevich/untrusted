@@ -223,6 +223,9 @@ Game.prototype.validateAndRunScript = function (code) {
             this.map = new this._mapPrototype(this.display, this);
         }
 
+        // re-initialize objects if necessary
+        this.objects = this.getListOfObjects();
+
         // and restart current level from saved state
         var savedState = this.editor.getGoodState(this._currentLevel);
         this._evalLevelCode(savedState['code'], savedState['playerCode'], false, true);

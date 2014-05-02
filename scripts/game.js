@@ -263,24 +263,24 @@ function Game(debugMode, startLevel) {
             }
         }, 'text');
     };
-    
+
     this._resetLevel = function( level ) {
         var game = this;
         var resetTimeout_msec = 2500;
-        
+
         if ( this._resetTimeout != null ) {
             $('body, #buttons').css('background-color', '#000');
             window.clearTimeout( this._resetTimeout );
             this._resetTimeout = null;
-            
+
             this._getLevel(level, true);
         } else {
             this.display.writeStatus("To reset this level press ^4 again.");
             $('body, #buttons').css('background-color', '#900');
-            
+
             this._resetTimeout = setTimeout(function () {
                 game._resetTimeout = null;
-                
+
                 $('body, #buttons').css('background-color', '#000');
             }, resetTimeout_msec );
         }
