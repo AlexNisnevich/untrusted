@@ -3,6 +3,7 @@ function Game(debugMode, startLevel) {
 
     var __currentCode = '';
     var __commands = [];
+    var __playerCodeRunning = false;
 
     /* unexposed properties */
 
@@ -58,6 +59,7 @@ function Game(debugMode, startLevel) {
         'player.js'
     ];
 
+    this._resetTimeout = null;
     this._currentLevel = 0;
     this._currentFile = null;
     this._levelReached = parseInt(localStorage.getItem('levelReached')) || 1;
@@ -69,6 +71,11 @@ function Game(debugMode, startLevel) {
     /* unexposed getters */
 
     this._getHelpCommands = function () { return __commands; };
+    this._isPlayerCodeRunning = function () { return __playerCodeRunning; };
+
+    /* unexposed setters */
+
+    this._setPlayerCodeRunning = function (pcr) { __playerCodeRunning = pcr; };
 
     /* unexposed methods */
 
@@ -100,9 +107,10 @@ function Game(debugMode, startLevel) {
             display.focus();
         });
 
-        // Initialize map and editor
+        // Initialize editor, map, and objects
         this.editor = new CodeEditor("editor", 600, 500, this);
         this.map = new Map(this.display, this);
+        this.objects = this.getListOfObjects();
 
         // Initialize validator
         this.saveReferenceImplementations(); // prevents tampering with methods
@@ -254,7 +262,29 @@ function Game(debugMode, startLevel) {
                 game.editor.loadCode(code);
             }
         }, 'text');
-    }
+    };
+
+    this._resetLevel = function( level ) {
+        var game = this;
+        var resetTimeout_msec = 2500;
+
+        if ( this._resetTimeout != null ) {
+            $('body, #buttons').css('background-color', '#000');
+            window.clearTimeout( this._resetTimeout );
+            this._resetTimeout = null;
+
+            this._getLevel(level, true);
+        } else {
+            this.display.writeStatus("To reset this level press ^4 again.");
+            $('body, #buttons').css('background-color', '#900');
+
+            this._resetTimeout = setTimeout(function () {
+                game._resetTimeout = null;
+
+                $('body, #buttons').css('background-color', '#000');
+            }, resetTimeout_msec );
+        }
+    };
 
     // restart level with currently loaded code
     this._restartLevel = function () {
@@ -350,6 +380,17 @@ function Game(debugMode, startLevel) {
 
             // disable player movement
             this.map.getPlayer()._canMove = false;
+        }
+    };
+
+    this._callUnexposedMethod = function(f) {
+        if (__playerCodeRunning) {
+            __playerCodeRunning = false;
+            res = f();
+            __playerCodeRunning = true;
+            return res;
+        } else {
+            return f();
         }
     };
 }
