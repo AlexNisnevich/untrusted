@@ -158,6 +158,7 @@ function Game(debugMode, startLevel) {
 
     var __currentCode = '';
     var __commands = [];
+    var __playerCodeRunning = false;
 
     /* unexposed properties */
 
@@ -213,6 +214,7 @@ function Game(debugMode, startLevel) {
         'player.js'
     ];
 
+    this._resetTimeout = null;
     this._currentLevel = 0;
     this._currentFile = null;
     this._levelReached = parseInt(localStorage.getItem('levelReached')) || 1;
@@ -224,6 +226,11 @@ function Game(debugMode, startLevel) {
     /* unexposed getters */
 
     this._getHelpCommands = function () { return __commands; };
+    this._isPlayerCodeRunning = function () { return __playerCodeRunning; };
+
+    /* unexposed setters */
+
+    this._setPlayerCodeRunning = function (pcr) { __playerCodeRunning = pcr; };
 
     /* unexposed methods */
 
@@ -255,9 +262,10 @@ function Game(debugMode, startLevel) {
             display.focus();
         });
 
-        // Initialize map and editor
+        // Initialize editor, map, and objects
         this.editor = new CodeEditor("editor", 600, 500, this);
         this.map = new Map(this.display, this);
+        this.objects = this.getListOfObjects();
 
         // Initialize validator
         this.saveReferenceImplementations(); // prevents tampering with methods
@@ -409,7 +417,29 @@ function Game(debugMode, startLevel) {
                 game.editor.loadCode(code);
             }
         }, 'text');
-    }
+    };
+
+    this._resetLevel = function( level ) {
+        var game = this;
+        var resetTimeout_msec = 2500;
+
+        if ( this._resetTimeout != null ) {
+            $('body, #buttons').css('background-color', '#000');
+            window.clearTimeout( this._resetTimeout );
+            this._resetTimeout = null;
+
+            this._getLevel(level, true);
+        } else {
+            this.display.writeStatus("To reset this level press ^4 again.");
+            $('body, #buttons').css('background-color', '#900');
+
+            this._resetTimeout = setTimeout(function () {
+                game._resetTimeout = null;
+
+                $('body, #buttons').css('background-color', '#000');
+            }, resetTimeout_msec );
+        }
+    };
 
     // restart level with currently loaded code
     this._restartLevel = function () {
@@ -505,6 +535,17 @@ function Game(debugMode, startLevel) {
 
             // disable player movement
             this.map.getPlayer()._canMove = false;
+        }
+    };
+
+    this._callUnexposedMethod = function(f) {
+        if (__playerCodeRunning) {
+            __playerCodeRunning = false;
+            res = f();
+            __playerCodeRunning = true;
+            return res;
+        } else {
+            return f();
         }
     };
 }
@@ -1255,23 +1296,36 @@ ROT.Display.prototype.renderDom = function(html, css) {
     // we fall back to basic DOM rendering
     $(dummyDom).html(html); // DOM CSS now resides in game.css with everything else
 }
-function DynamicObject(map, type, x, y) {
+function DynamicObject(map, type, x, y, __game) {
     /* private variables */
 
     var __x = x;
     var __y = y;
     var __type = type;
-    var __definition = map._getObjectDefinition(type);
+    var __definition = __game._callUnexposedMethod(function () {
+        return map._getObjectDefinition(type);
+    });
     var __inventory = [];
     var __destroyed = false;
     var __myTurn = true;
     var __timer = null;
 
+    /* wrapper */
+
+    function wrapExposedMethod(f, object) {
+        return function () {
+            var args = arguments;
+            return __game._callUnexposedMethod(function () {
+                return f.apply(object, args);
+            });
+        };
+    };
+
     /* unexposed methods */
 
-    this._isDestroyed = function () { return __destroyed; };
-
     this._computeDestination = function (startX, startY, direction) {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._computeDestination()';}
+
         switch (direction) {
             case 'up':
                 return {'x': startX, 'y': startY - 1};
@@ -1285,6 +1339,8 @@ function DynamicObject(map, type, x, y) {
     };
 
     this._onTurn = function () {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._onTurn()';}
+
         var me = this;
         var player = map.getPlayer();
 
@@ -1310,6 +1366,7 @@ function DynamicObject(map, type, x, y) {
                     });
                 }
             } catch (e) {
+                // throw e; // for debugging
                 map.writeStatus(e.toString());
             }
         }
@@ -1339,6 +1396,8 @@ function DynamicObject(map, type, x, y) {
     };
 
     this._afterMove = function () {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._afterMove()';}
+
         // try to pick up items
         var objectName = map._getGrid()[__x][__y].type;
         if (map._getObjectDefinition(objectName).type === 'item' && !__definition.projectile) {
@@ -1349,6 +1408,8 @@ function DynamicObject(map, type, x, y) {
     };
 
     this._destroy = function (onMapReset) {
+        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._destroy()';}
+
         var me = this;
 
         __destroyed = true;
@@ -1375,8 +1436,9 @@ function DynamicObject(map, type, x, y) {
     this.getX = function () { return __x; };
     this.getY = function () { return __y; };
     this.getType = function () { return __type; };
+    this.isDestroyed = function () { return __destroyed; };
 
-    this.giveItemTo = function (player, itemType) {
+    this.giveItemTo = wrapExposedMethod(function (player, itemType) {
         var pl_at = player.atLocation;
 
         if (!(pl_at(__x, __y) || pl_at(__x+1, __y) || pl_at(__x-1, __y) ||
@@ -1388,9 +1450,9 @@ function DynamicObject(map, type, x, y) {
         }
 
         player._pickUpItem(itemType, map._getObjectDefinition(itemType));
-    };
+    }, this);
 
-    this.move = function (direction) {
+    this.move = wrapExposedMethod(function (direction) {
         var dest = this._computeDestination(__x, __y, direction);
 
         if (!__myTurn) {
@@ -1429,23 +1491,23 @@ function DynamicObject(map, type, x, y) {
         }
 
         __myTurn = false;
-    };
+    }, this);
 
-    this.canMove = function (direction) {
+    this.canMove = wrapExposedMethod(function (direction) {
         var dest = this._computeDestination(__x, __y, direction);
 
         // check if the object can move there and will not collide with
         // another dynamic object
         return (map._canMoveTo(dest.x, dest.y, __type) &&
             !map._isPointOccupiedByDynamicObject(dest.x, dest.y));
-    };
+    }, this);
 
-    this.findNearest = function (type) {
+    this.findNearest = wrapExposedMethod(function (type) {
         return map._findNearestToPoint(type, __x, __y);
-    };
+    }, this);
 
     // only for teleporters
-    this.setTarget = function (target) {
+    this.setTarget = wrapExposedMethod(function (target) {
         if (__type != 'teleporter') {
             throw 'setTarget() can only be called on a teleporter!';
         }
@@ -1455,7 +1517,7 @@ function DynamicObject(map, type, x, y) {
         }
 
         this.target = target;
-    };
+    }, this);
 
     // constructor
 
@@ -1464,6 +1526,13 @@ function DynamicObject(map, type, x, y) {
     }
 }
 Game.prototype.inventory = [];
+
+Game.prototype.getItemDefinition = function (itemName) {
+	var map = this.map;
+	return this._callUnexposedMethod(function () {
+		return map._getObjectDefinition(itemName);
+	});
+};
 
 Game.prototype.addToInventory = function (itemName) {
 	if (this.inventory.indexOf(itemName) === -1) {
@@ -1477,7 +1546,7 @@ Game.prototype.checkInventory = function (itemName) {
 };
 
 Game.prototype.removeFromInventory = function (itemName) {
-	var object = this.map._getObjectDefinition(itemName);
+	var object = this.getItemDefinition(itemName);
 	if (!object) {
 		throw 'No such item: ' + itemName;
 	}
@@ -1603,12 +1672,35 @@ function Map(display, __game) {
     this._dummy = false; // overridden by dummyMap in validate.js
     this._status = '';
 
+    /* wrapper */
+
+    function wrapExposedMethod(f, map) {
+        return function () {
+            var args = arguments;
+            return __game._callUnexposedMethod(function () {
+                return f.apply(map, args);
+            });
+        };
+    };
+
     /* unexposed getters */
 
-    this._getObjectDefinition = function(objName) { return __objectDefinitions[objName]; };
-    this._getObjectDefinitions = function() { return __objectDefinitions; };
-    this._getGrid = function () { return __grid; };
-    this._getLines = function() { return __lines; };
+    this._getObjectDefinition = function(objName) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getObjectDefinition()';}
+        return __objectDefinitions[objName];
+    };
+    this._getObjectDefinitions = function() {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getObjectDefinitions()';}
+        return __objectDefinitions;
+    };
+    this._getGrid = function () {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getGrid()';}
+        return __grid;
+    };
+    this._getLines = function() {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._getLines()';}
+        return __lines;
+    };
 
     /* exposed getters */
 
@@ -1620,6 +1712,8 @@ function Map(display, __game) {
     /* unexposed methods */
 
     this._reset = function () {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._reset()';}
+
         __objectDefinitions = clone(__game.objects);
 
         this._display.clear();
@@ -1657,6 +1751,8 @@ function Map(display, __game) {
     };
 
     this._ready = function () {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._ready()';}
+
         var map = this;
 
         // set refresh rate if one is specified
@@ -1679,6 +1775,8 @@ function Map(display, __game) {
     };
 
     this._setProperties = function (mapProperties) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._setProperties()';}
+
         // set defaults
         this._properties = {};
         __allowOverwrite = false;
@@ -1704,6 +1802,8 @@ function Map(display, __game) {
     };
 
     this._canMoveTo = function (x, y, myType) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._canMoveTo()';}
+
         var x = Math.floor(x); var y = Math.floor(y);
 
         if (x < 0 || x >= __game._dimensions.width || y < 0 || y >= __game._dimensions.height) {
@@ -1741,6 +1841,8 @@ function Map(display, __game) {
 
     // Returns the object of the given type closest to target coordinates
     this._findNearestToPoint = function (type, targetX, targetY) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._findNearestToPoint()';}
+
         var foundObjects = [];
 
         // look for static objects
@@ -1783,6 +1885,8 @@ function Map(display, __game) {
     };
 
     this._isPointOccupiedByDynamicObject = function (x, y) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._isPointOccupiedByDynamicObject()';}
+
         var x = Math.floor(x); var y = Math.floor(y);
 
         for (var i = 0; i < this.getDynamicObjects().length; i++) {
@@ -1795,6 +1899,8 @@ function Map(display, __game) {
     };
 
     this._findDynamicObjectAtPoint = function (x, y) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._findDynamicObjectAtPoint()';}
+
         var x = Math.floor(x); var y = Math.floor(y);
 
         for (var i = 0; i < this.getDynamicObjects().length; i++) {
@@ -1807,6 +1913,8 @@ function Map(display, __game) {
     };
 
     this._moveAllDynamicObjects = function () {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._moveAllDynamicObjects()';}
+
         // the way things work right now, teleporters must take precedence
         // over all other objects -- otherwise, pointers.jsx will not work
         // correctly.
@@ -1831,6 +1939,8 @@ function Map(display, __game) {
     };
 
     this._removeItemFromMap = function (x, y, klass) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._removeItemFromMap()';}
+
         var x = Math.floor(x); var y = Math.floor(y);
 
         if (__grid[x][y].type === klass) {
@@ -1839,6 +1949,8 @@ function Map(display, __game) {
     };
 
     this._reenableMovementForPlayer = function (player) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._reenableMovementForPlayer()';}
+
         if (!this._callbackValidationFailed) {
             setTimeout(function () {
                 player._canMove = true;
@@ -1847,6 +1959,8 @@ function Map(display, __game) {
     };
 
     this._hideChapter = function() {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._hideChapter()';}
+
         // start fading out chapter immediately
         // unless it's a death message, in which case wait 2.5 sec
         clearInterval(__chapterHideTimeout);
@@ -1859,10 +1973,14 @@ function Map(display, __game) {
     };
 
     this._refreshDynamicObjects = function() {
-        __dynamicObjects = __dynamicObjects.filter(function (obj) { return !obj._isDestroyed(); });
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._refreshDynamicObjects()';}
+
+        __dynamicObjects = __dynamicObjects.filter(function (obj) { return !obj.isDestroyed(); });
     };
 
     this._countTimers = function() {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._countTimers()';}
+
         return __intervals.length;
     }
 
@@ -1877,16 +1995,20 @@ function Map(display, __game) {
     };
 
     this._playSound = function (sound) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._playSound()';}
+
         __game.sound.playSound(sound);
     };
 
     this._validateCallback = function (callback) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._validateCallback()';}
+
         return __game.validateCallback(callback);
     };
 
     /* exposed methods */
 
-    this.refresh = function () {
+    this.refresh = wrapExposedMethod(function () {
         if (__dom) {
             this._display.clear();
 
@@ -1900,9 +2022,9 @@ function Map(display, __game) {
             this._display.drawAll(this);
         }
         __game.drawInventory();
-    };
+    }, this);
 
-    this.countObjects = function (type) {
+    this.countObjects = wrapExposedMethod(function (type) {
         var count = 0;
 
         // count static objects
@@ -1922,9 +2044,9 @@ function Map(display, __game) {
         })
 
         return count;
-    };
+    }, this);
 
-    this.placeObject = function (x, y, type) {
+    this.placeObject = wrapExposedMethod(function (x, y, type) {
         var x = Math.floor(x); var y = Math.floor(y);
 
         if (!__objectDefinitions[type]) {
@@ -1942,7 +2064,7 @@ function Map(display, __game) {
 
         if (__objectDefinitions[type].type === 'dynamic') {
             // dynamic object
-            __dynamicObjects.push(new DynamicObject(this, type, x, y));
+            __dynamicObjects.push(new DynamicObject(this, type, x, y, __game));
         } else {
             // static object
             if (__grid[x][y].type === 'empty' || __grid[x][y].type === type || __allowOverwrite) {
@@ -1951,9 +2073,9 @@ function Map(display, __game) {
                 throw "There is already an object at (" + x + ", " + y + ")!";
             }
         }
-    };
+    }, this);
 
-    this.placePlayer = function (x, y) {
+    this.placePlayer = wrapExposedMethod(function (x, y) {
         var x = Math.floor(x); var y = Math.floor(y);
 
         if (__player) {
@@ -1962,9 +2084,9 @@ function Map(display, __game) {
 
         __player = new __game._playerPrototype(x, y, this, __game);
         this._display.drawAll(this);
-    };
+    }, this);
 
-    this.createFromGrid = function (grid, tiles, xOffset, yOffset) {
+    this.createFromGrid = wrapExposedMethod(function (grid, tiles, xOffset, yOffset) {
         for (var y = 0; y < grid.length; y++) {
             var line = grid[y];
             for (var x = 0; x < line.length; x++) {
@@ -1977,15 +2099,15 @@ function Map(display, __game) {
                 }
             }
         }
-    };
+    }, this);
 
-    this.setSquareColor = function (x, y, bgColor) {
+    this.setSquareColor = wrapExposedMethod(function (x, y, bgColor) {
         var x = Math.floor(x); var y = Math.floor(y);
 
         __grid[x][y].bgColor = bgColor;
-    };
+    }, this);
 
-    this.defineObject = function (name, properties) {
+    this.defineObject = wrapExposedMethod(function (name, properties) {
         if (__objectDefinitions[name]) {
             throw "There is already a type of object named " + name + "!";
         }
@@ -1995,16 +2117,15 @@ function Map(display, __game) {
         }
 
         __objectDefinitions[name] = properties;
+    }, this);
 
-    };
-
-    this.getObjectTypeAt = function (x, y) {
+    this.getObjectTypeAt = wrapExposedMethod(function (x, y) {
         var x = Math.floor(x); var y = Math.floor(y);
 
         return __grid[x][y].type;
-    }
+    }, this);
 
-    this.getAdjacentEmptyCells = function (x, y) {
+    this.getAdjacentEmptyCells = wrapExposedMethod(function (x, y) {
         var x = Math.floor(x); var y = Math.floor(y);
 
         var map = this;
@@ -2030,9 +2151,9 @@ function Map(display, __game) {
             }
         });
         return adjacentEmptyCells;
-    };
+    }, this);
 
-    this.startTimer = function(timer, delay) {
+    this.startTimer = wrapExposedMethod(function(timer, delay) {
         if (!delay) {
             throw "startTimer(): delay not specified"
         } else if (delay < 25) {
@@ -2040,9 +2161,9 @@ function Map(display, __game) {
         }
 
         __intervals.push(setInterval(timer, delay));
-    };
+    }, this);
 
-    this.timeout = function(timer, delay) {
+    this.timeout = wrapExposedMethod(function(timer, delay) {
         if (!delay) {
             throw "timeout(): delay not specified"
         } else if (delay < 25) {
@@ -2050,9 +2171,9 @@ function Map(display, __game) {
         }
 
         __intervals.push(setTimeout(timer, delay));
-    };
+    }, this);
 
-    this.displayChapter = function(chapterName, cssClass) {
+    this.displayChapter = wrapExposedMethod(function(chapterName, cssClass) {
         if (__game._displayedChapters.indexOf(chapterName) === -1) {
             $('#chapter').html(chapterName.replace("\n","<br>"));
             $('#chapter').removeClass().show();
@@ -2067,9 +2188,9 @@ function Map(display, __game) {
                 $('#chapter').fadeOut();
             }, 5 * 1000);
         }
-    };
+    }, this);
 
-    this.writeStatus = function(status) {
+    this.writeStatus = wrapExposedMethod(function(status) {
         this._status = status;
 
         if (__refreshRate) {
@@ -2081,29 +2202,29 @@ function Map(display, __game) {
                 display.writeStatus(status);
             }, 100);
         }
-    };
+    }, this);
 
     // used by validators
     // returns true iff called at the start of the level (that is, on DummyMap)
     // returns false iff called by validateCallback (that is, on the actual map)
-    this.isStartOfLevel = function () {
+    this.isStartOfLevel = wrapExposedMethod(function () {
         return this._dummy;
-    }
+    }, this);
 
     /* canvas-related stuff */
 
-    this.getCanvasContext = function() {
+    this.getCanvasContext = wrapExposedMethod(function() {
         return $('#drawingCanvas')[0].getContext('2d');
-    };
+    }, this);
 
-    this.getCanvasCoords = function(obj) {
+    this.getCanvasCoords = wrapExposedMethod(function(obj) {
         return {
             x: (obj.getX() + 0.5) * 600 / __game._dimensions.width,
             y: (obj.getY() + 0.5) * 500 / __game._dimensions.height
         };
-    };
+    }, this);
 
-    this.getRandomColor = function(start, end) {
+    this.getRandomColor = wrapExposedMethod(function(start, end) {
         var mean = [
             Math.floor((start[0] + end[0]) / 2),
             Math.floor((start[1] + end[1]) / 2),
@@ -2115,13 +2236,13 @@ function Map(display, __game) {
             Math.floor((end[2] - start[2]) / 2)
         ];
         return ROT.Color.toHex(ROT.Color.randomize(mean, std));
-    };
+    }, this);
 
-    this.createLine = function(start, end, callback) {
+    this.createLine = wrapExposedMethod(function(start, end, callback) {
         __lines.push({'start': start, 'end': end, 'callback': callback});
-    };
+    }, this);
 
-    this.testLineCollisions = function(player) {
+    this.testLineCollisions = wrapExposedMethod(function(player) {
         var threshold = 7;
         var playerCoords = this.getCanvasCoords(player);
         __lines.forEach(function (line) {
@@ -2131,25 +2252,69 @@ function Map(display, __game) {
                 line.callback(__player);
             }
         })
-    };
+    }, this);
 
     /* for DOM manipulation level */
 
-    this.getDOM = function () {
+    this.getDOM = wrapExposedMethod(function () {
         return __dom;
-    }
+    })
 
-    this.createFromDOM = function(dom) {
+    this.createFromDOM = wrapExposedMethod(function(dom) {
         __dom = dom;
-    };
+    }, this);
 
-    this.updateDOM = function(dom) {
+    this.updateDOM = wrapExposedMethod(function(dom) {
         __dom = dom;
-    };
+    }, this);
 
-    this.overrideKey = function(keyName, callback) {
+    this.overrideKey = wrapExposedMethod(function(keyName, callback) {
         this._overrideKeys[keyName] = callback;
-    }
+    }, this);
+
+    /* validators */
+
+    this.validateAtLeastXObjects = wrapExposedMethod(function(num, type) {
+        var count = this.countObjects(type);
+        if (count < num) {
+            throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+        }
+    }, this);
+
+    this.validateAtMostXObjects = wrapExposedMethod(function(num, type) {
+        var count = this.countObjects(type);
+        if (count > num) {
+            throw 'Too many ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+        }
+    }, this);
+
+    this.validateExactlyXManyObjects = wrapExposedMethod(function(num, type) {
+        var count = this.countObjects(type);
+        if (count != num) {
+            throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
+        }
+    }, this);
+
+    this.validateAtMostXDynamicObjects = wrapExposedMethod(function(num) {
+        var count = this.getDynamicObjects().length;
+        if (count > num) {
+            throw 'Too many dynamic objects on the map! Expected: ' + num + ', found: ' + count;
+        }
+    }, this);
+
+    this.validateNoTimers = wrapExposedMethod(function() {
+        var count = this._countTimers();
+        if (count > 0) {
+            throw 'Too many timers set on the map! Expected: 0, found: ' + count;
+        }
+    }, this);
+
+    this.validateAtLeastXLines = wrapExposedMethod(function(num) {
+        var count = this._getLines().length;
+        if (count < num) {
+            throw 'Not enough lines on the map! Expected: ' + num + ', found: ' + count;
+        }
+    }, this);
 
     /* initialization */
 
@@ -2165,148 +2330,153 @@ Objects can have the following parameters:
     type: 'item' or null
 */
 
-Game.prototype.objects = {
-    // special
+Game.prototype.getListOfObjects = function () {
+    var game = this;
+    return {
+        // special
 
-    'empty' : {
-        'symbol': ' ',
-        'impassableFor': ['raft']
-    },
+        'empty' : {
+            'symbol': ' ',
+            'impassableFor': ['raft']
+        },
 
-    'player' : {
-        'symbol': '@',
-        'color': '#0f0'
-    },
+        'player' : {
+            'symbol': '@',
+            'color': '#0f0'
+        },
 
-    'exit' : {
-        'symbol' : String.fromCharCode(0x2395), // ⎕
-        'color': '#0ff',
-        'onCollision': function (player, game) {
-            if (!game.map.finalLevel) {
-                game._moveToNextLevel();
+        'exit' : {
+            'symbol' : String.fromCharCode(0x2395), // ⎕
+            'color': '#0ff',
+            'onCollision': function (player) {
+                if (!game.map.finalLevel) {
+                    game._moveToNextLevel();
+                }
+            }
+        },
+
+        // obstacles
+
+        'block': {
+            'symbol': '#',
+            'color': '#999',
+            'impassable': true
+        },
+
+        'tree': {
+            'symbol': '♣',
+            'color': '#080',
+            'impassable': true
+        },
+
+        'mine': {
+            'symbol': ' ',
+            'onCollision': function (player) {
+                player.killedBy('a hidden mine');
+            }
+        },
+
+        'trap': {
+            'type': 'dynamic',
+            'symbol': '*',
+            'color': '#f00',
+            'onCollision': function (player, me) {
+                player.killedBy('a trap');
+            },
+            'behavior': null
+        },
+
+        'teleporter': {
+            'type': 'dynamic',
+            'symbol' : String.fromCharCode(0x2395), // ⎕
+            'color': '#f0f',
+            'onCollision': function (player, me) {
+                if (!player._hasTeleported) {
+                    game._callUnexposedMethod(function () {
+                        player._moveTo(me.target);
+                    });
+                }
+                player._hasTeleported = true;
+            },
+            'behavior': null
+        },
+
+        // items
+
+        'computer': {
+            'type': 'item',
+            'symbol': String.fromCharCode(0x2318), // ⌘
+            'color': '#ccc',
+            'onPickUp': function (player) {
+                $('#editorPane').fadeIn();
+                game.editor.refresh();
+                game.map.writeStatus('You have picked up the computer!');
+            },
+            'onDrop': function () {
+                $('#editorPane').hide();
+            }
+        },
+
+        'phone': {
+            'type': 'item',
+            'symbol': String.fromCharCode(0x260E), // ☎
+            'onPickUp': function (player) {
+                game.map.writeStatus('You have picked up the function phone!');
+                $('#phoneButton').show();
+            },
+            'onDrop': function () {
+                $('#phoneButton').hide();
+            }
+        },
+
+        'redKey': {
+            'type': 'item',
+            'symbol': 'k',
+            'color': 'red',
+            'onPickUp': function (player) {
+                game.map.writeStatus('You have picked up a red key!');
+            }
+        },
+
+        'greenKey': {
+            'type': 'item',
+            'symbol': 'k',
+            'color': '#0f0',
+            'onPickUp': function (player) {
+                game.map.writeStatus('You have picked up a green key!');
+            }
+        },
+
+        'blueKey': {
+            'type': 'item',
+            'symbol': 'k',
+            'color': '#06f',
+            'onPickUp': function (player) {
+                game.map.writeStatus('You have picked up a blue key!');
+            }
+        },
+
+        'yellowKey': {
+            'type': 'item',
+            'symbol': 'k',
+            'color': 'yellow',
+            'onPickUp': function (player) {
+                game.map.writeStatus('You have picked up a yellow key!');
+            }
+        },
+
+        'theAlgorithm': {
+            'type': 'item',
+            'symbol': 'A',
+            'color': 'white',
+            'onPickUp': function (player) {
+                game.map.writeStatus('You have picked up the Algorithm!');
+            },
+            'onDrop': function () {
+                game.map.writeStatus('You have lost the Algorithm!');
             }
         }
-    },
-
-    // obstacles
-
-    'block': {
-        'symbol': '#',
-        'color': '#999',
-        'impassable': true
-    },
-
-    'tree': {
-        'symbol': '♣',
-        'color': '#080',
-        'impassable': true
-    },
-
-    'mine': {
-        'symbol': ' ',
-        'onCollision': function (player, game) {
-            player.killedBy('a hidden mine');
-        }
-    },
-
-    'trap': {
-        'type': 'dynamic',
-        'symbol': '*',
-        'color': '#f00',
-        'onCollision': function (player, game) {
-            player.killedBy('a trap');
-        },
-        'behavior': null
-    },
-
-    'teleporter': {
-        'type': 'dynamic',
-        'symbol' : String.fromCharCode(0x2395), // ⎕
-        'color': '#f0f',
-        'onCollision': function (player, me) {
-            if (!player._hasTeleported) {
-                player._moveTo(me.target);
-            }
-            player._hasTeleported = true;
-        },
-        'behavior': null
-    },
-
-    // items
-
-    'computer': {
-        'type': 'item',
-        'symbol': String.fromCharCode(0x2318), // ⌘
-        'color': '#ccc',
-        'onPickUp': function (player, game) {
-            $('#editorPane').fadeIn();
-            game.editor.refresh();
-            game.map.writeStatus('You have picked up the computer!');
-        },
-        'onDrop': function (game) {
-            $('#editorPane').hide();
-        }
-    },
-
-    'phone': {
-        'type': 'item',
-        'symbol': String.fromCharCode(0x260E), // ☎
-        'onPickUp': function (player, game) {
-            game.map.writeStatus('You have picked up the function phone!');
-            $('#phoneButton').show();
-        },
-        'onDrop': function (game) {
-            $('#phoneButton').hide();
-        }
-    },
-
-    'redKey': {
-        'type': 'item',
-        'symbol': 'k',
-        'color': 'red',
-        'onPickUp': function (player, game) {
-            game.map.writeStatus('You have picked up a red key!');
-        }
-    },
-
-    'greenKey': {
-        'type': 'item',
-        'symbol': 'k',
-        'color': '#0f0',
-        'onPickUp': function (player, game) {
-            game.map.writeStatus('You have picked up a green key!');
-        }
-    },
-
-    'blueKey': {
-        'type': 'item',
-        'symbol': 'k',
-        'color': '#06f',
-        'onPickUp': function (player, game) {
-            game.map.writeStatus('You have picked up a blue key!');
-        }
-    },
-
-    'yellowKey': {
-        'type': 'item',
-        'symbol': 'k',
-        'color': 'yellow',
-        'onPickUp': function (player, game) {
-            game.map.writeStatus('You have picked up a yellow key!');
-        }
-    },
-
-    'theAlgorithm': {
-        'type': 'item',
-        'symbol': 'A',
-        'color': 'white',
-        'onPickUp': function (player, game) {
-            game.map.writeStatus('You have picked up the Algorithm!');
-        },
-        'onDrop': function (game) {
-            game.map.writeStatus('You have lost the Algorithm!');
-        }
-    }
+    };
 };
 function Player(x, y, __map, __game) {
     /* private variables */
@@ -2321,21 +2491,34 @@ function Player(x, y, __map, __game) {
 
     this._canMove = false;
 
+    /* wrapper */
+
+    function wrapExposedMethod(f, player) {
+        return function () {
+            var args = arguments;
+            return __game._callUnexposedMethod(function () {
+                return f.apply(player, args);
+            });
+        };
+    };
+
     /* exposed getters/setters */
 
     this.getX = function () { return __x; };
     this.getY = function () { return __y; };
-
     this.getColor = function () { return __color; };
-    this.setColor = function (c) {
+
+    this.setColor = wrapExposedMethod(function (c) {
         __color = c;
         __display.drawAll(__map);
-    };
+    });
 
     /* unexposed methods */
 
     // (used for teleporters)
     this._moveTo = function (dynamicObject) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._moveTo()';}
+
         // no safety checks or anything
         // this method is about as safe as a war zone
         __x = dynamicObject.getX();
@@ -2347,6 +2530,8 @@ function Player(x, y, __map, __game) {
     };
 
     this._afterMove = function (x, y) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._afterMove()';}
+
         var player = this;
 
         this._hasTeleported = false; // necessary to prevent bugs with teleportation
@@ -2377,7 +2562,7 @@ function Player(x, y, __map, __game) {
             } else if (objectDef.onCollision) {
                 __game.validateCallback(function () {
                     objectDef.onCollision(player, __game);
-                });
+                }, false, true);
             }
         }
 
@@ -2391,6 +2576,8 @@ function Player(x, y, __map, __game) {
     };
 
     this._pickUpItem = function (itemName, object) {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._pickUpItem()';}
+
         var player = this;
 
         __game.addToInventory(itemName);
@@ -2401,7 +2588,7 @@ function Player(x, y, __map, __game) {
         if (object.onPickUp) {
             __game.validateCallback(function () {
                 setTimeout(function () {
-                    object.onPickUp(player, __game);
+                    object.onPickUp(player);
                 }, 100);
                 // timeout is so that written text is not immediately overwritten
                 // TODO: play around with Display.writeStatus so that this is
@@ -2412,11 +2599,11 @@ function Player(x, y, __map, __game) {
 
     /* exposed methods */
 
-    this.atLocation = function (x, y) {
+    this.atLocation = wrapExposedMethod(function (x, y) {
         return (__x === x && __y === y);
-    };
+    }, this);
 
-    this.move = function (direction, fromKeyboard) {
+    this.move = wrapExposedMethod(function (direction, fromKeyboard) {
         if (!this._canMove) { // mainly for key delay
             return false;
         }
@@ -2477,29 +2664,29 @@ function Player(x, y, __map, __game) {
             // play bump sound
             __game.sound.playSound('select');
         }
-    };
+    }, this);
 
-    this.killedBy = function (killer) {
+    this.killedBy = wrapExposedMethod(function (killer) {
         __game.sound.playSound('hurt');
         __game._restartLevel();
 
         __map.displayChapter('You have been killed by \n' + killer + '!', 'death');
-    };
+    }, this);
 
-    this.hasItem = function (itemName) {
+    this.hasItem = wrapExposedMethod(function (itemName) {
         return __game.checkInventory(itemName);
-    };
+    }, this);
 
-    this.removeItem = function (itemName) {
+    this.removeItem = wrapExposedMethod(function (itemName) {
         var object = __game.objects[itemName];
 
         __game.removeFromInventory(itemName);
         __game.sound.playSound('blip');
-    };
+    }, this);
 
-    this.setPhoneCallback = function(func) {
+    this.setPhoneCallback = wrapExposedMethod(function(func) {
         this._phoneFunc = func;
-    };
+    }, this);
 }
 Game.prototype.reference = {
     'canvas.beginPath': {
@@ -3203,9 +3390,6 @@ function Sound(source) {
     this.init();
 }
 Game.prototype.verbotenWords = [
-    '._', '"_', "'_", // prevents calling _unexposed methods
-    '\\u005f', '\\x5', // equivalent to '_'
-    'fromCharCode', // prevents String.fromCharCode(95) => "_"
     'eval', '.call', 'call(', 'apply', 'bind', // prevents arbitrary code execution
     'prototype', // prevents messing with prototypes
     'setTimeout', 'setInterval', // requires players to use map.startTimer() instead
@@ -3269,7 +3453,9 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._eval(allCode);
 
         // start the level on a dummy map to validate
+        this._setPlayerCodeRunning(true);
         startLevel(dummyMap);
+        this._setPlayerCodeRunning(false);
 
         // re-run to check if the player messed with startLevel
         this._startOfStartLevelReached = false;
@@ -3309,6 +3495,9 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
         return startLevel;
     } catch (e) {
+        // cleanup
+        this._setPlayerCodeRunning(false);
+
         var exceptionText = e.toString();
         if (e instanceof SyntaxError) {
             var lineNum = this.findSyntaxError(allCode, e.message);
@@ -3325,10 +3514,33 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
-Game.prototype.validateCallback = function(callback, throwExceptions) {
+Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForbiddenCalls) {
     try {
-        // run the callback
-        var result = callback();
+        // run the callback and check for forbidden method calls
+        try {
+            if (!ignoreForbiddenCalls) {
+                this._setPlayerCodeRunning(true);
+            }
+            var result = callback();
+            this._setPlayerCodeRunning(false);
+        } catch (e) {
+            // cleanup
+            this._setPlayerCodeRunning(false);
+
+            if (e.toString().indexOf("Forbidden method call") > -1) {
+                // display error, disable player movement
+                this.display.appendError(e.toString(), "%c{red}Please reload the level.");
+                this.sound.playSound('static');
+                this.map.getPlayer()._canMove = false;
+                this.map._callbackValidationFailed = true;
+
+                // throw e; // for debugging
+                return;
+            } else {
+                // other exceptions are fine here - just pass them up
+                throw e;
+            }
+        }
 
         // check if validator still passes
         try {
@@ -3377,6 +3589,7 @@ Game.prototype.validateCallback = function(callback, throwExceptions) {
         }
     } catch (e) {
         this.map.writeStatus(e.toString());
+
         // throw e; // for debugging
         if (throwExceptions) {
             throw e;
@@ -3400,6 +3613,9 @@ Game.prototype.validateAndRunScript = function (code) {
             this.map._reset(); // for cleanup
             this.map = new this._mapPrototype(this.display, this);
         }
+
+        // re-initialize objects if necessary
+        this.objects = this.getListOfObjects();
 
         // and restart current level from saved state
         var savedState = this.editor.getGoodState(this._currentLevel);
@@ -3433,50 +3649,6 @@ Game.prototype.clearModifiedGlobals = function() {
         if (window.propertyIsEnumerable(p) && this._globalVars.indexOf(p) == -1) {
             window[p] = null;
         }
-    }
-};
-
-// Specific validators go here
-
-Map.prototype.validateAtLeastXObjects = function(num, type) {
-    var count = this.countObjects(type);
-    if (count < num) {
-        throw 'Not enough ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateAtMostXObjects = function(num, type) {
-    var count = this.countObjects(type);
-    if (count > num) {
-        throw 'Too many ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateExactlyXManyObjects = function(num, type) {
-    var count = this.countObjects(type);
-    if (count != num) {
-        throw 'Wrong number of ' + type + 's on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateAtMostXDynamicObjects = function(num) {
-    var count = this.getDynamicObjects().length;
-    if (count > num) {
-        throw 'Too many dynamic objects on the map! Expected: ' + num + ', found: ' + count;
-    }
-};
-
-Map.prototype.validateNoTimers = function() {
-    var count = this._countTimers();
-    if (count > 0) {
-        throw 'Too many timers set on the map! Expected: 0, found: ' + count;
-    }
-};
-
-Map.prototype.validateAtLeastXLines = function(num) {
-    var count = this._getLines().length;
-    if (count < num) {
-        throw 'Not enough lines on the map! Expected: ' + num + ', found: ' + count;
     }
 };
 
@@ -3641,7 +3813,7 @@ Game.prototype.enableButtons = function () {
 
     $("#resetButton").click( function () {
         game.sound.playSound('blip');
-        game._getLevel(game._currentLevel, true);
+        game._resetLevel( game._currentLevel );
     });
 
     $("#executeButton").click( function () {
@@ -3841,7 +4013,7 @@ Game.prototype._levels = {
     'levels/08_intoTheWoods.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2",\n    "commandsIntroduced":\n        ["map.getObjectTypeAt", "player.getX", "player.getY",\n         "map.refresh"],\n    "mapProperties": {\n        "allowOverwrite": true\n    },\n    "music": "Night Owl"\n}\n#END_PROPERTIES#\n/*******************\n * intoTheWoods.js *\n *******************\n *\n * Ah, you\'re out of the woods now. Or into the woods, as the\n * case may be.\n *\n * So take a deep breath, relax, and remember what you\'re here\n * for in the first place.\n *\n * I\'ve traced its signal and the Algorithm is nearby. You\'ll\n * need to go through the forest and across the river, and\n * you\'ll reach the fortress where it\'s kept. Their defences\n * are light, and we should be able to catch them off-guard.\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    // NOTE: In this level alone, map.placeObject is allowed to\n    //overwrite existing objects.\n\n    map.displayChapter(\'Chapter 2\\nRaiders of the Lost Algorithm\');\n\n    map.placePlayer(2, map.getHeight() - 1);\n\n    var functionList = {};\n\n    functionList[\'fortresses\'] = function () {\n        function genRandomValue(direction) {\n            if (direction === "height") {\n                return Math.floor(Math.random() * (map.getHeight()-3));\n            } else if (direction === "width") {\n                return Math.floor(Math.random() * (map.getWidth()+1));\n            }\n        }\n\n        var x = genRandomValue("width");\n        var y = genRandomValue("height");\n\n        for (var i = x-2; i < x+2; i++) {\n            map.placeObject(i,y-2, \'block\');\n        }\n        for (var i = x-2; i < x+2; i++) {\n            map.placeObject(i,y+2, \'block\');\n        }\n\n        for (var j = y-2; j < y+2; j++) {\n            map.placeObject(x-2,j, \'block\');\n        }\n\n        for (var j = y-2; j < y+2; j++) {\n            map.placeObject(x+2,j, \'block\');\n        }\n    };\n\n    functionList[\'generateForest\'] = function () {\n        for (var i = 0; i < map.getWidth(); i++) {\n            for (var j = 0; j < map.getHeight(); j++) {\n\n                // initialize to empty if the square contains a forest already\n                if (map.getObjectTypeAt(i, j) === \'tree\') {\n                    // remove existing forest\n                    map.placeObject(i,j, \'empty\');\n                }\n\n                if (map.getPlayer().atLocation(i,j) ||\n                        map.getObjectTypeAt(i, j) === \'block\' ||\n                        map.getObjectTypeAt(i, j) === \'exit\') {\n                    continue;\n                }\n\n                var rv = Math.random();\n                if (rv < 0.45) {\n                    map.placeObject(i, j, \'tree\');\n                }\n            }\n        }\n        map.refresh();\n    };\n\n    functionList[\'movePlayerToExit\'] = function () {\n        map.writeStatus("Permission denied.");\n    }\n\n    functionList[\'pleaseMovePlayerToExit\'] = function () {\n        map.writeStatus("I don\'t think so.");\n    }\n\n    functionList[\'movePlayerToExitDamnit\'] = function () {\n        map.writeStatus("So, how \'bout them <LOCAL SPORTS TEAM>?");\n    }\n\n    // generate forest\n    functionList[\'generateForest\']();\n\n    // generate fortresses\n    functionList[\'fortresses\']();\n    functionList[\'fortresses\']();\n    functionList[\'fortresses\']();\n    functionList[\'fortresses\']();\n\n    map.getPlayer().setPhoneCallback(functionList[#{#"movePlayerToExit"#}#]);\n\n    map.placeObject(map.getWidth()-1, map.getHeight()-1, \'exit\');\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateAtLeastXObjects(100, \'tree\');\n    map.validateExactlyXManyObjects(1, \'exit\');\n}\n 	', 
     'levels/09_fordingTheRiver.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2",\n    "commandsIntroduced":\n        ["player.killedBy", "object.onCollision"],\n    "music": "The_Waves_Call_Her_Name"\n}\n#END_PROPERTIES#\n/**********************\n * fordingTheRiver.js *\n **********************\n *\n * And there\'s the river. Fortunately, I was prepared for this.\n * See the raft on the other side?\n *\n * Everything is going according to plan.\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    var raftDirection = \'down\';\n\n    map.placePlayer(map.getWidth()-1, map.getHeight()-1);\n    var player = map.getPlayer();\n\n    map.defineObject(\'raft\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'▓\',\n        \'color\': \'#420\',\n        \'transport\': true, // (prevents player from drowning in water)\n        \'behavior\': function (me) {\n            me.move(raftDirection);\n        }\n    });\n\n    map.defineObject(\'water\', {\n        \'symbol\': \'░\',\n        \'color\': \'#44f\',\n        \'onCollision\': function (player) {\n            player.killedBy(\'drowning in deep dark water\');\n        }\n    });\n\n    for (var x = 0; x < map.getWidth(); x++) {\n        for (var y = 5; y < 15; y++) {\n            map.placeObject(x, y, \'water\');\n        }\n    }\n\n    map.placeObject(20, 5, \'raft\');\n    map.placeObject(0, 2, \'exit\');\n    map.placeObject(0, 1, \'block\');\n    map.placeObject(1, 1, \'block\');\n    map.placeObject(0, 3, \'block\');\n    map.placeObject(1, 3, \'block\');\n\n#BEGIN_EDITABLE#\n\n\n\n#END_EDITABLE#\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateExactlyXManyObjects(1, \'exit\');\n    map.validateExactlyXManyObjects(1, \'raft\');\n}\n 	', 
     'levels/10_ambush.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2",\n    "commandsIntroduced": [],\n    "music": "Come and Find Me"\n}\n#END_PROPERTIES#\n/*************\n * ambush.js *\n *************\n *\n * Oh. Oh, I see. This wasn\'t quite part of the plan.\n *\n * Looks like they won\'t let you take the Algorithm\n * without a fight. You\'ll need to carefully weave your\n * way through the guard drones.\n *\n * Well, time to improvise. Let\'s mess with their programming\n * a little, shall we?\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    function moveToward(obj, type) {\n        var target = obj.findNearest(type);\n        var leftDist = obj.getX() - target.x;\n        var upDist = obj.getY() - target.y;\n\n        var direction;\n        if (upDist == 0 && leftDist == 0) {\n            return;\n        } if (upDist > 0 && upDist >= leftDist) {\n            direction = \'up\';\n        } else if (upDist < 0 && upDist < leftDist) {\n            direction = \'down\';\n        } else if (leftDist > 0 && leftDist >= upDist) {\n            direction = \'left\';\n        } else {\n            direction = \'right\';\n        }\n\n        if (obj.canMove(direction)) {\n            obj.move(direction);\n        }\n    }\n\n    map.defineObject(\'attackDrone\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'d\',\n        \'color\': \'red\',\n        \'onCollision\': function (player) {\n            player.killedBy(\'an attack drone\');\n        },\n        \'behavior\': function (me) {\n#BEGIN_EDITABLE#\n            moveToward(me, \'player\');\n#END_EDITABLE#\n        }\n    });\n\n    map.defineObject(\'reinforcementDrone\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'d\',\n        \'color\': \'yellow\',\n        \'onCollision\': function (player) {\n            player.killedBy(\'a reinforcement drone\');\n        },\n        \'behavior\': function (me) {\n#BEGIN_EDITABLE#\n            me.move(\'left\');\n#END_EDITABLE#\n        }\n    });\n\n    map.defineObject(\'defenseDrone\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'d\',\n        \'color\': \'green\',\n        \'onCollision\': function (player) {\n            player.killedBy(\'a defense drone\');\n        },\n        \'behavior\': function (me) {\n#BEGIN_EDITABLE#\n\n#END_EDITABLE#\n        }\n    });\n\n    // just for decoration\n    map.defineObject(\'water\', {\n        \'symbol\': \'░\',\n        \'color\': \'#44f\'\n    });\n\n    map.placePlayer(0, 12);\n\n    for (var x = 0; x < map.getWidth(); x++) {\n        map.placeObject(x, 10, \'block\');\n        map.placeObject(x, 14, \'block\');\n\n        for (var y = 20; y < map.getHeight(); y++) {\n            map.placeObject(x, y, \'water\');\n        }\n    }\n\n    map.placeObject(23, 11, \'attackDrone\');\n    map.placeObject(23, 12, \'attackDrone\');\n    map.placeObject(23, 13, \'attackDrone\');\n\n    map.placeObject(27, 11, \'defenseDrone\');\n    map.placeObject(27, 12, \'defenseDrone\');\n    map.placeObject(27, 13, \'defenseDrone\');\n\n    map.placeObject(24, 11, \'reinforcementDrone\');\n    map.placeObject(25, 11, \'reinforcementDrone\');\n    map.placeObject(26, 11, \'reinforcementDrone\');\n    map.placeObject(24, 13, \'reinforcementDrone\');\n    map.placeObject(25, 13, \'reinforcementDrone\');\n    map.placeObject(26, 13, \'reinforcementDrone\');\n\n    map.placeObject(map.getWidth()-1, 12, \'exit\');\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateExactlyXManyObjects(1, \'exit\');\n}\n 	', 
-    'levels/11_robot.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2",\n    "commandsIntroduced":\n        ["object.inventory", "object.giveItemTo", "object.passableFor",\n         "map.validateAtMostXObjects"],\n    "music": "conspiracy"\n}\n#END_PROPERTIES#\n/*\n * robot.js\n *\n * You\'ll need three keys in order to unlock the\n * Algorithm: the red key, the green key, and the\n * blue key. Unfortunately, all three of them are\n * behind human-proof barriers.\n *\n * The plan is simple: reprogram the maintenance\n * robots to grab the key and bring it through\n * the barrier to us.\n *\n * Let\'s try it on the red key first.\n */\n\nfunction getRandomInt(min, max) {\n    return Math.floor(Math.random() * (max - min + 1)) + min;\n}\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    // Hint: you can press R or 5 to "rest" and not move the\n    // player, while the robot moves around.\n\n    map.placePlayer(map.getWidth()-2, map.getHeight()-2);\n    var player = map.getPlayer();\n\n    map.defineObject(\'robot\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'R\',\n        \'color\': \'gray\',\n        \'onCollision\': function (player, me) {\n            me.giveItemTo(player, \'redKey\');\n        },\n        \'behavior\': function (me) {\n#BEGIN_EDITABLE#\n            // Available commands: me.move(direction)\n            //                 and me.canMove(direction)\n\n\n\n#END_EDITABLE#\n        }\n    });\n\n    map.defineObject(\'barrier\', {\n        \'symbol\': \'░\',\n        \'color\': \'purple\',\n        \'impassable\': true,\n        \'passableFor\': [\'robot\']\n    });\n\n    map.placeObject(0, map.getHeight() - 1, \'exit\');\n    map.placeObject(1, 1, \'robot\');\n    map.placeObject(map.getWidth() - 2, 8, \'redKey\');\n    map.placeObject(map.getWidth() - 2, 9, \'barrier\');\n\n    for (var x = 0; x < map.getWidth(); x++) {\n        map.placeObject(x, 0, \'block\');\n        if (x != map.getWidth() - 2) {\n            map.placeObject(x, 9, \'block\');\n        }\n    }\n\n    for (var y = 1; y < 9; y++) {\n        map.placeObject(0, y, \'block\');\n        map.placeObject(map.getWidth() - 1, y, \'block\');\n    }\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateExactlyXManyObjects(1, \'exit\');\n    map.validateExactlyXManyObjects(1, \'robot\');\n    map.validateAtMostXObjects(1, \'redKey\');\n}\n\nfunction onExit(map) {\n    if (!map.getPlayer().hasItem(\'redKey\')) {\n        map.writeStatus("We need to get that key!");\n        return false;\n    } else {\n        return true;\n    }\n}\n 	', 
+    'levels/11_robot.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2",\n    "commandsIntroduced":\n        ["object.giveItemTo", "object.passableFor",\n         "map.validateAtMostXObjects"],\n    "music": "conspiracy"\n}\n#END_PROPERTIES#\n/*\n * robot.js\n *\n * You\'ll need three keys in order to unlock the\n * Algorithm: the red key, the green key, and the\n * blue key. Unfortunately, all three of them are\n * behind human-proof barriers.\n *\n * The plan is simple: reprogram the maintenance\n * robots to grab the key and bring it through\n * the barrier to us.\n *\n * Let\'s try it on the red key first.\n */\n\nfunction getRandomInt(min, max) {\n    return Math.floor(Math.random() * (max - min + 1)) + min;\n}\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    // Hint: you can press R or 5 to "rest" and not move the\n    // player, while the robot moves around.\n\n    map.placePlayer(map.getWidth()-2, map.getHeight()-2);\n    var player = map.getPlayer();\n\n    map.defineObject(\'robot\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'R\',\n        \'color\': \'gray\',\n        \'onCollision\': function (player, me) {\n            me.giveItemTo(player, \'redKey\');\n        },\n        \'behavior\': function (me) {\n#BEGIN_EDITABLE#\n            // Available commands: me.move(direction)\n            //                 and me.canMove(direction)\n\n\n\n#END_EDITABLE#\n        }\n    });\n\n    map.defineObject(\'barrier\', {\n        \'symbol\': \'░\',\n        \'color\': \'purple\',\n        \'impassable\': true,\n        \'passableFor\': [\'robot\']\n    });\n\n    map.placeObject(0, map.getHeight() - 1, \'exit\');\n    map.placeObject(1, 1, \'robot\');\n    map.placeObject(map.getWidth() - 2, 8, \'redKey\');\n    map.placeObject(map.getWidth() - 2, 9, \'barrier\');\n\n    for (var x = 0; x < map.getWidth(); x++) {\n        map.placeObject(x, 0, \'block\');\n        if (x != map.getWidth() - 2) {\n            map.placeObject(x, 9, \'block\');\n        }\n    }\n\n    for (var y = 1; y < 9; y++) {\n        map.placeObject(0, y, \'block\');\n        map.placeObject(map.getWidth() - 1, y, \'block\');\n    }\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateExactlyXManyObjects(1, \'exit\');\n    map.validateExactlyXManyObjects(1, \'robot\');\n    map.validateAtMostXObjects(1, \'redKey\');\n}\n\nfunction onExit(map) {\n    if (!map.getPlayer().hasItem(\'redKey\')) {\n        map.writeStatus("We need to get that key!");\n        return false;\n    } else {\n        return true;\n    }\n}\n 	', 
     'levels/12_robotNav.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2",\n    "commandsIntroduced": [],\n    "music": "Messeah"\n}\n#END_PROPERTIES#\n/*\n * robotNav.js\n *\n * The green key is located in a slightly more\n * complicated room. You\'ll need to get the robot\n * past these obstacles.\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    // Hint: you can press R or 5 to "rest" and not move the\n    // player, while the robot moves around.\n\n    map.placePlayer(0, map.getHeight() - 1);\n    var player = map.getPlayer();\n\n    map.defineObject(\'robot\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'R\',\n        \'color\': \'gray\',\n        \'onCollision\': function (player, me) {\n            me.giveItemTo(player, \'greenKey\');\n        },\n        \'behavior\': function (me) {\n#BEGIN_EDITABLE#\n            if (me.canMove(\'right\')) {\n                me.move(\'right\');\n            } else {\n                me.move(\'down\');\n            }\n\n\n\n\n\n\n\n\n\n\n\n#END_EDITABLE#\n        }\n    });\n\n    map.defineObject(\'barrier\', {\n        \'symbol\': \'░\',\n        \'color\': \'purple\',\n        \'impassable\': true,\n        \'passableFor\': [\'robot\']\n    });\n\n    map.placeObject(map.getWidth() - 1, map.getHeight() - 1, \'exit\');\n    map.placeObject(1, 1, \'robot\');\n    map.placeObject(map.getWidth() - 2, 8, \'greenKey\');\n    map.placeObject(map.getWidth() - 2, 9, \'barrier\');\n\n    for (var x = 0; x < map.getWidth(); x++) {\n        map.placeObject(x, 0, \'block\');\n        if (x != map.getWidth() - 2) {\n            map.placeObject(x, 9, \'block\');\n        }\n    }\n\n    for (var y = 1; y < 9; y++) {\n        map.placeObject(0, y, \'block\');\n        map.placeObject(map.getWidth() - 1, y, \'block\');\n    }\n\n    for (var i = 0; i < 4; i++) {\n        map.placeObject(20 - i, i + 1, \'block\');\n        map.placeObject(35 - i, 8 - i, \'block\');\n    }\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateExactlyXManyObjects(1, \'exit\');\n    map.validateExactlyXManyObjects(1, \'robot\');\n    map.validateAtMostXObjects(1, \'greenKey\');\n}\n\nfunction onExit(map) {\n    if (!map.getPlayer().hasItem(\'greenKey\')) {\n        map.writeStatus("We need to get that key!");\n        return false;\n    } else {\n        return true;\n    }\n}\n 	', 
     'levels/13_robotMaze.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2",\n    "commandsIntroduced": ["map.getAdjacentEmptyCells"],\n    "music": "Searching"\n}\n#END_PROPERTIES#\n/*\n * robotMaze.js\n *\n * The blue key is inside a labyrinth, and extracting\n * it will not be easy.\n *\n * It\'s a good thing that you\'re a AI expert, or\n * we would have to leave empty-handed.\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    // Hint: you can press R or 5 to "rest" and not move the\n    // player, while the robot moves around.\n\n    map.getRandomInt = function(min, max) {\n        return Math.floor(Math.random() * (max - min + 1)) + min;\n    }\n\n    map.placePlayer(map.getWidth()-1, map.getHeight()-1);\n    var player = map.getPlayer();\n\n    map.defineObject(\'robot\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'R\',\n        \'color\': \'gray\',\n        \'onCollision\': function (player, me) {\n            me.giveItemTo(player, \'blueKey\');\n        },\n        \'behavior\': function (me) {\n#BEGIN_EDITABLE#\n            // move randomly\n            var moves = map.getAdjacentEmptyCells(me.getX(), me.getY());\n            // getAdjacentEmptyCells gives array of ((x, y), direction) pairs\n            me.move(moves[map.getRandomInt(0, moves.length - 1)][1]);\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#END_EDITABLE#\n        }\n    });\n\n    map.defineObject(\'barrier\', {\n        \'symbol\': \'░\',\n        \'color\': \'purple\',\n        \'impassable\': true,\n        \'passableFor\': [\'robot\']\n    });\n\n    map.placeObject(0, map.getHeight() - 1, \'exit\');\n    map.placeObject(1, 1, \'robot\');\n    map.placeObject(map.getWidth() - 2, 8, \'blueKey\');\n    map.placeObject(map.getWidth() - 2, 9, \'barrier\');\n\n    var autoGeneratedMaze = new ROT.Map.DividedMaze(map.getWidth(), 10);\n    autoGeneratedMaze.create( function (x, y, mapValue) {\n        // don\'t write maze over robot or barrier\n        if ((x == 1 && y == 1) || (x == map.getWidth() - 2 && y >= 8)) {\n            return 0;\n        } else if (mapValue === 1) { //0 is empty space 1 is wall\n            map.placeObject(x,y, \'block\');\n        } else {\n            map.placeObject(x,y,\'empty\');\n        }\n    });\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateExactlyXManyObjects(1, \'exit\');\n    map.validateExactlyXManyObjects(1, \'robot\');\n    map.validateAtMostXObjects(1, \'blueKey\');\n}\n\nfunction onExit(map) {\n    if (!map.getPlayer().hasItem(\'blueKey\')) {\n        map.writeStatus("We need to get that key!");\n        return false;\n    } else {\n        return true;\n    }\n}\n 	', 
     'levels/14_crispsContest.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2",\n    "commandsIntroduced":\n        ["map.createFromGrid", "player.removeItem"],\n    "music": "Chip"\n}\n#END_PROPERTIES#\n/********************\n * crispsContest.js *\n ********************\n *\n * The Algorithm is almost in our grasp!\n * At long last, we will definitively establish\n * that 3SAT is solvable in polynomial time. It\'s\n * been a long, strange journey, but it will all be\n * worth it.\n *\n * You have the red, green, and blue keys. Now you\n * just need to figure out how to unlock this thing.\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    map.defineObject(\'redLock\', {\n        \'symbol\': String.fromCharCode(0x2297),\n        \'color\': \'red\',\n        \'impassable\': function (player) {\n            if (player.hasItem(\'redKey\')) {\n                player.removeItem(\'redKey\');\n                return false;\n            } else {\n                return true;\n            }\n        }\n    });\n\n    map.defineObject(\'blueLock\', {\n        \'symbol\': String.fromCharCode(0x2297),\n        \'color\': \'#06f\',\n        \'impassable\': function (player) {\n            if (player.hasItem(\'blueKey\')) {\n                player.removeItem(\'blueKey\');\n                return false;\n            } else {\n                return true;\n            }\n        }\n    });\n\n    map.defineObject(\'greenLock\', {\n        \'symbol\': String.fromCharCode(0x2297),\n        \'color\': \'#0f0\',\n        \'impassable\': function (player) {\n            if (player.hasItem(\'greenKey\')) {\n                player.removeItem(#{#\'greenKey\'#}#);\n                return false;\n            } else {\n                return true;\n            }\n        }\n    });\n\n    map.defineObject(\'yellowLock\', {\n        \'symbol\': String.fromCharCode(0x2297),\n        \'color\': \'yellow\',\n        \'impassable\': function (player) {\n            if (player.hasItem(\'yellowKey\')) {\n                player.removeItem(\'yellowKey\');\n                return false;\n            } else {\n                return true;\n            }\n        }\n    });\n\n    map.createFromGrid(\n       [\'  +++++ +++++  \',\n        \'  + b +++ r +  \',\n        \'  +   +E+   +  \',\n        \'+++G+B+ +R+G+++\',\n        \'+ y B     R b +\',\n        \'+   +     +   +\',\n        \'+++++  @  +++++\',\n        \'+   +     +   +\',\n        \'+ y R     B y +\',\n        \'++++++Y+Y++++++\',\n        \'    +  +  +    \',\n        \'    + ABy +    \',\n        \'    +++++++    \'],\n    {\n        \'@\': \'player\',\n        \'E\': \'exit\',\n        \'A\': \'theAlgorithm\',\n        \'+\': \'block\',\n        \'R\': \'redLock\',\n        \'G\': \'greenLock\',\n        \'B\': \'blueLock\',\n        \'Y\': \'yellowLock\',\n        \'r\': \'redKey\',\n        \'g\': \'greenKey\',\n        \'b\': \'blueKey\',\n        \'y\': \'yellowKey\'\n    }, 17, 6);\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateExactlyXManyObjects(1, \'exit\');\n    map.validateAtMostXObjects(1, \'theAlgorithm\');\n    map.validateAtMostXObjects(4, \'yellowKey\');\n    map.validateAtMostXObjects(2, \'blueKey\');\n    map.validateAtMostXObjects(1, \'redKey\');\n}\n\nfunction onExit(map) {\n    // make sure we have all the items we need!\n    if (!map.getPlayer().hasItem(\'theAlgorithm\')) {\n        map.writeStatus("You must get that Algorithm!!");\n        return false;\n    } else if (!map.getPlayer().hasItem(\'computer\')) {\n        map.writeStatus("You\'ll need your computer! [Ctrl-5 to restart]");\n        return false;\n    } else if (!map.getPlayer().hasItem(\'phone\')) {\n        map.writeStatus("You\'ll need your phone! [Ctrl-5 to restart]");\n        return false;\n    } else {\n        return true;\n    }\n}\n 	', 
