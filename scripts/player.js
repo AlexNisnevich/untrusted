@@ -37,7 +37,7 @@ function Player(x, y, __map, __game) {
 
     // (used for teleporters)
     this._moveTo = function (dynamicObject) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._moveTo()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._moveTo()';}
 
         // no safety checks or anything
         // this method is about as safe as a war zone
@@ -50,7 +50,7 @@ function Player(x, y, __map, __game) {
     };
 
     this._afterMove = function (x, y) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._afterMove()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._afterMove()';}
 
         var player = this;
 
@@ -96,7 +96,7 @@ function Player(x, y, __map, __game) {
     };
 
     this._pickUpItem = function (itemName, object) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._pickUpItem()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: player._pickUpItem()';}
 
         var player = this;
 
