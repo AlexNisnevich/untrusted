@@ -10,7 +10,6 @@ Objects can have the following parameters:
 
 Game.prototype.getListOfObjects = function () {
     var game = this;
-    console.log(game);
     return {
         // special
 
