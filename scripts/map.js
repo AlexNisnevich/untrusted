@@ -66,7 +66,7 @@ function Map(display, __game) {
     this._reset = function () {
         if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._reset()';}
 
-        __objectDefinitions = clone(__game.objects);
+        __objectDefinitions = __game.getListOfObjects();
 
         this._display.clear();
 
