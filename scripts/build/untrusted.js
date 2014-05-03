@@ -1324,7 +1324,7 @@ function DynamicObject(map, type, x, y, __game) {
     /* unexposed methods */
 
     this._computeDestination = function (startX, startY, direction) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._computeDestination()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._computeDestination()';}
 
         switch (direction) {
             case 'up':
@@ -1339,7 +1339,7 @@ function DynamicObject(map, type, x, y, __game) {
     };
 
     this._onTurn = function () {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._onTurn()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._onTurn()';}
 
         var me = this;
         var player = map.getPlayer();
@@ -1396,7 +1396,7 @@ function DynamicObject(map, type, x, y, __game) {
     };
 
     this._afterMove = function () {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._afterMove()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._afterMove()';}
 
         // try to pick up items
         var objectName = map._getGrid()[__x][__y].type;
@@ -1408,7 +1408,7 @@ function DynamicObject(map, type, x, y, __game) {
     };
 
     this._destroy = function (onMapReset) {
-        if (game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._destroy()';}
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: object._destroy()';}
 
         var me = this;
 
@@ -1714,7 +1714,7 @@ function Map(display, __game) {
     this._reset = function () {
         if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._reset()';}
 
-        __objectDefinitions = clone(__game.objects);
+        __objectDefinitions = __game.getListOfObjects();
 
         this._display.clear();
 
