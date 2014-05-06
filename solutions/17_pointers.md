@@ -56,7 +56,7 @@ break;
 Find nearest teleport to exit. Re-route all other teleports to it.
 There is no room for mistake. :)
 
-```
+```javascript
 var dist2 = function d2(o,x2,y2){
     var dx = x2 - o.getX();
     var dy = y2 - o.getY();
