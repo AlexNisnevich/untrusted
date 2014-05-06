@@ -89,3 +89,9 @@ if( me.canMove('down') ) {
     me.move('right');
 }
 ```
+
+## pk
+all three drone types random moves toward ceil or left:
+```
+(Math.random()>.5) ? me.move('right') : me.move('up');
+```
