@@ -91,7 +91,7 @@ if( me.canMove('down') ) {
 ```
 
 ## pk
-all three drone types random moves toward ceil or left:
+all three drone types random moves toward ceil or right:
 ```
 (Math.random()>.5) ? me.move('right') : me.move('up');
 ```
