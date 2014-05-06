@@ -100,25 +100,22 @@ Maze solver (works for 11, 12, 13) and any simple connected maze.
 Follow a wall to the right, turn counterclockwise each turn first. Remember last direction.
 With debug console output.
 ```javascript
-    map.defineObject('robot', {
-	...
-        'behavior': function (me) {
-            var dirs = ['up','right','down','left']
-            var d = me.dir || 0;
-            d--;
-            d = (d < 0)? 3 : d;
-            
-            var brain = [];
-            while(!me.canMove(dirs[d])) {
-            	brain.push("can't "+dirs[d]);
-            	d++;
-                d = (d > 3)? 0 : d;
-            }
-            brain.push(dirs[d]+ " ok");
-            console.log(brain.join(', '))
-            
-            me.dir = d;            
-            me.move(dirs[d]);
-        }
-    });
+'behavior': function (me) {
+    var dirs = ['up','right','down','left']
+    var d = me.dir || 0;
+    d--;
+    d = (d < 0)? 3 : d;
+    
+    var brain = [];
+    while(!me.canMove(dirs[d])) {
+        brain.push("can't "+dirs[d]);
+        d++;
+        d = (d > 3)? 0 : d;
+    }
+    brain.push(dirs[d]+ " ok");
+    console.log(brain.join(', '))
+    
+    me.dir = d;            
+    me.move(dirs[d]);
+}
 ```
