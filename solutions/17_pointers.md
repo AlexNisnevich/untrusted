@@ -51,6 +51,38 @@ start.setTarget(end);
 break;
 ```
 
+## PK 
+
+Find nearest teleport to exit. Re-route all other teleports to it.
+There is no room for mistake. :)
+
+```
+var dist2 = function d2(o,x2,y2){
+    var dx = x2 - o.getX();
+    var dy = y2 - o.getY();
+    return dx*dx + dy*dy;
+};
+
+var teleporters = teleportersAndTraps.filter(function(v){
+  return v.getType() == 'teleporter';
+});
+
+var x = map.getWidth();
+var y = map.getHeight();
+
+teleporters.sort(function(a, b){
+  return dist2(a,x,y) - dist2(b,x,y);
+})
+
+var exit = teleporters[0];
+
+for (var i = 1; i < teleporters.length; i++){
+  teleporters[i].setTarget(exit);
+}
+
+break;
+```
+
 ## Highlights
 
 Highlights mines and shows telepoerter's paths
