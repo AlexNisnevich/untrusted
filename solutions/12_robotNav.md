@@ -99,7 +99,7 @@ Just press "R" and go through the portals
 Maze solver (works for 11, 12, 13) and any simple connected maze.
 Follow a wall to the right, turn counterclockwise each turn first. Remember last direction.
 With debug console output.
-```
+```javascript
     map.defineObject('robot', {
 	...
         'behavior': function (me) {
