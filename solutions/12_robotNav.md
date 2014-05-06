@@ -112,7 +112,7 @@ With debug console output.
             while(!me.canMove(dirs[d])) {
             	brain.push("can't "+dirs[d]);
             	d++;
-                d = (d > 0)? 0 : d;
+                d = (d > 3)? 0 : d;
             }
             brain.push(dirs[d]+ " ok");
             console.log(brain.join(', '))
