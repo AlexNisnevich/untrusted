@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "version": "1.2",
-    "activateSuperMenu": true,
+    "activateScriptMenu": true,
     "music": "Comme Des Orages"
 }
 #END_PROPERTIES#

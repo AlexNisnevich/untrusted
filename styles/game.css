@@ -285,12 +285,10 @@ body {
 	color: rgb(27, 90, 158);
 }
 
+#leftMenuPane #scriptsDir,
+#rightMenuPane #scripts,
 #rightMenuPane #root {
-	display: none;
-}
-
-#rightMenuPane #scripts {
-	display: none;
+  display: none;
 }
 
 #rightMenuPane #scripts button.uneditable {
@@ -310,7 +308,7 @@ body {
 	z-index: 9000;
 	background: black;
 	border: 2px solid yellow;
-    display: none;
+  display: none;
 }
 
 .pop_up_box button {

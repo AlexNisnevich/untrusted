@@ -190,7 +190,7 @@ Game.prototype.activateScriptMenu = function () {
             $('#rightMenuPane div').hide();
             $('#scriptsDir').addClass('selected');
             $('#scripts').show();
-        });
+        }).show();
 
         $.each(game._viewableScripts, function (i, script) {
             var scriptButton = $('<button>');
