@@ -259,6 +259,7 @@ function Game(debugMode, startLevel) {
     
     this._resetLevel = function( level ) {
         var game = this;
+        var resetTimeout_msec = 2500;
         
         if ( this._resetTimeout != null ) {
             $('body, #buttons').css('background-color', '#000');
@@ -274,7 +275,7 @@ function Game(debugMode, startLevel) {
                 game._resetTimeout = null;
                 
                 $('body, #buttons').css('background-color', '#000');
-            }, 1000);
+            }, resetTimeout_msec );
         }
     };
 
