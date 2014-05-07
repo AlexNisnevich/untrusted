@@ -99,6 +99,31 @@ Game.prototype.enableButtons = function () {
     $("#muteButton").click( function () {
         game.sound.toggleSound();
     });
+    
+    // Activating "superMenu", now used also for the options.
+    
+    $('#rightMenuPane .pop_up_box_heading').hide();
+
+    $('#rootDir').click(function () {
+        $('#leftMenuPane li').removeClass('selected');
+        $('#rightMenuPane div').hide();
+        $('#rootDir').addClass('selected');
+        $('#root').show();
+    });
+
+    $('#levelsDir').click(function () {
+        $('#leftMenuPane li').removeClass('selected');
+        $('#rightMenuPane div').hide();
+        $('#levelsDir').addClass('selected');
+        $('#levels').show();
+    });
+
+    $('#optionsDir').click(function () {
+        $('#leftMenuPane li').removeClass('selected');
+        $('#rightMenuPane div').hide();
+        $('#optionsDir').addClass('selected');
+        $('#optionsD').show();
+    });
 };
 
 Game.prototype.setUpNotepad = function () {
@@ -155,27 +180,10 @@ Game.prototype.openMenu = function () {
     $('#menuPane').toggle();
 };
 
-Game.prototype.activateSuperMenu = function () {
+Game.prototype.activateScriptMenu = function () {
     var game = this;
 
-    if (!game._superMenuActivated) {
-        $('#menuPane').addClass('expanded');
-        $('#leftMenuPane').show();
-        $('#rightMenuPane .pop_up_box_heading').hide();
-
-        $('#rootDir').click(function () {
-            $('#leftMenuPane li').removeClass('selected');
-            $('#rightMenuPane div').hide();
-            $('#rootDir').addClass('selected');
-            $('#root').show();
-        });
-
-        $('#levelsDir').click(function () {
-            $('#leftMenuPane li').removeClass('selected');
-            $('#rightMenuPane div').hide();
-            $('#levelsDir').addClass('selected');
-            $('#levels').show();
-        });
+    if (!game._scriptMenuActivated) {
 
         $('#scriptsDir').click(function () {
             $('#leftMenuPane li').removeClass('selected');
@@ -198,7 +206,7 @@ Game.prototype.activateSuperMenu = function () {
             scriptButton.appendTo('#menuPane #scripts');
         });
 
-        game._superMenuActivated = true;
+        game._scriptMenuActivated = true;
     }
 }
 

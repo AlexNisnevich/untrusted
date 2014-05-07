@@ -340,7 +340,7 @@ Game.prototype.saveReferenceImplementations = function() {
 
 Game.prototype.detectTampering = function(map, player) {
     // once the super menu is activated, we don't care anymore!
-    if (this._superMenuActivated) {
+    if (this._scriptMenuActivated) {
         return;
     }
 
