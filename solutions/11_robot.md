@@ -48,3 +48,29 @@ Just press "R" and go through the portals
     // in place or not. Use "player" object from the closure
     player.teleportersAreReady = true;
 ```
+
+# Remote Control
+
+## sheaulle
+
+```javascript
+    // works with levels 11, 12, 13
+        
+    var PX = map.getPlayer().getX();
+    var PY = map.getPlayer().getY()-10;
+    var MX = me.getX();
+    var MY = me.getY();
+    
+    if (PX == MX && PY > MY) {
+        me.move('down'); 
+    }
+    else if (PX == MX && PY <= MY) {
+        me.move('up'); 
+    }
+    else if (PX > MX) {
+          me.move('right'); 
+    }
+    else if (PX < MX) {
+        me.move('left'); 
+    }
+```
