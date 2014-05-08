@@ -74,4 +74,7 @@ The music that appears in Untrusted, in order, is:
 - "Brazilicon Alley" - [Vernon Lenoir](http://vernonlenoir.wordpress.com/) (CC-BY-NC-SA)
 
 ### License
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.
+This work is dual-licensed.
+
+- Untrusted and the Untrusted soundtrack are licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License (CC-BY-NC-SA 3.0)</a>. In other words, you are free to use and modify Untrusted for non-commercial purposes, provided that you credit us and your work is also licensed under CC-BY-NC-SA.
+- Additionally, the Untrusted code *without the soundtrack* is licenced under a commercial license. This means that you are able to use Untrusted for commercial purposes under some conditions, provided that you do not use any of the music. Please [contact us](mailto:alex.nisnevich@gmail.com,greg.shuflin@gmail.com) for details.
