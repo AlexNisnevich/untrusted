@@ -60,6 +60,29 @@ if( me.getX() == 1 && me.getY() < 4 ){
 }
 ```
 
+## KamiSempai
+
+The Sinusoidal droid.
+```javascript
+if(me.canMove("right")) {
+    var x = me.getX()+1;
+    // It's a magic numbers. Don't change!!!
+    var y = Math.sin(x / 7) * 4 + 4.5;
+    if(y - me.getY() > 1) {
+    	me.move("down");
+    }
+    else if(y - me.getY() < -1) {
+    	me.move("up");
+    }
+    else {
+    	me.move("right");
+    }
+}
+else {
+	me.move("down");
+}
+```
+
 # Portal style
 
 ## JustBlackBird
