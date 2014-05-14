@@ -142,3 +142,25 @@ With debug console output.
     me.move(dirs[d]);
 }
 ```
+
+# ont.rif
+
+Just more simple code for "follow wall to the right".
+```javascript
+    me.dir = me.dir || 'up';
+
+    var plan = {
+        'up': ['left', 'right'],
+        'right': ['up', 'down'],
+        'down': ['right', 'left'],
+        'left': ['down', 'up'],
+    }[ me.dir ];
+
+
+    if(me.canMove(plan[0]))
+        me.dir = plan[0];
+    else if(!me.canMove(me.dir))
+        me.dir = plan[1];
+
+    me.move(me.dir);
+```
