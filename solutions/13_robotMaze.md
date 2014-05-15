@@ -157,6 +157,29 @@ if(player == map.getPlayer()){
 me.move(player);
 ```
 
+## mdunisch
+```javascript
+// Try to get possible moves
+       try{
+       	var playerpos = map.getAdjacentEmptyCells(player.getX(), player.getY());
+       	
+        // Player is at top-wall
+        if(player.getY() == 10){
+        	me.move("up");
+        }
+        // Player is at walls (bottom, left, right)
+       }catch(e){
+        
+        if(player.getX() == 49){
+        	me.move("right");
+        }else if(player.getX() == 0){
+        	me.move("left");
+        }else if (player.getY() == 24) {
+        	me.move("down");
+        }
+       }
+```
+
 # Portal style
 
 ## JustBlackBird
