@@ -106,15 +106,14 @@ function foo() {
 
 ##Gipnokote
 
+function jump() {
 ```javascript
-
-    function jump() {
     }
     
     function gravity() {
-    }
+    
 ```
-
+}
 # "I'm feeling lucky"
 ## Jhack (giacgbj)
 
