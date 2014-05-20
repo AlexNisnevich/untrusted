@@ -1,3 +1,18 @@
+## filippovdaniil: air strike
+
+```javascript
+    var arr = map.getDynamicObjects();
+
+    for( var i = 0; i < arr.length; i++ )
+        if( arr[ i ].getType() == 'boss' )
+            arr[ i ].direction = 'down';
+
+    map.getPlayer().setPhoneCallback(function(){
+        for( var i = 0; i < map.getWidth(); i++ )
+            map.placeObject( i, 5, 'bullet' );
+    });
+```
+
 ## amahdy: shoot-em style, press the left button!
 
 ```javascript
@@ -11,7 +26,7 @@
             me.move('up');
         }
     });
-    
+
     map.overrideKey('left', function() {
         map.placeObject(0, 20, 'bullet2');
         map.placeObject(1, 20, 'bullet2');
@@ -53,7 +68,7 @@
 
 ```javascript
 var bosses = map.getDynamicObjects();
- 
+
 for(var i=0;i<bosses.length;i++){
         (function(k){
                 map.defineObject('bossKiller'+k, {
@@ -66,7 +81,7 @@ for(var i=0;i<bosses.length;i++){
                 if(bosses[k][" _".substr(1,1)+"isDestroyed"]()){
                         me[" _".substr(1,1)+"destroy"]();
                 }
-               
+
                 var x = bosses[k].getX();
                 var y = bosses[k].getY();
                         var dx = Math.abs(me.getX() - x);
@@ -93,23 +108,23 @@ for(var i=0;i<bosses.length;i++){
                         || me.getY() != bosses[k].getY())
                         map.placeObject(me.getX()+Math.floor(Math.random()*2-1)
                         , me.getY(), 'bossKiller'+k);
-               
+
             }
                 });
     })(i);
 }
- 
+
 map.defineObject('helmet', {
         'symbol': 'o',
         'color': 'blue',
         'impassable':true,
 });
- 
+
 for(var i=0;i<50;i+=1){
         if(i==25) continue;
         map.placeObject(i,map.getPlayer().getY()-2,'helmet');
 }
- 
+
 map.getPlayer().setPhoneCallback(function(){
  for(var i=0;i<bosses.length;i++){
         map.placeObject(i*2,map.getPlayer().getY()-3,'bossKiller'+i);
@@ -133,12 +148,12 @@ map.getPlayer().setPhoneCallback(function(){
     });
 
     map.overrideKey('left', function()
-    {    
+    {
       for (var i = 0 ; i < map.getWidth() ; i++)
         for (var j = 8 ; j < map.getHeight()-4; +j++)
           map.placeObject(i, j, 'antiBullet');
     });
-    
+
 ```
 
 
@@ -184,11 +199,11 @@ You just need to be sure to "call" whan you're close to the bullet proof glass
     function searchBoss(obj) {
         var direction = 'left';
         var target = obj.findNearest('boss');
-    
-        if( target !== undefined ) {    
+
+        if( target !== undefined ) {
             var leftDist = obj.getX() - target.x;
         	var upDist = obj.getY() - target.y;
-    
+
         	if (upDist > 0 && upDist >= leftDist) {
     	        direction = 'up';
             } else if (leftDist > 0 && leftDist >= upDist) {
@@ -202,7 +217,7 @@ You just need to be sure to "call" whan you're close to the bullet proof glass
 
     function phonecall_shoot(){
         var p = map.getPlayer();
-    
+
       	map.placeObject(p.getX(),p.getY()-1,'killer-phonecall');
     }
 

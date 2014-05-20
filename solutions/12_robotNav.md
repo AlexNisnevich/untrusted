@@ -60,6 +60,29 @@ if( me.getX() == 1 && me.getY() < 4 ){
 }
 ```
 
+## KamiSempai
+
+The Sinusoidal droid.
+```javascript
+if(me.canMove("right")) {
+    var x = me.getX()+1;
+    // It's a magic numbers. Don't change!!!
+    var y = Math.sin(x / 7) * 4 + 4.5;
+    if(y - me.getY() > 1) {
+    	me.move("down");
+    }
+    else if(y - me.getY() < -1) {
+    	me.move("up");
+    }
+    else {
+    	me.move("right");
+    }
+}
+else {
+	me.move("down");
+}
+```
+
 # Portal style
 
 ## JustBlackBird
@@ -118,4 +141,26 @@ With debug console output.
     me.dir = d;            
     me.move(dirs[d]);
 }
+```
+
+# ont.rif
+
+Just more simple code for "follow wall to the right".
+```javascript
+    me.dir = me.dir || 'up';
+
+    var plan = {
+        'up': ['left', 'right'],
+        'right': ['up', 'down'],
+        'down': ['right', 'left'],
+        'left': ['down', 'up'],
+    }[ me.dir ];
+
+
+    if(me.canMove(plan[0]))
+        me.dir = plan[0];
+    else if(!me.canMove(me.dir))
+        me.dir = plan[1];
+
+    me.move(me.dir);
 ```
