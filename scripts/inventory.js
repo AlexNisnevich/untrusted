@@ -21,7 +21,10 @@ Game.prototype.checkInventory = function (itemName) {
 Game.prototype.removeFromInventory = function (itemName) {
 	var object = this.getItemDefinition(itemName);
 	if (!object) {
-		throw 'No such item: ' + itemName;
+		throw 'No such object: ' + itemName;
+	}
+	if (object.type != 'item') {
+		throw 'Object is not an item: ' + itemName;
 	}
 
 	this.inventory.remove(itemName);
