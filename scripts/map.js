@@ -474,7 +474,11 @@ function Map(display, __game) {
     this.getObjectTypeAt = wrapExposedMethod(function (x, y) {
         var x = Math.floor(x); var y = Math.floor(y);
 
-        return __grid[x][y].type;
+        // Bazek: We should always check, if the coordinates are inside of map!
+        if (x >= 0 && x < this.getWidth() && y >= 0 && y < this.getHeight())
+            return __grid[x][y].type;
+        else
+            return '';
     }, this);
 
     this.getAdjacentEmptyCells = wrapExposedMethod(function (x, y) {
