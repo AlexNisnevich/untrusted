@@ -474,7 +474,11 @@ function Map(display, __game) {
     this.getObjectTypeAt = wrapExposedMethod(function (x, y) {
         var x = Math.floor(x); var y = Math.floor(y);
 
-        return __grid[x][y].type;
+        // Bazek: We should always check, if the coordinates are inside of map!
+        if (x >= 0 && x < this.getWidth() && y >= 0 && y < this.getHeight())
+            return __grid[x][y].type;
+        else
+            return '';
     }, this);
 
     this.getAdjacentEmptyCells = wrapExposedMethod(function (x, y) {
@@ -498,7 +502,9 @@ function Map(display, __game) {
                     var child = [x, y-1];
                     break;
             }
-            if (map.getObjectTypeAt(child[0], child[1]) === 'empty') {
+            // Bazek: We need to check, if child is inside of map!
+            var childInsideMap = child[0] >= 0 && child[0] < map.getWidth() && child[1] >= 0 && child[1] < map.getHeight();
+            if (childInsideMap && map.getObjectTypeAt(child[0], child[1]) === 'empty') {
                 adjacentEmptyCells.push([child, action]);
             }
         });
