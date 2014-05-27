@@ -498,7 +498,9 @@ function Map(display, __game) {
                     var child = [x, y-1];
                     break;
             }
-            if (map.getObjectTypeAt(child[0], child[1]) === 'empty') {
+            // Bazek: We need to check, if child is inside of map!
+            var childInsideMap = child[0] >= 0 && child[0] < map.getWidth() && child[1] >= 0 && child[1] < map.getHeight();
+            if (childInsideMap && map.getObjectTypeAt(child[0], child[1]) === 'empty') {
                 adjacentEmptyCells.push([child, action]);
             }
         });
