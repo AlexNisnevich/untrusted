@@ -88,6 +88,83 @@ if (me.pathFound) {
 }
 ```
 
+# civilframe
+
+Wander with visit counts.
+```javascript
+    // check if finished
+    if (me.delivered > 0) {
+    	me.move('down');
+        me.delivered--;
+        return;
+    } 
+    else if (me.delivered == 0) {
+    	return;
+    }
+    
+    // check if we have the key
+    if (me.hasKey == true) {
+    	me.move('down');
+        me.delivered = 2;
+        return;
+    }
+   
+    // check if close to key
+    if (map.getObjectTypeAt(me.getX()+1, me.getY()) == 'blueKey') {
+      	me.move('right');
+        me.hasKey = true;
+        return;
+    } 
+    else if (map.getObjectTypeAt(me.getX(), me.getY()+1) == 'blueKey') {
+    	me.move('down');
+        me.hasKey = true;
+        return;
+    }          
+    
+    // start visit wander
+    if (me.visited == undefined) {
+    	me.visited = [];
+    }
+    
+    var current = null;
+    for (var i = 0; i < me.visited.length; i++) {
+    	var check = me.visited[i];
+        if (check.x == me.getX() && check.y == me.getY()) {
+        	current = check;
+        }
+    }
+    if (current == null) {
+    	current = {x: me.getX(), y: me.getY(), count: 0};
+        me.visited.push(current);
+        
+    }
+    current.count++;
+    
+    var moves = map.getAdjacentEmptyCells(me.getX(), me.getY());
+    
+    for (var i = 0; i < moves.length; i++) {
+      var move = moves[i];
+      for (var j = 0; j < me.visited.length; j++) {
+    	var check = me.visited[j];
+        if (check.x == move[0][0] && check.y == move[0][1]) {
+        	move.push(check.count);
+            break;
+        }
+      }
+    }
+    
+    var leastVisited = null;
+    for (var i = 0; i < moves.length; i++) {
+    	if (leastVisited == null
+        	|| moves[i][2] == undefined
+        	|| moves[i][2] < leastVisited[2]) {
+            leastVisited = moves[i];
+        }
+    }
+    
+    me.move(leastVisited[1]);
+```
+
 # Player-controlled approaches
 
 ## kerzol
