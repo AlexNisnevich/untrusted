@@ -59,7 +59,6 @@ function DynamicObject(map, type, x, y, __game) {
                 if (__x === player.getX() && __y === player.getY()) {
                     if (__definition.pushable) {
                             me.move(player.__lastMoveDirection);
-                            __myTurn = true; // Allow moving again
                     }
                     if (__definition.onCollision) {
                         map._validateCallback(function () {
@@ -68,7 +67,7 @@ function DynamicObject(map, type, x, y, __game) {
                     }
                 }
 
-                if (__definition.behavior !== null) {
+                if (__myTurn && __definition.behavior !== null) {
                     map._validateCallback(function () {
                         __definition.behavior(me, player);
                     });
