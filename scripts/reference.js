@@ -381,6 +381,12 @@ Game.prototype.reference = {
         'type': 'property',
         'description': '(For dynamic objects only.) If true, this object destroys any dynamic object (or player) that it collides with, and is itself destroyed when it collides with anything.'
     },
+    'object.pushable': {
+        'name': 'object.pushable',
+        'category': 'object',
+        'type': 'property',
+        'description': '(For dynamic objects only.) If true, this object can be pushed by the player.'
+    },
     'object.symbol': {
         'name': 'object.symbol',
         'category': 'object',
