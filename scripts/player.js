@@ -4,6 +4,7 @@ function Player(x, y, __map, __game) {
     var __x = x;
     var __y = y;
     var __color = "#0f0";
+    var __lastMoveDirection = '';
 
     var __display = __map._display;
 
@@ -177,6 +178,7 @@ function Player(x, y, __map, __game) {
 
             this._canMove = false;
 
+            this.__lastMoveDirection = direction;
             this._afterMove(__x, __y);
 
             __map._reenableMovementForPlayer(this); // (key delay can vary by map)
