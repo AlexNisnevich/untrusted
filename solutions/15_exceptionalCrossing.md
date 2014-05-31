@@ -30,6 +30,14 @@
         }
 ```
 
+## Frenchi
+```javascript
+// Shortest possible response - throws "undefined" error.
+       'onCollision': function (player) {
+            player.killedBy(a);
+        }
+```
+
 # Redefinition approach
 
 ## chenxiaoqino
