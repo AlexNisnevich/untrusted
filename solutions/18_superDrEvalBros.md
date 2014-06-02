@@ -22,6 +22,20 @@ function jump() {
 
 #Build a bridge across
 
+##Agamemnus
+Dynamic bridge:
+```javascript
+        var x = player.getX ()
+        var y = player.getY ()
+        if (map.getObjectTypeAt(x + 1, y + 1) == "empty") {
+            map.placeObject(x + 1, y + 1, 'block')
+        }
+    }
+    map.startTimer(jump, 45)
+     
+    var temp = function () {
+```
+    
 ##CaitSith2
 
 ```javascript
