@@ -1,6 +1,6 @@
-#make fun, not jump
+# make fun, not jump
 
-##gRz
+## gRz
 function jump() {
     
     map.placeObject(33,11,'teleporter');
@@ -20,9 +20,23 @@ function jump() {
 
 
 
-#Build a bridge across
-
-##CaitSith2
+# Build a bridge across
+ 
+## Agamemnus
+Dynamic bridge:
+```javascript
+        var x = player.getX ()
+        var y = player.getY ()
+        if (map.getObjectTypeAt(x + 1, y + 1) == "empty") {
+            map.placeObject(x + 1, y + 1, 'block')
+        }
+    }
+    map.startTimer(jump, 45)
+     
+    var temp = function () {
+```
+    
+## CaitSith2
 
 ```javascript
 	}	//DROP TABLES style solution
@@ -84,7 +98,7 @@ function jump() {
         }
 ```
 
-#Defy the Gravity
+# Defy the Gravity
 
 ## amahdy: Phone, eh?
 
@@ -104,7 +118,7 @@ function foo() {
 
     
 
-##Gipnokote
+## Gipnokote
 
 function jump() {
 ```javascript
