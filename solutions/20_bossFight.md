@@ -230,3 +230,32 @@ You just need to be sure to "call" whan you're close to the bullet proof glass
     map.getPlayer().setPhoneCallback( phonecall_shoot );
 ```
 
+
+## LostSenSS: Under attack
+
+```javascript
+
+    map.defineObject('myBullet', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'green',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('up');
+        }
+    });    
+   
+    // A safe place on the way to the phone where you can wait until the boss goes to the other side
+    map.placeObject(25, map.getHeight() - 4, 'block');
+	
+    // Run bullets
+    map.getPlayer().setPhoneCallback(function() {
+        for (var i = 8; i < 18; i++) {
+            for (var x = 0; x < map.getWidth(); x++) {
+                map.placeObject(x, i, 'myBullet');
+            }         
+        }
+    });
+```
+
