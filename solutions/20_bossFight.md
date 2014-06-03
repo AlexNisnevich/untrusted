@@ -36,6 +36,28 @@
     });
 ```
 
+## Frenchi: overkill
+```javascript
+    map.defineObject('bullet2', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'yellow',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('up');
+        }
+    });
+
+    map.overrideKey('left', function() {
+         
+	for(i=0;i<50;i++){
+	  map.placeObject(i, 20, 'bullet2');
+      }
+        map.getPlayer().move('left');
+    });
+```
+
 ## someone328: bullets with trigger
 
 ```javascript
