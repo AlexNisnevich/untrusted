@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "version": "1.2.1",
-    "commandsIntroduced": ['canBePushed'],
+    "commandsIntroduced": ['player.getLastMoveDirection()'],
     "music": "Brazil"
 }
 #END_PROPERTIES#
