@@ -355,7 +355,7 @@ Game.prototype.reference = {
         'name': 'object.impassable = function (player, object)',
         'category': 'object',
         'type': 'property',
-        'description': 'The function that determines whether or not the player can pass through this object.'
+        'description': '(For non-dynamic objects only.) The function that determines whether or not the player can pass through this object.'
     },
     'object.move': {
         'name': 'object.move(direction)',
