@@ -418,6 +418,12 @@ Game.prototype.reference = {
         'type': 'method',
         'description': 'Returns the color of the player.'
     },
+    'player.getLastMoveDirection()': {
+        'name': 'player.getLastMoveDirection()',
+        'category': 'player',
+        'type': 'method',
+        'description': 'Returns the direction of last move by the player.'
+    },    
     'player.getX': {
         'name': 'player.getX()',
         'category': 'player',
