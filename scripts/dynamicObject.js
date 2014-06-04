@@ -58,7 +58,7 @@ function DynamicObject(map, type, x, y, __game) {
                 //each other
                 if (__x === player.getX() && __y === player.getY()) {
                     if (__definition.pushable) {
-                            me.move(player.__lastMoveDirection);
+                        me.move(player.getLastMoveDirection());
                     }
                     if (__definition.onCollision) {
                         map._validateCallback(function () {

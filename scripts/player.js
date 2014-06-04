@@ -28,6 +28,7 @@ function Player(x, y, __map, __game) {
     this.getX = function () { return __x; };
     this.getY = function () { return __y; };
     this.getColor = function () { return __color; };
+    this.getLastMoveDirection = function() { return __lastMoveDirection; };
 
     this.setColor = wrapExposedMethod(function (c) {
         __color = c;
