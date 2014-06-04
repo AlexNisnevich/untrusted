@@ -49,25 +49,7 @@ function startLevel(map) {
             moveToward(me, 'player');
         }
     });    
-#BEGIN_EDITABLE#
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
     map.defineObject('box', {
         'pushable': true,
         'type': 'dynamic',
@@ -90,20 +72,26 @@ function startLevel(map) {
     map.placePlayer(0, 12);
     map.placeObject(map.getWidth() - 1, 12, 'exit');
     
- /*   
+    
     for (y = 0; y < map.getHeight(); y++)
     {
-        map.placeObject(25, y, 'box');
-        map.placeObject(35, y, 'box');
+        map.placeObject(15, y, Math.random() > .4 ? 'block' : 'box');
+        map.placeObject(25, y, Math.random() > .4 ? 'block' : 'box');
     }
     for (y = 0; y < map.getHeight(); y+= 3)
     {
-        for (x = 26; x <= 35; x++) {
-            map.placeObject(x, y, 'box');
+        for (x = 16; x <= 25; x++) {
+            map.placeObject(x, y, Math.random() > .1 ? 'block' : 'box');
         }
-        map.placeObject(34, y + 1, 'attackDrone');
+        map.placeObject(24, y + 1, 'attackDrone');
     }
-*/
+#BEGIN_EDITABLE#
+
+
+
+
+
+    
 #END_EDITABLE#  
     function validateLevel(map) {
         map.validateExactlyXManyObjects(1, 'exit');

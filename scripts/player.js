@@ -179,7 +179,7 @@ function Player(x, y, __map, __game) {
 
             this._canMove = false;
 
-            this.__lastMoveDirection = direction;
+            __lastMoveDirection = direction;
             this._afterMove(__x, __y);
 
             __map._reenableMovementForPlayer(this); // (key delay can vary by map)
