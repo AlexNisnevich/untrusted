@@ -35,7 +35,8 @@ function Game(debugMode, startLevel) {
         '20_bossFight.jsx',
         '21_endOfTheLine.jsx',
         '22_credits.jsx',
-        '23_pushme.jsx'
+        '23_pushme.jsx',
+        '24_trapped.jsx'
     ];
 
     this._viewableScripts = [
