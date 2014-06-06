@@ -281,3 +281,50 @@ You just need to be sure to "call" whan you're close to the bullet proof glass
     });
 ```
 
+
+## MI53RE: I can use drone too! >:D
+
+	////////////////////////////////////////////////////////////////////////////////////
+	//WARNING WHEN THE BOSS IS KILLED YOU STILL MIGHT DIE FFROM YOUR DRONES'S BULLET!!// 
+	//		  SO WATCH OUT WHEN GETTING THE ALGORYTHM!!			  //
+	//		            (Still IMAO it's fun :D)				  //
+	////////////////////////////////////////////////////////////////////////////////////
+
+```javascript
+	
+
+	
+	//we define a drone
+	map.defineObject('drone', {
+        'type': 'dynamic',
+        'symbol': '☣',
+        'color': 'yellow',
+        'interval': 200,
+        'behavior': function (me) {
+        		if (Math.random() < 0.3) {
+            			map.placeObject(me.getX() + 1, me.getY(), 'dbullet');
+        		}
+        	},
+    	});
+	 // we define the drone's weapon 
+   	map.defineObject('dbullet', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'blue',
+        'interval': 100,
+        'projectile': true,
+       	'behavior': function (me) {
+            		me.move('right');
+        	},
+        });
+	// we prepare the callback that will be activated later
+   	function callback(){
+		map.placeObject(1, 5, 'drone');
+    		map.placeObject(1, 6, 'drone');
+	}
+	//on level start we spawn a block that will help us 
+	//get to the phone across the bullet's rain
+	map.placeObject(28, map.getHeight() - 5, 'block');
+	//once we get the phone back we can start the fun >:D!!!
+	map.getPlayer().setPhoneCallback(callback);
+```
