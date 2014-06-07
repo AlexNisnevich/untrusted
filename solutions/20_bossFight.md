@@ -281,3 +281,27 @@ You just need to be sure to "call" whan you're close to the bullet proof glass
     });
 ```
 
+## larsj+apark: Random Access
+
+```javascript
+Math.random = function() { return 1; }
+
+map.defineObject('mybullet', {
+	'type': 'dynamic',
+	'symbol': '.',
+	'color': 'red',
+	'interval': 100,
+	'projectile': true,
+	'behavior': function (me) {
+    		me.move('right');
+	}
+});
+    
+
+map.getPlayer().setPhoneCallback(function() {
+	map.placeObject(5, 5, 'mybullet');
+	map.placeObject(5, 6, 'mybullet');
+});
+
+```
+
