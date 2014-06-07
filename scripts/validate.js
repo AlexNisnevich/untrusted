@@ -297,6 +297,7 @@ Game.prototype.referenceImplementations = {
     'player': {
         'atLocation': '',
         'getColor': '',
+        'getLastMoveDirection': '',
         'getX': '',
         'getY': '',
         'hasItem': '',

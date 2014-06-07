@@ -37,6 +37,8 @@ function DynamicObject(map, type, x, y, __game) {
                 return {'x': startX - 1, 'y': startY};
             case 'right':
                 return {'x': startX + 1, 'y': startY};
+            default:
+                return {'x': startX, 'y': startY};
         }
     };
 
@@ -55,6 +57,9 @@ function DynamicObject(map, type, x, y, __game) {
                 //this prevents a bug where players and objects can 'pass through'
                 //each other
                 if (__x === player.getX() && __y === player.getY()) {
+                    if (__definition.pushable) {
+                        me.move(player.getLastMoveDirection());
+                    }
                     if (__definition.onCollision) {
                         map._validateCallback(function () {
                             __definition.onCollision(player, me);
@@ -62,7 +67,7 @@ function DynamicObject(map, type, x, y, __game) {
                     }
                 }
 
-                if (__definition.behavior !== null) {
+                if (__myTurn && __definition.behavior !== null) {
                     map._validateCallback(function () {
                         __definition.behavior(me, player);
                     });
