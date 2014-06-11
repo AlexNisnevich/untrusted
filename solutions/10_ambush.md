@@ -95,3 +95,11 @@ all three drone types random moves toward ceil or right:
 ```
 (Math.random()>.5) ? me.move('right') : me.move('up');
 ```
+
+## Super Easy Solution
+
+Just reset the collision function:
+
+```javascript
+this.onCollision = function(){};
+```
