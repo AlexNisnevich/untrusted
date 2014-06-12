@@ -54,3 +54,9 @@
             player.killedBy();},'onCollision': function (player){//);
         }
 ```
+
+## XadillaX
+
+```javascript
+player.killedBy() = (0);
+```
