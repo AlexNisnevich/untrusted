@@ -34,10 +34,14 @@ function Game(debugMode, startLevel) {
         '19_documentObjectMadness.jsx',
         '20_bossFight.jsx',
         '21_endOfTheLine.jsx',
-        '22_credits.jsx',
-        '23_pushme.jsx',
-        '24_trapped.jsx'
+        '22_credits.jsx'
     ];
+
+    this._bonusLevels = [
+        // 'sampleLevel.jsx',
+        'pushme.jsx',
+        'trapped.jsx'
+    ]
 
     this._viewableScripts = [
         'codeEditor.js',
@@ -178,7 +182,14 @@ function Game(debugMode, startLevel) {
 
         //we disable moving so the player can't move during the fadeout
         this.map.getPlayer()._canMove = false;
-        this._getLevel(this._currentLevel + 1, false, true);
+
+        if (this._currentLevel == 'bonus') {
+            // open main menu
+            $('#helpPane, #notepadPane').hide();
+            $('#menuPane').show();
+        } else {
+            this._getLevel(this._currentLevel + 1, false, true);
+        }
     };
 
     this._jumpToNthLevel = function (levelNum) {
@@ -194,16 +205,16 @@ function Game(debugMode, startLevel) {
         var game = this;
         var editor = this.editor;
 
-        if (levelNum > game._levelFileNames.length) {
+        if (levelNum > this._levelFileNames.length) {
             return;
         }
 
-        game._levelReached = Math.max(levelNum, game._levelReached);
+        this._levelReached = Math.max(levelNum, this._levelReached);
         if (!debugMode) {
-            localStorage.setItem('levelReached', game._levelReached);
+            localStorage.setItem('levelReached', this._levelReached);
         }
 
-        var fileName = game._levelFileNames[levelNum - 1];
+        var fileName = this._levelFileNames[levelNum - 1];
 
         lvlCode = this._levels['levels/' + fileName];
         if (movingToNextLevel) {
@@ -247,6 +258,29 @@ function Game(debugMode, startLevel) {
         // store the commands introduced in this level (for api reference)
         __commands = __commands.concat(editor.getProperties().commandsIntroduced).unique();
         localStorage.setItem('helpCommands', __commands.join(';'));
+    };
+
+    this._getLevelByPath = function (filePath) {
+        var game = this;
+        var editor = this.editor;
+
+        $.get(filePath, function (lvlCode) {
+            game._currentLevel = 'bonus';
+            game._currentBonusLevel = filePath.split("levels/")[1];
+            game._currentFile = null;
+
+            // load level code in editor
+            editor.loadCode(lvlCode);
+
+            // start the level and fade in
+            game._evalLevelCode(null, null, true);
+            game.display.focus();
+
+            // store the commands introduced in this level (for api reference)
+            __commands = __commands.concat(editor.getProperties().commandsIntroduced).unique();
+            localStorage.setItem('helpCommands', __commands.join(';'));
+        }, 'text');
+
     };
 
     // how meta can we go?

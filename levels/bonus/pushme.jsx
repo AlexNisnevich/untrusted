@@ -5,9 +5,10 @@
     "music": "Brazil"
 }
 #END_PROPERTIES#
-/*************
- * pushme.js *
- *************
+/*******************
+ * pushme.js       *
+ * by benjaminpick *
+ *******************
  *
  * You will need to get inside, I guess.
  */
@@ -18,7 +19,7 @@ function startLevel(map) {
         var target = obj.findNearest(type);
         var leftDist = obj.getX() - target.x;
         var upDist = obj.getY() - target.y;
-        
+
         var direction;
         if (upDist == 0 && leftDist == 0) {
         	return;
@@ -47,18 +48,18 @@ function startLevel(map) {
         'behavior': function (me) {
             moveToward(me, 'player');
         }
-    });    
-    
+    });
+
     map.defineObject('box', {
         #{#                 #}#
         'type': 'dynamic',
         'symbol': '▣',
         'behavior': null
-    });  
-    
+    });
+
     map.placePlayer(0, 12);
     map.placeObject(map.getWidth()/2, map.getHeight()/2, 'exit');
-    
+
     for (x = map.getWidth()/2 - 1; x <= map.getWidth()/2 + 1; x++) {
         for (y = map.getHeight()/2 - 1; y <= map.getHeight()/2 + 1; y++) {
             if (x != map.getWidth()/2 || y != map.getHeight()/2) {

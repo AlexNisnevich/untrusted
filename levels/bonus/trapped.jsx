@@ -1,13 +1,14 @@
 #BEGIN_PROPERTIES#
 {
     "version": "1.2.1",
-    "commandsIntroduced": ['player.getLastMoveDirection()'],
+    "commandsIntroduced": ['object.pushable','player.getLastMoveDirection'],
     "music": "Brazil"
 }
 #END_PROPERTIES#
-/*************
- * trapped.js *
- *************
+/*******************
+ * trapped.js      *
+ * by benjaminpick *
+ *******************
  *
  * oh look! aren't they cute??
  *
@@ -19,7 +20,7 @@ function startLevel(map) {
         var target = obj.findNearest(type);
         var leftDist = obj.getX() - target.x;
         var upDist = obj.getY() - target.y;
-        
+
         var direction;
         if (upDist == 0 && leftDist == 0) {
         	return;
@@ -48,7 +49,7 @@ function startLevel(map) {
         'behavior': function (me) {
             moveToward(me, 'player');
         }
-    });    
+    });
 
     map.defineObject('box', {
         'pushable': true,
@@ -56,7 +57,7 @@ function startLevel(map) {
         'symbol': '▣',
         'onCollision': function (player, me) {
             if (!me.canMove(player.getLastMoveDirection()))
-                player.killedBy('a trap'); 
+                player.killedBy('a trap');
         },
         'behavior': function(me) {
             if (!me.canMove('left') && !me.canMove('right'))
@@ -64,15 +65,15 @@ function startLevel(map) {
             if (me.canMove('down'))
                 me.move('down');
         }
-    });  
-    
+    });
+
     map.placeObject(5, 10, 'box');
     map.placeObject(5, 11, 'block');
-    
+
     map.placePlayer(0, 12);
     map.placeObject(map.getWidth() - 1, 12, 'exit');
-    
-    
+
+
     for (y = 0; y < map.getHeight(); y++)
     {
         map.placeObject(15, y, Math.random() > .4 ? 'block' : 'box');
@@ -91,8 +92,8 @@ function startLevel(map) {
 
 
 
-    
-#END_EDITABLE#  
+
+#END_EDITABLE#
     function validateLevel(map) {
         map.validateExactlyXManyObjects(1, 'exit');
     }
