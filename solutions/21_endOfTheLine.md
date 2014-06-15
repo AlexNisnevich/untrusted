@@ -23,3 +23,13 @@ like this:
 ```
 
 *esolitos note*: Or symply remove/comment the if.
+
+## Agamemnus
+
+
+In map.js, before this._reset():
+```javascript
+   Object.defineProperty (this, 'finalLevel', {
+     set: function () {setTimeout (function () {__game._moveToNextLevel ()}, 0)}
+    })
+```

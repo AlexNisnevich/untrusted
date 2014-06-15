@@ -176,7 +176,12 @@ ROT.Display.prototype.playIntro = function (map, i) {
 ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
     var display = this;
     var game = this.game;
-    var command = "%c{#0f0}> run " + game._levelFileNames[game._currentLevel - 1];
+    if (game._currentLevel == "bonus") {
+        var levelName = game._currentBonusLevel;
+    } else {
+        var levelName = game._levelFileNames[game._currentLevel - 1];
+    }
+    var command = "%c{#0f0}> run " + levelName;
 
     if (i < -3) {
         if (callback) { callback(); }

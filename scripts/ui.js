@@ -184,6 +184,13 @@ Game.prototype.activateSuperMenu = function () {
             $('#scripts').show();
         });
 
+        $('#bonusDir').click(function () {
+            $('#leftMenuPane li').removeClass('selected');
+            $('#rightMenuPane div').hide();
+            $('#bonusDir').addClass('selected');
+            $('#bonus').show();
+        });
+
         $.each(game._viewableScripts, function (i, script) {
             var scriptButton = $('<button>');
             scriptButton.text(script).click(function () {
@@ -197,6 +204,18 @@ Game.prototype.activateSuperMenu = function () {
 
             scriptButton.appendTo('#menuPane #scripts');
         });
+
+        $.each(game._bonusLevels, function (i, lvl) {
+            var lvlButton = $('<button>');
+            lvlButton.text(lvl).click(function () {
+                game._getLevelByPath('levels/bonus/' + lvl);
+                $('#menuPane').hide();
+            });
+
+            lvlButton.appendTo('#menuPane #bonus');
+        });
+
+        $('#menuLabel').text('Menu+');
 
         game._superMenuActivated = true;
     }

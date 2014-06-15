@@ -164,3 +164,19 @@ Just more simple code for "follow wall to the right".
 
     me.move(me.dir);
 ```
+
+# civilframe
+
+Brute force.
+```javascript
+    var r = Math.random();
+    if (r < 0.25) {
+    	me.move('up');
+    } else if (r < 0.5) {
+    	me.move('down');
+    } else if (r < 0.65) { // slight propensity to go left
+    	me.move('left');
+    } else {
+    	me.move('right');
+    }
+```

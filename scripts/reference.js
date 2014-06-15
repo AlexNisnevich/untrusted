@@ -355,7 +355,7 @@ Game.prototype.reference = {
         'name': 'object.impassable = function (player, object)',
         'category': 'object',
         'type': 'property',
-        'description': 'The function that determines whether or not the player can pass through this object.'
+        'description': '(For non-dynamic objects only.) The function that determines whether or not the player can pass through this object.'
     },
     'object.move': {
         'name': 'object.move(direction)',
@@ -380,6 +380,12 @@ Game.prototype.reference = {
         'category': 'object',
         'type': 'property',
         'description': '(For dynamic objects only.) If true, this object destroys any dynamic object (or player) that it collides with, and is itself destroyed when it collides with anything.'
+    },
+    'object.pushable': {
+        'name': 'object.pushable',
+        'category': 'object',
+        'type': 'property',
+        'description': '(For dynamic objects only.) If true, this object can be pushed by the player.'
     },
     'object.symbol': {
         'name': 'object.symbol',
@@ -411,6 +417,12 @@ Game.prototype.reference = {
         'category': 'player',
         'type': 'method',
         'description': 'Returns the color of the player.'
+    },
+    'player.getLastMoveDirection': {
+        'name': 'player.getLastMoveDirection()',
+        'category': 'player',
+        'type': 'method',
+        'description': 'Returns the direction of last move by the player.'
     },
     'player.getX': {
         'name': 'player.getX()',

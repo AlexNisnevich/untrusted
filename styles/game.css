@@ -302,6 +302,10 @@ body {
 	background: white;
 }
 
+#rightMenuPane #bonus {
+	display: none;
+}
+
 .pop_up_box {
 	position: absolute;
 	height: 360px;

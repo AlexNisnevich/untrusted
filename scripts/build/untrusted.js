@@ -192,6 +192,12 @@ function Game(debugMode, startLevel) {
         '22_credits.jsx'
     ];
 
+    this._bonusLevels = [
+        // 'sampleLevel.jsx',
+        'pushme.jsx',
+        'trapped.jsx'
+    ]
+
     this._viewableScripts = [
         'codeEditor.js',
         'display.js',
@@ -331,7 +337,14 @@ function Game(debugMode, startLevel) {
 
         //we disable moving so the player can't move during the fadeout
         this.map.getPlayer()._canMove = false;
-        this._getLevel(this._currentLevel + 1, false, true);
+
+        if (this._currentLevel == 'bonus') {
+            // open main menu
+            $('#helpPane, #notepadPane').hide();
+            $('#menuPane').show();
+        } else {
+            this._getLevel(this._currentLevel + 1, false, true);
+        }
     };
 
     this._jumpToNthLevel = function (levelNum) {
@@ -347,16 +360,16 @@ function Game(debugMode, startLevel) {
         var game = this;
         var editor = this.editor;
 
-        if (levelNum > game._levelFileNames.length) {
+        if (levelNum > this._levelFileNames.length) {
             return;
         }
 
-        game._levelReached = Math.max(levelNum, game._levelReached);
+        this._levelReached = Math.max(levelNum, this._levelReached);
         if (!debugMode) {
-            localStorage.setItem('levelReached', game._levelReached);
+            localStorage.setItem('levelReached', this._levelReached);
         }
 
-        var fileName = game._levelFileNames[levelNum - 1];
+        var fileName = this._levelFileNames[levelNum - 1];
 
         lvlCode = this._levels['levels/' + fileName];
         if (movingToNextLevel) {
@@ -400,6 +413,29 @@ function Game(debugMode, startLevel) {
         // store the commands introduced in this level (for api reference)
         __commands = __commands.concat(editor.getProperties().commandsIntroduced).unique();
         localStorage.setItem('helpCommands', __commands.join(';'));
+    };
+
+    this._getLevelByPath = function (filePath) {
+        var game = this;
+        var editor = this.editor;
+
+        $.get(filePath, function (lvlCode) {
+            game._currentLevel = 'bonus';
+            game._currentBonusLevel = filePath.split("levels/")[1];
+            game._currentFile = null;
+
+            // load level code in editor
+            editor.loadCode(lvlCode);
+
+            // start the level and fade in
+            game._evalLevelCode(null, null, true);
+            game.display.focus();
+
+            // store the commands introduced in this level (for api reference)
+            __commands = __commands.concat(editor.getProperties().commandsIntroduced).unique();
+            localStorage.setItem('helpCommands', __commands.join(';'));
+        }, 'text');
+
     };
 
     // how meta can we go?
@@ -1215,7 +1251,12 @@ ROT.Display.prototype.playIntro = function (map, i) {
 ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
     var display = this;
     var game = this.game;
-    var command = "%c{#0f0}> run " + game._levelFileNames[game._currentLevel - 1];
+    if (game._currentLevel == "bonus") {
+        var levelName = game._currentBonusLevel;
+    } else {
+        var levelName = game._levelFileNames[game._currentLevel - 1];
+    }
+    var command = "%c{#0f0}> run " + levelName;
 
     if (i < -3) {
         if (callback) { callback(); }
@@ -1338,6 +1379,8 @@ function DynamicObject(map, type, x, y, __game) {
                 return {'x': startX - 1, 'y': startY};
             case 'right':
                 return {'x': startX + 1, 'y': startY};
+            default:
+                return {'x': startX, 'y': startY};
         }
     };
 
@@ -1356,6 +1399,9 @@ function DynamicObject(map, type, x, y, __game) {
                 //this prevents a bug where players and objects can 'pass through'
                 //each other
                 if (__x === player.getX() && __y === player.getY()) {
+                    if (__definition.pushable) {
+                        me.move(player.getLastMoveDirection());
+                    }
                     if (__definition.onCollision) {
                         map._validateCallback(function () {
                             __definition.onCollision(player, me);
@@ -1363,7 +1409,7 @@ function DynamicObject(map, type, x, y, __game) {
                     }
                 }
 
-                if (__definition.behavior !== null) {
+                if (__myTurn && __definition.behavior !== null) {
                     map._validateCallback(function () {
                         __definition.behavior(me, player);
                     });
@@ -2128,7 +2174,11 @@ function Map(display, __game) {
     this.getObjectTypeAt = wrapExposedMethod(function (x, y) {
         var x = Math.floor(x); var y = Math.floor(y);
 
-        return __grid[x][y].type;
+        // Bazek: We should always check, if the coordinates are inside of map!
+        if (x >= 0 && x < this.getWidth() && y >= 0 && y < this.getHeight())
+            return __grid[x][y].type;
+        else
+            return '';
     }, this);
 
     this.getAdjacentEmptyCells = wrapExposedMethod(function (x, y) {
@@ -2152,7 +2202,9 @@ function Map(display, __game) {
                     var child = [x, y-1];
                     break;
             }
-            if (map.getObjectTypeAt(child[0], child[1]) === 'empty') {
+            // Bazek: We need to check, if child is inside of map!
+            var childInsideMap = child[0] >= 0 && child[0] < map.getWidth() && child[1] >= 0 && child[1] < map.getHeight();
+            if (childInsideMap && map.getObjectTypeAt(child[0], child[1]) === 'empty') {
                 adjacentEmptyCells.push([child, action]);
             }
         });
@@ -2490,6 +2542,7 @@ function Player(x, y, __map, __game) {
     var __x = x;
     var __y = y;
     var __color = "#0f0";
+    var __lastMoveDirection = '';
 
     var __display = __map._display;
 
@@ -2513,6 +2566,7 @@ function Player(x, y, __map, __game) {
     this.getX = function () { return __x; };
     this.getY = function () { return __y; };
     this.getColor = function () { return __color; };
+    this.getLastMoveDirection = function() { return __lastMoveDirection; };
 
     this.setColor = wrapExposedMethod(function (c) {
         __color = c;
@@ -2663,6 +2717,7 @@ function Player(x, y, __map, __game) {
 
             this._canMove = false;
 
+            __lastMoveDirection = direction;
             this._afterMove(__x, __y);
 
             __map._reenableMovementForPlayer(this); // (key delay can vary by map)
@@ -3051,7 +3106,7 @@ Game.prototype.reference = {
         'name': 'object.impassable = function (player, object)',
         'category': 'object',
         'type': 'property',
-        'description': 'The function that determines whether or not the player can pass through this object.'
+        'description': '(For non-dynamic objects only.) The function that determines whether or not the player can pass through this object.'
     },
     'object.move': {
         'name': 'object.move(direction)',
@@ -3076,6 +3131,12 @@ Game.prototype.reference = {
         'category': 'object',
         'type': 'property',
         'description': '(For dynamic objects only.) If true, this object destroys any dynamic object (or player) that it collides with, and is itself destroyed when it collides with anything.'
+    },
+    'object.pushable': {
+        'name': 'object.pushable',
+        'category': 'object',
+        'type': 'property',
+        'description': '(For dynamic objects only.) If true, this object can be pushed by the player.'
     },
     'object.symbol': {
         'name': 'object.symbol',
@@ -3107,6 +3168,12 @@ Game.prototype.reference = {
         'category': 'player',
         'type': 'method',
         'description': 'Returns the color of the player.'
+    },
+    'player.getLastMoveDirection': {
+        'name': 'player.getLastMoveDirection()',
+        'category': 'player',
+        'type': 'method',
+        'description': 'Returns the direction of last move by the player.'
     },
     'player.getX': {
         'name': 'player.getX()',
@@ -3694,6 +3761,7 @@ Game.prototype.referenceImplementations = {
     'player': {
         'atLocation': '',
         'getColor': '',
+        'getLastMoveDirection': '',
         'getX': '',
         'getY': '',
         'hasItem': '',
@@ -3930,6 +3998,13 @@ Game.prototype.activateSuperMenu = function () {
             $('#scripts').show();
         });
 
+        $('#bonusDir').click(function () {
+            $('#leftMenuPane li').removeClass('selected');
+            $('#rightMenuPane div').hide();
+            $('#bonusDir').addClass('selected');
+            $('#bonus').show();
+        });
+
         $.each(game._viewableScripts, function (i, script) {
             var scriptButton = $('<button>');
             scriptButton.text(script).click(function () {
@@ -3943,6 +4018,18 @@ Game.prototype.activateSuperMenu = function () {
 
             scriptButton.appendTo('#menuPane #scripts');
         });
+
+        $.each(game._bonusLevels, function (i, lvl) {
+            var lvlButton = $('<button>');
+            lvlButton.text(lvl).click(function () {
+                game._getLevelByPath('levels/bonus/' + lvl);
+                $('#menuPane').hide();
+            });
+
+            lvlButton.appendTo('#menuPane #bonus');
+        });
+
+        $('#menuLabel').text('Menu+');
 
         game._superMenuActivated = true;
     }

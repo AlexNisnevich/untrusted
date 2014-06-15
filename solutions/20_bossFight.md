@@ -36,6 +36,28 @@
     });
 ```
 
+## Frenchi: overkill
+```javascript
+    map.defineObject('bullet2', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'yellow',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('up');
+        }
+    });
+
+    map.overrideKey('left', function() {
+         
+	for(i=0;i<50;i++){
+	  map.placeObject(i, 20, 'bullet2');
+      }
+        map.getPlayer().move('left');
+    });
+```
+
 ## someone328: bullets with trigger
 
 ```javascript
@@ -230,3 +252,140 @@ You just need to be sure to "call" whan you're close to the bullet proof glass
     map.getPlayer().setPhoneCallback( phonecall_shoot );
 ```
 
+
+## LostSenSS: Under attack
+
+```javascript
+
+    map.defineObject('myBullet', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'green',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('up');
+        }
+    });    
+   
+    // A safe place on the way to the phone where you can wait until the boss goes to the other side
+    map.placeObject(25, map.getHeight() - 4, 'block');
+	
+    // Run bullets
+    map.getPlayer().setPhoneCallback(function() {
+        for (var i = 8; i < 18; i++) {
+            for (var x = 0; x < map.getWidth(); x++) {
+                map.placeObject(x, i, 'myBullet');
+            }         
+        }
+    });
+```
+
+## larsj+apark: Random Access
+
+```javascript
+Math.random = function() { return 1; }
+
+map.defineObject('mybullet', {
+	'type': 'dynamic',
+	'symbol': '.',
+	'color': 'red',
+	'interval': 100,
+	'projectile': true,
+	'behavior': function (me) {
+    		me.move('right');
+	}
+});
+    
+
+map.getPlayer().setPhoneCallback(function() {
+	map.placeObject(5, 5, 'mybullet');
+	map.placeObject(5, 6, 'mybullet');
+});
+
+```
+
+## XadillaX's Hack Solution
+
+Define a new block type and let them at the bottom of bosses and bullets:
+
+```javascript
+map.defineObject("sb", {
+    impassable: function() {
+        return true;
+    },
+    symbol: "a",
+    onCollision: function() {
+    }
+});
+
+for(var i = 0; i < map.getWidth(); i++) {
+
+    map.placeObject(i, 9, "sb");
+}
+```
+
+And then you can get phone.
+
+Set the phone callback function to hack:
+
+Get all dynamic objects, and let the `_destroy` function of `boss` to `bullet`. That means when a bullet is to destroy, the `boss` will be destroyed instead:
+
+```javascript
+map.getPlayer().setPhoneCallback(function() {
+    var bosses = [];
+    var bullets = [];
+    var objects = map.getDynamicObjects();
+    for(var i = 0; i < objects.length; i++) {
+        if(objects[i].getType() == "boss") {
+            bosses.push(objects[i]);
+        } else {
+            bullets.push(objects[i]);
+        }
+    }
+    for(var i = 0; i < Math.min(bosses.length, bullets.length); i++) {
+        bullets[i]._destroy = bosses[i]._destroy;
+    }
+
+    if(bosses.length === 0) {
+        map.placeObject(map.getPlayer().getX(), map.getPlayer().getY() + 1,
+            'theAlgorithm');
+    }
+});
+```
+
+But don't forget to generate `theAlgorithm` after all `boss` destroyed.
+
+Now you can get your phone and press `Q` until all bosses are destroyed and get `theAlgorithm` to next stage!
+
+## garzon: hide and shoot 
+
+Don't panic! Just hide in the shelters and make phone calls. :) 
+
+```javascript
+    map.defineObject('bullet2', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'green',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('up');
+        }
+    });
+    map.defineObject('shelter', {
+        'symbol': 'O',
+        'color': 'green',
+        'impassable':true
+    });
+    
+    for(x=Math.floor(map.getWidth()/2);x>0;x--){
+    	map.placeObject(2*x,12,'shelter');
+        map.placeObject(2*x-1,14,'shelter');
+    }
+    
+    map.getPlayer().setPhoneCallback(function(){
+    	player=map.getPlayer();
+        map.placeObject(player.getX()-1,player.getY(),'bullet2');
+    });
+```
