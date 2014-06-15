@@ -357,3 +357,35 @@ map.getPlayer().setPhoneCallback(function() {
 But don't forget to generate `theAlgorithm` after all `boss` destroyed.
 
 Now you can get your phone and press `Q` until all bosses are destroyed and get `theAlgorithm` to next stage!
+
+## garzon: hide and shoot 
+
+Don't panic! Just hide in the shelters and make phone calls. :) 
+
+```javascript
+    map.defineObject('bullet2', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'green',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('up');
+        }
+    });
+    map.defineObject('shelter', {
+        'symbol': 'O',
+        'color': 'green',
+        'impassable':true
+    });
+    
+    for(x=Math.floor(map.getWidth()/2);x>0;x--){
+    	map.placeObject(2*x,12,'shelter');
+        map.placeObject(2*x-1,14,'shelter');
+    }
+    
+    map.getPlayer().setPhoneCallback(function(){
+    	player=map.getPlayer();
+        map.placeObject(player.getX()-1,player.getY(),'bullet2');
+    });
+```
