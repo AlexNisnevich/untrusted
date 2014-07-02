@@ -21,6 +21,7 @@
 ```
 
 ## Jhack (giacgbj)
+*Note: this solution no longer works as of version 1.2 of this level.*
 
 Let's call the cells from the top to the bottom and from left to right 1,2,3,4,5,6,7,8 and the one in which the player starts C:
  * C -> 3
@@ -30,7 +31,7 @@ Let's call the cells from the top to the bottom and from left to right 1,2,3,4,5
  * 2 -> 4
  * 4 -> C
  * C -> 7 (Algorithm)
- * 7 -> 8 
+ * 7 -> 8
  * 8 -> C
  * C -> Exit
 
@@ -59,3 +60,21 @@ Steps:
 4. Exit!
 
 We must be lucky enough to remove blue key at first green lock and remove green key at second green lock. If the lock doesn't remove expected key, restart game. Ideally, we have 25% chance to pass this level.
+
+
+## kraigory
+```javascript
+    map.defineObject('greenLock', {
+        'symbol': String.fromCharCode(0x2297),
+        'color': '#0f0',
+        'impassable': function (player) {
+            if (player.hasItem('greenKey')) {
+                player.removeItem('greenKey');map.placeObject(24,10,'blueKey');
+                return false;
+            } else {
+                return true;
+            }
+        }
+    });
+```
+Go up through the blue lock to get the blue key. Come down through green, grab the yellow key, and out through blue. Now go down through yellow on the bottom left, grab the A, through the blue lock, grab the yellow key, and up through the yellow lock.
