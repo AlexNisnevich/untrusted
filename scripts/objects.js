@@ -27,9 +27,9 @@ Game.prototype.getListOfObjects = function () {
             'symbol' : String.fromCharCode(0x2395), // ⎕
             'color': '#0ff',
             'onCollision': function (player) {
-                if (!game.map.finalLevel) {
+                //if (!game.map.finalLevel) {
                     game._moveToNextLevel();
-                }
+                //}
             }
         },
 
