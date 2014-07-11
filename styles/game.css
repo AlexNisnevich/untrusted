@@ -40,8 +40,6 @@ body {
 
 #inventory {
 	color: white;
-	position: absolute;
-	top: 505px;
 	font-size: 13px;
 	cursor: default;
 }
