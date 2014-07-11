@@ -1,4 +1,3 @@
-
 html {
 	height: 100%;
 }
@@ -14,21 +13,20 @@ body {
 }
 
 #container {
-	width: 1210px;
-	min-width: 1210px;
-	margin: 0 auto;
 	display: table-cell;
 	vertical-align: middle;
 }
 
 #panes {
+	display: table;
+	margin: 0 auto;
 	position: relative;
-	width: 100%;
 }
 
 #screenPane {
 	color: transparent;
-	width: 602px;
+	float: left;
+	clear: left;
 }
 
 #screen canvas {
@@ -74,9 +72,7 @@ body {
 }
 
 #editorPane {
-	position: absolute;
-	top: 0;
-	left: 602px;
+	float: left;
 }
 
 #editorPane #editor {
@@ -353,8 +349,8 @@ body {
 }
 
 #muteButton {
-	position: absolute;
-	top: -20px;
+	margin: -0.1em 0.5em 0 0;
+	float: left;
 	cursor: pointer;
 }
 
@@ -378,17 +374,12 @@ body {
 }
 
 #savedLevelMsg {
-	position: relative;
-	float: right;
-	top: -16px;
-	right: 5px;
+	position: absolute;         
+	right: 0;
 }
 
 #nowPlayingMsg {
-	position: absolute;
-	top: -18px;
-	color: #999;
-	margin-left: 2em;
+	float: left;
 }
 
 #paypal {
