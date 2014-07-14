@@ -31,7 +31,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
     var game = this;
 
     try {
-        for (var i = 0; i < this.verbotenWords.length; i++) {
+        for (var i = 0, verbotenWordsLen = this.verbotenWords.length; i < verbotenWordsLen; i++) {
             var badWord = this.verbotenWords[i];
             if (playerCode.indexOf(badWord) > -1) {
                 throw "You are not allowed to use '" + badWord + "'!";
