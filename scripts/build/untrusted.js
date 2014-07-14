@@ -3057,7 +3057,7 @@ Game.prototype.reference = {
         'name': 'map.validateNoTimers()',
         'category': 'map',
         'type': 'method',
-        'description': 'Raises an exception if there are any timers currently set with map.startLevel.'
+        'description': 'Raises an exception if there are any timers currently set with map.startTimer.'
     },
 
     'object.behavior': {

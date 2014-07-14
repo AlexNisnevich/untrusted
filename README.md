@@ -31,6 +31,35 @@ Then run:
 make runlocal
 ```
 
+### Contributing Levels
+
+To add a new level, create a jsx file in [/levels/bonus](https://github.com/AlexNisnevich/untrusted/tree/master/levels/bonus) and add the level filename to the `bonusLevels` array in [game.js](https://github.com/AlexNisnevich/untrusted/blob/master/scripts/game.js#L40).
+
+If you are adding any new commands that the player can use, make sure to add them to `reference.js`.
+
+#### The .jsx file format
+
+jsx files are like regular JavaScript files, but have some additional syntax:
+- `#BEGIN_EDITABLE#` and `#END_EDITABLE#` surround editable lines
+- `#{#` and `#}#` wrap editable sections (parts of lines)
+- `#BEGIN_PROPERTIES#` and `#END_PROPERTIES#` surround the properties object at the start of the file. Available properties include:
+  - `commandsIntroduced`: array of new commands introduced in the level (see `reference.js`)
+  - `mapProperties`: optionally contains any of the following:
+     - `allowOverwrite`: if true, placed static objects can be overwritten by other objects
+     - `keyDelay`: specifies the lag, in milliseconds, between player keystrokes (default: 0)
+     - `quickValidateCallback`: speeds up validation of callback methods at the cost of some security (useful for levels with very many dynamic objects)
+     - `refreshRate`: the refresh rate of the level, in milliseconds (required for dynamic objects with `interval` properties to work correctly)
+     - `showDrawingCanvas`: if true, the drawing canvas overlay is displayed
+     - `showDummyDom`: if true, a dummy DOM will be displayed instead of the regular map
+  - `music`: name of the background track for the level (see `music.js`) 
+  - `startingMessage`: message displayed at the bottom of the screen when the level starts (if any)
+  - `version`: increase the level version whenever you update a level
+- `#START_OF_START_LEVEL#` and `#END_OF_START_LEVEL#` should be the first and last line of the `startLevel` method, respectively
+
+#### Adding music
+
+[Coming soon]
+
 ### Acknowledgements
 
 Untrusted is a game by [Alex Nisnevich](http://alex.nisnevich.com/) and [Greg Shuflin](https://github.com/neunenak).

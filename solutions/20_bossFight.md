@@ -50,7 +50,7 @@
     });
 
     map.overrideKey('left', function() {
-         
+
 	for(i=0;i<50;i++){
 	  map.placeObject(i, 20, 'bullet2');
       }
@@ -266,17 +266,17 @@ You just need to be sure to "call" whan you're close to the bullet proof glass
         'behavior': function (me) {
             me.move('up');
         }
-    });    
-   
+    });
+
     // A safe place on the way to the phone where you can wait until the boss goes to the other side
     map.placeObject(25, map.getHeight() - 4, 'block');
-	
+
     // Run bullets
     map.getPlayer().setPhoneCallback(function() {
         for (var i = 8; i < 18; i++) {
             for (var x = 0; x < map.getWidth(); x++) {
                 map.placeObject(x, i, 'myBullet');
-            }         
+            }
         }
     });
 ```
@@ -296,7 +296,7 @@ map.defineObject('mybullet', {
     		me.move('right');
 	}
 });
-    
+
 
 map.getPlayer().setPhoneCallback(function() {
 	map.placeObject(5, 5, 'mybullet');
@@ -358,9 +358,9 @@ But don't forget to generate `theAlgorithm` after all `boss` destroyed.
 
 Now you can get your phone and press `Q` until all bosses are destroyed and get `theAlgorithm` to next stage!
 
-## garzon: hide and shoot 
+## garzon: hide and shoot
 
-Don't panic! Just hide in the shelters and make phone calls. :) 
+Don't panic! Just hide in the shelters and make phone calls. :)
 
 ```javascript
     map.defineObject('bullet2', {
@@ -378,14 +378,60 @@ Don't panic! Just hide in the shelters and make phone calls. :)
         'color': 'green',
         'impassable':true
     });
-    
+
     for(x=Math.floor(map.getWidth()/2);x>0;x--){
     	map.placeObject(2*x,12,'shelter');
         map.placeObject(2*x-1,14,'shelter');
     }
-    
+
     map.getPlayer().setPhoneCallback(function(){
     	player=map.getPlayer();
         map.placeObject(player.getX()-1,player.getY(),'bullet2');
     });
+
+## MI53RE: I can use drone too! >:D
+
+	////////////////////////////////////////////////////////////////////////////////////
+	//WARNING WHEN THE BOSS IS KILLED YOU STILL MIGHT DIE FFROM YOUR DRONES'S BULLET!!//
+	//		  SO WATCH OUT WHEN GETTING THE ALGORYTHM!!			  //
+	//		            (Still IMAO it's fun :D)				  //
+	////////////////////////////////////////////////////////////////////////////////////
+
+```javascript
+
+
+
+	//we define a drone
+	map.defineObject('drone', {
+        'type': 'dynamic',
+        'symbol': '☣',
+        'color': 'yellow',
+        'interval': 200,
+        'behavior': function (me) {
+        		if (Math.random() < 0.3) {
+            			map.placeObject(me.getX() + 1, me.getY(), 'dbullet');
+        		}
+        	},
+    	});
+	 // we define the drone's weapon
+   	map.defineObject('dbullet', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'blue',
+        'interval': 100,
+        'projectile': true,
+       	'behavior': function (me) {
+            		me.move('right');
+        	},
+        });
+	// we prepare the callback that will be activated later
+   	function callback(){
+		map.placeObject(1, 5, 'drone');
+    		map.placeObject(1, 6, 'drone');
+	}
+	//on level start we spawn a block that will help us
+	//get to the phone across the bullet's rain
+	map.placeObject(28, map.getHeight() - 5, 'block');
+	//once we get the phone back we can start the fun >:D!!!
+	map.getPlayer().setPhoneCallback(callback);
 ```

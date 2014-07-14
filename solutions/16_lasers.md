@@ -53,3 +53,20 @@ The following code in the second area:
 ```javascript
 getRandomInt = function(){return 600;};
 ```
+
+# Closures
+## ZER0
+```js
+ 
+// using canvas to draw the line
+var ctx = map.getCanvasContext();
+ctx.beginPath();
+ctx.strokeStyle = 'white';
+ctx.lineWidth = 5;
+ctx.moveTo(x1, y1);
+ctx.lineTo(x2, y2);
+ctx.stroke();
+// take advantages of the closure create by `map.createLine`
+// so all lasers will be of the same color of the player
+color = player.getColor();
+```
