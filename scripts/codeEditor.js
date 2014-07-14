@@ -12,7 +12,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     var charLimit = 80;
 
-    var properties = {}
+    var properties = {};
     var editableLines = [];
     var editableSections = {};
     var lastChange = {};
