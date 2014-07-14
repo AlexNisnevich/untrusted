@@ -71,6 +71,8 @@ body {
 
 #editorPane {
 	float: left;
+	position: relative;
+	left: -2px;
 }
 
 #editorPane #editor {
