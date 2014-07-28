@@ -308,6 +308,12 @@ Game.prototype.reference = {
         'type': 'method',
         'description': 'Raises an exception if there are any timers currently set with map.startTimer.'
     },
+    'map.writeStatus': {
+        'name': 'map.writeStatus(message)',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Displays a message at the bottom of the map.'
+    },
 
     'object.behavior': {
         'name': 'object.behavior = function (object)',
