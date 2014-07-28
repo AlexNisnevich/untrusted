@@ -200,7 +200,7 @@ Simple down/right/up/left behavior, with a twist to make the problem more simple
   var prev_x = me.getX();
   var prev_y = me.getY();
   
-  var move_conditionnaly = function (direction) {
+  var move_conditionally = function (direction) {
     if (!me.canMove(direction) || me.getY()>22) {
       return false;
     }
@@ -210,10 +210,10 @@ Simple down/right/up/left behavior, with a twist to make the problem more simple
   };
   
   // We're aiming down & right first
-  if (!move_conditionnaly("down")) {
-    if (!move_conditionnaly("right")) {
-      if (!move_conditionnaly("up")) {
-        move_conditionnaly("left");
+  if (!move_conditionally("down")) {
+    if (!move_conditionally("right")) {
+      if (!move_conditionally("up")) {
+        move_conditionally("left");
       }
     }
   }
