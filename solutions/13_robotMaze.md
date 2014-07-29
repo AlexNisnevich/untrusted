@@ -290,3 +290,92 @@ Just press "R" and go through the portals
     // in place or not. Use "player" object from the closure
     player.teleportersAreReady = true;
 ```
+
+# Building Droid style
+
+## mike_perdide
+
+Droid fills the maze with blocks, makes for a simpler maze.
+
+```javascript
+    var moves = map.getAdjacentEmptyCells(me.getX(), me.getY());
+
+    var directions_delta = {
+      "down": [0, 1],
+      "up"  : [0, -1],
+      "left": [-1, 0],
+      "right": [1, 0],
+    }
+    var opposites = {
+      "down": "up",
+      "up":"down",
+      "left":"right",
+      "right":"left"
+    }
+    var prev_x = me.getX();
+    var prev_y = me.getY();
+    
+    if (me.previous_direction === undefined) {
+      me.previous_direction = "";
+    }
+
+    var move_conditionally = function (direction) {
+      if (!me.canMove(direction)) {
+        return false;
+      }
+      
+      // Are we in a dead end?
+      if (moves.length == 1) {
+        me.blocked_mode = true;
+      } else {
+        me.blocked_mode = false;
+      }
+      
+      // Are we doubling back? Only allowed if we encountered
+      // a dead end.
+      if (direction == opposites[me.previous_direction] 
+          && ! me.blocked_mode) {
+          return false;
+      }
+        
+      me.move(direction);
+      me.previous_direction = direction;
+      
+      return true;
+    }
+    
+    if ( me.getY() < 23 )
+      if (!move_conditionally("down"))
+        if (!move_conditionally("right"))
+          if (!move_conditionally("up"))
+            move_conditionally("left");
+
+    // Putting blocks where we can to limit the droid option
+    prev_moves = map.getAdjacentEmptyCells(prev_x, prev_y)
+    
+    if (prev_moves.length == 1) {
+      // This was a dead end, placing a block behind the droid.
+      map.placeObject(prev_x, prev_y, "block");
+    } else if (prev_moves.length == 2 &&
+               prev_moves[0][1] != opposites[prev_moves[1][1]] ) { 
+      move_1_delta_x = directions_delta[prev_moves[0][1]][0];
+      move_2_delta_x = directions_delta[prev_moves[1][1]][0];
+      move_1_delta_y = directions_delta[prev_moves[0][1]][1];
+      move_2_delta_y = directions_delta[prev_moves[1][1]][1];
+      
+      // Calculating the coordinates of the diagonal cell
+      diag_x = prev_x
+               + move_1_delta_x
+               + move_2_delta_x;
+      diag_y = prev_y
+               + move_1_delta_y
+               + move_2_delta_y;
+      // If the diagonal object is empty, that means we can access
+      // the adjacent 2 cells without the cell at (prev_x, prev_y).
+      // So let's put a block there!
+      if (map.getObjectTypeAt(diag_x, diag_y) == "empty") {
+        map.placeObject(prev_x, prev_y, "block");
+      }
+    };
+
+```
