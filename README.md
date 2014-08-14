@@ -100,7 +100,7 @@ The music that appears in Untrusted, in order, is:
 - "Boss Loop 1" - [Essa](http://www.youtube.com/user/Essasmusic) (free to use)
 - "Adversity" - [Seropard](https://soundcloud.com/seropard) (free to use)
 - "Comme Des Orages" - [Obsibilo](http://freemusicarchive.org/music/Obsibilo/) (CC-BY-NC-SA)
-- "Brazilicon Alley" - [Vernon Lenoir](http://vernonlenoir.wordpress.com/) (CC-BY-NC-SA)
+- "Brazilicon Alley" - [Vernon Lenoir](http://vernonlenoir.wordpress.com/) (CC-BY-NC-SA), based on "Aquarela do Brazil" by Ary Barroso
 
 ### License
 This work is dual-licensed.
