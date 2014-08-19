@@ -67,7 +67,7 @@ function DynamicObject(map, type, x, y, __game) {
                     }
                 }
 
-                if (__myTurn && __definition.behavior !== null) {
+                if (__myTurn && __definition.behavior) {
                     map._validateCallback(function () {
                         __definition.behavior(me, player);
                     });
