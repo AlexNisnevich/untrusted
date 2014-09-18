@@ -43,7 +43,7 @@ js-modules-debug = scripts/util.js \
 yui-jar = tools/yuicompressor-2.4.8pre.jar
 
 # if the mod is set but not exist, raise an error
-ERR_NOT_FOUND:=$(shell if [ ! -z '$(mod)' ] && [ ! -d '$(mod)' ]; then echo 'Mod [$(mod)] not found!'; fi)
+ERR_NOT_FOUND:=$(shell if [ ! -z '$(mod)' ] && [ ! -d 'mods/$(mod)' ]; then echo 'Mod [$(mod)] not found!'; fi)
 # `make` or `make debug` merges scripts (using debug launcher)
 debug:
 ifneq '$(ERR_NOT_FOUND)' ''

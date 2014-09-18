@@ -31,10 +31,10 @@ Then run:
 make runlocal
 ```
 
-Build your own mod in another directory:
+Build your own mod in the `mods` directory:
 
 ```
-make mod=$path_of_mod
+make mod=example_mod
 ```
 
 ### Contributing Levels
