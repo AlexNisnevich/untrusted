@@ -260,12 +260,6 @@ Game.prototype.reference = {
         'type': 'method',
         'description': 'Sets the background color of the given square.'
     },
-    'map.setSquareColor': {
-        'name': 'map.setSquareColor(x, y, color)',
-        'category': 'map',
-        'type': 'method',
-        'description': 'Sets the background color of the given square.'
-    },
     'map.startTimer': {
         'name': 'map.startTimer(callback, delay)',
         'category': 'map',
