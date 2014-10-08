@@ -1,6 +1,9 @@
 # collecting jsx filenames in a directory and write them to $target.
 target=$1
 mod=$2
+
+sed -i "s#\/\/%MOD%#$mod#" $target
+
 [ -z $mod ] && mod=default
 
 levels=''

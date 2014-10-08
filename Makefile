@@ -54,7 +54,7 @@ endif
 	@echo "[ Done ]"
 	@echo "Merging JS files…\t\t\t\c"
 	@cat $(js-modules-debug) > $(js-target)
-	@./collect_levels_filename.sh $(js-target) $(mod)
+	@./parse_target.sh $(js-target) $(mod)
 	@echo "[ Done ]"
 
 # `make release` merges and compresses scripts (using release launcher)
@@ -68,7 +68,7 @@ endif
 	@echo "[ Done ]"
 	@echo "Merging JS files…\t\t\t\c"
 	@cat $(js-modules) > $(js-target)
-	@./collect_levels_filename.sh $(js-target) $(mod)
+	@./parse_target.sh $(js-target) $(mod)
 	@echo "[ Done ]"
 	@echo "Compressing merged JS…\t\t\t\c"
 	@java -jar $(yui-jar) -o $(js-target-min) $(js-target)
