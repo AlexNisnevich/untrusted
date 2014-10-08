@@ -31,6 +31,12 @@ Then run:
 make runlocal
 ```
 
+Build your own mod in the `mods` directory:
+
+```
+make mod=example_mod
+```
+
 ### Contributing Levels
 
 To add a new level, create a jsx file in [/levels/bonus](https://github.com/AlexNisnevich/untrusted/tree/master/levels/bonus) and add the level filename to the `bonusLevels` array in [game.js](https://github.com/AlexNisnevich/untrusted/blob/master/scripts/game.js#L40).
