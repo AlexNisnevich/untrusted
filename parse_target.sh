@@ -3,9 +3,8 @@ target=$1
 mod=$2
 
 # MOD
-sed -i "s#\/\/%MOD%#$mod#" $target
-
-[ -z $mod ] && mod=default
+[ "$mod" != "default" ] && m=$mod
+sed -i "s#\/\/%MOD%#$m#" $target
 
 # LEVELS
 levels=''
@@ -28,13 +27,3 @@ if [ -d mods/$mod/bonus ]; then
 fi
 bonus="${bonus%?}"
 sed -i "s#\/\/%BONUS%#$bonus#" $target
-
-# INTRO
-f=mods/default/intro.jsi
-[ -f mods/$mod/intro.jsi ] && f=mods/$mod/intro.jsi
-IFS="
-"
-for l in `cat $f`; do
-	l=`echo $l|sed "s|#|\\\\\#|"`
-	sed -i "s#\/\/%INTRO%#$l\n\/\/%INTRO%#" $target
-done

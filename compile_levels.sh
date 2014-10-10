@@ -2,8 +2,6 @@ echo "Game.prototype._levels = {" > levels/levels.js
 
 mod=$1
 
-[ -z $mod ] && mod=default
-
 for lvl in mods/$mod/*.jsx
 do
 	lvlfn=`basename $lvl`

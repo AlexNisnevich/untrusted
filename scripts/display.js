@@ -155,8 +155,7 @@ ROT.Display.prototype.saveGrid = function (map) {
 
 ROT.Display.prototype.playIntro = function (map, i) {
     display = this;
-
-//%INTRO%
+	playIntro(display, map, i)
 };
 
 ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
