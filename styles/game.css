@@ -55,8 +55,8 @@ body {
 	display: none;
 	position: absolute;
 	top: 220px;
-	width: 584px;
-	padding: 10px;
+	width: 100%;
+	padding: 10px 0;
 	background-color: white;
 	color: black;
 	text-align: center;
@@ -374,7 +374,7 @@ body {
 }
 
 #savedLevelMsg {
-	position: absolute;         
+	position: absolute;
 	right: 0;
 }
 
