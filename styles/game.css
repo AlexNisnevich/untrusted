@@ -27,6 +27,7 @@ body {
 	color: transparent;
 	float: left;
 	clear: left;
+	position: relative;
 }
 
 #screen canvas {
@@ -55,7 +56,7 @@ body {
 	display: none;
 	position: absolute;
 	top: 220px;
-	width: 604px;
+	width: 100%;
 	padding: 10px 0;
 	background-color: white;
 	color: black;
