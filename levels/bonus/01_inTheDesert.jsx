@@ -6,6 +6,8 @@
 #END_PROPERTIES#
 /******************
  * inTheDesert.js *
+ * from HangoverX *
+ * by janosgyerik *
  ******************
  *
  * Good morning, Mr.... uhm, who are you again?

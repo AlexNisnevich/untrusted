@@ -4,9 +4,11 @@
     "commandsIntroduced": []
 }
 #END_PROPERTIES#
-/***************
- * theGuard.js *
- ***************
+/******************
+ *   theGuard.js  *
+ * from HangoverX *
+ * by janosgyerik *
+ ******************
  *
  * Damn that was close!
  *

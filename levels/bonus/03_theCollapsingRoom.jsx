@@ -6,6 +6,8 @@
 #END_PROPERTIES#
 /************************
  * theCollapsingRoom.js *
+ *    from HangoverX    *
+ *    by janosgyerik    *
  ************************
  *
  * As you step through the portal, bright flash of white light.
