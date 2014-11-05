@@ -18,7 +18,7 @@ function Game(debugMode, startLevel) {
 
     this._bonusLevels = [
 //%BONUS%
-    ]
+    ].filter(function (lvl) { return (lvl.indexOf('_') != 0); }); // filter out bonus levels that start with '_'
 
 	this._mod = '//%MOD%';
 
@@ -47,7 +47,7 @@ function Game(debugMode, startLevel) {
     this._resetTimeout = null;
     this._currentLevel = 0;
     this._currentFile = null;
-    this._levelReached = parseInt(localStorage.getItem(this._mod.length == 0 ? 'levelReached' : this._mod + '.levelReached')) || 1;
+    this._levelReached = 1;
     this._displayedChapters = [];
 
     this._eval = window.eval; // store our own copy of eval so that we can override window.eval
@@ -66,6 +66,10 @@ function Game(debugMode, startLevel) {
     /* unexposed methods */
 
     this._initialize = function () {
+        // Get last level reached from localStorage (if any)
+        var levelKey = this._mod.length == 0 ? 'levelReached' : this._mod + '.levelReached';
+        this._levelReached = parseInt(localStorage.getItem(levelKey)) || 1;
+
         // Fix potential corruption
         // levelReached may be "81111" instead of "8" due to bug
         if (this._levelReached > this._levelFileNames.length) {
@@ -378,6 +382,18 @@ function Game(debugMode, startLevel) {
             // start bg music for this level
             if (this.editor.getProperties().music) {
                 this.sound.playTrackByName(this.editor.getProperties().music);
+            }
+
+            // show editor pane if first level has been passed before
+            if (this._levelReached > 1) {
+                // first level passed - unlock editor pane
+                $('#editorPane').fadeIn();
+                this.editor.refresh();
+            }
+
+            // activate super menu if 21_endOfTheLine has been reached
+            if (this._levelReached >= 21) {
+                this.activateSuperMenu();
             }
 
             // finally, allow player movement
