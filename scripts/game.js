@@ -384,13 +384,6 @@ function Game(debugMode, startLevel) {
                 this.sound.playTrackByName(this.editor.getProperties().music);
             }
 
-            // show editor pane if first level has been passed before
-            if (this._levelReached > 1) {
-                // first level passed - unlock editor pane
-                $('#editorPane').fadeIn();
-                this.editor.refresh();
-            }
-
             // activate super menu if 21_endOfTheLine has been reached
             if (this._levelReached >= 21) {
                 this.activateSuperMenu();
