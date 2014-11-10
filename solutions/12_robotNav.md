@@ -245,3 +245,21 @@ Simple down/right/up/left behavior, with a twist to make the problem more simple
     }
   };
 ```
+
+# ToeFungi
+
+Creating no other path
+
+```javascript
+	if(me.canMove('up')){        
+		me.move('up');                     
+	}else if(me.canMove('right')){
+		me.move('right');        
+	}else if(!me.canMove('right') && !me.canMove('down')){
+		me.move('left');
+		map.placeObject(me.getX()+1, me.getY(), 'block');
+	} else {
+		me.move('down');
+		map.placeObject(me.getX(), me.getY()-1, 'block');
+	}
+```
