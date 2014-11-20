@@ -1,0 +1,20 @@
+Pseudocode: 
+
+hashLine = '#' from top to bottom; 
+
+place object at y=0 and width/2; 
+place item to recieve at top and width/2; 
+initiate walls with 5 hash lines on left and 5 on right side. 
+
+function trackobject { 
+ 	while( object has not reached item){
+	 	if player moves
+	 		draw 1 new hash line on left and 1 new line on right; //this should be the editing line 
+	 	if object touches hash
+	 		game lost; 
+	 } 
+} 
+
+if object reaches item
+	game won; 
+	
