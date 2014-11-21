@@ -27,7 +27,7 @@ function startLevel(map) {
 			for(var j = 0 j <= 5; j++){
 			map.placeObject(j, i, 'block');
 			}
-			for(var k = getWidth()-5 j <= getWidth(); k++){
+			for(var k = getWidth()-5; j <= getWidth(); k++){
 			map.placeObject(k, i, 'block');
 			}
 		}         
