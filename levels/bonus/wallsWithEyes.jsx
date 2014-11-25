@@ -51,11 +51,11 @@ function startLevel(map) {
             }
             //right wall add layer
             for (var y = 0; y < map.getHeight(); y++){
-                map.placeObject((map.getWidth() - rightWallBound), y, 'block');
+                map.placeObject(rightWallBound, y, 'block');
             }
             // move both wall bounds inwards by 1 space
-            leftWallBound = leftWallBound + 1;
-            rightWallBound = rightWallBound - 1;
+            leftWallBound = leftWallBound++;
+            rightWallBound = rightWallBound--;
         }
     }
 
