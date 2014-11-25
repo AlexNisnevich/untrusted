@@ -24,16 +24,50 @@
 
 function startLevel(map) {
 #START_OF_START_LEVEL#
-    map.placePlayer(map.getWidth()/ 2, 1);
-    map.placeObject(map.getWidth()/ 2, map.getHeight()-1, 'exit');
+    map.placePlayer(map.getWidth()/ 2, (map.getHeight()-2));
+    map.placeObject(map.getWidth()/ 2, 2, 'exit');
 	//Should place initial walls from top to bottom of thickness 5
-        for (var i = 0; i < map.getHeight(); i++) {
-			for(var j = 0; j <= 5; j++){
-			map.placeObject(j, i, 'block');
-			}
-			for(var k = map.getWidth()-5; k<= map.getWidth(); k++){
-			map.placeObject(k, i, 'block');
-			}
-		}         
+    for (var i = 0; i < map.getHeight(); i++) {
+		for(var j = 0; j < 5; j++){
+		map.placeObject(j, i, 'block');
+		}
+		for(var k = map.getWidth()-5; k<= map.getWidth(); k++){
+		map.placeObject(k, i, 'block');
+		}
+	}
+
+    function closeWalls() {
+        
+        var leftWallBound = 5;
+        var rightWallBound = map.getWidth() - 6;
+        var playerDir = map.getPlayer().getLastMoveDirection();
+        //var playerXCoord = map.getPlayer().getX();
+
+        if (playerDir === 'up'){
+            //increase walls on both sides by one layer of chars
+            //left wall add layer
+            for (var y = 0; y < map.getHeight(); y++){
+                map.placeObject(leftWallBound, y, 'block');
+            }
+            //right wall add layer
+            for (var y = 0; y < map.getHeight(); y++){
+                map.placeObject((map.getWidth() - rightWallBound), y, 'block');
+            }
+            // move both wall bounds inwards by 1 space
+            leftWallBound = leftWallBound + 1;
+            rightWallBound = rightWallBound - 1;
+        }
+    }
+
+    closeWalls();
+
+#BEGIN_EDITABLE#
+
+
+
+#END_EDITABLE#             
 #END_OF_START_LEVEL#
+}
+function validateLevel(map) {
+    map.validateExactlyXManyObjects(1, 'exit');
 }
