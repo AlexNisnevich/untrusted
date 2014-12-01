@@ -69,9 +69,6 @@ function startLevel(map) {
         }
     }
 
-    // this line is the solution
-    //teleport1.setTarget(teleport2);
-
 	map.createFromGrid(['    +++    ',
 						'    +E+    ',
 						'           ',
