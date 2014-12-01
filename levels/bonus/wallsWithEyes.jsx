@@ -28,64 +28,38 @@ function startLevel(map) {
     map.placeObject(map.getWidth()/ 2, 2, 'exit');
 	//Should place initial walls from top to bottom of thickness 5
     for (var i = 0; i < map.getHeight(); i++) {
-		for(var j = 0; j < 13; j++){
+		for(var j = 0; j < 5; j++){
 		map.placeObject(j, i, 'block');
 		}
-		for(var k = map.getWidth()-13; k<= map.getWidth(); k++){
+		for(var k = map.getWidth()-5; k<= map.getWidth(); k++){
 		map.placeObject(k, i, 'block');
 		}
 	}
 
-    var leftWallBound = 13;
-    var rightWallBound = map.getWidth() - 14;
-    //flag for if player has passed a certain point
-    //walls start closing in once this is true
-    var doomed = false;
-
-    function closeWalls(map) {
+    function closeWalls() {
         
-        //var leftWallBound = 5;
-        //var rightWallBound = map.getWidth() - 6;
+        var leftWallBound = 5;
+        var rightWallBound = map.getWidth() - 6;
         var playerDir = map.getPlayer().getLastMoveDirection();
-        var playerYCoord = map.getPlayer().getY();
+        //var playerXCoord = map.getPlayer().getX();
 
-        if (playerYCoord < (map.getHeight()/2 + 5)) {
-            doomed = true;
-
-            //TODO: add a popup message that says:
-            //"You have chosen poorly and triggered a trap! You are doomed!"    
-        }    
-
-        if (doomed) {  
+       // if (playerDir === 'up'){
             //increase walls on both sides by one layer of chars
             //left wall add layer
-            for (var y = 5; y < (map.getHeight() - 5); y++){
-                if (map.getPlayer().atLocation(leftWallBound, y)) {
-                    map.getPlayer().killedBy('the collapsing tunnel');
-                }
+            for (var y = 0; y < map.getHeight(); y++){
                 map.placeObject(leftWallBound, y, 'block');
-                if (map.getPlayer().atLocation(rightWallBound, y)) {
-                    map.getPlayer().killedBy('the collapsing tunnel');
-                }
+            }
+            //right wall add layer
+            for (var y = 0; y < map.getHeight(); y++){
                 map.placeObject(rightWallBound, y, 'block');
             }
-        
             // move both wall bounds inwards by 1 space
-            leftWallBound++; 
-            rightWallBound--; 
-        }
+            leftWallBound = leftWallBound + 1;
+            rightWallBound = rightWallBound - 1;
+        //}
     }
 
-    //make an object of type wallcloser to use closeWalls function
-    map.defineObject('wallsOfDeath', {
-        'type': 'dynamic',
-        'symbol': '#',
-        'color ': 'grey',
-        'behavior': function() {
-            closeWalls(map)
-        }
-    });
-    map.placeObject(1, 1, 'wallsOfDeath');
+    closeWalls();
 
 #BEGIN_EDITABLE#
 
