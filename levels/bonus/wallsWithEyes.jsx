@@ -58,7 +58,6 @@ function startLevel(map) {
     var dynamicObjects = map.getDynamicObjects();
 
     for (i = 0; i < dynamicObjects.length; i++) {
-        
         var t = dynamicObjects[i];
 
         if ((t.getX() == teleport1X) && (t.getY() == teleport1Y)) {
@@ -103,14 +102,10 @@ function startLevel(map) {
 
     var leftWallBound = 14;
     var rightWallBound = map.getWidth() - 14;
-    //flag for if player has passed a certain point
-    //walls start closing in once this is true
     var doomed = false;
 
     function closeWalls(map) {
-        
-        //var leftWallBound = 5;
-        //var rightWallBound = map.getWidth() - 6;
+    	
         var playerDir = map.getPlayer().getLastMoveDirection();
         var playerYCoord = map.getPlayer().getY();
 
@@ -119,9 +114,7 @@ function startLevel(map) {
             map.writeStatus("It's a trap! You are doomed!");
         }    
 
-        if (doomed) {  
-            //increase walls on both sides by one layer of chars
-            //left wall add layer
+        if (doomed) { 
             for (var y = 5; y < (map.getHeight() - 5); y++){
                 if (map.getPlayer().atLocation(leftWallBound, y)) {
                     map.getPlayer().killedBy('the collapsing tunnel');
@@ -136,14 +129,11 @@ function startLevel(map) {
                 	map.placeObject(rightWallBound, y, 'block');
                 }
             }
-        
-            // move both wall bounds inwards by 1 space
             leftWallBound++; 
             rightWallBound--; 
         }
     }
-
-    //make an object of type wallcloser to use closeWalls function
+    
     map.defineObject('wallsOfDeath', {
         'type': 'dynamic',
         'symbol': '#',
