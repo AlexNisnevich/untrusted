@@ -23,9 +23,7 @@
 
 function startLevel(map) {
 #START_OF_START_LEVEL#
-    map.placePlayer(map.getWidth()/2, (map.getHeight()-2));
-    //map.placeObject(map.getWidth()/ 2, 2, 'exit');
-	//Should place initial walls from top to bottom of thickness 5
+    
     for (var i = 0; i < map.getHeight(); i++) {
 		for(var j = 0; j < 14; j++){
 		map.placeObject(j, i, 'block');
@@ -40,6 +38,33 @@ function startLevel(map) {
 		'color' : '#8B4513',
 		'impassable': true
 	});
+
+    var teleport1X = 30;
+    var teleport1Y = 3;
+    var teleport2X = 30;
+    var teleport2Y = (map.getHeight() - 2);
+
+    map.placeObject(teleport1X, teleport1Y, 'teleporter');
+    map.placeObject(teleport2X, teleport2Y, 'teleporter');
+
+    var teleport1;
+    var teleport2;
+    var dynamicObjects = map.getDynamicObjects();
+
+    for (i = 0; i < dynamicObjects.length; i++) {
+        
+        var t = dynamicObjects[i];
+
+        if ((t.getX() == teleport1X) && (t.getY() == teleport1Y)) {
+            teleport1 = t;
+        }
+        if ((t.getX() == teleport2X) && (t.getY() == teleport2Y)) {
+            teleport2 = t;
+        }
+    }
+
+    // this line is the solution
+    //teleport1.setTarget(teleport2);
 
 	map.createFromGrid(['    +++    ',
 						'    +E+    ',
@@ -64,11 +89,12 @@ function startLevel(map) {
 						'           ',
 						'           ',
 						'           ',
-						'P         P'],
+						'P    G    P'],
 					{
 						'E': 'exit',
 						'+': 'block',
 						'P': 'pillar',
+                        'G': 'player',
 					}, 20, 1);
 
     var leftWallBound = 14;
