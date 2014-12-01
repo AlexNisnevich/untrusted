@@ -39,6 +39,12 @@ function startLevel(map) {
 		'impassable': true
 	});
 
+    map.defineObject('indiejones', {
+        'symbol': String.fromCharCode(0x2620),
+        'color': '#FF3300',
+        'onCollision': function(player) { map.writeStatus("Here lies Indiana Jones. He chose poorly");}
+    })
+
     var teleport1X = 30;
     var teleport1Y = 3;
     var teleport2X = 30;
@@ -84,7 +90,7 @@ function startLevel(map) {
 						'P         P',
 						'           ',
 						'           ',
-						'           ',
+						'      I    ',
 						'P         P',
 						'           ',
 						'           ',
@@ -95,6 +101,7 @@ function startLevel(map) {
 						'+': 'block',
 						'P': 'pillar',
                         'G': 'player',
+                        'I': 'indiejones',
 					}, 20, 1);
 
     var leftWallBound = 14;
