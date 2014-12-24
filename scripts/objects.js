@@ -132,9 +132,13 @@ Game.prototype.getListOfObjects = function () {
             'color': '#f0f',
             'onCollision': function (player, me) {
                 if (!player._hasTeleported) {
-                    game._callUnexposedMethod(function () {
-                        player._moveTo(me.target);
-                    });
+                    if (me.target) {
+                        game._callUnexposedMethod(function () {
+                            player._moveTo(me.target);
+                        });
+                    } else {
+                        throw 'TeleporterError: Missing target for teleporter'
+                    }
                 }
                 player._hasTeleported = true;
             },
