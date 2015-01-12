@@ -98,6 +98,12 @@ Dynamic bridge:
         }
 ```
 
+## ct-js: build it step by step with phone
+```javascript
+	try { map.defineObject('blocky', {type:"none"}); } catch(e) {}
+	map.placeObject(player.getX()+1, player.getY()+1, 'blocky');
+```
+
 # Defy the Gravity
 
 ## amahdy: Phone, eh?
