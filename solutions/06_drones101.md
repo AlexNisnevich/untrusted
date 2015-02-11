@@ -17,6 +17,15 @@ map.placeObject(map.getWidth()-9, 11, 'block');
 
 And than just go for the exit from the top.
 
+## amahdy: Block-em, they are idiots
+
+```javascript
+map.placeObject(map.getWidth()-5, 11, 'block');
+map.placeObject(map.getWidth()-6, 11, 'block');
+map.placeObject(map.getWidth()-6, 12, 'block');
+map.placeObject(map.getWidth()-5, 13, 'block');
+map.placeObject(map.getWidth()-6, 13, 'block');
+```
 
 # Function Override
 ## esolitos
@@ -25,13 +34,4 @@ And than just go for the exit from the top.
 function moveToward(obj, type) {
     obj.move('left');
 }
-
-## amahdy: Block-em, they are idiots
-
-```javascript
-    map.placeObject(map.getWidth()-5, 11, 'block');
-    map.placeObject(map.getWidth()-6, 11, 'block');
-    map.placeObject(map.getWidth()-6, 12, 'block');
-    map.placeObject(map.getWidth()-5, 13, 'block');
-    map.placeObject(map.getWidth()-6, 13, 'block');
 ```
