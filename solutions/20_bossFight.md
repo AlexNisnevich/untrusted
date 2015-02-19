@@ -1,3 +1,16 @@
+## mrtank: precise air strike
+
+```javascript
+    map.getPlayer().setPhoneCallback(function () {
+        var bosses = map.getDynamicObjects();
+        for (var i = 0; i < 23; i++) {
+            map.placeObject(bosses[i].getX(),
+                            bosses[i].getY() - 1,
+                            'bullet');
+        }
+    });
+```
+
 ## filippovdaniil: air strike
 
 ```javascript
