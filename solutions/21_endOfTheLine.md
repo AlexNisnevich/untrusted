@@ -33,3 +33,9 @@ In map.js, before this._reset():
      set: function () {setTimeout (function () {__game._moveToNextLevel ()}, 0)}
     })
 ```
+## mrtank
+
+In map.js's unexposed variables you can write:
+```javascript
+__game._getLevel(22);
+```
