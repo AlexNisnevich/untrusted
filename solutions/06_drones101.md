@@ -27,6 +27,20 @@ map.placeObject(map.getWidth()-5, 13, 'block');
 map.placeObject(map.getWidth()-6, 13, 'block');
 ```
 
+## mathdude314: The drone can't get out if he wanted to
+```javascript
+map.createFromGrid([
+    	' #####',
+        ' #   #',
+        ' # # #',
+        ' # # #',
+        '#  #  ',
+        ' ##   '
+    ], {
+    	'#': 'block',
+    }, 38, 8);
+```
+
 # Function Override
 ## esolitos
 
