@@ -1,3 +1,30 @@
+## joshua-s: jam their guns
+```javascript
+// Don't let boss emit bullets
+Math.random = function () {
+        return 1;
+}
+
+// Create good bullets
+map.defineObject('goodbullet', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'blue',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+                me.move('up');
+        }
+});
+
+// Fire!
+map.getPlayer().setPhoneCallback(function(){
+        for (var i = 0; i < map.getWidth(); i++) {
+                map.placeObject(i, 8, 'goodbullet');
+        }
+});
+```
+
 ## mrtank: precise air strike
 
 ```javascript
