@@ -257,6 +257,19 @@ me.move(player);
        }
 ```
 
+##eiais
+copy the players moves
+```javascript
+if(me.getY() < player.getY()-9)
+{me.move('down')}
+if(me.getY() > player.getY()-9)
+{me.move('up')}
+if(me.getX() < player.getX())
+{me.move('right')}
+if(me.getX() > player.getX())
+{me.move('left')}
+```
+
 # Portal style
 
 ## JustBlackBird
