@@ -4,7 +4,7 @@
     "commandsIntroduced": ["player.move", "map.startTimer"],
     "music": "Beach Wedding Dance",
     "mapProperties": {
-        "keyDelay": 150
+         "keyDelay": 25
     }
 }
 #END_PROPERTIES#
@@ -30,13 +30,13 @@ function startLevel(map) {
 
     map.placeObject(w-1, fl(h/2)-1, 'exit');
 
-    for (var x = 0; x < fl(w/2) - 9; x++) {
+    for (var x = 0; x < fl(w/2) - 5; x++) {
         for (var y = fl(h/2); y < h; y++) {
             map.placeObject(x, y, 'block');
         }
     }
 
-    for (var x = fl(w/2) + 9; x <= w; x++) {
+    for (var x = fl(w/2) + 5; x <= w; x++) {
         for (var y = fl(h/2); y < h; y++) {
             map.placeObject(x, y, 'block');
         }
@@ -55,7 +55,7 @@ function startLevel(map) {
         }
 
     }
-    map.startTimer(gravity, 30);
+    map.startTimer(gravity, 45);
 
     function jump() {
 #BEGIN_EDITABLE#
