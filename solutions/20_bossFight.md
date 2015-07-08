@@ -553,3 +553,46 @@ map.defineObject('minishield', {
 The whole idea behind this is that before you get the function phone, you hide under the minishield (see code) for cover.  Once you reach the other side and get the function phone, call it once.  A good version of the boss (named ANTIboss in the code) will appear.  It looks exactly the same as the boss, except that it is green in color and shoots upwards.  If the boss KOs the antiboss at the first call, simply call it again.  However, when the boss is defeated, you must still get the timing right, because the ANTIboss will still shoot upwards, and if you're not careful, you will die from its bullets.
 
 Thank you to those who have posted solutions before me.  Without your solutions, I would never have been able to understand the code and create this awesome solution.
+
+## lz: bigger bosses
+
+Touch the '7' to call two bigger bosses that will let you safely pick up the two items and exit.
+
+```javascript
+    map.defineObject('biggerboss', {
+        'type': 'dynamic',
+        'symbol': '⊙',
+        'color': 'blue',
+        'interval': 200,
+        'onCollision': function (player) {
+            player.killedBy('the biggerboss');
+        },
+        'behavior': function (me) {
+            if (map.countObjects('boss') === 0) {
+                return;
+            }
+            if (Math.random() < 0.3) {
+                map.placeObject(me.getX() + 1, me.getY(), 'bluebullet');
+            }
+        }
+    });
+    map.defineObject('bluebullet', {
+        'type': 'dynamic',
+        'symbol': '-',
+        'color': 'blue',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('right');
+        }
+    });
+    map.defineObject('button',  {
+        'symbol': '7',
+        'color': 'blue',
+        'onCollision': function (player) {
+            map.placeObject(0, 5, 'biggerboss');
+            map.placeObject(0, 6, 'biggerboss');
+        }
+    });
+    map.placeObject(1, map.getHeight() - 3, 'button');
+```
