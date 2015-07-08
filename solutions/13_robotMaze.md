@@ -257,6 +257,28 @@ me.move(player);
        }
 ```
 
+## lz
+
+Let the robot try to follow you as your mirror image.
+
+```javascript
+var meX = me.getX(),
+  meY = me.getY(),
+  playerX = player.getX(),
+  playerY = player.getY(),
+  mazeHeight = 10;
+
+if (meX < playerX) {
+  me.move('right');
+} else if (meX > playerX) {
+  me.move('left');
+} else if (meY < 2 * mazeHeight - playerY) {
+  me.move('down');
+} else if (meY > 2 * mazeHeight - playerY) {
+  me.move('up');
+}
+```
+
 # Portal style
 
 ## JustBlackBird
