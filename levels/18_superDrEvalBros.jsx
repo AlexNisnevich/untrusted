@@ -4,7 +4,7 @@
     "commandsIntroduced": ["player.move", "map.startTimer"],
     "music": "Beach Wedding Dance",
     "mapProperties": {
-        "keyDelay": 25
+         "keyDelay": 25
     }
 }
 #END_PROPERTIES#
