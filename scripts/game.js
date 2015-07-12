@@ -47,6 +47,7 @@ function Game(debugMode, startLevel) {
     this._resetTimeout = null;
     this._currentLevel = 0;
     this._currentFile = null;
+    this._currentBonusLevel = null;
     this._levelReached = 1;
     this._displayedChapters = [];
 
@@ -203,6 +204,7 @@ function Game(debugMode, startLevel) {
         }
 
         game._currentLevel = levelNum;
+        game._currentBonusLevel = null;
         game._currentFile = null;
 
         // load level code in editor
@@ -288,7 +290,11 @@ function Game(debugMode, startLevel) {
             window.clearTimeout( this._resetTimeout );
             this._resetTimeout = null;
 
-            this._getLevel(level, true);
+            if (game._currentBonusLevel) {
+                game._getLevelByPath('levels/' + game._currentBonusLevel);
+            } else {
+                this._getLevel(level, true);
+            }
         } else {
             this.display.writeStatus("To reset this level press ^4 again.");
             $('body, #buttons').css('background-color', '#900');
