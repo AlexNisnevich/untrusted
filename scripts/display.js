@@ -1,5 +1,5 @@
 ROT.Display.create = function(game, opts) {
-    opts['fontFamily'] = '"droid sans mono", Courier, "Courier New", monospace';
+    opts.fontFamily = '"droid sans mono", Courier, "Courier New", monospace';
     var display = new ROT.Display(opts);
     display.game = game;
     return display;
@@ -155,22 +155,7 @@ ROT.Display.prototype.saveGrid = function (map) {
 
 ROT.Display.prototype.playIntro = function (map, i) {
     display = this;
-
-    if (i < 0) {
-        this._intro = true;
-    } else {
-        if (typeof i === 'undefined') { i = map.getHeight(); }
-        this.clear();
-        this.drawText(0, i - 2, "%c{#0f0}> initialize")
-        this.drawText(15, i + 3, "U N T R U S T E D");
-        this.drawText(20, i + 5, "- or - ");
-        this.drawText(5, i + 7, "THE CONTINUING ADVENTURES OF DR. EVAL");
-        this.drawText(3, i + 12, "a game by Alex Nisnevich and Greg Shuflin");
-        this.drawText(10, i + 22, "Press any key to begin ...")
-        setTimeout(function () {
-            display.playIntro(map, i - 1);
-        }, 100);
-    }
+	playIntro(display, map, i)
 };
 
 ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {

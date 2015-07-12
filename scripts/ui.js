@@ -114,7 +114,7 @@ Game.prototype.setUpNotepad = function () {
     this.notepadEditor.setSize(null, 275);
 
     var ls_tag = 'notepadContent';
-    var content = localStorage.getItem(ls_tag);
+    var content = localStorage.getItem(this._getLocalKey(ls_tag));
     if (content === null) {
         content = '';
     }
@@ -126,7 +126,7 @@ Game.prototype.setUpNotepad = function () {
 
     $('#notepadSaveButton').click(function () {
         var v = game.notepadEditor.getValue();
-        localStorage.setItem(ls_tag, v);
+        localStorage.setItem(this._getLocalKey(ls_tag), v);
     });
 };
 

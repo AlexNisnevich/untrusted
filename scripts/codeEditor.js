@@ -12,7 +12,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     var charLimit = 80;
 
-    var properties = {}
+    var properties = {};
     var editableLines = [];
     var editableSections = {};
     var lastChange = {};
@@ -438,7 +438,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     this.saveGoodState = function () {
         var lvlNum = game._currentFile ? game._currentFile : game._currentLevel;
-        localStorage.setItem('level' + lvlNum + '.lastGoodState', JSON.stringify({
+        localStorage.setItem(game._getLocalKey('level' + lvlNum + '.lastGoodState'), JSON.stringify({
             code: this.getCode(true),
             playerCode: this.getPlayerCode(),
             editableLines: editableLines,
@@ -473,7 +473,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
     }
 
     this.getGoodState = function (lvlNum) {
-        return JSON.parse(localStorage.getItem('level' + lvlNum + '.lastGoodState'));
+        return JSON.parse(localStorage.getItem(game._getLocalKey('level' + lvlNum + '.lastGoodState')));
     }
 
     this.refresh = function () {

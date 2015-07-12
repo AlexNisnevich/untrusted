@@ -8,6 +8,68 @@ Objects can have the following parameters:
     type: 'item' or null
 */
 
+// used by bonus levels 01 through 04
+function moveToward(obj, type) {
+    var target = obj.findNearest(type);
+    var leftDist = obj.getX() - target.x;
+    var upDist = obj.getY() - target.y;
+
+    var direction;
+    if (upDist == 0 && leftDist == 0) {
+        return;
+    }
+    if (upDist > 0 && upDist >= leftDist) {
+        direction = 'up';
+    } else if (upDist < 0 && upDist < leftDist) {
+        direction = 'down';
+    } else if (leftDist > 0 && leftDist >= upDist) {
+        direction = 'left';
+    } else {
+        direction = 'right';
+    }
+
+    if (obj.canMove(direction)) {
+        obj.move(direction);
+    }
+}
+
+// used by bonus levels 01 through 04
+function followAndKeepDistance(obj, type) {
+    var target = obj.findNearest(type);
+    var leftDist = obj.getX() - target.x;
+    var upDist = obj.getY() - target.y;
+
+    if (Math.abs(upDist) < 2 && Math.abs(leftDist) < 4
+        || Math.abs(leftDist) < 2 && Math.abs(upDist) < 4) {
+        return;
+    }
+    var direction;
+    if (upDist > 0 && upDist >= leftDist) {
+        direction = 'up';
+    } else if (upDist < 0 && upDist < leftDist) {
+        direction = 'down';
+    } else if (leftDist > 0 && leftDist >= upDist) {
+        direction = 'left';
+    } else {
+        direction = 'right';
+    }
+
+    if (obj.canMove(direction)) {
+        obj.move(direction);
+    }
+}
+
+// used by bonus levels 01 through 04
+function killPlayerIfTooFar(obj) {
+    var target = obj.findNearest('player');
+    var leftDist = obj.getX() - target.x;
+    var upDist = obj.getY() - target.y;
+
+    if (Math.abs(upDist) > 8 || Math.abs(leftDist) > 8) {
+        obj._map.getPlayer().killedBy('"suspicious circumstances"');
+    }
+}
+
 Game.prototype.getListOfObjects = function () {
     var game = this;
     return {
@@ -70,9 +132,13 @@ Game.prototype.getListOfObjects = function () {
             'color': '#f0f',
             'onCollision': function (player, me) {
                 if (!player._hasTeleported) {
-                    game._callUnexposedMethod(function () {
-                        player._moveTo(me.target);
-                    });
+                    if (me.target) {
+                        game._callUnexposedMethod(function () {
+                            player._moveTo(me.target);
+                        });
+                    } else {
+                        throw 'TeleporterError: Missing target for teleporter'
+                    }
                 }
                 player._hasTeleported = true;
             },
@@ -153,6 +219,33 @@ Game.prototype.getListOfObjects = function () {
             'onDrop': function () {
                 game.map.writeStatus('You have lost the Algorithm!');
             }
+        },
+
+        // used by bonus levels 01 through 04
+        'eye': {
+            'type': 'dynamic',
+            'symbol': 'E',
+            'color': 'red',
+            'behavior': function (me) {
+                followAndKeepDistance(me, 'player');
+                killPlayerIfTooFar(me);
+            },
+            'onCollision': function (player) {
+                player.killedBy('"the eye"');
+            },
+        },
+
+        // used by bonus levels 01 through 04
+        'guard': {
+            'type': 'dynamic',
+            'symbol': 'd',
+            'color': 'red',
+            'behavior': function (me) {
+                moveToward(me, 'player');
+            },
+            'onCollision': function (player) {
+                player.killedBy('a guard drone');
+            },
         }
     };
 };

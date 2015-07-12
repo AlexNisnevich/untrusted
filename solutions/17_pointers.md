@@ -110,3 +110,14 @@ if( t2.getType() == 'trap' ) {
     map.setSquareColor( t1.getX(), t1.getY(), 'red' );
 }
 ```
+
+## Redefine shuffle
+
+not shuffling for real 
+
+function shuffle(o){
+var ret = []
+ret.push(o[0]);
+ret.push(o[o.length -2]);
+return ret;
+};

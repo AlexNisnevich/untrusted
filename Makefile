@@ -1,64 +1,81 @@
 # Partially based off of:
 # http://nefariousdesigns.co.uk/website-builds-using-make.html
 
+# if a mod is specified but doesn't exist, raise an error
+err:=$(shell if [ ! -z '$(mod)' ] && [ ! -d 'mods/$(mod)' ]; then echo 'Mod [$(mod)] not found!'; fi)
+ifneq '$(err)' ''
+$(error $(err))
+endif
+
+mod-dir=$(shell if [ -z '$(mod)' ]; then echo 'default'; else echo $(mod); fi)
+
+err:=$(shell if [ ! -f 'mods/$(mod-dir)/intro.js' ]; then echo 'File mods/$(mod-dir)/intro.js not found!'; fi)
+ifneq '$(err)' ''
+$(error $(err))
+endif
+
 js-target = scripts/build/untrusted.js
 js-target-min = scripts/build/untrusted.min.js
 
 js-modules = scripts/util.js \
+			 mods/$(mod-dir)/intro.js\
 			 scripts/_head.js \
-             scripts/game.js \
-             scripts/codeEditor.js \
-             scripts/display.js \
-             scripts/dynamicObject.js \
-             scripts/inventory.js \
-             scripts/map.js \
-             scripts/objects.js \
-             scripts/player.js \
-             scripts/reference.js \
-             scripts/sound.js \
-             scripts/validate.js \
-             scripts/ui.js \
-	         levels/levels.js \
-             scripts/_launcher_release.js \
-	         scripts/_tail.js
+			 scripts/game.js \
+			 scripts/codeEditor.js \
+			 scripts/display.js \
+			 scripts/dynamicObject.js \
+			 scripts/inventory.js \
+			 scripts/map.js \
+			 scripts/objects.js \
+			 scripts/player.js \
+			 scripts/reference.js \
+			 scripts/sound.js \
+			 scripts/validate.js \
+			 scripts/ui.js \
+			 levels/levels.js \
+			 scripts/_launcher_release.js \
+			 scripts/_tail.js
 
 js-modules-debug = scripts/util.js \
-	               scripts/_head.js \
+				   mods/$(mod-dir)/intro.js\
+				   scripts/_head.js \
 				   scripts/game.js \
-	               scripts/codeEditor.js \
-	               scripts/display.js \
-	               scripts/dynamicObject.js \
-	               scripts/inventory.js \
-	               scripts/map.js \
-	               scripts/objects.js \
-	               scripts/player.js \
-	               scripts/reference.js \
-	               scripts/sound.js \
-	               scripts/validate.js \
-	               scripts/ui.js \
-	               levels/levels.js \
-	               scripts/_launcher_debug.js \
-	               scripts/_tail.js
+				   scripts/codeEditor.js \
+				   scripts/display.js \
+				   scripts/dynamicObject.js \
+				   scripts/inventory.js \
+				   scripts/map.js \
+				   scripts/objects.js \
+				   scripts/player.js \
+				   scripts/reference.js \
+				   scripts/sound.js \
+				   scripts/validate.js \
+				   scripts/ui.js \
+				   levels/levels.js \
+				   scripts/_launcher_debug.js \
+				   scripts/_tail.js
 
 yui-jar = tools/yuicompressor-2.4.8pre.jar
 
 # `make` or `make debug` merges scripts (using debug launcher)
 debug:
 	@echo "Building level file…\t\t\t\c"
-	@./compile_levels.sh
+	@./compile_levels.sh $(mod-dir)
 	@echo "[ Done ]"
 	@echo "Merging JS files…\t\t\t\c"
 	@cat $(js-modules-debug) > $(js-target)
+	@./parse_target.sh $(js-target) $(mod-dir)
 	@echo "[ Done ]"
 
 # `make release` merges and compresses scripts (using release launcher)
 release:
 	@rm -f $(js-target-min)
 	@echo "Building level file…\t\t\t\c"
-	@./compile_levels.sh
+	@./compile_levels.sh $(mod-dir)
 	@echo "[ Done ]"
 	@echo "Merging JS files…\t\t\t\c"
 	@cat $(js-modules) > $(js-target)
+	@./parse_target.sh $(js-target) $(mod-dir)
 	@echo "[ Done ]"
 	@echo "Compressing merged JS…\t\t\t\c"
 	@java -jar $(yui-jar) -o $(js-target-min) $(js-target)

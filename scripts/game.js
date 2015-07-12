@@ -13,35 +13,14 @@ function Game(debugMode, startLevel) {
     };
 
     this._levelFileNames = [
-        '01_cellBlockA.jsx',
-        '02_theLongWayOut.jsx',
-        '03_validationEngaged.jsx',
-        '04_multiplicity.jsx',
-        '05_minesweeper.jsx',
-        '06_drones101.jsx',
-        '07_colors.jsx',
-        '08_intoTheWoods.jsx',
-        '09_fordingTheRiver.jsx',
-        '10_ambush.jsx',
-        '11_robot.jsx',
-        '12_robotNav.jsx',
-        '13_robotMaze.jsx',
-        '14_crispsContest.jsx',
-        '15_exceptionalCrossing.jsx',
-        '16_lasers.jsx',
-        '17_pointers.jsx',
-        '18_superDrEvalBros.jsx',
-        '19_documentObjectMadness.jsx',
-        '20_bossFight.jsx',
-        '21_endOfTheLine.jsx',
-        '22_credits.jsx'
+//%LEVELS%
     ];
 
     this._bonusLevels = [
-        // 'sampleLevel.jsx',
-        'pushme.jsx',
-        'trapped.jsx'
-    ]
+//%BONUS%
+    ].filter(function (lvl) { return (lvl.indexOf('_') != 0); }); // filter out bonus levels that start with '_'
+
+	this._mod = '//%MOD%';
 
     this._viewableScripts = [
         'codeEditor.js',
@@ -68,7 +47,8 @@ function Game(debugMode, startLevel) {
     this._resetTimeout = null;
     this._currentLevel = 0;
     this._currentFile = null;
-    this._levelReached = parseInt(localStorage.getItem('levelReached')) || 1;
+    this._currentBonusLevel = null;
+    this._levelReached = 1;
     this._displayedChapters = [];
 
     this._eval = window.eval; // store our own copy of eval so that we can override window.eval
@@ -78,6 +58,7 @@ function Game(debugMode, startLevel) {
 
     this._getHelpCommands = function () { return __commands; };
     this._isPlayerCodeRunning = function () { return __playerCodeRunning; };
+	this._getLocalKey = function (key) { return (this._mod.length == 0 ? '' : this._mod + '.') + key; };
 
     /* unexposed setters */
 
@@ -86,11 +67,15 @@ function Game(debugMode, startLevel) {
     /* unexposed methods */
 
     this._initialize = function () {
+        // Get last level reached from localStorage (if any)
+        var levelKey = this._mod.length == 0 ? 'levelReached' : this._mod + '.levelReached';
+        this._levelReached = parseInt(localStorage.getItem(levelKey)) || 1;
+
         // Fix potential corruption
         // levelReached may be "81111" instead of "8" due to bug
         if (this._levelReached > this._levelFileNames.length) {
             for (var l = 1; l <= this._levelFileNames.length; l++) {
-                if (!localStorage["level" + l + ".lastGoodState"]) {
+                if (!localStorage[this._getLocalKey("level" + l + ".lastGoodState")]) {
                     this._levelReached = l - 1;
                     break;
                 }
@@ -133,8 +118,8 @@ function Game(debugMode, startLevel) {
         this.setUpNotepad();
 
         // Load help commands from local storage (if possible)
-        if (localStorage.getItem('helpCommands')) {
-            __commands = localStorage.getItem('helpCommands').split(';');
+        if (localStorage.getItem(this._getLocalKey('helpCommands'))) {
+            __commands = localStorage.getItem(this._getLocalKey('helpCommands')).split(';');
         }
 
         // Enable debug features
@@ -143,11 +128,6 @@ function Game(debugMode, startLevel) {
             this._levelReached = 999; // make all levels accessible
             __commands = Object.keys(this.reference); // display all help
             this.sound.toggleSound(); // mute sound by default in debug mode
-        } else {
-            // some people are at work right now
-            if (document.referrer.indexOf('news.ycombinator.com') > -1) {
-                this.toggleSound();
-            }
         }
 
         // Lights, camera, action
@@ -211,7 +191,7 @@ function Game(debugMode, startLevel) {
 
         this._levelReached = Math.max(levelNum, this._levelReached);
         if (!debugMode) {
-            localStorage.setItem('levelReached', this._levelReached);
+            localStorage.setItem(this._getLocalKey('levelReached'), this._levelReached);
         }
 
         var fileName = this._levelFileNames[levelNum - 1];
@@ -224,6 +204,7 @@ function Game(debugMode, startLevel) {
         }
 
         game._currentLevel = levelNum;
+        game._currentBonusLevel = null;
         game._currentFile = null;
 
         // load level code in editor
@@ -257,7 +238,7 @@ function Game(debugMode, startLevel) {
 
         // store the commands introduced in this level (for api reference)
         __commands = __commands.concat(editor.getProperties().commandsIntroduced).unique();
-        localStorage.setItem('helpCommands', __commands.join(';'));
+        localStorage.setItem(this._getLocalKey('helpCommands'), __commands.join(';'));
     };
 
     this._getLevelByPath = function (filePath) {
@@ -278,7 +259,7 @@ function Game(debugMode, startLevel) {
 
             // store the commands introduced in this level (for api reference)
             __commands = __commands.concat(editor.getProperties().commandsIntroduced).unique();
-            localStorage.setItem('helpCommands', __commands.join(';'));
+            localStorage.setItem(this._getLocalKey('helpCommands'), __commands.join(';'));
         }, 'text');
 
     };
@@ -309,7 +290,11 @@ function Game(debugMode, startLevel) {
             window.clearTimeout( this._resetTimeout );
             this._resetTimeout = null;
 
-            this._getLevel(level, true);
+            if (game._currentBonusLevel) {
+                game._getLevelByPath('levels/' + game._currentBonusLevel);
+            } else {
+                this._getLevel(level, true);
+            }
         } else {
             this.display.writeStatus("To reset this level press ^4 again.");
             $('body, #buttons').css('background-color', '#900');
@@ -403,6 +388,11 @@ function Game(debugMode, startLevel) {
             // start bg music for this level
             if (this.editor.getProperties().music) {
                 this.sound.playTrackByName(this.editor.getProperties().music);
+            }
+
+            // activate super menu if 21_endOfTheLine has been reached
+            if (this._levelReached >= 21) {
+                this.activateSuperMenu();
             }
 
             // finally, allow player movement

@@ -12,6 +12,8 @@ function DynamicObject(map, type, x, y, __game) {
     var __myTurn = true;
     var __timer = null;
 
+    this._map = map;
+
     /* wrapper */
 
     function wrapExposedMethod(f, object) {
@@ -67,7 +69,7 @@ function DynamicObject(map, type, x, y, __game) {
                     }
                 }
 
-                if (__myTurn && __definition.behavior !== null) {
+                if (__myTurn && __definition.behavior) {
                     map._validateCallback(function () {
                         __definition.behavior(me, player);
                     });
@@ -107,10 +109,19 @@ function DynamicObject(map, type, x, y, __game) {
 
         // try to pick up items
         var objectName = map._getGrid()[__x][__y].type;
-        if (map._getObjectDefinition(objectName).type === 'item' && !__definition.projectile) {
+        var object = map._getObjectDefinition(objectName);
+        if (object.type === 'item' && !__definition.projectile) {
             __inventory.push(objectName);
             map._removeItemFromMap(__x, __y, objectName);
             map._playSound('pickup');
+        } else if (object.type === 'trap') {
+            // this part is used by janosgyerik's bonus levels
+            if (object.deactivatedBy && object.deactivatedBy.indexOf(__type) > -1) {
+                if (typeof(object.onDeactivate) === 'function') {
+                    object.onDeactivate();
+                }
+                map._removeItemFromMap(__x, __y, objectName);
+            }
         }
     };
 

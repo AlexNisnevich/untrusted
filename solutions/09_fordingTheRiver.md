@@ -17,7 +17,6 @@
 ## JustBlackBird
 
 ```javascript
-    var player = map.getPlayer();
     // Press "Q" when you are on raft to change its direction and walk on it
     // to the other bank of the river.
     player.setPhoneCallback(function() {

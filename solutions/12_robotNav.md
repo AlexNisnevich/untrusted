@@ -180,3 +180,86 @@ Brute force.
     	me.move('right');
     }
 ```
+
+# mike_perdide
+
+Simple down/right/up/left behavior, with a twist to make the problem more simple for the droid by placing blocks wherever we can.
+```javascript
+  var directions_delta = {
+    "down": [0, 1],
+    "up"  : [0, -1],
+    "left": [-1, 0],
+    "right": [1, 0]
+  }
+  var opposites = {
+    "down": "up",
+    "up":"down",
+    "left":"right",
+    "right":"left"
+  }
+  var prev_x = me.getX();
+  var prev_y = me.getY();
+  
+  var move_conditionally = function (direction) {
+    if (!me.canMove(direction) || me.getY()>22) {
+      return false;
+    }
+    
+    me.move(direction);
+    return true; 
+  };
+  
+  // We're aiming down & right first
+  if (!move_conditionally("down")) {
+    if (!move_conditionally("right")) {
+      if (!move_conditionally("up")) {
+        move_conditionally("left");
+      }
+    }
+  }
+     
+  // Putting blocks where we can to limit the droid options
+  prev_moves = map.getAdjacentEmptyCells(prev_x, prev_y)
+  if (prev_moves.length == 1) {
+    map.placeObject(prev_x, prev_y, "block");
+  } else if (prev_moves.length == 2 &&
+           prev_moves[0][1] != opposites[prev_moves[1][1]] ) { 
+    move_1_delta_x = directions_delta[prev_moves[0][1]][0];
+    move_2_delta_x = directions_delta[prev_moves[1][1]][0];
+    move_1_delta_y = directions_delta[prev_moves[0][1]][1];
+    move_2_delta_y = directions_delta[prev_moves[1][1]][1];
+    
+    // Calculating the coordinates of the diagonal object
+    diag_x = prev_x
+             + move_1_delta_x
+             + move_2_delta_x;
+    diag_y = prev_y
+             + move_1_delta_y
+             + move_2_delta_y;
+    
+    // If the diagonal object is empty, that means we can access
+    // the adjacent 2 cells without the cell at (prev_x, prev_y).
+    // So let's put a block there!
+    if (map.getObjectTypeAt(diag_x, diag_y) == "empty") {
+      map.placeObject(prev_x, prev_y, "block");
+    }
+  };
+```
+
+# ToeFungi
+
+Creating no other path
+
+```javascript
+	if(me.canMove('up')){        
+		me.move('up');                     
+	}else if(me.canMove('right')){
+		me.move('right');        
+	}else if(!me.canMove('right') && !me.canMove('down')){
+		me.move('left');
+		map.placeObject(me.getX()+1, me.getY(), 'block');
+	} else {
+		me.move('down');
+		map.placeObject(me.getX(), me.getY()-1, 'block');
+	}
+```
