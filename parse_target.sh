@@ -4,7 +4,7 @@ mod=$2
 
 # MOD
 [ "$mod" != "default" ] && m=$mod
-sed -i "s#\/\/%MOD%#$m#" $target
+sed -i -e "s#\/\/%MOD%#$m#" $target
 
 # LEVELS
 levels=''
@@ -14,7 +14,7 @@ do
 	levels=`printf "$levels'%s'," $lvl`
 done
 levels="${levels%?}"
-sed -i "s#\/\/%LEVELS%#$levels#g" $target
+sed -i -e "s#\/\/%LEVELS%#$levels#g" $target
 
 # BONUS
 bonus=''
@@ -26,4 +26,4 @@ if [ -d mods/$mod/bonus ]; then
 	done
 fi
 bonus="${bonus%?}"
-sed -i "s#\/\/%BONUS%#$bonus#" $target
+sed -i -e "s#\/\/%BONUS%#$bonus#" $target
