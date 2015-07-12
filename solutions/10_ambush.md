@@ -12,7 +12,7 @@
 ```javascript
           if (me.canMove('up')) {
               me.move('up');
-          }else {
+          } else {
               me.move('left');
           }
 ```
@@ -34,7 +34,7 @@
 ```javascript
           if (me.canMove('up')) {
               me.move('up');
-          }else {
+          } else {
               me.move('right');
           }
 ```

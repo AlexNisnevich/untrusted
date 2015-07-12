@@ -1,3 +1,43 @@
+## joshua-s: jam their guns
+```javascript
+// Don't let boss emit bullets
+Math.random = function () {
+        return 1;
+}
+
+// Create good bullets
+map.defineObject('goodbullet', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'blue',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+                me.move('up');
+        }
+});
+
+// Fire!
+map.getPlayer().setPhoneCallback(function(){
+        for (var i = 0; i < map.getWidth(); i++) {
+                map.placeObject(i, 8, 'goodbullet');
+        }
+});
+```
+
+## mrtank: precise air strike
+
+```javascript
+    map.getPlayer().setPhoneCallback(function () {
+        var bosses = map.getDynamicObjects();
+        for (var i = 0; i < 23; i++) {
+            map.placeObject(bosses[i].getX(),
+                            bosses[i].getY() - 1,
+                            'bullet');
+        }
+    });
+```
+
 ## filippovdaniil: air strike
 
 ```javascript
@@ -434,4 +474,125 @@ Don't panic! Just hide in the shelters and make phone calls. :)
 	map.placeObject(28, map.getHeight() - 5, 'block');
 	//once we get the phone back we can start the fun >:D!!!
 	map.getPlayer().setPhoneCallback(callback);
+```
+
+## Innovision: Fight the Boss with a Boss
+
+```javascript
+map.defineObject('minishield', {
+        'symbol': '-',
+        'color': 'blue',
+        'impassable': true
+    });
+    
+    map.placeObject(25, 21, 'minishield');
+    
+   map.defineObject('ANTIboss', {
+        'type': 'dynamic',
+        'symbol': '⊙',
+        'color': 'green',
+        'interval': 200,
+        'onCollision': function (player) {
+            player.killedBy('the ANTIboss');
+        },
+        'behavior': function (me) {
+        	if (!me.direction) {
+        		me.direction = 'right';
+        	}
+        	if (me.canMove(me.direction)) {
+            	me.move(me.direction);
+        	} else {
+        		me.direction = (me.direction == 'right') ? 'left' : 'right';
+        	}
+        	if (Math.random() < 0.3) {
+            	map.placeObject(me.getX(), me.getY() - 2, 'ANTIbullet');
+        	}
+        }
+    });
+    
+    map.defineObject('ANTIbullet', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'green',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('up');
+        }
+    });
+    
+    map.getPlayer().setPhoneCallback(function(){
+        map.placeObject(9, 5, 'boss');
+    map.placeObject(11, 13, 'ANTIboss');
+    map.placeObject(13, 13, 'ANTIboss');
+    map.placeObject(15, 13, 'ANTIboss');
+    map.placeObject(17, 13, 'ANTIboss');
+    map.placeObject(19, 13, 'ANTIboss');
+    map.placeObject(21, 13, 'ANTIboss');
+    map.placeObject(23, 13, 'ANTIboss');
+    map.placeObject(25, 13, 'ANTIboss');
+    map.placeObject(27, 13, 'ANTIboss');
+    map.placeObject(29, 13, 'ANTIboss');
+    map.placeObject(31, 13, 'ANTIboss');
+    
+    map.placeObject(10, 14, 'ANTIboss');
+    map.placeObject(12, 14, 'ANTIboss');
+    map.placeObject(14, 14, 'ANTIboss');
+    map.placeObject(16, 14, 'ANTIboss');
+    map.placeObject(18, 14, 'ANTIboss');
+    map.placeObject(20, 14, 'ANTIboss');
+    map.placeObject(22, 14, 'ANTIboss');
+    map.placeObject(24, 14, 'ANTIboss');
+    map.placeObject(26, 14, 'ANTIboss');
+    map.placeObject(28, 14, 'ANTIboss');
+    map.placeObject(30, 14, 'ANTIboss');
+    map.placeObject(32, 14, 'ANTIboss');
+    });
+```
+
+The whole idea behind this is that before you get the function phone, you hide under the minishield (see code) for cover.  Once you reach the other side and get the function phone, call it once.  A good version of the boss (named ANTIboss in the code) will appear.  It looks exactly the same as the boss, except that it is green in color and shoots upwards.  If the boss KOs the antiboss at the first call, simply call it again.  However, when the boss is defeated, you must still get the timing right, because the ANTIboss will still shoot upwards, and if you're not careful, you will die from its bullets.
+
+Thank you to those who have posted solutions before me.  Without your solutions, I would never have been able to understand the code and create this awesome solution.
+
+## lz: bigger bosses
+
+Touch the '7' to call two bigger bosses that will let you safely pick up the two items and exit.
+
+```javascript
+    map.defineObject('biggerboss', {
+        'type': 'dynamic',
+        'symbol': '⊙',
+        'color': 'blue',
+        'interval': 200,
+        'onCollision': function (player) {
+            player.killedBy('the biggerboss');
+        },
+        'behavior': function (me) {
+            if (map.countObjects('boss') === 0) {
+                return;
+            }
+            if (Math.random() < 0.3) {
+                map.placeObject(me.getX() + 1, me.getY(), 'bluebullet');
+            }
+        }
+    });
+    map.defineObject('bluebullet', {
+        'type': 'dynamic',
+        'symbol': '-',
+        'color': 'blue',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('right');
+        }
+    });
+    map.defineObject('button',  {
+        'symbol': '7',
+        'color': 'blue',
+        'onCollision': function (player) {
+            map.placeObject(0, 5, 'biggerboss');
+            map.placeObject(0, 6, 'biggerboss');
+        }
+    });
+    map.placeObject(1, map.getHeight() - 3, 'button');
 ```
