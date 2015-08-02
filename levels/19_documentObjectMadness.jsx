@@ -93,7 +93,11 @@ function startLevel(map) {
         var currentPosition = $dom.find('.' + className);
         if (currentPosition.parent().length > 0) {
             if (currentPosition.parent().hasClass('container')) {
-                map.getPlayer().killedBy('moving off the edge of the DOM');
+                if (className === 'drEval') {
+                    map.getPlayer().killedBy('moving off the edge of the DOM');
+                } else {
+                    return false;
+                }
             } else {
                 currentPosition.parent().addClass(className);
                 currentPosition.removeClass(className);
