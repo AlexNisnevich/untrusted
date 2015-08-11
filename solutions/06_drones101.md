@@ -49,3 +49,11 @@ function moveToward(obj, type) {
     obj.move('left');
 }
 ```
+
+# Create another player to glitch the drone
+## 8shashank
+
+```javascript
+    map.placeObject(map.getWidth()-5,12,'player');
+```
+Approach the exit from top or bottom
