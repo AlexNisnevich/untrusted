@@ -74,3 +74,37 @@ Just press "R" and go through the portals
         me.move('left'); 
     }
 ```
+
+# Control pad (works for 11, 12, 13)
+
+## mingp
+
+```javascript
+if (typeof(me.controlInited == 'undefined')) {
+    me.controlSquares = [
+        [40, 20, 'up', 'red'],
+        [39, 21, 'left', 'yellow'],
+        [41, 21, 'right', 'cyan'],
+        [40, 22, 'down', 'magenta']
+    ];
+    for (var i = 0; i < me.controlSquares.length; ++i) {
+        var controlSquare = me.controlSquares[i];
+        map.setSquareColor(
+            controlSquare[0],
+            controlSquare[1],
+            controlSquare[3]
+        );
+    }
+    me.controlInited = true;
+}
+for (var i = 0; i < me.controlSquares.length; ++i) {
+    var controlSquare = me.controlSquares[i];
+    if (
+        player.getX() == controlSquare[0]
+        && player.getY() == controlSquare[1]
+    ) {
+        me.move(controlSquare[2]);
+        break;
+    }
+}
+```
