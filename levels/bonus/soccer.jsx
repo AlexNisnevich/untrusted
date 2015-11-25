@@ -8,7 +8,7 @@
 }
 #END_PROPERTIES#
 /*****************************
-* soccer.js                  *
+* soccer.jsx                 *
 * by Phelan, Alex, and Daisy *
 ******************************
 *
@@ -17,20 +17,17 @@
 function startLevel(map){
 #START_OF_START_LEVEL#
 // Create map here (or after object definitions)
-
-var kickedDirection = 'none';
-var kickedDirection = 0;
-
-
-map.defineObject('enemyPlayer', {
-	// Define enemy player here
-});
-
-map.defineObject('goalie', {
+    map.defineObject('enemyPlayer', {
+        'symbol': 'P', 'color': '#00f',
+        'onCollision': function (player) {
+            player.killedBy('running into one of the enemy players');
+        }
+    });
+    map.defineObject('goalie', {
 	// Define goalie here
-});
+    });
 
-map.defineObject('ball', {
+    map.defineObject('ball', {
 	// Define ball here
 	'type': 'dynamic',
 	'symbol': 'o',
@@ -49,9 +46,41 @@ map.defineObject('ball', {
 			map.placeObject(4, map.getHeight() - 4, 'exit');
 		}
 	}
-});
+    });
+    map.createFromGrid(
+       ['++++++++++++++++++++++++++++++++++++++',
+        '+ @                                  +',
+        '+                                    +',
+        '+          P                         +',
+        '+                          P         +',
+        '+                                   ++',
+        '+                   P                +',
+        '+    b                             G +',
+        '+                                    +',
+        '+                                   ++',
+        '+                      P      P      +',
+        '+                                    +',
+        '+              P                     +',
+        '+ E              L                   +',
+        '++++++++++++++++++++++++++++++++++++++'],
+    {
+        '@': 'player',
+        'E': 'exit',
+        '+': 'block',
+        'P': 'enemyPlayer',
+        'L': 'phone',
+        'G': 'goalie',
+        'b': 'ball'
+    }, 6, 6);
 
-map.getPlayer().setPhoneCallback(function () {
+var kickedDirection = 'none';
+var kickedDirection = 0;
+
+#BEGIN_EDITABLE#
+
+#END_EDITABLE#
+
+     map.getPlayer().setPhoneCallback(function () {
 	var x = map.getPlayer().getX();
 	var y = map.getPlayer().getY();
 	if (map.getObjectTypeAt(x + 1, y) == 'ball'){
