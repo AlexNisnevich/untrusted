@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-	"version": "1.0"
+	"version": "1.0",
 	"mapProperties": {
 		"refreshRate": 50,
 		"quickValidateCallback": true // <-- not sure what this does or if needed
@@ -20,6 +20,8 @@ function startLevel(map) {
 
 	var kickedDirection = 'none';
 	var kickedDistance = 0;
+	var ballX = 11;
+	var ballY = 13;
 
 	map.defineObject('invisibleWall', {
 		'impassable': function (player, me) {
@@ -100,10 +102,13 @@ function startLevel(map) {
 		'type': 'dynamic',
 		'symbol': 'o',
 		'pushable': true,
+		'interval': 100,
 		    //'onCollision': function(player) {
 		    //     //push the ball
 		    //}
 		'behavior': function (me) {
+			ballX = me.getX();
+			ballY = me.getY();
 			if (kickedDirection != 'none' && kickedDistance > 0){
 				if (me.canMove(kickedDirection)){
 					me.move(kickedDirection);
@@ -168,21 +173,22 @@ function startLevel(map) {
 	map.getPlayer().setPhoneCallback(function () {
 		var x = map.getPlayer().getX();
 		var y = map.getPlayer().getY();
-		if (map.getObjectTypeAt(x + 1, y) == 'ball'){
+
+		if (x + 1 == ballX && y == ballY){
 			kickedDirection = 'right';
-			kickedDistance = 10;
+			kickedDistance = 100;
 		}
-		else if (map.getObjectTypeAt(x - 1, y) == 'ball'){
+		else if (x - 1 == ballX && y == ballY){
 			kickedDirection = 'left';
-			kickedDistance = 10;
+			kickedDistance = 100;
 		}
-		else if (map.getObjectTypeAt(x, y + 1) == 'ball'){
+		else if (x == ballX && y - 1 == ballY){
 			kickedDirection = 'up';
-			kickedDistance = 10;
+			kickedDistance = 100;
 		}
-		else if (map.getObjectTypeAt(x, y - 1) == 'ball'){
+		else if (x == ballX && y + 1 == ballY){
 			kickedDirection = 'down';
-			kickedDistance = 10;
+			kickedDistance = 100;
 		}
 	});
 
