@@ -25,6 +25,7 @@ function startLevel(map){
     });
     map.defineObject('goalie', {
 	// Define goalie here
+        'symbol': 'G', 'color': '#00f',
     });
 
     map.defineObject('ball', {
