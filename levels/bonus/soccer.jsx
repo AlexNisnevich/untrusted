@@ -48,7 +48,7 @@ function startLevel(map) {
 		'onCollision': function (player) {
 		    player.killedBy('running into one of the enemy players');
 		},
-		'behaviour': function (me) {
+		'behavior': function (me) {
 			moveEnemyPlayer(me);
 		}	
 	});
@@ -58,16 +58,18 @@ function startLevel(map) {
 		'type': 'dynamic',
 		'symbol': 'G',
 		'color': '#00f',
-		'behaviour': function (me) {
-			moveGoalie(me, 'ball');
+		'behavior': function (me) {
+			moveGoalie(me);
 		}	
 	});
 
 	//should these go into objects.js?
 	function moveEnemyPlayer(enemyPlayer) {
-		var direction = (Math.random() > 0) ? 'up' : 'down'; //randomly go up or down
-		setInterval(function(enemyPlayer) {	
-			var maxHeight = map.getHeight();
+		var direction = (Math.random() > 0) ? 'up' : 'down'; //randomly set initial direction
+//		console.log("initial direction: ", direction); //testing
+		var maxHeight = map.getHeight();
+//		console.log("maxHeight: ", maxHeight); //testing
+		return function() {
 			if(direction === 'up'){
 				if(enemyPlayer.getY() > 0){
 					if(enemyPlayer.canMove('up')){
@@ -88,14 +90,25 @@ function startLevel(map) {
 					direction = 'up';
 				}
 			}
-		}, 1000); //move every 1 second
+		}
 	}
 
-	function moveGoalie(goalie, type) {
-		var target = goalie.findNearest(type);
+	function moveGoalie(goalie) {
+		var target = goalie.findNearest('ball');
 		//should we keep goalie within the goal posts?
-		goalie.y = target.y;
+		var yDist = goalie.getY() - target.y; //relative distance
+		if(yDist == 0 || target.y < 11 || target.y > 15){
+			return;
+		}
+		var direction = 'down';
+		if(yDist > 0 ){
+			direction = 'up';
+		}
+		if(goalie.canMove(direction)){
+			goalie.move(direction);
+		}
 	}
+
 
 	map.defineObject('ball', {
 		// Define ball here
@@ -103,9 +116,6 @@ function startLevel(map) {
 		'symbol': 'o',
 		'pushable': true,
 		'interval': 100,
-		    //'onCollision': function(player) {
-		    //     //push the ball
-		    //}
 		'behavior': function (me) {
 			ballX = me.getX();
 			ballY = me.getY();
@@ -155,7 +165,6 @@ function startLevel(map) {
 		    '++++++++++++++++++++++++++++++++++++++'],
 		{
 		    '@': 'player',
-		    //'E': 'exit',
 		    '+': 'block',
 		    'P': 'enemyPlayer',
 		    'L': 'phone',
@@ -164,7 +173,7 @@ function startLevel(map) {
 		    'i': 'invisibleWall'
 		}, 6, 6);
 
-	
+
 
 #BEGIN_EDITABLE#
 
