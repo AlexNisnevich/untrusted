@@ -114,7 +114,8 @@ function startLevel(map) {
 				map.placeObject(4, map.getHeight() - 4, 'exit');
 			}
 		}
-		});
+	});
+
 		map.startTimer(function() {
 		    player = map.getPlayer();
 		    x = player.getX(); y = player.getY();
