@@ -3,7 +3,7 @@
 	"version": "1.0"
 	"mapProperties": {
 		"refreshRate": 50,
-		//"quickValidateCallback": true // <-- not sure what this does or if needed
+		"quickValidateCallback": true // <-- not sure what this does or if needed
 	}
 }
 #END_PROPERTIES#
@@ -17,6 +17,10 @@
 function startLevel(map) {
 #START_OF_START_LEVEL#
 // Create map here (or after object definitions)
+
+	var kickedDirection = 'none';
+	var kickedDistance = 0;
+
 	map.defineObject('invisibleWall', {
 		'impassable': function (player, me) {
 		    var savedX = player.getX();
@@ -95,11 +99,11 @@ function startLevel(map) {
 		// Define ball here
 		'type': 'dynamic',
 		'symbol': 'o',
-		    'pushable': true,
+		'pushable': true,
 		    //'onCollision': function(player) {
 		    //     //push the ball
 		    //}
-		'behaviour': function (me) {
+		'behavior': function (me) {
 			if (kickedDirection != 'none' && kickedDistance > 0){
 				if (me.canMove(kickedDirection)){
 					me.move(kickedDirection);
@@ -109,7 +113,6 @@ function startLevel(map) {
 					kickedDistance = 0;
 				}
 			}
-			if (kickedDirection != 'none' && kickedDistance > 0 && me.canMove(kickedDirection))
 			if (me.getX() == (map.getWidth - 1) && me.getY() < 15 && me.getY() > 10){ // <-- change to actual goal post locations
 				map.placeObject(4, map.getHeight() - 4, 'exit');
 			}
@@ -156,8 +159,7 @@ function startLevel(map) {
 		    'i': 'invisibleWall'
 		}, 6, 6);
 
-	var kickedDirection = 'none';
-	var kickedDirection = 0;
+	
 
 #BEGIN_EDITABLE#
 
