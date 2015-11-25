@@ -23,6 +23,7 @@ function startLevel(map) {
 	var ballX = 11;
 	var ballY = 13;
 	var scored = false;
+    	var savedDirection = 'left';
 
 	map.defineObject('invisibleWall', {
 		'impassable': function (player, me) {
@@ -31,7 +32,6 @@ function startLevel(map) {
 		    return false;
 		},
 		'onCollision': function (player) {
-                    var savedDirection = 'left';
 		    var dirs = ['up', 'down', 'left', 'right'];
 		    for (d=0;d<dirs.length;d++) {
 		        if (dirs[d] != savedDirection) {
@@ -46,11 +46,13 @@ function startLevel(map) {
 		'type': 'dynamic',
 		'symbol': 'P',
 		'color': '#00f',
+		'interval': 200,
 		'onCollision': function (player) {
 		    player.killedBy('running into one of the enemy players');
 		},
 		'behavior': function (me) {
-			moveEnemyPlayer(me);
+			var direction = (Math.round(Math.random()) > 0) ? 'up' : 'down'; //randomly set initial direction
+			moveEnemyPlayer(me, direction);
 		}	
 	});
 
@@ -66,31 +68,25 @@ function startLevel(map) {
 	});
 
 	//should these go into objects.js?
-	function moveEnemyPlayer(enemyPlayer) {
-		var direction = (Math.random() > 0) ? 'up' : 'down'; //randomly set initial direction
-//		console.log("initial direction: ", direction); //testing
-		var maxHeight = map.getHeight();
-//		console.log("maxHeight: ", maxHeight); //testing
-		return function() {
-			if(direction === 'up'){
-				if(enemyPlayer.getY() > 0){
-					if(enemyPlayer.canMove('up')){
-						enemyPlayer.move('up');
-					}
+	function moveEnemyPlayer(enemyPlayer, direction) {
+		if(direction === 'up'){
+			if(enemyPlayer.getY() > 0){
+				if(enemyPlayer.canMove('up')){
+					enemyPlayer.move('up');
 				}
-				else {
-					direction = 'down';
-				}	
 			}
-			if(direction === 'down'){
-				if(enemyPlayer.getY() < maxHeight){
-					if(enemyPlayer.canMove('down')){
-						enemyPlayer.move('down');
-					}
+			else {
+				direction = 'down';
+			}	
+		}
+		else if(direction === 'down'){
+			if(enemyPlayer.getY() < map.getHeight()){
+				if(enemyPlayer.canMove('down')){
+					enemyPlayer.move('down');
 				}
-				else {
-					direction = 'up';
-				}
+			}
+			else {
+				direction = 'up';
 			}
 		}
 	}
