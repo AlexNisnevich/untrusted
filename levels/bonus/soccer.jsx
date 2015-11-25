@@ -95,8 +95,7 @@ function startLevel(map) {
 		var target = goalie.findNearest('ball');
 		//should we keep goalie within the goal posts?
 		var yDist = goalie.getY() - target.y; //relative distance
-console.log("yDist: ", yDist); //testing
-		if(yDist == 0){
+		if(yDist == 0 || target.y < 11 || target.y > 15){
 			return;
 		}
 		var direction = 'down';
