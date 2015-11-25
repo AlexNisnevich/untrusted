@@ -24,11 +24,31 @@ var kickedDirection = 0;
 
 map.defineObject('enemyPlayer', {
 	// Define enemy player here
+	'type': 'dynamic',
+	'symbol': 'P',
+	//'color': 'red',
+	'behaviour': function (me) {
+		
+	}	
 });
+
 
 map.defineObject('goalie', {
 	// Define goalie here
+	'type': 'dynamic',
+	'symbol': 'G',
+	'color': 'red',
+	'behaviour': function (me) {
+		moveGoalie(me, 'ball');
+	}	
 });
+
+//should this go into objects.js?
+function moveGoalie(goalieObj, type) {
+	var target = goalieObj.findNearest(type);
+	//should we keep goalie within the goal posts?
+	goalieObj.y = target.y;
+}
 
 map.defineObject('ball', {
 	// Define ball here
