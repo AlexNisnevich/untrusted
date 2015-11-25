@@ -22,6 +22,7 @@ function startLevel(map) {
 	var kickedDistance = 0;
 	var ballX = 11;
 	var ballY = 13;
+	var scored = false;
 
 	map.defineObject('invisibleWall', {
 		'impassable': function (player, me) {
@@ -58,6 +59,7 @@ function startLevel(map) {
 		'type': 'dynamic',
 		'symbol': 'G',
 		'color': '#00f',
+		'interval': 800,
 		'behavior': function (me) {
 			moveGoalie(me);
 		}	
@@ -129,7 +131,10 @@ function startLevel(map) {
 				}
 			}
 			if (me.getX() == 42 && me.getY() < 15 && me.getY() > 11){ // <-- change to actual goal post locations
-				map.placeObject(8, map.getHeight() - 7, 'exit');
+				if (!scored) {
+					map.placeObject(8, map.getHeight() - 7, 'exit');
+					scored = true;
+				}
 			}
 		}
 	});
