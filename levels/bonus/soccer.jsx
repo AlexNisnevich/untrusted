@@ -24,7 +24,7 @@ function startLevel(map) {
 		    return false;
 		},
 		'onCollision': function (player) {
-		    var savedDirection = 'left';
+                    var savedDirection = 'left';
 		    var dirs = ['up', 'down', 'left', 'right'];
 		    for (d=0;d<dirs.length;d++) {
 		        if (dirs[d] != savedDirection) {
@@ -111,7 +111,7 @@ function startLevel(map) {
 			}
 			if (kickedDirection != 'none' && kickedDistance > 0 && me.canMove(kickedDirection))
 			if (me.getX() == (map.getWidth - 1) && me.getY() < 15 && me.getY() > 10){ // <-- change to actual goal post locations
-				map.placeObject(4, map.getHeight() - 4, 'exit');
+				map.placeObject(8, map.getHeight() - 7, 'exit');
 			}
 		}
 	});
@@ -143,11 +143,11 @@ function startLevel(map) {
 		    '+                i     P      P      +',
 		    '+                i                   +',
 		    '+              P i                   +',
-		    '+ E             Li                   +',
+		    '+               Li                   +',
 		    '++++++++++++++++++++++++++++++++++++++'],
 		{
 		    '@': 'player',
-		    'E': 'exit',
+		    //'E': 'exit',
 		    '+': 'block',
 		    'P': 'enemyPlayer',
 		    'L': 'phone',
