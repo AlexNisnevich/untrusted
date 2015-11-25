@@ -46,6 +46,10 @@ function startLevel(map){
 	// Define ball here
 	'type': 'dynamic',
 	'symbol': 'o',
+        'pushable': true,
+        //'onCollision': function(player) {
+        //     //push the ball
+        //}
 	'behaviour': function (me) {
 		if (kickedDirection != 'none' && kickedDistance > 0){
 			if (me.canMove(kickedDirection)){
@@ -74,7 +78,7 @@ function startLevel(map){
             map.overrideKey('left', null);
             map.overrideKey('right', null);
         }
-    },100);
+    },10);
     map.createFromGrid(
        ['++++++++++++++++++++++++++++++++++++++',
         '+ @              i                   +',
