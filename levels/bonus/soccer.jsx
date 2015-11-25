@@ -3,7 +3,7 @@
 	"version": "1.0"
 	"mapProperties": {
 		"refreshRate": 50,
-		//"quickValidateCallback": true // <-- not sure what this does or if needed
+		"quickValidateCallback": true // <-- not sure what this does or if needed
 	}
 }
 #END_PROPERTIES#
@@ -17,6 +17,10 @@
 function startLevel(map) {
 #START_OF_START_LEVEL#
 // Create map here (or after object definitions)
+
+	var kickedDirection = 'none';
+	var kickedDistance = 0;
+
 	map.defineObject('invisibleWall', {
 		'impassable': function (player, me) {
 		    var savedX = player.getX();
@@ -24,7 +28,7 @@ function startLevel(map) {
 		    return false;
 		},
 		'onCollision': function (player) {
-		    var savedDirection = 'left';
+                    var savedDirection = 'left';
 		    var dirs = ['up', 'down', 'left', 'right'];
 		    for (d=0;d<dirs.length;d++) {
 		        if (dirs[d] != savedDirection) {
@@ -33,35 +37,6 @@ function startLevel(map) {
 		    }
 		}
 	});
-
-	var kickedDirection = 'none';
-	var kickedDistance = 0;
-
-	map.defineObject('ball', {
-		// Define ball here
-		'type': 'dynamic',
-		'symbol': 'o',
-		    'pushable': true,
-		    //'onCollision': function(player) {
-		    //     //push the ball
-		    //}
-		'behavior': function (me) {
-			if (kickedDirection != 'none' && kickedDistance > 0){
-				if (me.canMove(kickedDirection)){
-					me.move(kickedDirection);
-					kickedDistance--;
-				}
-				else{
-					kickedDistance = 0;
-				}
-			}
-			if (kickedDirection != 'none' && kickedDistance > 0 && me.canMove(kickedDirection))
-			if (me.getX() == (map.getWidth - 1) && me.getY() < 15 && me.getY() > 10){ // <-- change to actual goal post locations
-				map.placeObject(4, map.getHeight() - 4, 'exit');
-			}
-		}
-	});
-
 
 	map.defineObject('enemyPlayer', {
 		// Define enemy player here
@@ -121,11 +96,11 @@ function startLevel(map) {
 		//should we keep goalie within the goal posts?
 		var yDist = goalie.getY() - target.y; //relative distance
 console.log("yDist: ", yDist); //testing
-		if(yDist == 0 ){
+		if(yDist == 0){
 			return;
 		}
 		var direction = 'down';
-		if(yDist > 0){
+		if(yDist > 0 ){
 			direction = 'up';
 		}
 		if(goalie.canMove(direction)){
@@ -133,6 +108,30 @@ console.log("yDist: ", yDist); //testing
 		}
 	}
 
+
+	map.defineObject('ball', {
+		// Define ball here
+		'type': 'dynamic',
+		'symbol': 'o',
+		'pushable': true,
+		    //'onCollision': function(player) {
+		    //     //push the ball
+		    //}
+		'behavior': function (me) {
+			if (kickedDirection != 'none' && kickedDistance > 0){
+				if (me.canMove(kickedDirection)){
+					me.move(kickedDirection);
+					kickedDistance--;
+				}
+				else{
+					kickedDistance = 0;
+				}
+			}
+			if (me.getX() == (map.getWidth - 1) && me.getY() < 15 && me.getY() > 10){ // <-- change to actual goal post locations
+				map.placeObject(8, map.getHeight() - 7, 'exit');
+			}
+		}
+	});
 
 		map.startTimer(function() {
 		    player = map.getPlayer();
@@ -161,11 +160,10 @@ console.log("yDist: ", yDist); //testing
 		    '+                i     P      P      +',
 		    '+                i                   +',
 		    '+              P i                   +',
-		    '+ E             Li                   +',
+		    '+               Li                   +',
 		    '++++++++++++++++++++++++++++++++++++++'],
 		{
 		    '@': 'player',
-		    'E': 'exit',
 		    '+': 'block',
 		    'P': 'enemyPlayer',
 		    'L': 'phone',
@@ -173,6 +171,8 @@ console.log("yDist: ", yDist); //testing
 		    'b': 'ball',
 		    'i': 'invisibleWall'
 		}, 6, 6);
+
+
 
 #BEGIN_EDITABLE#
 
