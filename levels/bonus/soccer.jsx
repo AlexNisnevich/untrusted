@@ -16,7 +16,6 @@
 
 function startLevel(map){
 #START_OF_START_LEVEL#
-// Create map here (or after object definitions)
     map.defineObject('enemyPlayer', {
         'symbol': 'P', 'color': '#00f',
         'onCollision': function (player) {
@@ -27,7 +26,22 @@ function startLevel(map){
 	// Define goalie here
         'symbol': 'G', 'color': '#00f',
     });
-
+    map.defineObject('invisibleWall', {
+        'impassable': function(player, me) {
+            savedX = player.getX();
+            savedY = player.getY();
+            return false;
+        },
+        'onCollision': function (player) {
+            savedDirection = 'left';
+            dirs = ['up', 'down', 'left', 'right'];
+            for (d=0;d<dirs.length;d++) {
+                if (dirs[d] != savedDirection) {
+                    map.overrideKey(dirs[d], function(){});
+                }
+            }
+        }
+    });
     map.defineObject('ball', {
 	// Define ball here
 	'type': 'dynamic',
@@ -48,21 +62,34 @@ function startLevel(map){
 		}
 	}
     });
+    map.startTimer(function() {
+        player = map.getPlayer();
+        x = player.getX(); y = player.getY();
+        if (map.getObjectTypeAt(x,y) == 'invisibleWall') {
+            player.move(savedDirection);
+        }
+        if (player.getX() == x && player.getY() == y) {
+            map.overrideKey('up', null);
+            map.overrideKey('down', null);
+            map.overrideKey('left', null);
+            map.overrideKey('right', null);
+        }
+    },100);
     map.createFromGrid(
        ['++++++++++++++++++++++++++++++++++++++',
-        '+ @                                  +',
-        '+                                    +',
-        '+          P                         +',
-        '+                          P         +',
-        '+                                   ++',
-        '+                   P                +',
-        '+    b                             G +',
-        '+                                    +',
-        '+                                   ++',
-        '+                      P      P      +',
-        '+                                    +',
-        '+              P                     +',
-        '+ E              L                   +',
+        '+ @              i                   +',
+        '+                i                   +',
+        '+          P     i                   +',
+        '+                i         P         +',
+        '+                i                  ++',
+        '+                i  P                +',
+        '+    b           i                 G +',
+        '+                i                   +',
+        '+                i                  ++',
+        '+                i     P      P      +',
+        '+                i                   +',
+        '+              P i                   +',
+        '+ E             Li                   +',
         '++++++++++++++++++++++++++++++++++++++'],
     {
         '@': 'player',
@@ -71,7 +98,8 @@ function startLevel(map){
         'P': 'enemyPlayer',
         'L': 'phone',
         'G': 'goalie',
-        'b': 'ball'
+        'b': 'ball',
+        'i': 'invisibleWall'
     }, 6, 6);
 
 var kickedDirection = 'none';
