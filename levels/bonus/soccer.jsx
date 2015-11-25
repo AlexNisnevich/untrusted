@@ -100,9 +100,6 @@ function startLevel(map) {
 		'type': 'dynamic',
 		'symbol': 'o',
 		'pushable': true,
-		    //'onCollision': function(player) {
-		    //     //push the ball
-		    //}
 		'behavior': function (me) {
 			if (kickedDirection != 'none' && kickedDistance > 0){
 				if (me.canMove(kickedDirection)){
