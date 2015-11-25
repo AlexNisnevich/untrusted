@@ -163,7 +163,7 @@ function startLevel(map) {
 
 #END_EDITABLE#
 
-		 map.getPlayer().setPhoneCallback(function () {
+	map.getPlayer().setPhoneCallback(function () {
 		var x = map.getPlayer().getX();
 		var y = map.getPlayer().getY();
 		if (map.getObjectTypeAt(x + 1, y) == 'ball'){
