@@ -1,3 +1,12 @@
+#BEGIN_PROPERTIES#
+{
+    "version": "1.2.1",
+    "commandsIntroduced": [],
+    "music": "Brazil"
+}
+#END_PROPERTIES#
+
+
 function startLevel(map) {
 #START_OF_START_LEVEL#
   map.placePlayer(5,5);
