@@ -37,7 +37,8 @@ function startLevel(map) {
 	map.defineObject('enemyPlayer', {
 		// Define enemy player here
 		'type': 'dynamic',
-		'symbol': 'P''color': '#00f',
+		'symbol': 'P',
+		'color': '#00f',
 		'onCollision': function (player) {
 		    player.killedBy('running into one of the enemy players');
 		},
@@ -73,7 +74,7 @@ function startLevel(map) {
 			}
 			if(direction === 'down'){
 				if(enemyPlayer.getY() < maxHeight){
-					if(enemyPlayer.canMove('down'){
+					if(enemyPlayer.canMove('down')){
 						enemyPlayer.move('down');
 					}
 				}
