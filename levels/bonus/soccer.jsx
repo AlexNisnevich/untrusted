@@ -34,6 +34,35 @@ function startLevel(map) {
 		}
 	});
 
+	var kickedDirection = 'none';
+	var kickedDistance = 0;
+
+	map.defineObject('ball', {
+		// Define ball here
+		'type': 'dynamic',
+		'symbol': 'o',
+		    'pushable': true,
+		    //'onCollision': function(player) {
+		    //     //push the ball
+		    //}
+		'behavior': function (me) {
+			if (kickedDirection != 'none' && kickedDistance > 0){
+				if (me.canMove(kickedDirection)){
+					me.move(kickedDirection);
+					kickedDistance--;
+				}
+				else{
+					kickedDistance = 0;
+				}
+			}
+			if (kickedDirection != 'none' && kickedDistance > 0 && me.canMove(kickedDirection))
+			if (me.getX() == (map.getWidth - 1) && me.getY() < 15 && me.getY() > 10){ // <-- change to actual goal post locations
+				map.placeObject(4, map.getHeight() - 4, 'exit');
+			}
+		}
+	});
+
+
 	map.defineObject('enemyPlayer', {
 		// Define enemy player here
 		'type': 'dynamic',
@@ -42,7 +71,7 @@ function startLevel(map) {
 		'onCollision': function (player) {
 		    player.killedBy('running into one of the enemy players');
 		},
-		'behaviour': function (me) {
+		'behavior': function (me) {
 			moveEnemyPlayer(me);
 		}	
 	});
@@ -52,16 +81,18 @@ function startLevel(map) {
 		'type': 'dynamic',
 		'symbol': 'G',
 		'color': '#00f',
-		'behaviour': function (me) {
-			moveGoalie(me, 'ball');
+		'behavior': function (me) {
+			moveGoalie(me);
 		}	
 	});
 
 	//should these go into objects.js?
 	function moveEnemyPlayer(enemyPlayer) {
-		var direction = (Math.random() > 0) ? 'up' : 'down'; //randomly go up or down
-		setInterval(function(enemyPlayer) {	
-			var maxHeight = map.getHeight();
+		var direction = (Math.random() > 0) ? 'up' : 'down'; //randomly set initial direction
+//		console.log("initial direction: ", direction); //testing
+		var maxHeight = map.getHeight();
+//		console.log("maxHeight: ", maxHeight); //testing
+		return function() {
 			if(direction === 'up'){
 				if(enemyPlayer.getY() > 0){
 					if(enemyPlayer.canMove('up')){
@@ -82,39 +113,26 @@ function startLevel(map) {
 					direction = 'up';
 				}
 			}
-		}, 1000); //move every 1 second
-	}
-
-	function moveGoalie(goalie, type) {
-		var target = goalie.findNearest(type);
-		//should we keep goalie within the goal posts?
-		goalie.y = target.y;
-	}
-
-	map.defineObject('ball', {
-		// Define ball here
-		'type': 'dynamic',
-		'symbol': 'o',
-		    'pushable': true,
-		    //'onCollision': function(player) {
-		    //     //push the ball
-		    //}
-		'behaviour': function (me) {
-			if (kickedDirection != 'none' && kickedDistance > 0){
-				if (me.canMove(kickedDirection)){
-					me.move(kickedDirection);
-					kickedDistance--;
-				}
-				else{
-					kickedDistance = 0;
-				}
-			}
-			if (kickedDirection != 'none' && kickedDistance > 0 && me.canMove(kickedDirection))
-			if (me.getX() == (map.getWidth - 1) && me.getY() < 15 && me.getY() > 10){ // <-- change to actual goal post locations
-				map.placeObject(4, map.getHeight() - 4, 'exit');
-			}
 		}
-	});
+	}
+
+	function moveGoalie(goalie) {
+		var target = goalie.findNearest('ball');
+		//should we keep goalie within the goal posts?
+		var yDist = goalie.getY() - target.y; //relative distance
+console.log("yDist: ", yDist); //testing
+		if(yDist == 0 ){
+			return;
+		}
+		var direction = 'down';
+		if(yDist > 0){
+			direction = 'up';
+		}
+		if(goalie.canMove(direction)){
+			goalie.move(direction);
+		}
+	}
+
 
 		map.startTimer(function() {
 		    player = map.getPlayer();
@@ -155,9 +173,6 @@ function startLevel(map) {
 		    'b': 'ball',
 		    'i': 'invisibleWall'
 		}, 6, 6);
-
-	var kickedDirection = 'none';
-	var kickedDirection = 0;
 
 #BEGIN_EDITABLE#
 
