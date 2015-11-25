@@ -118,7 +118,7 @@ function startLevel(map) {
 					kickedDistance = 0;
 				}
 			}
-			if (me.getX() == (map.getWidth - 1) && me.getY() < 15 && me.getY() > 10){ // <-- change to actual goal post locations
+			if (me.getX() == 42 && me.getY() < 15 && me.getY() > 11){ // <-- change to actual goal post locations
 				map.placeObject(8, map.getHeight() - 7, 'exit');
 			}
 		}
