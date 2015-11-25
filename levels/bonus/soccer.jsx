@@ -128,7 +128,7 @@ function startLevel(map) {
 		        map.overrideKey('left', null);
 		        map.overrideKey('right', null);
 		    }
-		},10);
+		},25);
 		map.createFromGrid(
 		   ['++++++++++++++++++++++++++++++++++++++',
 		    '+ @              i                   +',
