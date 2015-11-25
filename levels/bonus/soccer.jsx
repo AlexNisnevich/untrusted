@@ -147,7 +147,6 @@ function startLevel(map) {
 		    '++++++++++++++++++++++++++++++++++++++'],
 		{
 		    '@': 'player',
-		    //'E': 'exit',
 		    '+': 'block',
 		    'P': 'enemyPlayer',
 		    'L': 'phone',
