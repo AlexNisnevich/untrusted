@@ -159,11 +159,11 @@ function startLevel(map) {
 	var kickedDirection = 'none';
 	var kickedDirection = 0;
 
-	#BEGIN_EDITABLE#
+#BEGIN_EDITABLE#
 
-	#END_EDITABLE#
+#END_EDITABLE#
 
-		 map.getPlayer().setPhoneCallback(function () {
+	map.getPlayer().setPhoneCallback(function () {
 		var x = map.getPlayer().getX();
 		var y = map.getPlayer().getY();
 		if (map.getObjectTypeAt(x + 1, y) == 'ball'){
