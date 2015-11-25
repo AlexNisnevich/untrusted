@@ -16,7 +16,6 @@
 
 function startLevel(map){
 #START_OF_START_LEVEL#
-<<<<<<< HEAD
 // Create map here (or after object definitions)
 
 var kickedDirection = 'none';
