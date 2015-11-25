@@ -128,7 +128,7 @@ function startLevel(map) {
 		        map.overrideKey('left', null);
 		        map.overrideKey('right', null);
 		    }
-		},10);
+		},25);
 		map.createFromGrid(
 		   ['++++++++++++++++++++++++++++++++++++++',
 		    '+ @              i                   +',
@@ -159,9 +159,9 @@ function startLevel(map) {
 	var kickedDirection = 'none';
 	var kickedDirection = 0;
 
-	#BEGIN_EDITABLE#
+#BEGIN_EDITABLE#
 
-	#END_EDITABLE#
+#END_EDITABLE#
 
 		 map.getPlayer().setPhoneCallback(function () {
 		var x = map.getPlayer().getX();
