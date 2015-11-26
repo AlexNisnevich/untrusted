@@ -10,16 +10,6 @@
 function startLevel(map) {
 #START_OF_START_LEVEL#
 
- function gravity() {
-  var x = player.getX();
-  var y = player.getY() + 1;
-
-   if(x > 2 && x < 27 && (y === map.getHeight() - 5)) {
-     player.killedBy("gravity");
-   }
- }
-
- map.startTimer(gravity,10000000000);
  var savedX, savedY, savedDirection;
     map.defineObject('ice', {
       'symbol': String.fromCharCode(0x2630), 'color': '#75D1FF',
