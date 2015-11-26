@@ -9,6 +9,7 @@
 
 function startLevel(map) {
 #START_OF_START_LEVEL#
+
  var savedX, savedY, savedDirection;
     map.defineObject('ice', {
       'symbol': String.fromCharCode(0x2630), 'color': '#75D1FF',
@@ -59,32 +60,32 @@ function startLevel(map) {
     'color' : '#5C1F00',
     'impassable': true
   });
-    map.createFromGrid(
-['                                                  ',
-'                                                  ',
-'                                            E     ',
-'                                                  ',
-'                                                  ',
-'                                                  ',
-'                                                  ',
-'###                                               ',
-'  #                                               ',
-'  #                                               ',
-'  #                                               ',
-'  #                                               ',
-'xx                                                ',
-'xx                                                ',
+    map.createFromGrid([
+'                           #                      ',
+'                           #                      ',
+'                           #                E     ',
+'                           #                      ',
+'                           #                      ',
+'                           #                      ',
+'                           #                      ',
+'###                        #                      ',
+'  #                        #                      ',
+'  #                        #                      ',
+'  #                        #                      ',
+'xx                         #                      ',
+'xx  ########################                      ',
+'xx                         #                      ',
+'xx#                        #                      ',
+'xx#                        #                      ',
+'xx#                        #                      ',
+'xx#                        #                      ',
 'xx#                                               ',
-'xx#                                               ',
-'xx#                                               ',
-'xx#                                               ',
-'xx#                                               ',
-'xx#                                               ',
-'xx#                                               ',
-'xx#                                               ',
-'xx#                                               ',
-'xx#                                               ',
-'@ #                                               '],
+'xx#                        #                      ',
+'xx#                        #                      ',
+'xx#                        #                      ',
+'xx#                        #                      ',
+'xx#                        #                      ',
+'@ #                        #                      '],
     {
         '@': 'player',
         'E': 'exit',
@@ -92,7 +93,6 @@ function startLevel(map) {
         'x': 'ice',
         'C': 'computer',
     }, 0, 0);
-
 #BEGIN_EDITABLE#
   for(x = 43; x < 46; x++){
     map.placeObject(x, 1, 'boulder');
@@ -100,7 +100,7 @@ function startLevel(map) {
   }
   map.placeObject(43, 2, 'boulder');
   map.placeObject(45, 2, 'boulder');
-  map.placeObject(1, 10, 'boulder');
+  map.placeObject(1, 9, 'boulder');
 #END_EDITABLE#
 #END_OF_START_LEVEL#
 }
