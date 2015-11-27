@@ -65,6 +65,14 @@ function startLevel(map) {
     'impassable': true
   });
 
+  map.defineObject('water', {
+      'symbol': '░',
+      'color': '#44f',
+      'onCollision': function (player) {
+          player.killedBy#{#('drowning in deep dark water')#}#;
+      }
+  });
+
   map.defineObject('invisibleBoulder', {
     'symbol' : String.fromCharCode(0x2617),
     'color' : '#000000',
@@ -72,30 +80,30 @@ function startLevel(map) {
   });
     map.createFromGrid([
 'o                          #                      ',
-'                           #                      ',
-'                           #                E     ',
-'                           #                      ',
-'                           #                      ',
-'                           #                      ',
+'xx                         #                      ',
+'xx                         #                E     ',
+'xx                         #                      ',
+'xx                         #                      ',
+'xx                         #                      ',
 '                           #                      ',
 '###                        #                      ',
 '  #                        #                      ',
 '  #                        #                      ',
 '  #                        #                      ',
 'xx                         #                      ',
-'xx  ########################                      ',
-'xx                         #                      ',
-'xx#                        #                      ',
-'xx#                        #                      ',
-'xx#                        #                      ',
-'xx#                        #                      ',
-'xx#                        o                      ',
-'xx#                        #                      ',
-'xx#                        #                      ',
-'xx#                        #                      ',
-'xx#                        #                      ',
-'xx#                        #                      ',
-'@ #                        #                      '],
+'xx  ############################################# ',
+'xx                         o                      ',
+'xx#                        ##          ##         ',
+'xx#                        ##wwwwwwwwww##         ',
+'xx#                        ##wwwwwwwwww##         ',
+'xx#                        ##wwwwwwwwww##         ',
+'xx#                        ##wwwwwwwwww##         ',
+'xx#                        ##wwwwwwwwww##         ',
+'xx#                        ##wwwwwwwwww##         ',
+'xx#                        ##wwwwwwwwww##         ',
+'xx#                        ##wwwwwwwwww##         ',
+'xx#                        ##wwwwwwwwww##         ',
+'@ #                        ##wwwwwwwwww##         '],
     {
         '@': 'player',
         'E': 'exit',
@@ -103,9 +111,10 @@ function startLevel(map) {
         'i': 'invisibleBoulder',
         'x': 'ice',
         'C': 'computer',
-        'o': 'teleporter'
+        'o': 'teleporter',
+        'w': 'water',
     }, 0, 0);
-  function gravity(trigger) {
+  function gravity() {
     var player = map.getPlayer();
     var x = player.getX();
     var y = player.getY() + 1;
@@ -119,6 +128,18 @@ function startLevel(map) {
     }
   }
   map.startTimer(gravity,45);
+
+  function waterGravity() {
+    var player = map.getPlayer();
+    var x = player.getX();
+    var y = player.getY() + 1;
+    if(x > 28 && x < 39) {
+      if(y >= 13){
+        player.move('down');
+      }
+    }
+  }
+  map.startTimer(waterGravity, 45);
 
   var teleporters = map.getDynamicObjects();
   teleporters = shuffle(teleporters);
@@ -181,6 +202,7 @@ function startLevel(map) {
   map.placeObject(43, 2, 'boulder');
   map.placeObject(45, 2, 'boulder');
   map.placeObject(1, 9, 'boulder');
+  map.placeObject(30, 14, 'boulder');
 #END_EDITABLE#
 #END_OF_START_LEVEL#
 }
