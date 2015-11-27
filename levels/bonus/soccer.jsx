@@ -3,7 +3,7 @@
 	"version": "1.0",
 	"mapProperties": {
 		"refreshRate": 50,
-		"quickValidateCallback": true // <-- not sure what this does or if needed
+		"quickValidateCallback": true
 	}
 }
 #END_PROPERTIES#
@@ -16,85 +16,50 @@
 
 function startLevel(map) {
 #START_OF_START_LEVEL#
-// Create map here (or after object definitions)
-
 	var kickedDirection = 'none';
-	var kickedDistance = 0;
 	var ballX = 11;
 	var ballY = 13;
 	var scored = false;
-    	var savedDirection = 'left';
 
 	map.defineObject('invisibleWall', {
-		'impassable': function (player, me) {
-		    var savedX = player.getX();
-		    var savedY = player.getY();
-		    return false;
-		},
-		'onCollision': function (player) {
-		    var dirs = ['up', 'down', 'left', 'right'];
-		    for (d=0;d<dirs.length;d++) {
-		        if (dirs[d] != savedDirection) {
-		            map.overrideKey(dirs[d], function(){});
-		        }
-		    }
-		}
+		'color': '#333',
+		'symbol': '|'
 	});
 
 	map.defineObject('enemyPlayer', {
-		// Define enemy player here
 		'type': 'dynamic',
 		'symbol': 'P',
 		'color': '#00f',
 		'interval': 200,
 		'onCollision': function (player) {
-		    player.killedBy('running into one of the enemy players');
+		    player.killedBy('an enemy player');
 		},
 		'behavior': function (me) {
-			var direction = (Math.round(Math.random()) > 0) ? 'up' : 'down'; //randomly set initial direction
-			moveEnemyPlayer(me, direction);
+			var direction = (Math.round(Math.random()) > 0) ? 'up' : 'down';
+			moveEnemyPlayer(me, direction)
 		}	
 	});
 
 	map.defineObject('goalie', {
-		// Define goalie here
 		'type': 'dynamic',
 		'symbol': 'G',
 		'color': '#00f',
-		'interval': 800,
+		'interval': 100,
 		'behavior': function (me) {
 			moveGoalie(me);
 		}	
 	});
 
-	//should these go into objects.js?
 	function moveEnemyPlayer(enemyPlayer, direction) {
-		if(direction === 'up'){
-			if(enemyPlayer.getY() > 0){
-				if(enemyPlayer.canMove('up')){
-					enemyPlayer.move('up');
-				}
-			}
-			else {
-				direction = 'down';
-			}	
-		}
-		else if(direction === 'down'){
-			if(enemyPlayer.getY() < map.getHeight()){
-				if(enemyPlayer.canMove('down')){
-					enemyPlayer.move('down');
-				}
-			}
-			else {
-				direction = 'up';
-			}
-		}
+		if (enemyPlayer.canMove(direction))
+			enemyPlayer.move(direction)
+		else
+			enemyPlayer.move((direction === 'up') ? 'down' : 'up');
 	}
 
 	function moveGoalie(goalie) {
 		var target = goalie.findNearest('ball');
-		//should we keep goalie within the goal posts?
-		var yDist = goalie.getY() - target.y; //relative distance
+		var yDist = goalie.getY() - target.y;
 		if(yDist == 0 || target.y < 11 || target.y > 15){
 			return;
 		}
@@ -109,7 +74,6 @@ function startLevel(map) {
 
 
 	map.defineObject('ball', {
-		// Define ball here
 		'type': 'dynamic',
 		'symbol': 'o',
 		'pushable': true,
@@ -117,94 +81,114 @@ function startLevel(map) {
 		'behavior': function (me) {
 			ballX = me.getX();
 			ballY = me.getY();
-			if (kickedDirection != 'none' && kickedDistance > 0){
+			if (kickedDirection != 'none'){
 				if (me.canMove(kickedDirection)){
 					me.move(kickedDirection);
-					kickedDistance--;
 				}
 				else{
-					kickedDistance = 0;
-				}
-			}
-			if (me.getX() == 42 && me.getY() < 15 && me.getY() > 11){ // <-- change to actual goal post locations
-				if (!scored) {
-					map.placeObject(8, map.getHeight() - 7, 'exit');
-					scored = true;
+					kickedDirection = 'none';
 				}
 			}
 		}
 	});
 
-		map.startTimer(function() {
-		    player = map.getPlayer();
-		    x = player.getX(); y = player.getY();
-		    if (map.getObjectTypeAt(x,y) == 'invisibleWall') {
-		        player.move(savedDirection);
-		    }
-		    if (player.getX() == x && player.getY() == y) {
-		        map.overrideKey('up', null);
-		        map.overrideKey('down', null);
-		        map.overrideKey('left', null);
-		        map.overrideKey('right', null);
-		    }
-		},25);
-		map.createFromGrid(
-		   ['++++++++++++++++++++++++++++++++++++++',
-		    '+ @              i                   +',
-		    '+                i                   +',
-		    '+          P     i                   +',
-		    '+                i         P         +',
-		    '+                i                  ++',
-		    '+                i  P                +',
-		    '+    b           i                 G +',
-		    '+                i                   +',
-		    '+                i                  ++',
-		    '+                i     P      P      +',
-		    '+                i                   +',
-		    '+              P i                   +',
-		    '+               Li                   +',
-		    '++++++++++++++++++++++++++++++++++++++'],
-		{
-		    '@': 'player',
-		    '+': 'block',
-		    'P': 'enemyPlayer',
-		    'L': 'phone',
-		    'G': 'goalie',
-		    'b': 'ball',
-		    'i': 'invisibleWall'
-		}, 6, 6);
+	map.defineObject('gate', {
+		'type': 'dynamic',
+		'symbol': '=',
+		'color': '#f00',
+		'interval': 500,
+		'behavior': function(me) {
+			var ball = me.findNearest('ball');
+			if (ball.x == 42 && ball.y < 15 && ball.y > 11){
+				if (me.getY() > 11){
+					if (me.canMove('up'))
+						me.move('up');
+					else
+						me.move('left');
+				}
+				map.writeStatus("GOOOOOOOOOOOOAAAAAAAAAAAL!")
+			}
+		},
+		'onCollision': function (player) {
+			map.placeObject(5,12,'block');
+			map.placeObject(5,13,'block');
+			map.placeObject(5,14,'block');
+			map.writeStatus("You must score a goal first!");
+		}
+	});
 
+	map.startTimer(function() {
+	    player = map.getPlayer();
+	    x = player.getX();
+	    if (x > 23){
+	    	map.overrideKey('right', function(){});
+		    player.move('left');
+	    }
+	    else {
+	    	map.overrideKey('right', null);
+	    }
+	},25);
 
+	map.createFromGrid(
+	   ['++++++++++++++++++++++++++++++++++++++',
+	    '+ @               i                  +',
+	    '+                 i                  +',
+	    '+          P      i                  +',
+	    '+                 i        P         +',
+	    '+                 i                 ++',
+	    '=                 i P                +',
+	    '=    b            i                G +',
+	    '=                 i                  +',
+	    '+                 i                 ++',
+	    '+                 i    P      P      +',
+	    '+                 i                  +',
+	    '+              P  i                  +',
+	    '+               L i                  +',
+	    '++++++++++++++++++++++++++++++++++++++'],
+	{
+	    '@': 'player',
+	    '+': 'block',
+	    'P': 'enemyPlayer',
+	    'L': 'phone',
+	    'G': 'goalie',
+	    'b': 'ball',
+	    'i': 'invisibleWall',
+	    '=': 'gate'
+	}, 6, 6);
 
-#BEGIN_EDITABLE#
+	map.placeObject(3, 13, 'exit');
 
-#END_EDITABLE#
-
+	// Kick the ball!
 	map.getPlayer().setPhoneCallback(function () {
+
 		var x = map.getPlayer().getX();
 		var y = map.getPlayer().getY();
 
-		if (x + 1 == ballX && y == ballY){
+		if (x + 1 == ballX && y == ballY)
 			kickedDirection = 'right';
-			kickedDistance = 100;
-		}
-		else if (x - 1 == ballX && y == ballY){
+		else if (x - 1 == ballX && y == ballY)
 			kickedDirection = 'left';
-			kickedDistance = 100;
-		}
-		else if (x == ballX && y - 1 == ballY){
+		else if (x == ballX && y - 1 == ballY)
 			kickedDirection = 'up';
-			kickedDistance = 100;
-		}
-		else if (x == ballX && y + 1 == ballY){
+		else if (x == ballX && y + 1 == ballY)
 			kickedDirection = 'down';
-			kickedDistance = 100;
-		}
+		
+
 	});
+#BEGIN_EDITABLE#
+	
+	
+	
+	
 
-// More stuff probably goes here
-
+#END_EDITABLE#
 
 #END_OF_START_LEVEL#
+}
+function validateLevel(map) {
+	map.validateAtMostXObjects(1, 'exit');
+  	map.validateAtLeastXObjects(6, 'enemyPlayer');
+  	map.validateAtLeastXObjects(1, 'goalie');
+  	map.validateAtMostXObjects(1, 'ball');
 }
 
