@@ -17,7 +17,7 @@ function Game(debugMode, startLevel) {
     ];
 
     this._bonusLevels = [
-      'bonus.jsx', 'wallsWithEyes.jsx'
+      'labryinth.jsx', 'wallsWithEyes.jsx'
     ].filter(function (lvl) { return (lvl.indexOf('_') != 0); }); // filter out bonus levels that start with '_'
 
 	this._mod = '//%MOD%';
