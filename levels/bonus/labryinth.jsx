@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "version": "1.2.1",
-    "commandsIntroduced": ['map.startTimer', "object.setTarget", "map.getDynamicObjects", "player.removeItem"],
+    "commandsIntroduced": [],
     "music": "Brazil"
 }
 #END_PROPERTIES#
