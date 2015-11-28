@@ -185,7 +185,6 @@ function startLevel(map) {
         '#': 'boulder',
         'i': 'invisibleBoulder',
         'x': 'ice',
-        'C': 'computer',
         'o': 'teleporter',
         'w': 'water',
         'z': 'zombie',
@@ -297,4 +296,12 @@ function startLevel(map) {
   }
 #END_EDITABLE#
 #END_OF_START_LEVEL#
+}
+
+function validateLevel(map) {
+  map.validateExactlyXManyObjects(0, 'phone');
+  map.validateExactlyXManyObjects(0, 'theAlgorithm');
+  map.validateExactlyXManyObjects(1, 'exit');
+  map.validateExactlyXManyObjects(0, 'computer');
+  map.validateAtMostXDynamicObjects(6);
 }
