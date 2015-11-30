@@ -29,7 +29,7 @@ function startLevel(map) {
 	map.defineObject('enemyPlayer', {
 		'type': 'dynamic',
 		'symbol': 'P',
-		'color': '#00f',
+		'color': '#ff0',
 		'interval': 200,
 		'onCollision': function (player) {
 		    player.killedBy('an enemy player');
@@ -43,7 +43,7 @@ function startLevel(map) {
 	map.defineObject('goalie', {
 		'type': 'dynamic',
 		'symbol': 'G',
-		'color': '#00f',
+		'color': '#0ff',
 		'interval': 100,
 		'behavior': function (me) {
 			moveGoalie(me);
