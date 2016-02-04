@@ -27,7 +27,7 @@ map.placeObject(map.getWidth()-5, 13, 'block');
 map.placeObject(map.getWidth()-6, 13, 'block');
 ```
 
-## mathdude314: The drone can't get out if he wanted to
+## The drone can't get out if he wanted to
 ```javascript
 map.createFromGrid([
     	' #####',
@@ -50,10 +50,22 @@ function moveToward(obj, type) {
 }
 ```
 
-# Create another player to glitch the drone
-## 8shashank
+# Minimalistic solutions
+## Create another player to glitch the drone - 8shashank
 
 ```javascript
     map.placeObject(map.getWidth()-5,12,'player');
 ```
 Approach the exit from top or bottom
+
+
+
+## 3-0663651 - Single Block
+
+```javascript
+map.placeObject(25, 12, 'block');
+```
+Oh yeah, solution: Move down until you, the drone, and the block are collinear. Then advance right, hiding behind the block: `@#d`. Move down, then come around the block and dart for the exit.
+This solution would not work at all with proper path-finding.
+
+
