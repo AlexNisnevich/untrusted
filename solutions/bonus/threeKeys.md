@@ -67,3 +67,48 @@ Oh, a robot "eats" the keys. It first grabs the red key and suicides, re-spawnin
     // Gets the reaction going.
     map.placeObject(24, 1, 'robot');
 ```
+##Teleport
+1. Place teleporter (q)
+2. enter room
+3. Get Key
+4. Leave room
+5. Remove teleporter (q)
+6. Repeat. 
+```javascript
+    map.defineObject('killBox',{
+    'type':'dynamic',
+    'symbol':'X',
+    'interval':100,
+    'behavior':function(me){me.move('up')},
+    'projectile': true
+    });
+    var teleport1X = 0;
+    var teleport1Y = 0;
+    var teleport2X = [20,20,20,40];
+    var teleport2Y = [0,10,20,20];
+    var teleport1;
+    var teleport2;
+    var i_ = 0;
+    map.placeObject(8, 6, 'phone');
+    map.placeObject(teleport1X, teleport1Y, 'teleporter');
+    map.getPlayer().setPhoneCallback(function(){
+      if((i_ % 2) == 1){
+      	map.placeObject(teleport2.getX(),(teleport2.getY() + 1),'killBox');
+      }else{
+        map.placeObject(teleport2X[i_/2], teleport2Y[i_/2], 'teleporter');
+        var dynamicObjects = map.getDynamicObjects();
+        for (i = 0; i < dynamicObjects.length; i++) {
+            var t = dynamicObjects[i];
+            if ((t.getX() == teleport1X) && (t.getY() == teleport1Y)) {
+              teleport1 = t;
+            }
+            if ((t.getX() == teleport2X[i_/2])&&(t.getY() == teleport2Y[i_/2])){
+              teleport2 = t;
+            }
+        }
+        teleport1.setTarget(teleport2);
+        teleport2.setTarget(teleport1);
+      }
+      i_=i_+1;
+    });
+```
