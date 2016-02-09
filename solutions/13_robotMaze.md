@@ -166,7 +166,29 @@ Wander with visit counts.
 ```
 
 # Player-controlled approaches
-
+##Pcat0
+Hit 'q' to toggle between controlling you and the robot. Works for 11, 12, 13
+```javascript
+          me.move(dr);
+        }
+    });
+    var Pc = 0;
+    var dr = '';
+    map.getPlayer().setPhoneCallback(function(){
+      if ((Pc++)%2==0){
+        map.overrideKey('down', ()=> dr = 'down');
+        map.overrideKey('up', ()=> dr = 'up');
+        map.overrideKey('left', ()=> dr = 'left');
+        map.overrideKey('right', ()=> dr = 'right');
+      }else{
+        map.overrideKey('down', ()=> map.getPlayer().move('down'));
+        map.overrideKey('up', ()=> map.getPlayer().move('up'));
+        map.overrideKey('left', ()=> map.getPlayer().move('left'));
+        map.overrideKey('right', ()=> map.getPlayer().move('right'));
+        dr = '';
+      }
+    });({function(){
+```
 ## kerzol
 ```
 map.setSquareColor(21, 22, 'red');
