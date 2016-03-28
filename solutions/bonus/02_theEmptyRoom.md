@@ -13,3 +13,9 @@ Oh, just classic Fibonacci number formula
         }
         return sum;
 ```
+
+### urandon: admin's privilege
+What if you are an admin?
+```javascript
+        throw 'root#term: access granted';
+```
