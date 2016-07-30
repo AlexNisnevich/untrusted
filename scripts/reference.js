@@ -412,6 +412,12 @@ Game.prototype.reference = {
         'type': 'method',
         'description': 'Returns true if and only if the player is at the given location.'
     },
+    'player.encounterEnemy': {
+        'name': 'player.encounterEnemy(text)',
+        'category': 'player',
+        'type': 'method',
+        'description': 'Determines if player is killedBy(text) or if the player successfully escapes. Text is displayed as entity that attacked the player.'
+    },
     'player.getColor': {
         'name': 'player.getColor()',
         'category': 'player',
