@@ -20,11 +20,23 @@
 function startLevel(map) {
 #START_OF_START_LEVEL#
 
+	var thugCount = 4;
+	var invincible = false;
+
 	map.defineObject('thug', {
 		'symbol': String.fromCharCode(0x2620),
 		'color': '#333333',
 		'onCollision': function(player) {
-			player.encounterEnemy('vicious thug');
+			if (!invincible) {
+				var result = player.encounterEnemy('vicious thug');
+
+				if (result === true) {
+					thugCount -= 1;
+				}
+
+			} else {
+				thugCount -= 1;
+			}
 		}
 	});
 
@@ -45,7 +57,10 @@ function startLevel(map) {
 	map.defineObject('goldengun', {
 		'type': 'item',
 		'symbol': String.fromCharCode(0xD83D),
-		'color': 'black'
+		'color': 'black',
+		'onPickup': function() {
+			invincible = true;
+		}
 	});
 
 	var alleyX = parseInt(map.getWidth() / 2);

@@ -215,9 +215,14 @@ function Player(x, y, __map, __game) {
         var randInt = Math.floor(Math.random() * 100) + 1; // Random roll of 1 - 100
 
         if (randInt <= 30) {
-            this.killedBy(enemy);
+            __game.sound.playSound("hurt");
+            
+            map.writeStatus("You fought with " + enemy + " and lost! You managed to escape.");
+
+            return false;
         } else {
-            map.writeStatus("You managed to escaped from the unfriendly " + enemy + "!");
+            map.writeStatus("You fought with and defeated the unfriendly " + enemy + "!");
+            return true;
         }
 
     }, this);
