@@ -71,3 +71,16 @@ function startLevel(map) {
 
 #END_OF_START_LEVEL#
 }
+
+// onExit function
+function onExit(map) {
+	map.writeStatus("You have made it out of the dark alley.");
+
+	return true;
+}
+
+// validate object counts
+function validateLevel(map) {
+	map.validateExactlyXManyObjects(1, 'exit');
+	map.validateExactlyXManyObjects(4, 'thug');
+}
