@@ -210,20 +210,5 @@ function Player(x, y, __map, __game) {
     this.setPhoneCallback = wrapExposedMethod(function(func) {
         this._phoneFunc = func;
     }, this);
-
-    this.encounterEnemy = wrapExposedMethod(function (enemy) {
-        var randInt = Math.floor(Math.random() * 100) + 1; // Random roll of 1 - 100
-
-        if (randInt <= 30) {
-            __game.sound.playSound("hurt");
-            
-            map.writeStatus("You fought with " + enemy + " and lost! You managed to escape.");
-
-            return false;
-        } else {
-            map.writeStatus("You fought with and defeated the unfriendly " + enemy + "!");
-            return true;
-        }
-
-    }, this);
+    
 }

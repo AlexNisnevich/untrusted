@@ -1,7 +1,7 @@
 #BEGIN_PROPERTIES#
 {
 	"version": "1.0",
-	"commandsIntroduced": ["player.encounterEnemy"]
+	"commandsIntroduced": []
 }
 #END_PROPERTIES#
 /******************
@@ -20,82 +20,63 @@
 function startLevel(map) {
 #START_OF_START_LEVEL#
 
-	var thugCount = 4;
-	var invincible = false;
-
 	map.defineObject('thug', {
 		'symbol': String.fromCharCode(0x2620),
 		'color': '#333333',
 		'onCollision': function(player) {
-			if (!invincible) {
-				var result = player.encounterEnemy('vicious thug');
-
-				if (result === true) {
-					thugCount -= 1;
-				}
-
+			if ( !player.hasItem('goldengun') ) {
+				player.killedBy('vicious thug');
 			} else {
-				thugCount -= 1;
+				map.writeStatus('You are invincible!');
 			}
 		}
 	});
 
-	map.defineObject('wire', {
-		'type': 'trap'
-		'symbol': '-',
-		'color': '#f6f6f6',
-		'onCollision': function(player) {
-			player.killedBy('razor wire');
-		},
-		'passableFor': ['player', 'goldengun'],
-		'deactivateBy': 'goldengun',
-		'onDeactivate': function() {
-			map.writeStatus("The player is unstoppable with the golden gun!");
-		}
-	});
-
 	map.defineObject('goldengun', {
-		'type': 'item',
-		'symbol': String.fromCharCode(0xD83D),
-		'color': 'black',
-		'onPickup': function() {
-			invincible = true;
+		'symbol': String.fromCharCode(0x122),
+		type: 'item',
+		'onPickup': function(player, game) {
+			map.writeStatus('You are invincible now!');
 		}
-	});
+	})
 
 	var alleyX = parseInt(map.getWidth() / 2);
 	var alleyY = parseInt(map.getHeight() / 2);
 
+#BEGIN_EDITABLE#
 	map.createFromGrid(['#######',
-						'# +E+ #',
-						'#  +  #',
-						'   T  G',
-						'      T',
-						' T   ##',
-						'  ##   ',
-						'       ',
-						'   T   ',
-						'       '],
+						'# E   #',
+						'#     #',
+						'#  T  #',
+						'#     T',
+						'#T   ##',
+						'# ##  #',
+						'#     #',
+						'###T###',
+						'#  P  #',
+						'#######'],
 					{
 						'E': 'exit',
 						'#': 'block',
-						'+': 'wire',
 						'G': 'goldengun',
-						'T': 'thug'
+						'T': 'thug',
+						'P': 'player'
 					}, alleyX, alleyY);
+
+	map.placeObject(20, 20, 'goldengun');
+#END_EDITABLE#
 
 #END_OF_START_LEVEL#
 }
 
-// onExit function
 function onExit(map) {
 	map.writeStatus("You have made it out of the dark alley.");
 
 	return true;
 }
 
-// validate object counts
 function validateLevel(map) {
+	map.validateAtLeastXObjects(38, 'block');
 	map.validateExactlyXManyObjects(1, 'exit');
 	map.validateExactlyXManyObjects(4, 'thug');
 }
