@@ -22,7 +22,6 @@ function startLevel(map) {
 
 	map.defineObject('thug', {
 		'symbol': String.fromCharCode(0x2620),
-		'color': '#333333',
 		'onCollision': function(player) {
 			if ( !player.hasItem('goldengun') ) {
 				player.killedBy('vicious thug');
@@ -32,27 +31,46 @@ function startLevel(map) {
 		}
 	});
 
+	map.defineObject('bluedoor', {
+		'symbol': '-',
+		'color': 'blue',
+		'impassable': function(player) {
+			if (player.getColor() === '#0f0') {
+				player.setColor('orange');
+				this.color = 'red';
+				return false;
+			}
+			return true;
+		}
+	});
+
 	map.defineObject('goldengun', {
 		'symbol': String.fromCharCode(0x122),
 		type: 'item',
-		'onPickup': function(player, game) {
-			map.writeStatus('You are invincible now!');
+		'onPickUp': function(player) {
+			map.writeStatus('You have the golden gun!');
+			
+			if (player.getColor() === "orange") {
+				player.setColor('#0f0');
+			}
 		}
-	})
+	});
 
 	var alleyX = parseInt(map.getWidth() / 2);
-	var alleyY = parseInt(map.getHeight() / 2);
+	var alleyY = parseInt(map.getHeight() / 2) - 5;
 
-#BEGIN_EDITABLE#
 	map.createFromGrid(['#######',
-						'# E   #',
+						'# 	E  #',
+						'#     #',
+						'#     #',
+						'#     #',
 						'#     #',
 						'#  T  #',
 						'#     T',
 						'#T   ##',
-						'# ##  #',
+						'#L#TLL#',
 						'#     #',
-						'###T###',
+						'###T#L#',
 						'#  P  #',
 						'#######'],
 					{
@@ -60,9 +78,10 @@ function startLevel(map) {
 						'#': 'block',
 						'G': 'goldengun',
 						'T': 'thug',
+						'L': 'bluedoor',
 						'P': 'player'
 					}, alleyX, alleyY);
-
+#BEGIN_EDITABLE#
 	map.placeObject(20, 20, 'goldengun');
 #END_EDITABLE#
 
@@ -70,13 +89,10 @@ function startLevel(map) {
 }
 
 function onExit(map) {
-	map.writeStatus("You have made it out of the dark alley.");
-
+	map.writeStatus("You have escaped the dark alley.");
 	return true;
 }
 
 function validateLevel(map) {
-	map.validateAtLeastXObjects(38, 'block');
 	map.validateExactlyXManyObjects(1, 'exit');
-	map.validateExactlyXManyObjects(4, 'thug');
 }
