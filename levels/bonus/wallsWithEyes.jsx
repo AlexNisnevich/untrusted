@@ -43,7 +43,7 @@ function startLevel(map) {
         'symbol': String.fromCharCode(0x2620),
         'color': '#FF3300',
         'onCollision': function(player) { map.writeStatus("Here lies Indiana Jones. He chose poorly");}
-    })
+    });
 
     var teleport1X = 30;
     var teleport1Y = 3;

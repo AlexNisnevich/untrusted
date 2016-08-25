@@ -210,4 +210,5 @@ function Player(x, y, __map, __game) {
     this.setPhoneCallback = wrapExposedMethod(function(func) {
         this._phoneFunc = func;
     }, this);
+    
 }
