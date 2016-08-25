@@ -130,8 +130,8 @@ deploy-github:
 	@git checkout gh-pages && git merge master --no-commit && make release && git commit -am "build" && git push origin gh-pages; git checkout master && make
 
 # run-local will start a mini python webserver and host a local
-# instance of the game on port 9001 (-c-1 disables caching)
-
+# instance of the game will run on an available port
+# the option -c-1 disables caching
 runlocal: debug
 	@echo "Running local instance"
-	./node_modules/http-server/bin/http-server -p 9001 -c-1
+	./node_modules/http-server/bin/http-server -c-1

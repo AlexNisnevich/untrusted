@@ -166,7 +166,29 @@ Wander with visit counts.
 ```
 
 # Player-controlled approaches
-
+##Pcat0
+Hit 'q' to toggle between controlling you and the robot. Works for 11, 12, 13
+```javascript
+          me.move(dr);
+        }
+    });
+    var Pc = 0;
+    var dr = '';
+    map.getPlayer().setPhoneCallback(function(){
+      if ((Pc++)%2==0){
+        map.overrideKey('down', ()=> dr = 'down');
+        map.overrideKey('up', ()=> dr = 'up');
+        map.overrideKey('left', ()=> dr = 'left');
+        map.overrideKey('right', ()=> dr = 'right');
+      }else{
+        map.overrideKey('down', ()=> map.getPlayer().move('down'));
+        map.overrideKey('up', ()=> map.getPlayer().move('up'));
+        map.overrideKey('left', ()=> map.getPlayer().move('left'));
+        map.overrideKey('right', ()=> map.getPlayer().move('right'));
+        dr = '';
+      }
+    });({function(){
+```
 ## kerzol
 ```
 map.setSquareColor(21, 22, 'red');
@@ -400,4 +422,53 @@ Droid fills the maze with blocks, makes for a simpler maze.
       }
     };
 
+```
+
+# Simulated Annealing
+
+(Randomized algorithm)
+
+```javascript
+
+if (typeof me.step === 'undefined')
+{
+    me.step = 0;
+    me.state = 0;
+}
+me.step ++;
+p = Math.exp(me.step * -0.005); // heat
+if (me.getX() == map.getWidth() - 2 &&
+    me.getY() == 8) // key got!
+me.state = 2;
+if (me.state == 0)
+{
+    targetX = map.getWidth() - 2;
+    targetY = 8;
+
+    var flag = false;
+    var calcDis = function(x, y) {
+        return Math.abs(targetX - x) + Math.abs(targetY - y);
+    };
+
+    var curDis = calcDis(me.getX(), me.getY());
+
+    var moves = map.getAdjacentEmptyCells(me.getX(), me.getY());
+    // adjacent cells not considered empty :(
+    if (me.getX() == targetX && me.getY() == targetY - 1)
+        me.move('down');
+    else
+        if (me.getX() == targetX - 1 && me.getY() == targetY)
+            me.move('right');
+    else
+        // annealing
+        while (!flag) {
+            var m = moves[map.getRandomInt(0, moves.length - 1)];
+            var d = calcDis(m[0][0], m[0][1]);
+            if (d<curDis || Math.random() < p)
+            {
+                flag = true;
+                me.move(m[1]);
+            } 
+        }
+} else me.move('down'); // got key, exit
 ```
