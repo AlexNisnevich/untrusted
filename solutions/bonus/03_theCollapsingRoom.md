@@ -10,3 +10,8 @@ If we want to stop the rain, we can destroy rainmaker.
     });
     map.placeObject(1, 2, 'rocket');
 ```
+
+## Redefine Math.random
+```javascript
+Math.random = function() { return 0.75; }
+```
