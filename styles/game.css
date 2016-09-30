@@ -120,9 +120,21 @@ body {
 	background: #511 !important;
 }
 
+.CodeMirror-lines .disabled .CodeMirror-linenumber {
+    background: red;
+    color: black;
+}
+
+.CodeMirror-lines .partiallyEditable .CodeMirror-linenumber {
+    background: rgb(250, 123, 123);
+    color: black;
+}
+
+
 .CodeMirror-lines .disabled .editableSection {
 	background: rgba(0, 0, 0, 0.5); /* semi-transparent so we can see selection over it */
 }
+
 
 #helpPane {
 	position: absolute;
