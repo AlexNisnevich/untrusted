@@ -601,7 +601,7 @@ Touch the '7' to call two bigger bosses that will let you safely pick up the two
 
 With our recent escapades in jQuery land, we now have access to jQuery. With this, we can get a grip on the window object, and bypass the validations:
 
-```
+```javascript
     map.defineObject('myBoss', {
         'type': 'dynamic',
         'symbol': '💩',
@@ -631,4 +631,13 @@ With our recent escapades in jQuery land, we now have access to jQuery. With thi
     	for(var i = 0; i < 25; i++) 
 		map.placeObject(i+3, map.getHeight() - 4, 'myBoss');
     }, 1000);
+```
+
+## Pcat0: Hank the game not the level
+
+Its a game about hacking, so its not cheating right?
+
+```javascript
+(this ["vali"+"dateLevel"]=0,(d=>((a,b,c)=>(c(a+1,b,'exit'),c(a+1,b+1,'phone'),
+c(a,b+1,'theAlgorithm')))(d.getX(),d.getY(),map.placeObject))(map.getPlayer()))
 ```
