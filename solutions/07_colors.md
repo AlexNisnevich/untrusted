@@ -35,6 +35,20 @@ player.atLocation(30, 12) ) {
 player.setColor(chosenColor);
 
 ```
+## Wav3
+```javascript
+ if (player.atLocation(24, 12)) {
+player.setColor('#f00');
+} else if (player.atLocation(27, 12)) {
+player.setColor('#ff0');
+} else if (player.atLocation(30, 12)) {
+player.setColor('#0f0');
+} else if (player.atLocation(33, 12)) {
+player.setColor('#f00');
+} else if (player.atLocation(36, 12)) {
+player.setColor('#ff0');
+}; 
+```
 ## Nabellaleen
 ```javascript
 var playerColor = player.getColor();
