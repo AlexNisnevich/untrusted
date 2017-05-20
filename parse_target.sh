@@ -1,6 +1,6 @@
 # collecting jsx filenames in a directory and write them to $target.
 target=$1
-mod=$2
+mod=$3
 
 # MOD
 [ "$mod" != "default" ] && m=$mod

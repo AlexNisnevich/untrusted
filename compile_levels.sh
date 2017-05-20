@@ -1,6 +1,6 @@
 echo "Game.prototype._levels = {" > levels/levels.js
 
-mod=$1
+mod=$2
 
 for lvl in mods/$mod/*.jsx
 do
