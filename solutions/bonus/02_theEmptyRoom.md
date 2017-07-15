@@ -19,3 +19,5 @@ What if you are an admin?
 ```javascript
         throw 'root#term: access granted';
 ```
+### Shortest answer
+a
