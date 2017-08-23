@@ -233,6 +233,23 @@ map.defineObject('foo', {
     'dat': function() {
 ```
 
+## sulaymonz
+```javascript
+            me.move(directions[i]);
+        }
+    });
+    
+    var directions = ['up', 'right', 'down', 'left'];
+    var i = 0;
+    
+    player.setPhoneCallback(function(){
+        i = i < directions.length-1 ? i+1 : 0;
+        map.writeStatus(directions[i]);
+    });
+
+    ({function(){
+```
+
 ## Neogeek
 ```javascript
 if(player == map.getPlayer()){
