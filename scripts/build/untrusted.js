@@ -524,7 +524,9 @@ function Game(debugMode, startLevel) {
             }
 
             // clear drawing canvas and hide it until level loads
-            $('#drawingCanvas')[0].width = $('#drawingCanvas')[0].width;
+            var screenCanvas = $('#screen canvas')[0];
+            $('#drawingCanvas')[0].width = screenCanvas.width;
+            $('#drawingCanvas')[0].height = screenCanvas.height;
             $('#drawingCanvas').hide();
             $('#dummyDom').hide();
 
@@ -2274,9 +2276,10 @@ function Map(display, __game) {
     }, this);
 
     this.getCanvasCoords = wrapExposedMethod(function(obj) {
+        var canvas =  $('#drawingCanvas')[0];
         return {
-            x: (obj.getX() + 0.5) * 600 / __game._dimensions.width,
-            y: (obj.getY() + 0.5) * 500 / __game._dimensions.height
+            x: (obj.getX() + 0.5) * canvas.width / __game._dimensions.width,
+            y: (obj.getY() + 0.5) * canvas.height / __game._dimensions.height
         };
     }, this);
 

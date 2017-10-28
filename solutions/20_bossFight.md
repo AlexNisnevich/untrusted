@@ -596,3 +596,48 @@ Touch the '7' to call two bigger bosses that will let you safely pick up the two
     });
     map.placeObject(1, map.getHeight() - 3, 'button');
 ```
+
+## seiyria: The Jake Weary Bypass
+
+With our recent escapades in jQuery land, we now have access to jQuery. With this, we can get a grip on the window object, and bypass the validations:
+
+```javascript
+    map.defineObject('myBoss', {
+        'type': 'dynamic',
+        'symbol': '💩',
+        'color': 'red',
+        'interval': 200,
+        'behavior': function (me) {
+            if (Math.random() < 0.3) {
+                map.placeObject(me.getX(), me.getY() - 2, 'myBullet');
+            }
+        }
+    }); 
+
+    map.defineObject('myBullet', {
+        'type': 'dynamic',
+        'symbol': '.',
+        'color': 'red',
+        'interval': 100,
+        'projectile': true,
+        'behavior': function (me) {
+            me.move('up');
+        }
+    });
+    
+    var win = $('body')[0].ownerDocument.defaultView[('win'+'dow')]
+    var x = win['set' + 'Timeout']
+    x(function() {
+    	for(var i = 0; i < 25; i++) 
+		map.placeObject(i+3, map.getHeight() - 4, 'myBoss');
+    }, 1000);
+```
+
+## Pcat0: Hank the game not the level
+
+Its a game about hacking, so its not cheating right?
+
+```javascript
+(this ["vali"+"dateLevel"]=0,(d=>((a,b,c)=>(c(a+1,b,'exit'),c(a+1,b+1,'phone'),
+c(a,b+1,'theAlgorithm')))(d.getX(),d.getY(),map.placeObject))(map.getPlayer()))
+```

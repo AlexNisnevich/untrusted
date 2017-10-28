@@ -352,7 +352,9 @@ function Game(debugMode, startLevel) {
             }
 
             // clear drawing canvas and hide it until level loads
-            $('#drawingCanvas')[0].width = $('#drawingCanvas')[0].width;
+            var screenCanvas = $('#screen canvas')[0];
+            $('#drawingCanvas')[0].width = screenCanvas.width;
+            $('#drawingCanvas')[0].height = screenCanvas.height;
             $('#drawingCanvas').hide();
             $('#dummyDom').hide();
 

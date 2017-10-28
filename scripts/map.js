@@ -576,9 +576,10 @@ function Map(display, __game) {
     }, this);
 
     this.getCanvasCoords = wrapExposedMethod(function(obj) {
+        var canvas =  $('#drawingCanvas')[0];
         return {
-            x: (obj.getX() + 0.5) * 600 / __game._dimensions.width,
-            y: (obj.getY() + 0.5) * 500 / __game._dimensions.height
+            x: (obj.getX() + 0.5) * canvas.width / __game._dimensions.width,
+            y: (obj.getY() + 0.5) * canvas.height / __game._dimensions.height
         };
     }, this);
 
