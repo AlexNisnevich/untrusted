@@ -255,7 +255,8 @@ function Game(debugMode, startLevel) {
         }
 
         // Initialize sound
-        this.sound = new Sound(debugMode ? 'local' : 'cloudfront');
+        this.sound = new Sound('local');
+        // this.sound = new Sound(debugMode ? 'local' : 'cloudfront');
 
         // Initialize map display
         this.display = ROT.Display.create(this, {
