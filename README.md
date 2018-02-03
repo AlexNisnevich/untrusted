@@ -57,14 +57,14 @@ jsx files are like regular JavaScript files, but have some additional syntax:
      - `refreshRate`: the refresh rate of the level, in milliseconds (required for dynamic objects with `interval` properties to work correctly)
      - `showDrawingCanvas`: if true, the drawing canvas overlay is displayed
      - `showDummyDom`: if true, a dummy DOM will be displayed instead of the regular map
-  - `music`: name of the background track for the level (see `music.js`) 
+  - `music`: name of the background track for the level (see `sound.js`)
   - `startingMessage`: message displayed at the bottom of the screen when the level starts (if any)
   - `version`: increase the level version whenever you update a level
 - `#START_OF_START_LEVEL#` and `#END_OF_START_LEVEL#` should be the first and last line of the `startLevel` method, respectively
 
 #### Adding music
 
-[Coming soon]
+To add a new background music track, add an MP3 file (that you have permission to use) to the [/music](https://github.com/AlexNisnevich/untrusted/tree/master/music) and add a new entry to the `tracks` array in [sound.js](https://github.com/AlexNisnevich/untrusted/blob/master/scripts/sound.js).
 
 ### Acknowledgements
 
