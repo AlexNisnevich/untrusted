@@ -12,6 +12,6 @@ function playIntro(display, map, i) {
         display.drawText(10, i + 22, "Press any key to begin ...");
         setTimeout(function () {
             display.playIntro(map, i - 1);
-        }, 100);
+        }, 1);
     }
 }

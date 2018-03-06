@@ -19,10 +19,10 @@ Game.prototype.enableShortcutKeys = function () {
         return true;
     });
 
-	shortcut.add('ctrl+2', function () {
+    shortcut.add('ctrl+2', function () {
         $("#toggleFocusButton").click();
-		return true;
-	});
+        return true;
+    });
 
     shortcut.add('ctrl+3', function () {
         $("#notepadButton").click();
@@ -53,17 +53,17 @@ Game.prototype.enableShortcutKeys = function () {
 Game.prototype.enableButtons = function () {
     var game = this;
 
-    $("#helpButton").click( function () {
+    $("#helpButton").click(function () {
         game.sound.playSound('select');
         game.openHelp();
     });
 
-    $("#toggleFocusButton").click( function () {
+    $("#toggleFocusButton").click(function () {
         game.sound.playSound('select');
         toggleFocus(game);
     });
 
-    $('#notepadButton').click( function () {
+    $('#notepadButton').click(function () {
         game.sound.playSound('select');
         $('#helpPane, #menuPane').hide();
         $('#notepadPane').toggle();
@@ -71,32 +71,32 @@ Game.prototype.enableButtons = function () {
         return true;
     });
 
-    $("#resetButton").click( function () {
+    $("#resetButton").click(function () {
         game.sound.playSound('blip');
-        game._resetLevel( game._currentLevel );
+        game._resetLevel(game._currentLevel);
     });
 
-    $("#executeButton").click( function () {
+    $("#executeButton").click(function () {
         game.sound.playSound('blip');
         game._evalLevelCode();
     });
 
-    $("#phoneButton").click( function () {
+    $("#phoneButton").click(function () {
         game.sound.playSound('select');
         game.usePhone();
     });
 
-    $("#menuButton").click( function () {
+    $("#menuButton").click(function () {
         game.sound.playSound('select');
         game.openMenu();
     });
 
-    $("#helpPaneCloseButton").click ( function () {
+    $("#helpPaneCloseButton").click(function () {
         game.sound.playSound('select');
         $('#helpPane').hide();
     });
 
-    $("#muteButton").click( function () {
+    $("#muteButton").click(function () {
         game.sound.toggleSound();
     });
 };
@@ -237,7 +237,7 @@ Game.prototype.openHelp = function () {
             if (categories.indexOf(reference.category) == -1) {
                 categories.push(reference.category);
 
-                var categoryLink = $('<li class="category" id="'+ reference.category +'">');
+                var categoryLink = $('<li class="category" id="' + reference.category + '">');
                 categoryLink.text(reference.category)
                     .click(function () {
                         $('#helpPaneSidebar .category').removeClass('selected');
@@ -245,22 +245,26 @@ Game.prototype.openHelp = function () {
 
                         $('#helpPaneContent .category').hide();
                         $('#helpPaneContent .category#' + this.id).show();
-                });
+                    });
                 $('#helpPaneSidebar ul').append(categoryLink);
 
-                $('#helpPaneContent').append($('<div class="category" id="'+ reference.category +'">'));
+                $('#helpPaneContent').append($('<div class="category" id="' + reference.category + '">'));
             }
 
+            // Ajoute une commande à la commande
             var $command = $('<div class="command">');
             $command.appendTo($('#helpPaneContent .category#' + reference.category));
 
+            // Ajout du nom de la fonction
             var $commandTitle = $('<div class="commandTitle">');
-            $commandTitle.text(reference.name)
-                .appendTo($command);
+            $commandTitle.text(reference.name).appendTo($command);
 
             var $commandDescription = $('<div class="commandDescription">');
-            $commandDescription.html(reference.description)
-                .appendTo($command);
+            $commandDescription.html(reference.description).appendTo($command);
+
+            $command.click(function () {
+                alert(reference.name);
+            });
         }
     });
 
