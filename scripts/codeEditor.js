@@ -18,7 +18,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
     var lastChange = {};
     var startOfStartLevel = null;
     var endOfStartLevel = null;
-    var derniereLigneModifier = -1;
+    var derniereLigneSaisiModifiable = -1;
 
 
     this.setEndOfStartLevel = function (eosl) {
@@ -154,7 +154,14 @@ function CodeEditor(textAreaDomID, width, height, game) {
     // for the 'beforeChange' event
     var enforceRestrictions = function (instance, change) {
         lastChange = change;
-        alert();
+        change.text = 'p';
+
+
+
+
+
+
+
         var inEditableArea = function (c) {
             var lineNum = c.to.line;
             if (editableLines.indexOf(lineNum) !== -1 && editableLines.indexOf(c.from.line) !== -1) {
@@ -246,6 +253,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         }
 
         log(editableLines);
+
     }
 
     var updateEditableLinesOnInsert = function (change, newLines) {
@@ -310,6 +318,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         this.internalEditor.setSize(width, height);
 
+
         // set up event handlers
 
         this.internalEditor.on("focus", function (instance) {
@@ -329,20 +338,36 @@ function CodeEditor(textAreaDomID, width, height, game) {
             // and the line is empty (ignore if backspacing)
             if (lastChange.origin !== '+delete') {
                 var loc = instance.getCursor();
+                derniereLigneSaisiModifiable = loc.line + 1;
+
                 if (loc.ch === 0 && instance.getLine(loc.line).trim() === "") {
                     instance.indentLine(loc.line, "prev");
                 }
             }
+
+            //caca = CodeMirror.fromTextArea(document.getElementById(textAreaDomID));
+
+
+            //instance.getDoc().setValue("");
+            //var doc = caca.getDoc();
+            //var cursor = doc.getCursor();
+            //doc.replaceRange("text", cursor);
         });
 
-        this.internalEditor.on('change', markEditableSections);
-        this.internalEditor.on('change', trackUndoRedo);
-        this.internalEditor.on('change', po);
+        //this.internalEditor.on('change', markEditableSections);
+        //this.internalEditor.on('change', trackUndoRedo);
     }
 
-    var po = function () {
-        console.log(derniereLigneModifier);
-    }
+    // loads code into editor
+    this.mettre = function () {
+       // caca = CodeMirror.fromTextArea(document.getElementById(textAreaDomID));
+    
+
+        this.internalEditor.setValue("");
+
+        this.internalEditor.refresh();
+        this.internalEditor.clearHistory();
+    };
 
     // loads code into editor
     this.loadCode = function (codeString) {
@@ -355,7 +380,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         this.internalEditor.off('beforeChange', enforceRestrictions);
         codeString = preprocess(codeString);
-        derniereLigneModifier = editableLines[0];
+
+        derniereLigneSaisiModifiable = editableLines[0] + 1;
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);
 
@@ -436,6 +462,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
         code = code.split('\n').filter(function (line) {
             return line.indexOf('OfStartLevelReached') < 0;
         }).join('\n');
+
+
 
         this.internalEditor.off('beforeChange', enforceRestrictions);
         this.internalEditor.setValue(code);

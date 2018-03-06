@@ -50,12 +50,12 @@ Game.prototype.enableShortcutKeys = function () {
     });
 };
 
-Game.prototype.enableButtons = function () {
+Game.prototype.enableButtons = function (p_codeEditor) {
     var game = this;
 
     $("#helpButton").click(function () {
         game.sound.playSound('select');
-        game.openHelp();
+        game.openHelp(p_codeEditor);
     });
 
     $("#toggleFocusButton").click(function () {
@@ -221,7 +221,7 @@ Game.prototype.activateSuperMenu = function () {
     }
 }
 
-Game.prototype.openHelp = function () {
+Game.prototype.openHelp = function (p_codeEditor) {
     var game = this;
 
     var categories = [];
@@ -263,7 +263,10 @@ Game.prototype.openHelp = function () {
             $commandDescription.html(reference.description).appendTo($command);
 
             $command.click(function () {
-                alert(reference.name);
+                p_codeEditor.mettre();
+               
+              
+                //alert(reference.name);
             });
         }
     });

@@ -115,7 +115,7 @@ function Game(debugMode, startLevel) {
 
         // Enable controls
         this.enableShortcutKeys();
-        this.enableButtons();
+        this.enableButtons(this.editor);
         this.setUpNotepad();
 
         // Load help commands from local storage (if possible)
