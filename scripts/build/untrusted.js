@@ -4196,10 +4196,18 @@ Game.prototype._levels = {
     'levels/02_mod.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.0",\n    "music": "Brazil"\n}\n#END_PROPERTIES#\n/**************\n * mod.js *\n *************\n *\n * Congratulations! You\'v completed the example of mod.\n *\n * Create your own mod by putting the source code into\n * the directory [mods/$your_mod_name]. When you ready for it,\n * just run [make mod=$your_mod_name] to build it. And you can\n * add this paramater to any [make] command to specify which\n * mod you want to handle.\n * \n * What are you waiting for? Come on!\n *\n * Create you own mod and enjoy it.\n *\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    var credits = [\n        [14, 5, "E X A M P L E of M O D"],\n		[10, 7, "%c{#0f0}$%c{#cccccc} make mod=example_mod"],\n		[10, 9, "%c{#0f0}$%c{#cccccc} make mod=example_mod release"],\n		[10, 11, "%c{#0f0}$%c{#cccccc} make mod=example_mod runlocal"],\n	] \n\n    function drawCredits(i) {\n        if (i >= credits.length) {\n            return;\n        }\n\n        // redraw lines bottom to top to avoid cutting off letters\n        for (var j = i; j >= 0; j--) {\n            var line = credits[j];\n            map._display.drawText(line[0], line[1], line[2]);\n        }\n\n        map.timeout(function () {drawCredits(i+1);}, 2000)\n    }\n\n    map.timeout(function () {drawCredits(0);}, 4000);\n\n#END_OF_START_LEVEL#\n}\n 	', 
 };
 $(document).ready(function() {
-    var startLevel = getParameterByName('lvl') ? parseInt(getParameterByName('lvl')) : null;
-    window.game = new Game(true, startLevel);
-    window.game._initialize();
+    new Game()._initialize();
     window.eval = {};
+});
+
+// prevent ctrl+R and F5
+$(document).bind('keydown keyup', function(e) {
+    if(e.which === 116) {
+       return false;
+    }
+    if(e.which === 82 && e.ctrlKey) {
+       return false;
+    }
 });
 
 })();
