@@ -12,6 +12,12 @@ body {
 	margin:0;
 }
 
+.apiNotification {
+	color: green;
+	font-size: 1em;
+	padding: 20px;
+}
+
 #container {
 	display: table-cell;
 	vertical-align: middle;
@@ -186,7 +192,7 @@ body {
 	font-size: 1.2em;
 	font-weight: bold;
 	color: yellow;
-	margin-bottom: 4px;
+	display: inline-block;	
 }
 
 #helpPaneContent .commandDescription a {

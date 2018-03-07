@@ -10,7 +10,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         'end_start_level': '#END_OF_START_LEVEL#'
     };
 
-    var charLimit = 80
+    var charLimit = 80;
     var properties = {};
     var editableLines = [];
     var editableSections = {};
@@ -157,7 +157,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
         }
 
         lastChange = change;
-        change.text = 'p';
 
         var inEditableArea = function (c) {
             var lineNum = c.to.line;
@@ -355,7 +354,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         var cursorCh = this.internalEditor.getLine(derniereLigneSaisiModifiable).length
 
         this.internalEditor.setCursor({ line: derniereLigneSaisiModifiable, ch: cursorCh })
-        
+
         var cursor = this.internalEditor.getCursor();
         this.internalEditor.replaceRange(p_nomReference, cursor);
         this.internalEditor.refresh();

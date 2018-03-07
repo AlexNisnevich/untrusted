@@ -50,12 +50,12 @@ Game.prototype.enableShortcutKeys = function () {
     });
 };
 
-Game.prototype.enableButtons = function (p_codeEditor) {
+Game.prototype.enableButtons = function () {
     var game = this;
 
     $("#helpButton").click(function () {
         game.sound.playSound('select');
-        game.openHelp(p_codeEditor);
+        game.openHelp();
     });
 
     $("#toggleFocusButton").click(function () {
@@ -254,19 +254,32 @@ Game.prototype.openHelp = function (p_codeEditor) {
             // Ajoute une commande à la commande
             var $command = $('<div class="command">');
             $command.appendTo($('#helpPaneContent .category#' + reference.category));
-
+            
             // Ajout du nom de la fonction
-            var $commandTitle = $('<div class="commandTitle">');
-            $commandTitle.text(reference.name).appendTo($command);
+            var commandTitle = $('<div class="commandTitle">');
+            commandTitle.text(reference.name).appendTo($command);
 
             var $commandDescription = $('<div class="commandDescription">');
             $commandDescription.html(reference.description).appendTo($command);
 
-            $command.click(function () {
-                p_codeEditor.mettre(reference.name);
-               
-              
-                //alert(reference.name);
+            $('command').css( 'cursor', 'pointer' );
+
+            commandTitle.mouseover(function () {
+                commandTitle.css('cursor','pointer');
+                commandTitle.css('background-color','red');
+            });
+
+            commandTitle.mouseleave(function () {
+                commandTitle.css('background-color','black');                
+            });
+
+            commandTitle.click(function () {
+                var span = $('<span class="apiNotification">Added</span>');
+                commandTitle.append(span);
+                game.editor.mettre(reference.name);
+                setTimeout(function(){
+                    span.remove();
+               },3000);
             });
         }
     });
