@@ -337,15 +337,34 @@ function CodeEditor(textAreaDomID, width, height, game) {
                     instance.indentLine(loc.line, "prev");
                 }
 
+                console.log(editableLines);
+                console.log(loc.line);
+
                 // Si la modification traite suelement d'une ligne modifiable on change la ligne courrante.
+                if (lineIsEditable(loc.line)) {
+                    derniereLigneSaisiModifiable = loc.line;
+                }
+                /*
                 if (editableLines[0] == loc.line) {
                     derniereLigneSaisiModifiable = loc.line;
                 }
+                */
+
             }
         });
 
         this.internalEditor.on('change', markEditableSections);
         this.internalEditor.on('change', trackUndoRedo);
+    }
+
+    function lineIsEditable(p_line) {
+        for (var line in editableLines) {
+            if (editableLines[line] == p_line) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // loads code into editor
