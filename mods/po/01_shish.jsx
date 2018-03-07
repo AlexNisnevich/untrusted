@@ -20,8 +20,12 @@ function startLevel(map) {
 #START_OF_START_LEVEL#
     map.displayChapter('Chapter 1\nUne assiette mixte svp');
 
-    map.placePlayer(14, 12);
+#BEGIN_EDITABLE#
 
+#END_EDITABLE#    
+
+    map.placePlayer(14, 12);
+    
     for (x = 0; x < map.getWidth(); x++) {
 		if ((x % 10) < 5 ) {
         	map.placeObject(x, 5, 'block');
