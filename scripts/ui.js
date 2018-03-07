@@ -263,7 +263,7 @@ Game.prototype.openHelp = function (p_codeEditor) {
             $commandDescription.html(reference.description).appendTo($command);
 
             $command.click(function () {
-                p_codeEditor.mettre();
+                p_codeEditor.mettre(reference.name);
                
               
                 //alert(reference.name);

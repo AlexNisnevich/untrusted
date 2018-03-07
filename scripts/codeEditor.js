@@ -10,8 +10,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         'end_start_level': '#END_OF_START_LEVEL#'
     };
 
-    var charLimit = 80;
-
+    var charLimit = 80
     var properties = {};
     var editableLines = [];
     var editableSections = {};
@@ -19,7 +18,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
     var startOfStartLevel = null;
     var endOfStartLevel = null;
     var derniereLigneSaisiModifiable = -1;
-
+    var modification = false;
 
     this.setEndOfStartLevel = function (eosl) {
         endOfStartLevel = eosl;
@@ -153,14 +152,12 @@ function CodeEditor(textAreaDomID, width, height, game) {
     // enforces editing restrictions when set as the handler
     // for the 'beforeChange' event
     var enforceRestrictions = function (instance, change) {
+        if (modification) {
+            return;
+        }
+
         lastChange = change;
         change.text = 'p';
-
-
-
-
-
-
 
         var inEditableArea = function (c) {
             var lineNum = c.to.line;
@@ -253,7 +250,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
         }
 
         log(editableLines);
-
     }
 
     var updateEditableLinesOnInsert = function (change, newLines) {
@@ -320,7 +316,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
 
         // set up event handlers
-
         this.internalEditor.on("focus", function (instance) {
             // implements yellow box when changing focus
             $('.CodeMirror').addClass('focus');
@@ -338,35 +333,34 @@ function CodeEditor(textAreaDomID, width, height, game) {
             // and the line is empty (ignore if backspacing)
             if (lastChange.origin !== '+delete') {
                 var loc = instance.getCursor();
-                derniereLigneSaisiModifiable = loc.line + 1;
 
                 if (loc.ch === 0 && instance.getLine(loc.line).trim() === "") {
                     instance.indentLine(loc.line, "prev");
                 }
+
+                // Si la modification traite suelement d'une ligne modifiable on change la ligne courrante.
+                if (editableLines[0] == loc.line) {
+                    derniereLigneSaisiModifiable = loc.line;
+                }
             }
-
-            //caca = CodeMirror.fromTextArea(document.getElementById(textAreaDomID));
-
-
-            //instance.getDoc().setValue("");
-            //var doc = caca.getDoc();
-            //var cursor = doc.getCursor();
-            //doc.replaceRange("text", cursor);
         });
 
-        //this.internalEditor.on('change', markEditableSections);
-        //this.internalEditor.on('change', trackUndoRedo);
+        this.internalEditor.on('change', markEditableSections);
+        this.internalEditor.on('change', trackUndoRedo);
     }
 
     // loads code into editor
-    this.mettre = function () {
-       // caca = CodeMirror.fromTextArea(document.getElementById(textAreaDomID));
-    
+    this.mettre = function (p_nomReference) {
+        modification = true;
+        var cursorCh = this.internalEditor.getLine(derniereLigneSaisiModifiable).length
 
-        this.internalEditor.setValue("");
-
+        this.internalEditor.setCursor({ line: derniereLigneSaisiModifiable, ch: cursorCh })
+        
+        var cursor = this.internalEditor.getCursor();
+        this.internalEditor.replaceRange(p_nomReference, cursor);
         this.internalEditor.refresh();
         this.internalEditor.clearHistory();
+        modification = false;
     };
 
     // loads code into editor
@@ -381,7 +375,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
         this.internalEditor.off('beforeChange', enforceRestrictions);
         codeString = preprocess(codeString);
 
-        derniereLigneSaisiModifiable = editableLines[0] + 1;
+        derniereLigneSaisiModifiable = editableLines[0];
+
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);
 
@@ -462,8 +457,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
         code = code.split('\n').filter(function (line) {
             return line.indexOf('OfStartLevelReached') < 0;
         }).join('\n');
-
-
 
         this.internalEditor.off('beforeChange', enforceRestrictions);
         this.internalEditor.setValue(code);
