@@ -17,8 +17,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
     var lastChange = {};
     var startOfStartLevel = null;
     var endOfStartLevel = null;
-    var derniereLigneSaisiModifiable = -1;
-    var modification = false;
+    var lastEditedLine = -1;
+    var editedFromApi = false;
 
     this.setEndOfStartLevel = function (eosl) {
         endOfStartLevel = eosl;
@@ -152,9 +152,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
     // enforces editing restrictions when set as the handler
     // for the 'beforeChange' event
     var enforceRestrictions = function (instance, change) {
-        if (modification) {
+        /*
+        if (editedFromApi) {
             return;
         }
+        */
 
         lastChange = change;
 
@@ -337,19 +339,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
                     instance.indentLine(loc.line, "prev");
                 }
 
-                console.log(editableLines);
-                console.log(loc.line);
-
-                // Si la modification traite suelement d'une ligne modifiable on change la ligne courrante.
+                // Change the value of the last line edited if the current line is editable
+                // Prevents inserting code into a uneditable line
                 if (lineIsEditable(loc.line)) {
-                    derniereLigneSaisiModifiable = loc.line;
+                    lastEditedLine = loc.line;
                 }
-                /*
-                if (editableLines[0] == loc.line) {
-                    derniereLigneSaisiModifiable = loc.line;
-                }
-                */
-
             }
         });
 
@@ -357,6 +351,12 @@ function CodeEditor(textAreaDomID, width, height, game) {
         this.internalEditor.on('change', trackUndoRedo);
     }
 
+    /**
+     * 
+     * Lets you know if a line is editable or not.
+     * @param {int} p_line The number of the line that will be tested
+     * @returns {boolean} If the line is editable or not.
+     */
     function lineIsEditable(p_line) {
         for (var line in editableLines) {
             if (editableLines[line] == p_line) {
@@ -367,18 +367,20 @@ function CodeEditor(textAreaDomID, width, height, game) {
         return false;
     }
 
-    // loads code into editor
-    this.mettre = function (p_nomReference) {
-        modification = true;
-        var cursorCh = this.internalEditor.getLine(derniereLigneSaisiModifiable).length
+    // Add code into editor
+    this.addCodeIntoEditor = function (p_codeString) {
+        var cursorCh = this.internalEditor.getLine(lastEditedLine).length;
 
-        this.internalEditor.setCursor({ line: derniereLigneSaisiModifiable, ch: cursorCh })
+        // Check if we exceeds the char limit
+        if ((cursorCh + p_codeString.length) > charLimit) {
+            return false;
+        }
 
-        var cursor = this.internalEditor.getCursor();
-        this.internalEditor.replaceRange(p_nomReference, cursor);
+        // Add the code after setting the cursor correctly
+        this.internalEditor.setCursor({ line: lastEditedLine, ch: cursorCh })
+        this.internalEditor.replaceRange(p_codeString, this.internalEditor.getCursor());
         this.internalEditor.refresh();
-        this.internalEditor.clearHistory();
-        modification = false;
+        return true;
     };
 
     // loads code into editor
@@ -393,7 +395,8 @@ function CodeEditor(textAreaDomID, width, height, game) {
         this.internalEditor.off('beforeChange', enforceRestrictions);
         codeString = preprocess(codeString);
 
-        derniereLigneSaisiModifiable = editableLines[0];
+        // By default the last edited line is the first editable line
+        lastEditedLine = editableLines[0];
 
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);

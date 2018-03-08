@@ -12,8 +12,14 @@ body {
 	margin:0;
 }
 
-.apiNotification {
+#apiSuccessNotification {
 	color: green;
+	font-size: 1em;
+	padding: 20px;
+}
+
+#apiErrorNotification {
+	color: red;
 	font-size: 1em;
 	padding: 20px;
 }
