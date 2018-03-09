@@ -130,9 +130,7 @@ jQuery.fn.sortElements = (function(){
         return sort.call(this, comparator).each(function(i){
             placements[i].call(getSortable.call(this));
         });
-
     };
-
 })();
 
 // http://stackoverflow.com/a/20095486/2608804
