@@ -11,6 +11,20 @@ var toggleFocus = (function () {
     };
 })();
 
+Game.prototype.enableShortcutKeysWithoutComputer = function () {
+    var game = this;
+
+    shortcut.add('ctrl+4', function () {
+        $("#resetButton").click();
+        return true;
+    });
+
+    shortcut.add('ctrl+0', function () {
+        $("#menuButton").click();
+        return true;
+    });
+};
+
 Game.prototype.enableShortcutKeys = function () {
     var game = this;
 
@@ -29,11 +43,6 @@ Game.prototype.enableShortcutKeys = function () {
         return true;
     });
 
-    shortcut.add('ctrl+4', function () {
-        $("#resetButton").click();
-        return true;
-    });
-
     shortcut.add('ctrl+5', function () {
         $("#executeButton").click();
         return true;
@@ -41,11 +50,6 @@ Game.prototype.enableShortcutKeys = function () {
 
     shortcut.add('ctrl+6', function () {
         $("#phoneButton").click();
-        return true;
-    });
-
-    shortcut.add('ctrl+0', function () {
-        $("#menuButton").click();
         return true;
     });
 };

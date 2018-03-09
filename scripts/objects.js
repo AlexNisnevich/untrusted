@@ -155,6 +155,7 @@ Game.prototype.getListOfObjects = function () {
                 $('#editorPane').fadeIn();
                 game.editor.refresh();
                 game.map.writeStatus('You have picked up the computer!');
+                game.enableShortcutKeys();
             },
             'onDrop': function () {
                 $('#editorPane').hide();
