@@ -300,12 +300,60 @@ function CodeEditor(textAreaDomID, width, height, game) {
     }
 
     this.initialize = function () {
+        var orig = CodeMirror.hint.javascript;
+        CodeMirror.hint.javascript = function (cm) {
+            var list;
+            var inner = orig(cm) || { from: cm.getCursor(), to: cm.getCursor(), list: [] };
+
+            $.each(game._getHelpCommands(), function (i, command) {
+                if (game.reference[command]) {
+                    var reference = game.reference[command];
+                    var name = reference.name.split('.')[0];
+                    var nameCommand = reference.name.split('.')[1];
+
+                    if (!inner.list.includes(name)) {
+                        inner.list.push(name);
+                    }
+
+                    if (!inner.list.includes(nameCommand)) {
+                        inner.list.push('.' + nameCommand);
+                    }
+                }
+            });
+
+            var cursor = cm.getCursor();
+            var currentLine = cm.getLine(cursor.line);
+            var start = cursor.ch;
+            var end = start;
+
+            //while (end < currentLine.length && /[\w$]+/.test(currentLine.charAt(end)))++end;
+            while (start && /[\w$]+/.test(currentLine.charAt(start - 1)))--start;
+
+            var curWord = (start != end) ? currentLine.slice(start, end) : false;
+            var regex = new RegExp('^' + curWord);
+            var result = {
+                list: (!curWord ? inner.list : inner.list.filter(function (item) {
+                    return item.match(regex);
+                })).sort(),
+                from: CodeMirror.Pos(cursor.line, start),
+                to: CodeMirror.Pos(cursor.line, end)
+            };
+            return result;
+        }
+
+        CodeMirror.commands.autocomplete = function (cm) {
+            cm.showHint({ hint: CodeMirror.hint.javascript });
+        }
+
         this.internalEditor = CodeMirror.fromTextArea(document.getElementById(textAreaDomID), {
             theme: 'vibrant-ink',
             lineNumbers: true,
             dragDrop: false,
-            smartIndent: false
+            smartIndent: false,
+            extraKeys: { "Ctrl-Space": "autocomplete" },
+            mode: 'javascript'
         });
+
 
         this.internalEditor.setSize(width, height);
 
