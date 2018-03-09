@@ -18,11 +18,7 @@
 
 function startLevel(map) {
 #START_OF_START_LEVEL#
-    map.displayChapter('Chapter 1\nUne assiette mixte svp');
-
-#BEGIN_EDITABLE#
-
-#END_EDITABLE#    
+    map.displayChapter('Chapter 1\nTest');
 
     map.placePlayer(14, 12);
     

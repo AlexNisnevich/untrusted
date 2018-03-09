@@ -14,14 +14,16 @@ body {
 
 #apiSuccessNotification {
 	color: green;
+	background-color: #000;
 	font-size: 1em;
-	padding: 20px;
+	padding-left: 20px;
 }
 
 #apiErrorNotification {
 	color: red;
 	font-size: 1em;
-	padding: 20px;
+	padding-left: 20px;
+	background-color: #000;
 }
 
 #container {

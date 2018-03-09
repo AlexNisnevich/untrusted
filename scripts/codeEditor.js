@@ -152,12 +152,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
     // enforces editing restrictions when set as the handler
     // for the 'beforeChange' event
     var enforceRestrictions = function (instance, change) {
-        /*
-        if (editedFromApi) {
-            return;
-        }
-        */
-
         lastChange = change;
 
         var inEditableArea = function (c) {
@@ -315,7 +309,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         this.internalEditor.setSize(width, height);
 
-
         // set up event handlers
         this.internalEditor.on("focus", function (instance) {
             // implements yellow box when changing focus
@@ -339,7 +332,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
                     instance.indentLine(loc.line, "prev");
                 }
 
-                // Change the value of the last line edited if the current line is editable
+                // Change the value of the last edited line if the current line is editable
                 // Prevents inserting code into a uneditable line
                 if (lineIsEditable(loc.line)) {
                     lastEditedLine = loc.line;
@@ -351,12 +344,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         this.internalEditor.on('change', trackUndoRedo);
     }
 
-    /**
-     * 
-     * Lets you know if a line is editable or not.
-     * @param {int} p_line The number of the line that will be tested
-     * @returns {boolean} If the line is editable or not.
-     */
+    // Lets you know if a line is editable or not
     function lineIsEditable(p_line) {
         for (var line in editableLines) {
             if (editableLines[line] == p_line) {
@@ -371,12 +359,12 @@ function CodeEditor(textAreaDomID, width, height, game) {
     this.addCodeIntoEditor = function (p_codeString) {
         var cursorCh = this.internalEditor.getLine(lastEditedLine).length;
 
-        // Check if we exceeds the char limit
+        // Check if we exceed the char limit
         if ((cursorCh + p_codeString.length) > charLimit) {
             return false;
         }
 
-        // Add the code after setting the cursor correctly
+        // Add code after correctly defining the cursor
         this.internalEditor.setCursor({ line: lastEditedLine, ch: cursorCh })
         this.internalEditor.replaceRange(p_codeString, this.internalEditor.getCursor());
         this.internalEditor.refresh();

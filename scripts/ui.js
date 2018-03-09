@@ -255,38 +255,39 @@ Game.prototype.openHelp = function (p_codeEditor) {
             $command.appendTo($('#helpPaneContent .category#' + reference.category));
 
             var $commandTitle = $('<div class="commandTitle">');
-           $commandTitle.text(reference.name).appendTo($command);
+            $commandTitle.text(reference.name).appendTo($command);
 
             var $commandDescription = $('<div class="commandDescription">');
             $commandDescription.html(reference.description).appendTo($command);
 
-            //$('command').css('cursor', 'pointer');
-            
-            $commandTitle.mouseover(function () {
-                $commandTitle.css('cursor', 'pointer');
-                $commandTitle.css('background-color', 'red');
-            });
+            $commandTitle.on({
+                mouseover: function (e) {
+                    $commandTitle.css('cursor', 'pointer');
+                    $commandTitle.css('background-color', 'red');
+                },
+                mouseleave: function () {
+                    $commandTitle.css('background-color', 'black');
+                },
+                click: function () {
+                    // Elements of the api notification (span)
+                    var text = "Added";
+                    var idName = "apiSuccessNotification"
 
-            $commandTitle.mouseleave(function () {
-                $commandTitle.css('background-color', 'black');
-            });
+                    // Change the text and the id if the code has not been added (charLimit)
+                    if (!game.editor.addCodeIntoEditor(reference.name)) {
+                        text = "Max line width";
+                        idName = "apiErrorNotification"
+                    }
 
-            $commandTitle.click(function () {
-                var text = "Added";
-                var idName = "apiSuccessNotification"
+                    $commandTitle.children("span").remove(); // Remove all span from children
+                    var apiNotification = $('<span id="' + idName + '">' + text + '</span>');
+                    $commandTitle.append(apiNotification); // Add a new span to the command title
 
-                if (!game.editor.addCodeIntoEditor(reference.name)) {
-                    text = "Max line width";
-                    idName = "apiErrorNotification"
+                    // Remove the notification after a few seconds 
+                    setTimeout(function () {
+                        apiNotification.remove();
+                    }, 3000);
                 }
-               
-                $commandTitle.children("span").remove();
-                var apiNotification = $('<span id="' + idName + '">' + text + '</span>');
-                $commandTitle.append(apiNotification);
-
-                setTimeout(function () {
-                    apiNotification.remove();
-                }, 3000);
             });
         }
     });
