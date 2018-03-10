@@ -293,7 +293,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
     // beforeChange events don't pick up undo/redo
     // so we track them on change event
     var trackUndoRedo = function (instance, change) {
-
         if (change.origin === 'undo' || change.origin === 'redo') {
             enforceRestrictions(instance, change);
         }
@@ -301,48 +300,44 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     this.initialize = function () {
         var orig = CodeMirror.hint.javascript;
-        var savedList = [];
 
         CodeMirror.hint.javascript = function (cm) {
-            var list;
-            var inner = orig(cm) || { from: cm.getCursor(), to: cm.getCursor(), list: savedList };
-
-            if(savedList.length == 0 ) {
-                $.each(game._getHelpCommands(), function (i, command) {
-                    if (game.reference[command]) {
-                        var reference = game.reference[command];
-                        var name = reference.name.split('.')[0];
-                        var nameCommand = reference.name.split('.')[1];
-    
-                        if (!savedList.includes(name)) {
-                            savedList.push(name);
-                        }
-                    }
-                });
-            }
-            
+            var inner = orig(cm) || { from: cm.getCursor(), to: cm.getCursor(), list: [] };
             var cursor = cm.getCursor();
             var currentLine = cm.getLine(cursor.line);
             var start = cursor.ch;
             var end = start;
 
-            //while (end < currentLine.length && /[\w$]+/.test(currentLine.charAt(end)))++end;
-            while (start && /[\w$]+/.test(currentLine.charAt(start - 1)))--start;
+            if (!lineIsEditable(cursor.line)) {
+                // Add help commands to the autocomplete list
+                $.each(game._getHelpCommands(), function (i, command) {
+                    if (game.reference[command]) {
+                        var reference = game.reference[command];
+                        var name = reference.name.split('.')[0];
 
-            var curWord = (start != end) ? currentLine.slice(start, end) : false;
-            var regex = new RegExp('^' + curWord);
-            var result = {
-                list: (!curWord ? inner.list : inner.list.filter(function (item) {
-                    return item.match(regex);
-                })).sort(),
-                from: CodeMirror.Pos(cursor.line, start),
-                to: CodeMirror.Pos(cursor.line, end)
-            };
-            return result;
-        }
+                        if (!inner.list.includes(name)) {
+                            inner.list.push(name);
+                        }
+                    }
+                });
 
-        CodeMirror.commands.autocomplete = function (cm) {
-            cm.showHint({ hint: CodeMirror.hint.javascript });
+                // Determine the beginning and end of the current word
+                while (end < currentLine.length && /[\w$]+/.test(currentLine.charAt(end)))++end;
+                while (start && /[\w$]+/.test(currentLine.charAt(start - 1)))--start;
+
+                // Current word
+                var curWord = (start != end) ? currentLine.slice(start, end) : false;
+                var regex = new RegExp('^' + curWord);
+                // Sort the list with the current word if we have a current word
+                var result = {
+                    list: (!curWord ? inner.list : inner.list.filter(function (item) {
+                        return item.match(regex);
+                    })).sort(),
+                    from: CodeMirror.Pos(cursor.line, start),
+                    to: CodeMirror.Pos(cursor.line, end)
+                };
+                return result;
+            }
         }
 
         this.internalEditor = CodeMirror.fromTextArea(document.getElementById(textAreaDomID), {
@@ -353,7 +348,6 @@ function CodeEditor(textAreaDomID, width, height, game) {
             extraKeys: { "Ctrl-Space": "autocomplete" },
             mode: 'javascript'
         });
-
 
         this.internalEditor.setSize(width, height);
 
