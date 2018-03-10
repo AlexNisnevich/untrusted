@@ -308,7 +308,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
             var start = cursor.ch;
             var end = start;
 
-            if (!lineIsEditable(cursor.line)) {
+            if (lineIsEditable(cursor.line)) {
                 // Add help commands to the autocomplete list
                 $.each(game._getHelpCommands(), function (i, command) {
                     if (game.reference[command]) {
