@@ -301,26 +301,26 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     this.initialize = function () {
         var orig = CodeMirror.hint.javascript;
+        var savedList = [];
+
         CodeMirror.hint.javascript = function (cm) {
             var list;
-            var inner = orig(cm) || { from: cm.getCursor(), to: cm.getCursor(), list: [] };
+            var inner = orig(cm) || { from: cm.getCursor(), to: cm.getCursor(), list: savedList };
 
-            $.each(game._getHelpCommands(), function (i, command) {
-                if (game.reference[command]) {
-                    var reference = game.reference[command];
-                    var name = reference.name.split('.')[0];
-                    var nameCommand = reference.name.split('.')[1];
-
-                    if (!inner.list.includes(name)) {
-                        inner.list.push(name);
+            if(savedList.length == 0 ) {
+                $.each(game._getHelpCommands(), function (i, command) {
+                    if (game.reference[command]) {
+                        var reference = game.reference[command];
+                        var name = reference.name.split('.')[0];
+                        var nameCommand = reference.name.split('.')[1];
+    
+                        if (!savedList.includes(name)) {
+                            savedList.push(name);
+                        }
                     }
-
-                    if (!inner.list.includes(nameCommand)) {
-                        inner.list.push('.' + nameCommand);
-                    }
-                }
-            });
-
+                });
+            }
+            
             var cursor = cm.getCursor();
             var currentLine = cm.getLine(cursor.line);
             var start = cursor.ch;
