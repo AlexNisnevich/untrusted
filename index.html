@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Untrusted - a user javascript adventure game</title>
 	<meta charset='utf8'></meta>
@@ -10,10 +11,13 @@
 	<link rel="stylesheet" href="styles/game.css">
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script type="text/javascript" src="lib/es5-shim.min.js"></script>
 	<script type="text/javascript" src="lib/shortcut.js"></script>
 	<script type="text/javascript" src="lib/rotjs-library/rot.js"></script>
 	<script type="text/javascript" src="lib/jquery.jplayer.min.js"></script>
+
+	<script type="text/javascript" src="lib/jquery.knob.js"></script>
 
 	<link rel="stylesheet" href="lib/codemirror-3.1/lib/codemirror.css">
 	<script src="lib/codemirror-3.1/lib/codemirror.js"></script>
@@ -21,18 +25,40 @@
 	<link rel="stylesheet" href="lib/codemirror-3.1/theme/vibrant-ink.css">
 
 	<script src="scripts/build/untrusted.js"></script>
+	<style>
+	</style>
+	<script>
+	</script>
 </head>
+
 <body>
-	<a id="forkMe" href="https://github.com/AlexNisnevich/untrusted" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999;" src="//s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+	<a id="forkMe" href="https://github.com/AlexNisnevich/untrusted" target="_blank">
+		<img style="position: absolute; top: 0; right: 0; border: 0; z-index: 9999;" src="//s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
+		 alt="Fork me on GitHub">
+	</a>
 	<div id="container">
-	<div id="panes">
-		<noscript>
-			You must enable JavaScript to play Untrusted.
-		</noscript>
-		<a id="muteButton"><img src="images/mute-off.png" /></a>
+		<!--panes for new controls-->
+		<div id="panes">
+			<input class="knob" data-min="0" data-max="100" data-step="1" data-displayInput="true" value="60" data-fgColor="#66CC66"
+			 data-angleOffset=-125 data-angleArc=250 data-width="50%">
+			<label class="switch" for="checkbox">
+				<input type="checkbox" id="checkbox" />
+				<div class="slider round"></div>
+			</label>
+		</div>
+		<div id="panes">
+			<noscript>
+				You must enable JavaScript to play Untrusted.
+			</noscript>
+			<a id="muteButton">
+				<img src="images/mute-off.png" />
+			</a>
 			<span id="nowPlayingMsg" class="topStatus"></span>
 			<span id="savedLevelMsg" class="topStatus"></span>
-			<div id="screenPane">
+			<div id="screenPane" class="tooltip">
+				<span id="tooltip-span" style="display: none;">
+					[-0,-0]
+				</span>
 				<canvas id="drawingCanvas"></canvas>
 				<div id="dummyDom"></div>
 				<div id="screen"></div>
@@ -44,13 +70,36 @@
 				<textarea id="editor">
 				</textarea>
 				<div id="buttons">
-					<span><a id="helpButton" title="Ctrl+1: API Reference"><span class="keys">^1</span> API</a></span>
-					<span><a id="toggleFocusButton" title="Ctrl+2: Toggle Focus"><span class="keys">^2</span> Toggle Focus</a></span>
-                    <span><a id="notepadButton" title="Ctrl+3: Notepad"><span class="keys">^3</span> Notepad</a></span>
-					<span><a id="resetButton" title="Ctrl+4: Reset Level"><span class="keys">^4</span> Reset</a></span>
-					<span><a id="executeButton" title="Ctrl+5: Execute"><span class="keys">^5</span> Execute</a></span>
-					<span><a id="phoneButton" style="display: none;" title="Q: Use Phone"><span class="keys"> Q</span> Phone</a></span>
-					<span><a id="menuButton" title="Ctrl+0: Menu" style="float: right;"><span class="keys">^0</span> <span id="menuLabel">Menu</span></a></span>
+					<span>
+						<a id="helpButton" title="Ctrl+1: API Reference">
+							<span class="keys">^1</span> API</a>
+					</span>
+					<span>
+						<a id="toggleFocusButton" title="Ctrl+2: Toggle Focus">
+							<span class="keys">^2</span> Toggle Focus</a>
+					</span>
+					<span>
+						<a id="notepadButton" title="Ctrl+3: Notepad">
+							<span class="keys">^3</span> Notepad</a>
+					</span>
+					<span>
+						<a id="resetButton" title="Ctrl+4: Reset Level">
+							<span class="keys">^4</span> Reset</a>
+					</span>
+					<span>
+						<a id="executeButton" title="Ctrl+5: Execute">
+							<span class="keys">^5</span> Execute</a>
+					</span>
+					<span>
+						<a id="phoneButton" style="display: none;" title="Q: Use Phone">
+							<span class="keys"> Q</span> Phone</a>
+					</span>
+					<span>
+						<a id="menuButton" title="Ctrl+0: Menu" style="float: right;">
+							<span class="keys">^0</span>
+							<span id="menuLabel">Menu</span>
+						</a>
+					</span>
 				</div>
 			</div>
 			<div id="helpPane" style="display: none;">
@@ -69,6 +118,7 @@
 						<li id="levelsDir" class="nested selected">levels/</li>
 						<li id="scriptsDir" class="nested">scripts/</li>
 						<li id="bonusDir" class="nested">bonus/</li>
+						<li id="displayDir" class="nested">display/</li>
 					</ul>
 				</div>
 				<div id="rightMenuPane">
@@ -77,17 +127,18 @@
 					<div id="levels"></div>
 					<div id="scripts"></div>
 					<div id="bonus"></div>
+					<div id="color"></div>
 				</div>
 			</div>
 
-		<div id="notepadPane" class='pop_up_box'>
-			<div id='notepadPaneContent'>
-			<div class="pop_up_box_heading">$EDITOR</div>
-			<textarea id=notepadTextarea></textarea>
-			<button id='notepadSaveButton'>Save</button>
-		</div>
-                <div id='notepadPaneCloseButton'>x</div>
-            </div>
+			<div id="notepadPane" class='pop_up_box'>
+				<div id='notepadPaneContent'>
+					<div class="pop_up_box_heading">$EDITOR</div>
+					<textarea id=notepadTextarea></textarea>
+					<button id='notepadSaveButton'>Save</button>
+				</div>
+				<div id='notepadPaneCloseButton'>x</div>
+			</div>
 		</div>
 
 		<div id="licensing">
@@ -98,7 +149,7 @@
 		<div id="paypal">
 			<span id="paypalCaption">Send some beer money our way?</span>
 			<form id="paypalButton" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-			<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="cmd" value="_s-xclick">
 				<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
 				<input type="image" src="//www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 				<img alt="" border="0" src="//www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
@@ -109,15 +160,16 @@
 	<div id="jquery_bgPlayer" class="jp-jplayer"></div>
 	<div id="jquery_soundPlayer" class="jp-jplayer"></div>
 	<script type="text/javascript">
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-345959-12']);
-	  _gaq.push(['_trackPageview']);
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-345959-12']);
+		_gaq.push(['_trackPageview']);
 
-	  (function() {
-		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
+		(function () {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
 	</script>
 </body>
+
 </html>

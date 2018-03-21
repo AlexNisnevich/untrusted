@@ -162,6 +162,11 @@ Game.prototype.activateSuperMenu = function () {
         $('#menuPane').addClass('expanded');
         $('#leftMenuPane').show();
         $('#rightMenuPane .pop_up_box_heading').hide();
+        
+        $('#leftMenuPane li').removeClass('selected');
+        $('#rightMenuPane div').hide();
+        $('#rootDir').addClass('selected');
+        $('#root').show();
 
         $('#rootDir').click(function () {
             $('#leftMenuPane li').removeClass('selected');
@@ -191,12 +196,26 @@ Game.prototype.activateSuperMenu = function () {
             $('#bonus').show();
         });
 
+        $('#displayDir').click(function () {
+            $('#leftMenuPane li').removeClass('selected');
+            $('#rightMenuPane div').hide();
+            $('#displayDir').addClass('selected');
+            $('#display').show();
+        });
+
+        // here we can put options for the displays
+        var test = $('<input>');
+        test.text("display position").click(function () {
+            console.log("display changed");
+        });
+        test.appendTo('#menuPane #display');
+
         $.each(game._viewableScripts, function (i, script) {
             var scriptButton = $('<button>');
             scriptButton.text(script).click(function () {
                 game._editFile('scripts/' + script);
                 $('#menuPane').hide();
-            });
+            });   
 
             if (game._editableScripts.indexOf(script) == -1) {
                 scriptButton.addClass('uneditable');

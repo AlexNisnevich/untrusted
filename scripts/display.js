@@ -1,4 +1,4 @@
-ROT.Display.create = function(game, opts) {
+ROT.Display.create = function (game, opts) {
     opts.fontFamily = '"droid sans mono", Courier, "Courier New", monospace';
     var display = new ROT.Display(opts);
     display.game = game;
@@ -7,7 +7,7 @@ ROT.Display.create = function(game, opts) {
 
 ROT.Display.prototype.errors = [];
 
-ROT.Display.prototype.setupEventHandlers = function() {
+ROT.Display.prototype.setupEventHandlers = function () {
     var display = this;
     var game = this.game;
 
@@ -36,7 +36,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
 
     // contentEditable is required for canvas elements to detect keyboard events
     $(this.getContainer()).attr("contentEditable", "true");
-    this.getContainer().addEventListener("keydown", function(e) {
+    this.getContainer().addEventListener("keydown", function (e) {
         if (display._intro == true) {
             game._start();
             display._intro = false;
@@ -46,12 +46,46 @@ ROT.Display.prototype.setupEventHandlers = function() {
         e.preventDefault();
     });
 
-    this.getContainer().addEventListener("click", function(e) {
+    this.getContainer().addEventListener("click", function (e) {
         $(this).addClass('focus');
         $('.CodeMirror').removeClass('focus');
 
         $('#helpPane').hide();
         $('#menuPane').hide();
+    });
+
+    // if the mous moves, we can display the position
+    this.getContainer().addEventListener("mousemove", function (e) {
+        if (display.coordCanva) {
+            var x = e.clientX, y = e.clientY;
+            window.xMouse = display.eventToPosition(e)[0];
+            window.yMouse = display.eventToPosition(e)[1];
+            if (window.lastMapReceived) {
+                display.drawAll(window.lastMapReceived);
+            }
+            document.getElementById('tooltip-span').innerHTML = "[" + display.eventToPosition(e) + "]";
+            document.getElementById('tooltip-span').style.top = (y + 20) + 'px';
+            document.getElementById('tooltip-span').style.left = (x + 20) + 'px';
+        }
+    });
+
+    // to activate the position tracking
+    document.getElementById('checkbox').onchange = function () {
+        if (document.getElementById('checkbox').checked) {
+            display.coordCanva = true;
+            document.getElementById("tooltip-span").style["display"] = null;
+        } else {
+            display.coordCanva = false;
+            document.getElementById("tooltip-span").style["display"] = "none";
+        }
+    };
+
+    this.getContainer().addEventListener("mouseleave", function (e) {
+        if (window.lastMapReceived) {
+            window.xMouse = -1;
+            window.yMouse = -1;
+            display.drawAll(window.lastMapReceived);
+        }
     });
 };
 
@@ -65,11 +99,18 @@ ROT.Display.prototype.drawObject = function (map, x, y, object) {
     var color = object.color || definition.color || "#fff";
     var bgColor = object.bgColor || "#000";
 
-    this.draw(x, y, symbol, color, bgColor);
+    // if we are drawing position, we change the color
+    if (this.coordCanva && window.xMouse == x && window.yMouse == y) {
+        this.draw(x, y, symbol, color, "#00F");
+    }
+    else {
+        this.draw(x, y, symbol, color, bgColor);
+    }
 };
 
-ROT.Display.prototype.drawAll = function(map) {
-    if (!this.offset) {this.offset = 0;}
+ROT.Display.prototype.drawAll = function (map) {
+    window.lastMapReceived = map;
+    if (!this.offset) { this.offset = 0; }
 
     var game = this.game;
 
@@ -133,9 +174,8 @@ ROT.Display.prototype.drawAll = function(map) {
     this.grid = grid;
 };
 
-ROT.Display.prototype.drawPreviousLevel = function(map, offset) {
-    if (!offset) {offset = 0;}
-
+ROT.Display.prototype.drawPreviousLevel = function (map, offset) {
+    if (!offset) { offset = 0; }
     var game = this.game;
     var grid = this.savedGrid;
 
@@ -155,7 +195,7 @@ ROT.Display.prototype.saveGrid = function (map) {
 
 ROT.Display.prototype.playIntro = function (map, i) {
     display = this;
-	playIntro(display, map, i)
+    playIntro(display, map, i)
 };
 
 ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
@@ -187,7 +227,7 @@ ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
     }
 };
 
-ROT.Display.prototype.writeStatus = function(text) {
+ROT.Display.prototype.writeStatus = function (text) {
     var map = this.game.map;
 
     var strings = [text];
@@ -206,7 +246,7 @@ ROT.Display.prototype.writeStatus = function(text) {
     }
 };
 
-ROT.Display.prototype.appendError = function(errorText, command) {
+ROT.Display.prototype.appendError = function (errorText, command) {
     var map = this.game.map;
     if (!command) {
         command = "%c{#0f0}> run " + this.game._levelFileNames[this.game._currentLevel - 1];
@@ -218,13 +258,13 @@ ROT.Display.prototype.appendError = function(errorText, command) {
     this.drawAll(map);
 };
 
-ROT.Display.prototype.focus = function() {
+ROT.Display.prototype.focus = function () {
     $('#screen').show();
     $(this.getContainer()).attr('tabindex', '0').click().focus();
 };
 
 
-ROT.Display.prototype.renderDom = function(html, css) {
+ROT.Display.prototype.renderDom = function (html, css) {
     // using ideas from http://robert.ocallahan.org/2011/11/drawing-dom-content-to-canvas.html
     /*var canvas = $('#drawingCanvas')[0];
     var ctx = canvas.getContext("2d");
