@@ -130,9 +130,7 @@ jQuery.fn.sortElements = (function(){
         return sort.call(this, comparator).each(function(i){
             placements[i].call(getSortable.call(this));
         });
-
     };
-
 })();
 
 // http://stackoverflow.com/a/20095486/2608804
@@ -161,12 +159,12 @@ function playIntro(display, map, i) {
         display.drawText(0, i - 2, "%c{#0f0}> initialize");
         display.drawText(13, i + 3, "R I S E O F T H E M O D S");
         display.drawText(22, i + 5, "- or - ");
-        display.drawText(16, i + 7, "THE EXAMPLE OF MODS");
+        display.drawText(16, i + 7, "PO THE BEAST");
         display.drawText(5, i + 12, "a demo that shows how to develop a mod");
         display.drawText(10, i + 22, "Press any key to begin ...");
         setTimeout(function () {
             display.playIntro(map, i - 1);
-        }, 100);
+        }, 1);
     }
 }
 (function () {
@@ -185,14 +183,14 @@ function Game(debugMode, startLevel) {
     };
 
     this._levelFileNames = [
-'01_theGreatWall.jsx','02_mod.jsx'
+'01_shish.jsx','02_minesweeper.jsx','03_mod.jsx'
     ];
 
     this._bonusLevels = [
 
     ].filter(function (lvl) { return (lvl.indexOf('_') != 0); }); // filter out bonus levels that start with '_'
 
-	this._mod = '';
+	this._mod = 'po';
 
     this._viewableScripts = [
         'codeEditor.js',
@@ -286,7 +284,7 @@ function Game(debugMode, startLevel) {
         }
 
         // Enable controls
-        this.enableShortcutKeys();
+        this.enableShortcutKeysWithoutComputer();
         this.enableButtons();
         this.setUpNotepad();
 
@@ -597,24 +595,25 @@ function Game(debugMode, startLevel) {
 }
 function CodeEditor(textAreaDomID, width, height, game) {
     var symbols = {
-        'begin_line':'#BEGIN_EDITABLE#',
-        'end_line':'#END_EDITABLE#',
-        'begin_char':"#{#",
+        'begin_line': '#BEGIN_EDITABLE#',
+        'end_line': '#END_EDITABLE#',
+        'begin_char': "#{#",
         'end_char': "#}#",
-        'begin_properties':'#BEGIN_PROPERTIES#',
-        'end_properties':'#END_PROPERTIES#',
-        'start_start_level':'#START_OF_START_LEVEL#',
-        'end_start_level':'#END_OF_START_LEVEL#'
+        'begin_properties': '#BEGIN_PROPERTIES#',
+        'end_properties': '#END_PROPERTIES#',
+        'start_start_level': '#START_OF_START_LEVEL#',
+        'end_start_level': '#END_OF_START_LEVEL#'
     };
 
     var charLimit = 80;
-
     var properties = {};
     var editableLines = [];
     var editableSections = {};
     var lastChange = {};
     var startOfStartLevel = null;
     var endOfStartLevel = null;
+    var lastEditedLine = -1;
+    var editedFromApi = false;
 
     this.setEndOfStartLevel = function (eosl) {
         endOfStartLevel = eosl;
@@ -653,42 +652,42 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
             // process properties
             if (currentLine.indexOf(symbols.begin_properties) === 0) {
-                lineArray.splice(i,1); // be aware that this *mutates* the list
+                lineArray.splice(i, 1); // be aware that this *mutates* the list
                 i--;
                 inPropertiesBlock = true;
             } else if (currentLine.indexOf(symbols.end_properties) === 0) {
-                lineArray.splice(i,1);
+                lineArray.splice(i, 1);
                 i--;
                 inPropertiesBlock = false;
             } else if (inPropertiesBlock) {
-                lineArray.splice(i,1);
+                lineArray.splice(i, 1);
                 i--;
                 propertiesString += currentLine;
             }
             // process editable lines and sections
-              else if (currentLine.indexOf(symbols.begin_line) === 0) {
-                lineArray.splice(i,1);
+            else if (currentLine.indexOf(symbols.begin_line) === 0) {
+                lineArray.splice(i, 1);
                 i--;
                 inEditableBlock = true;
             } else if (currentLine.indexOf(symbols.end_line) === 0) {
-                lineArray.splice(i,1);
+                lineArray.splice(i, 1);
                 i--;
                 inEditableBlock = false;
             }
             // process start of startLevel()
-              else if (currentLine.indexOf(symbols.start_start_level) === 0) {
-                lineArray.splice(i,1);
+            else if (currentLine.indexOf(symbols.start_start_level) === 0) {
+                lineArray.splice(i, 1);
                 startOfStartLevel = i;
                 i--;
             }
             // process end of startLevel()
-              else if (currentLine.indexOf(symbols.end_start_level) === 0) {
-                lineArray.splice(i,1);
+            else if (currentLine.indexOf(symbols.end_start_level) === 0) {
+                lineArray.splice(i, 1);
                 endOfStartLevel = i;
                 i--;
             }
             // everything else
-              else {
+            else {
                 if (inEditableBlock) {
                     editableLines.push(i);
                 } else {
@@ -696,11 +695,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
                     var sections = [];
                     var startPoint = null;
                     for (var j = 0; j < currentLine.length - 2; j++) {
-                        if (currentLine.slice(j,j+3) === symbols.begin_char) {
-                            currentLine = currentLine.slice(0,j) + currentLine.slice(j+3, currentLine.length);
+                        if (currentLine.slice(j, j + 3) === symbols.begin_char) {
+                            currentLine = currentLine.slice(0, j) + currentLine.slice(j + 3, currentLine.length);
                             startPoint = j;
-                        } else if (currentLine.slice(j,j+3) === symbols.end_char) {
-                            currentLine = currentLine.slice(0,j) + currentLine.slice(j+3, currentLine.length);
+                        } else if (currentLine.slice(j, j + 3) === symbols.end_char) {
+                            currentLine = currentLine.slice(0, j) + currentLine.slice(j + 3, currentLine.length);
                             sections.push([startPoint, j]);
                         }
                     }
@@ -721,7 +720,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         return lineArray.join("\n");
     }
 
-    var findEndOfSegment = function(line) {
+    var findEndOfSegment = function (line) {
         // Given an editable line number, returns the last line of the
         // given line's editable segment.
 
@@ -732,11 +731,11 @@ function CodeEditor(textAreaDomID, width, height, game) {
         return findEndOfSegment(line + 1);
     };
 
-    var shiftLinesBy = function(array, after, shiftAmount) {
+    var shiftLinesBy = function (array, after, shiftAmount) {
         // Shifts all line numbers strictly after the given line by
         // the provided amount.
 
-        return array.map(function(line) {
+        return array.map(function (line) {
             if (line > after) {
                 log('Shifting ' + line + ' to ' + (line + shiftAmount));
                 return line + shiftAmount;
@@ -747,10 +746,10 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     // enforces editing restrictions when set as the handler
     // for the 'beforeChange' event
-    var enforceRestrictions = function(instance, change) {
+    var enforceRestrictions = function (instance, change) {
         lastChange = change;
 
-        var inEditableArea = function(c) {
+        var inEditableArea = function (c) {
             var lineNum = c.to.line;
             if (editableLines.indexOf(lineNum) !== -1 && editableLines.indexOf(c.from.line) !== -1) {
                 // editable lines?
@@ -780,7 +779,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         if (!inEditableArea(change)) {
             change.cancel();
         } else if (change.to.line < change.from.line ||
-                   change.to.line - change.from.line + 1 > change.text.length) { // Deletion
+            change.to.line - change.from.line + 1 > change.text.length) { // Deletion
             updateEditableLinesOnDeletion(change);
         } else { // Insert/paste
             // First line already editable
@@ -843,7 +842,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         log(editableLines);
     }
 
-    var updateEditableLinesOnInsert = function(change, newLines) {
+    var updateEditableLinesOnInsert = function (change, newLines) {
         var lastLine = findEndOfSegment(change.to.line);
 
         // Shift editable line numbers after this segment
@@ -866,7 +865,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         }
     };
 
-    var updateEditableLinesOnDeletion = function(changeInput) {
+    var updateEditableLinesOnDeletion = function (changeInput) {
         // Figure out how many lines just got removed
         var numRemoved = changeInput.to.line - changeInput.from.line - changeInput.text.length + 1;
         // Find end of segment
@@ -888,25 +887,67 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     // beforeChange events don't pick up undo/redo
     // so we track them on change event
-    var trackUndoRedo = function(instance, change) {
+    var trackUndoRedo = function (instance, change) {
         if (change.origin === 'undo' || change.origin === 'redo') {
             enforceRestrictions(instance, change);
         }
     }
 
-    this.initialize = function() {
+    this.initialize = function () {
+        var orig = CodeMirror.hint.javascript;
+
+        CodeMirror.hint.javascript = function (cm) {
+            var inner = orig(cm) || { from: cm.getCursor(), to: cm.getCursor(), list: [] };
+            var cursor = cm.getCursor();
+            var currentLine = cm.getLine(cursor.line);
+            var start = cursor.ch;
+            var end = start;
+
+            if (lineIsEditable(cursor.line)) {
+                // Add help commands to the autocomplete list
+                $.each(game._getHelpCommands(), function (i, command) {
+                    if (game.reference[command]) {
+                        var reference = game.reference[command];
+                        var name = reference.name.split('.')[0];
+
+                        if (!inner.list.includes(name)) {
+                            inner.list.push(name);
+                        }
+                    }
+                });
+
+                // Determine the beginning and end of the current word
+                while (end < currentLine.length && /[\w$]+/.test(currentLine.charAt(end)))++end;
+                while (start && /[\w$]+/.test(currentLine.charAt(start - 1)))--start;
+
+                // Current word
+                var curWord = (start != end) ? currentLine.slice(start, end) : false;
+                var regex = new RegExp('^' + curWord);
+                // Sort the list with the current word if we have a current word
+                var result = {
+                    list: (!curWord ? inner.list : inner.list.filter(function (item) {
+                        return item.match(regex);
+                    })).sort(),
+                    from: CodeMirror.Pos(cursor.line, start),
+                    to: CodeMirror.Pos(cursor.line, end)
+                };
+                return result;
+            }
+        }
+
         this.internalEditor = CodeMirror.fromTextArea(document.getElementById(textAreaDomID), {
             theme: 'vibrant-ink',
             lineNumbers: true,
             dragDrop: false,
-            smartIndent: false
+            smartIndent: false,
+            extraKeys: { "Ctrl-Space": "autocomplete" },
+            mode: 'javascript'
         });
 
         this.internalEditor.setSize(width, height);
 
         // set up event handlers
-
-        this.internalEditor.on("focus", function(instance) {
+        this.internalEditor.on("focus", function (instance) {
             // implements yellow box when changing focus
             $('.CodeMirror').addClass('focus');
             $('#screen canvas').removeClass('focus');
@@ -923,8 +964,15 @@ function CodeEditor(textAreaDomID, width, height, game) {
             // and the line is empty (ignore if backspacing)
             if (lastChange.origin !== '+delete') {
                 var loc = instance.getCursor();
+
                 if (loc.ch === 0 && instance.getLine(loc.line).trim() === "") {
                     instance.indentLine(loc.line, "prev");
+                }
+
+                // Change the value of the last edited line if the current line is editable
+                // Prevents inserting code into a uneditable line
+                if (lineIsEditable(loc.line)) {
+                    lastEditedLine = loc.line;
                 }
             }
         });
@@ -933,8 +981,35 @@ function CodeEditor(textAreaDomID, width, height, game) {
         this.internalEditor.on('change', trackUndoRedo);
     }
 
+    // Lets you know if a line is editable or not
+    function lineIsEditable(p_line) {
+        for (var line in editableLines) {
+            if (editableLines[line] == p_line) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Add code into editor
+    this.addCodeIntoEditor = function (p_codeString) {
+        var cursorCh = this.internalEditor.getLine(lastEditedLine).length;
+
+        // Check if we exceed the char limit
+        if ((cursorCh + p_codeString.length) > charLimit) {
+            return false;
+        }
+
+        // Add code after correctly defining the cursor
+        this.internalEditor.setCursor({ line: lastEditedLine, ch: cursorCh })
+        this.internalEditor.replaceRange(p_codeString, this.internalEditor.getCursor());
+        this.internalEditor.refresh();
+        return true;
+    };
+
     // loads code into editor
-    this.loadCode = function(codeString) {
+    this.loadCode = function (codeString) {
         /*
          * logic: before setting the value of the editor to the code string,
          * we run it through setEditableLines and setEditableSections, which
@@ -944,6 +1019,10 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         this.internalEditor.off('beforeChange', enforceRestrictions);
         codeString = preprocess(codeString);
+
+        // By default the last edited line is the first editable line
+        lastEditedLine = editableLines[0];
+
         this.internalEditor.setValue(codeString);
         this.internalEditor.on('beforeChange', enforceRestrictions);
 
@@ -953,7 +1032,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
     };
 
     // marks uneditable lines within editor
-    this.markUneditableLines = function() {
+    this.markUneditableLines = function () {
         var instance = this.internalEditor;
         for (var i = 0; i < instance.lineCount(); i++) {
             if (editableLines.indexOf(i) === -1) {
@@ -963,16 +1042,16 @@ function CodeEditor(textAreaDomID, width, height, game) {
     }
 
     // marks editable sections inside uneditable lines within editor
-    var markEditableSections = function(instance) {
+    var markEditableSections = function (instance) {
         $('.editableSection').removeClass('editableSection');
         for (var line in editableSections) {
             if (editableSections.hasOwnProperty(line)) {
                 var sections = editableSections[line];
                 for (var i = 0; i < sections.length; i++) {
                     var section = sections[i];
-                    var from = {'line': parseInt(line), 'ch': section[0]};
-                    var to = {'line': parseInt(line), 'ch': section[1]};
-                    instance.markText(from, to, {'className': 'editableSection'});
+                    var from = { 'line': parseInt(line), 'ch': section[0] };
+                    var to = { 'line': parseInt(line), 'ch': section[1] };
+                    instance.markText(from, to, { 'className': 'editableSection' });
                 }
             }
         }
@@ -989,7 +1068,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         if (!forSaving && endOfStartLevel) {
             // insert the end of startLevel() marker at the appropriate location
-            lines.splice(endOfStartLevel+1, 0, "map._endOfStartLevelReached()");
+            lines.splice(endOfStartLevel + 1, 0, "map._endOfStartLevelReached()");
         }
 
         return lines.join('\n');
@@ -1019,13 +1098,13 @@ function CodeEditor(textAreaDomID, width, height, game) {
         return properties;
     }
 
-    this.setCode = function(code) {
+    this.setCode = function (code) {
         // make sure we're not saving the hidden START/END_OF_START_LEVEL lines
         code = code.split('\n').filter(function (line) {
             return line.indexOf('OfStartLevelReached') < 0;
         }).join('\n');
 
-        this.internalEditor.off('beforeChange',enforceRestrictions);
+        this.internalEditor.off('beforeChange', enforceRestrictions);
         this.internalEditor.setValue(code);
         this.internalEditor.on('beforeChange', enforceRestrictions);
         this.markUneditableLines();
@@ -1134,7 +1213,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
     this.getContainer().addEventListener("click", function(e) {
         $(this).addClass('focus');
         $('.CodeMirror').removeClass('focus');
-
+ 
         $('#helpPane').hide();
         $('#menuPane').hide();
     });
@@ -2537,6 +2616,7 @@ Game.prototype.getListOfObjects = function () {
                 $('#editorPane').fadeIn();
                 game.editor.refresh();
                 game.map.writeStatus('You have picked up the computer!');
+                game.enableShortcutKeys();
             },
             'onDrop': function () {
                 $('#editorPane').hide();
@@ -3921,6 +4001,20 @@ var toggleFocus = (function () {
     };
 })();
 
+Game.prototype.enableShortcutKeysWithoutComputer = function () {
+    var game = this;
+
+    shortcut.add('ctrl+4', function () {
+        $("#resetButton").click();
+        return true;
+    });
+
+    shortcut.add('ctrl+0', function () {
+        $("#menuButton").click();
+        return true;
+    });
+};
+
 Game.prototype.enableShortcutKeys = function () {
     var game = this;
 
@@ -3929,18 +4023,13 @@ Game.prototype.enableShortcutKeys = function () {
         return true;
     });
 
-	shortcut.add('ctrl+2', function () {
+    shortcut.add('ctrl+2', function () {
         $("#toggleFocusButton").click();
-		return true;
-	});
-
-    shortcut.add('ctrl+3', function () {
-        $("#notepadButton").click();
         return true;
     });
 
-    shortcut.add('ctrl+4', function () {
-        $("#resetButton").click();
+    shortcut.add('ctrl+3', function () {
+        $("#notepadButton").click();
         return true;
     });
 
@@ -3953,27 +4042,22 @@ Game.prototype.enableShortcutKeys = function () {
         $("#phoneButton").click();
         return true;
     });
-
-    shortcut.add('ctrl+0', function () {
-        $("#menuButton").click();
-        return true;
-    });
 };
 
 Game.prototype.enableButtons = function () {
     var game = this;
 
-    $("#helpButton").click( function () {
+    $("#helpButton").click(function () {
         game.sound.playSound('select');
         game.openHelp();
     });
 
-    $("#toggleFocusButton").click( function () {
+    $("#toggleFocusButton").click(function () {
         game.sound.playSound('select');
         toggleFocus(game);
     });
 
-    $('#notepadButton').click( function () {
+    $('#notepadButton').click(function () {
         game.sound.playSound('select');
         $('#helpPane, #menuPane').hide();
         $('#notepadPane').toggle();
@@ -3981,32 +4065,32 @@ Game.prototype.enableButtons = function () {
         return true;
     });
 
-    $("#resetButton").click( function () {
+    $("#resetButton").click(function () {
         game.sound.playSound('blip');
-        game._resetLevel( game._currentLevel );
+        game._resetLevel(game._currentLevel);
     });
 
-    $("#executeButton").click( function () {
+    $("#executeButton").click(function () {
         game.sound.playSound('blip');
         game._evalLevelCode();
     });
 
-    $("#phoneButton").click( function () {
+    $("#phoneButton").click(function () {
         game.sound.playSound('select');
         game.usePhone();
     });
 
-    $("#menuButton").click( function () {
+    $("#menuButton").click(function () {
         game.sound.playSound('select');
         game.openMenu();
     });
 
-    $("#helpPaneCloseButton").click ( function () {
+    $("#helpPaneCloseButton").click(function () {
         game.sound.playSound('select');
         $('#helpPane').hide();
     });
 
-    $("#muteButton").click( function () {
+    $("#muteButton").click(function () {
         game.sound.toggleSound();
     });
 };
@@ -4131,7 +4215,7 @@ Game.prototype.activateSuperMenu = function () {
     }
 }
 
-Game.prototype.openHelp = function () {
+Game.prototype.openHelp = function (p_codeEditor) {
     var game = this;
 
     var categories = [];
@@ -4147,7 +4231,7 @@ Game.prototype.openHelp = function () {
             if (categories.indexOf(reference.category) == -1) {
                 categories.push(reference.category);
 
-                var categoryLink = $('<li class="category" id="'+ reference.category +'">');
+                var categoryLink = $('<li class="category" id="' + reference.category + '">');
                 categoryLink.text(reference.category)
                     .click(function () {
                         $('#helpPaneSidebar .category').removeClass('selected');
@@ -4155,22 +4239,50 @@ Game.prototype.openHelp = function () {
 
                         $('#helpPaneContent .category').hide();
                         $('#helpPaneContent .category#' + this.id).show();
-                });
+                    });
                 $('#helpPaneSidebar ul').append(categoryLink);
 
-                $('#helpPaneContent').append($('<div class="category" id="'+ reference.category +'">'));
+                $('#helpPaneContent').append($('<div class="category" id="' + reference.category + '">'));
             }
 
             var $command = $('<div class="command">');
             $command.appendTo($('#helpPaneContent .category#' + reference.category));
 
             var $commandTitle = $('<div class="commandTitle">');
-            $commandTitle.text(reference.name)
-                .appendTo($command);
+            $commandTitle.text(reference.name).appendTo($command);
 
             var $commandDescription = $('<div class="commandDescription">');
-            $commandDescription.html(reference.description)
-                .appendTo($command);
+            $commandDescription.html(reference.description).appendTo($command);
+
+            $commandTitle.on({
+                mouseover: function (e) {
+                    $commandTitle.css('cursor', 'pointer');
+                    $commandTitle.css('background-color', 'red');
+                },
+                mouseleave: function () {
+                    $commandTitle.css('background-color', 'black');
+                },
+                click: function () {
+                    // Elements of the api notification (span)
+                    var text = "Added";
+                    var idName = "apiSuccessNotification"
+
+                    // Change the text and the id if the code has not been added (charLimit)
+                    if (!game.editor.addCodeIntoEditor(reference.name)) {
+                        text = "Max line width";
+                        idName = "apiErrorNotification"
+                    }
+
+                    $commandTitle.children("span").remove(); // Remove all span from children
+                    var apiNotification = $('<span id="' + idName + '">' + text + '</span>');
+                    $commandTitle.append(apiNotification); // Add a new span to the command title
+
+                    // Remove the notification after a few seconds 
+                    setTimeout(function () {
+                        apiNotification.remove();
+                    }, 3000);
+                }
+            });
         }
     });
 
@@ -4192,22 +4304,15 @@ Game.prototype.openHelp = function () {
     }
 };
 Game.prototype._levels = {
-    'levels/01_theGreatWall.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.0",\n    "commandsIntroduced":\n        ["global.startLevel", "global.onExit", "map.placePlayer",\n         "map.placeObject", "map.getHeight", "map.getWidth",\n         "map.displayChapter", "map.getPlayer", "player.hasItem"],\n    "music": "The Green"\n}\n#END_PROPERTIES#\n/*****************\n * theGreatWall.js *\n *****************\n *\n * The great wall defensed enemies in ancient.\n * Meanwhile, it blocked citizens travel and trade to outside.\n *\n * Today, the great wall which replaced with electronic stones is still standing there.\n *\n * BREAK OUT! MAN!\n *\n * Freedom is not free!\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    map.displayChapter(\'Chapter 1\\nFreedom is not free\');\n\n    map.placePlayer(25, map.getHeight() - 5);\n\n    for (x = 0; x < map.getWidth(); x++) {\n		if ((x % 10) < 5 ) {\n        	map.placeObject(x, 5, \'block\');\n		} else {\n        	map.placeObject(x, 7, \'block\');\n			for (y = 0; y < 3; y ++) {\n	        	map.placeObject(x, 7 - y, \'block\');				\n			}\n		}\n        map.placeObject(x, 10, \'block\');\n    }\n\n#BEGIN_EDITABLE#\n\n#END_EDITABLE#\n\n    map.placeObject(15, 12, \'computer\');\n    map.placeObject(25, 0, \'exit\');\n#END_OF_START_LEVEL#\n}\n\nfunction onExit(map) {\n    if (!map.getPlayer().hasItem(\'computer\')) {\n        map.writeStatus("Don\'t forget to pick up the computer!");\n        return false;\n    } else {\n        return true;\n    }\n}\n 	', 
-    'levels/02_mod.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.0",\n    "music": "Brazil"\n}\n#END_PROPERTIES#\n/**************\n * mod.js *\n *************\n *\n * Congratulations! You\'v completed the example of mod.\n *\n * Create your own mod by putting the source code into\n * the directory [mods/$your_mod_name]. When you ready for it,\n * just run [make mod=$your_mod_name] to build it. And you can\n * add this paramater to any [make] command to specify which\n * mod you want to handle.\n * \n * What are you waiting for? Come on!\n *\n * Create you own mod and enjoy it.\n *\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    var credits = [\n        [14, 5, "E X A M P L E of M O D"],\n		[10, 7, "%c{#0f0}$%c{#cccccc} make mod=example_mod"],\n		[10, 9, "%c{#0f0}$%c{#cccccc} make mod=example_mod release"],\n		[10, 11, "%c{#0f0}$%c{#cccccc} make mod=example_mod runlocal"],\n	] \n\n    function drawCredits(i) {\n        if (i >= credits.length) {\n            return;\n        }\n\n        // redraw lines bottom to top to avoid cutting off letters\n        for (var j = i; j >= 0; j--) {\n            var line = credits[j];\n            map._display.drawText(line[0], line[1], line[2]);\n        }\n\n        map.timeout(function () {drawCredits(i+1);}, 2000)\n    }\n\n    map.timeout(function () {drawCredits(0);}, 4000);\n\n#END_OF_START_LEVEL#\n}\n 	', 
+    'levels/01_shish.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.0",\n    "commandsIntroduced":\n        ["global.startLevel", "global.onExit", "map.placePlayer",\n         "map.placeObject", "map.getHeight", "map.getWidth",\n         "map.displayChapter", "map.getPlayer", "player.hasItem"],\n    "music": "The Green"\n}\n#END_PROPERTIES#\n/*****************\n * shish.js *\n *****************\n *\n * BREAK OUT! MAN!\n *\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    map.displayChapter(\'Chapter 1\\nTest\');\n\n    map.placePlayer(14, 12);\n    \n    for (x = 0; x < map.getWidth(); x++) {\n		if ((x % 10) < 5 ) {\n        	map.placeObject(x, 5, \'block\');\n		} else {\n        	map.placeObject(x, 7, \'block\');\n			for (y = 0; y < 3; y ++) {\n	        	map.placeObject(x, 7 - y, \'block\');				\n			}\n		}\n        map.placeObject(x, 10, \'block\');\n    }\n\n#BEGIN_EDITABLE#\n\n#END_EDITABLE#\n\n    map.placeObject(15, 12, \'computer\');\n    map.placeObject(25, 0, \'exit\');\n#END_OF_START_LEVEL#\n}\n\nfunction onExit(map) {\n    if (!map.getPlayer().hasItem(\'computer\')) {\n        map.writeStatus("Don\'t forget to pick up the computer!");\n        return false;\n    } else {\n        return true;\n    }\n}\n 	', 
+    'levels/02_minesweeper.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2.1",\n    "commandsIntroduced": ["map.setSquareColor"],\n    "music": "cloudy_sin"\n}\n#END_PROPERTIES#\n/******************\n * minesweeper.js *\n ******************\n *\n * So much for Asimov\'s Laws. They\'re actually trying to kill\n * you now. Not to be alarmist, but the floor is littered\n * with mines. Rushing for the exit blindly may be unwise.\n * I need you alive, after all.\n *\n * If only there was some way you could track the positions\n * of the mines...\n */\n\nfunction getRandomInt(min, max) {\n    return Math.floor(Math.random() * (max - min + 1)) + min;\n}\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    for (x = 0; x < map.getWidth(); x++) {\n        for (y = 0; y < map.getHeight(); y++) {\n            map.setSquareColor(x, y, \'#f00\');\n        }\n    }\n\n    map.placePlayer(map.getWidth() - 5, 5);\n\n    for (var i = 0; i < 75; i++) {\n        var x = getRandomInt(0, map.getWidth() - 1);\n        var y = getRandomInt(0, map.getHeight() - 1);\n        if ((x != 2 || y != map.getHeight() - 1)\n            && (x != map.getWidth() - 5 || y != 5)) {\n            // don\'t place mine over exit or player!\n            map.placeObject(x, y, \'mine\');\n#BEGIN_EDITABLE#\n\n#END_EDITABLE#\n        }\n    }\n\n    map.placeObject(2, map.getHeight() - 1, \'exit\');\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateAtLeastXObjects(40, \'mine\');\n    map.validateExactlyXManyObjects(1, \'exit\');\n}\n 	', 
+    'levels/03_mod.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.0",\n    "music": "Brazil"\n}\n#END_PROPERTIES#\n/**************\n * mod.js *\n *************\n *\n * Congratulations! You\'v completed the example of mod.\n *\n * Create your own mod by putting the source code into\n * the directory [mods/$your_mod_name]. When you ready for it,\n * just run [make mod=$your_mod_name] to build it. And you can\n * add this paramater to any [make] command to specify which\n * mod you want to handle.\n * \n * What are you waiting for? Come on!\n *\n * Create you own mod and enjoy it.\n *\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    var credits = [\n        [14, 5, "E X A M P L E of M O D"],\n		[10, 7, "%c{#0f0}$%c{#cccccc} make mod=example_mod"],\n		[10, 9, "%c{#0f0}$%c{#cccccc} make mod=example_mod release"],\n		[10, 11, "%c{#0f0}$%c{#cccccc} make mod=example_mod runlocal"],\n	] \n\n    function drawCredits(i) {\n        if (i >= credits.length) {\n            return;\n        }\n\n        // redraw lines bottom to top to avoid cutting off letters\n        for (var j = i; j >= 0; j--) {\n            var line = credits[j];\n            map._display.drawText(line[0], line[1], line[2]);\n        }\n\n        map.timeout(function () {drawCredits(i+1);}, 2000)\n    }\n\n    map.timeout(function () {drawCredits(0);}, 4000);\n\n#END_OF_START_LEVEL#\n}\n 	', 
 };
 $(document).ready(function() {
-    new Game()._initialize();
+    var startLevel = getParameterByName('lvl') ? parseInt(getParameterByName('lvl')) : null;
+    window.game = new Game(true, startLevel);
+    window.game._initialize();
     window.eval = {};
-});
-
-// prevent ctrl+R and F5
-$(document).bind('keydown keyup', function(e) {
-    if(e.which === 116) {
-       return false;
-    }
-    if(e.which === 82 && e.ctrlKey) {
-       return false;
-    }
 });
 
 })();
