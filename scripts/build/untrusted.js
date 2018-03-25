@@ -183,14 +183,22 @@ function Game(debugMode, startLevel) {
     };
 
     this._levelFileNames = [
+<<<<<<< HEAD
 '01_shish.jsx','02_minesweeper.jsx','03_mod.jsx'
+=======
+'01_theGreatWall.jsx','02_theCorridor.jsx','03_caca.jsx'
+>>>>>>> feature/Oli
     ];
 
     this._bonusLevels = [
 
     ].filter(function (lvl) { return (lvl.indexOf('_') != 0); }); // filter out bonus levels that start with '_'
 
+<<<<<<< HEAD
 	this._mod = 'po';
+=======
+	this._mod = 'test_mod';
+>>>>>>> feature/Oli
 
     this._viewableScripts = [
         'codeEditor.js',
@@ -1162,7 +1170,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
     this.initialize(); // run initialization code
 }
-ROT.Display.create = function(game, opts) {
+ROT.Display.create = function (game, opts) {
     opts.fontFamily = '"droid sans mono", Courier, "Courier New", monospace';
     var display = new ROT.Display(opts);
     display.game = game;
@@ -1171,7 +1179,7 @@ ROT.Display.create = function(game, opts) {
 
 ROT.Display.prototype.errors = [];
 
-ROT.Display.prototype.setupEventHandlers = function() {
+ROT.Display.prototype.setupEventHandlers = function () {
     var display = this;
     var game = this.game;
 
@@ -1200,7 +1208,7 @@ ROT.Display.prototype.setupEventHandlers = function() {
 
     // contentEditable is required for canvas elements to detect keyboard events
     $(this.getContainer()).attr("contentEditable", "true");
-    this.getContainer().addEventListener("keydown", function(e) {
+    this.getContainer().addEventListener("keydown", function (e) {
         if (display._intro == true) {
             game._start();
             display._intro = false;
@@ -1210,12 +1218,44 @@ ROT.Display.prototype.setupEventHandlers = function() {
         e.preventDefault();
     });
 
-    this.getContainer().addEventListener("click", function(e) {
+    this.getContainer().addEventListener("click", function (e) {
         $(this).addClass('focus');
         $('.CodeMirror').removeClass('focus');
  
         $('#helpPane').hide();
         $('#menuPane').hide();
+    });
+
+    this.getContainer().addEventListener("mousemove", function (e) {
+        if (display.coordCanva) {
+            var x = e.clientX, y = e.clientY;
+            window.xMouse = display.eventToPosition(e)[0];
+            window.yMouse = display.eventToPosition(e)[1];
+            if (window.lastMapReceived) {
+                display.drawAll(window.lastMapReceived);
+            }
+            document.getElementById('tooltip-span').innerHTML = "[" + display.eventToPosition(e) + "]";
+            document.getElementById('tooltip-span').style.top = (y + 20) + 'px';
+            document.getElementById('tooltip-span').style.left = (x + 20) + 'px';
+        }
+    });
+
+    document.getElementById('checkbox').onchange = function () {
+        if(document.getElementById('checkbox').checked) {
+            display.coordCanva = true;
+            document.getElementById("tooltip-span").style["display"] = null;
+        } else {
+            display.coordCanva = false;
+            document.getElementById("tooltip-span").style["display"] = "none";
+        }
+    };
+
+    this.getContainer().addEventListener("mouseleave", function (e) {
+        if (window.lastMapReceived) {
+            window.xMouse = -1;
+            window.yMouse = -1;
+            display.drawAll(window.lastMapReceived);
+        }
     });
 };
 
@@ -1229,11 +1269,17 @@ ROT.Display.prototype.drawObject = function (map, x, y, object) {
     var color = object.color || definition.color || "#fff";
     var bgColor = object.bgColor || "#000";
 
-    this.draw(x, y, symbol, color, bgColor);
+    if (this.coordCanva && window.xMouse == x && window.yMouse == y) {
+        this.draw(x, y, symbol, color, "#00F");
+    }
+    else {
+        this.draw(x, y, symbol, color, bgColor);
+    }
 };
 
-ROT.Display.prototype.drawAll = function(map) {
-    if (!this.offset) {this.offset = 0;}
+ROT.Display.prototype.drawAll = function (map) {
+    window.lastMapReceived = map;
+    if (!this.offset) { this.offset = 0; }
 
     var game = this.game;
 
@@ -1297,8 +1343,8 @@ ROT.Display.prototype.drawAll = function(map) {
     this.grid = grid;
 };
 
-ROT.Display.prototype.drawPreviousLevel = function(map, offset) {
-    if (!offset) {offset = 0;}
+ROT.Display.prototype.drawPreviousLevel = function (map, offset) {
+    if (!offset) { offset = 0; }
 
     var game = this.game;
     var grid = this.savedGrid;
@@ -1319,7 +1365,7 @@ ROT.Display.prototype.saveGrid = function (map) {
 
 ROT.Display.prototype.playIntro = function (map, i) {
     display = this;
-	playIntro(display, map, i)
+    playIntro(display, map, i)
 };
 
 ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
@@ -1351,7 +1397,7 @@ ROT.Display.prototype.fadeIn = function (map, speed, callback, i) {
     }
 };
 
-ROT.Display.prototype.writeStatus = function(text) {
+ROT.Display.prototype.writeStatus = function (text) {
     var map = this.game.map;
 
     var strings = [text];
@@ -1370,7 +1416,7 @@ ROT.Display.prototype.writeStatus = function(text) {
     }
 };
 
-ROT.Display.prototype.appendError = function(errorText, command) {
+ROT.Display.prototype.appendError = function (errorText, command) {
     var map = this.game.map;
     if (!command) {
         command = "%c{#0f0}> run " + this.game._levelFileNames[this.game._currentLevel - 1];
@@ -1382,13 +1428,13 @@ ROT.Display.prototype.appendError = function(errorText, command) {
     this.drawAll(map);
 };
 
-ROT.Display.prototype.focus = function() {
+ROT.Display.prototype.focus = function () {
     $('#screen').show();
     $(this.getContainer()).attr('tabindex', '0').click().focus();
 };
 
 
-ROT.Display.prototype.renderDom = function(html, css) {
+ROT.Display.prototype.renderDom = function (html, css) {
     // using ideas from http://robert.ocallahan.org/2011/11/drawing-dom-content-to-canvas.html
     /*var canvas = $('#drawingCanvas')[0];
     var ctx = canvas.getContext("2d");
@@ -3555,6 +3601,7 @@ function Sound(source) {
         'cloudfront': 'http://dk93t8qfl63bu.cloudfront.net/'
     };
 
+    
     this.bgPlayerElt = $("#jquery_bgPlayer");
     this.soundPlayerElt = $("#jquery_soundPlayer");
     this.muted = false;
@@ -3577,6 +3624,14 @@ function Sound(source) {
             supplied: 'wav',
             swfPath: "lib/Jplayer.swf"
         });
+
+         
+			$(".knob").knob({
+				change : function (value) {
+					$("#jquery_bgPlayer").jPlayer( "volume", value/100);
+					$("#jquery_soundPlayer").jPlayer( "volume", value/100);
+				}
+            });
 
         $(window).focus(function () {
             $(sound.bgPlayerElt).jPlayer('play');
@@ -4156,6 +4211,11 @@ Game.prototype.activateSuperMenu = function () {
         $('#menuPane').addClass('expanded');
         $('#leftMenuPane').show();
         $('#rightMenuPane .pop_up_box_heading').hide();
+        
+        $('#leftMenuPane li').removeClass('selected');
+        $('#rightMenuPane div').hide();
+        $('#rootDir').addClass('selected');
+        $('#root').show();
 
         $('#rootDir').click(function () {
             $('#leftMenuPane li').removeClass('selected');
@@ -4185,12 +4245,25 @@ Game.prototype.activateSuperMenu = function () {
             $('#bonus').show();
         });
 
+        $('#displayDir').click(function () {
+            $('#leftMenuPane li').removeClass('selected');
+            $('#rightMenuPane div').hide();
+            $('#displayDir').addClass('selected');
+            $('#display').show();
+        });
+
+        var test = $('<input>');
+        test.text("display blind").click(function () {
+            console.log("display changed");
+        });
+        test.appendTo('#menuPane #display');
+
         $.each(game._viewableScripts, function (i, script) {
             var scriptButton = $('<button>');
             scriptButton.text(script).click(function () {
                 game._editFile('scripts/' + script);
                 $('#menuPane').hide();
-            });
+            });   
 
             if (game._editableScripts.indexOf(script) == -1) {
                 scriptButton.addClass('uneditable');
@@ -4304,9 +4377,15 @@ Game.prototype.openHelp = function (p_codeEditor) {
     }
 };
 Game.prototype._levels = {
+<<<<<<< HEAD
     'levels/01_shish.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.0",\n    "commandsIntroduced":\n        ["global.startLevel", "global.onExit", "map.placePlayer",\n         "map.placeObject", "map.getHeight", "map.getWidth",\n         "map.displayChapter", "map.getPlayer", "player.hasItem"],\n    "music": "The Green"\n}\n#END_PROPERTIES#\n/*****************\n * shish.js *\n *****************\n *\n * BREAK OUT! MAN!\n *\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    map.displayChapter(\'Chapter 1\\nTest\');\n\n    map.placePlayer(14, 12);\n    \n    for (x = 0; x < map.getWidth(); x++) {\n		if ((x % 10) < 5 ) {\n        	map.placeObject(x, 5, \'block\');\n		} else {\n        	map.placeObject(x, 7, \'block\');\n			for (y = 0; y < 3; y ++) {\n	        	map.placeObject(x, 7 - y, \'block\');				\n			}\n		}\n        map.placeObject(x, 10, \'block\');\n    }\n\n#BEGIN_EDITABLE#\n\n#END_EDITABLE#\n\n    map.placeObject(15, 12, \'computer\');\n    map.placeObject(25, 0, \'exit\');\n#END_OF_START_LEVEL#\n}\n\nfunction onExit(map) {\n    if (!map.getPlayer().hasItem(\'computer\')) {\n        map.writeStatus("Don\'t forget to pick up the computer!");\n        return false;\n    } else {\n        return true;\n    }\n}\n 	', 
     'levels/02_minesweeper.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2.1",\n    "commandsIntroduced": ["map.setSquareColor"],\n    "music": "cloudy_sin"\n}\n#END_PROPERTIES#\n/******************\n * minesweeper.js *\n ******************\n *\n * So much for Asimov\'s Laws. They\'re actually trying to kill\n * you now. Not to be alarmist, but the floor is littered\n * with mines. Rushing for the exit blindly may be unwise.\n * I need you alive, after all.\n *\n * If only there was some way you could track the positions\n * of the mines...\n */\n\nfunction getRandomInt(min, max) {\n    return Math.floor(Math.random() * (max - min + 1)) + min;\n}\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    for (x = 0; x < map.getWidth(); x++) {\n        for (y = 0; y < map.getHeight(); y++) {\n            map.setSquareColor(x, y, \'#f00\');\n        }\n    }\n\n    map.placePlayer(map.getWidth() - 5, 5);\n\n    for (var i = 0; i < 75; i++) {\n        var x = getRandomInt(0, map.getWidth() - 1);\n        var y = getRandomInt(0, map.getHeight() - 1);\n        if ((x != 2 || y != map.getHeight() - 1)\n            && (x != map.getWidth() - 5 || y != 5)) {\n            // don\'t place mine over exit or player!\n            map.placeObject(x, y, \'mine\');\n#BEGIN_EDITABLE#\n\n#END_EDITABLE#\n        }\n    }\n\n    map.placeObject(2, map.getHeight() - 1, \'exit\');\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateAtLeastXObjects(40, \'mine\');\n    map.validateExactlyXManyObjects(1, \'exit\');\n}\n 	', 
     'levels/03_mod.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.0",\n    "music": "Brazil"\n}\n#END_PROPERTIES#\n/**************\n * mod.js *\n *************\n *\n * Congratulations! You\'v completed the example of mod.\n *\n * Create your own mod by putting the source code into\n * the directory [mods/$your_mod_name]. When you ready for it,\n * just run [make mod=$your_mod_name] to build it. And you can\n * add this paramater to any [make] command to specify which\n * mod you want to handle.\n * \n * What are you waiting for? Come on!\n *\n * Create you own mod and enjoy it.\n *\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    var credits = [\n        [14, 5, "E X A M P L E of M O D"],\n		[10, 7, "%c{#0f0}$%c{#cccccc} make mod=example_mod"],\n		[10, 9, "%c{#0f0}$%c{#cccccc} make mod=example_mod release"],\n		[10, 11, "%c{#0f0}$%c{#cccccc} make mod=example_mod runlocal"],\n	] \n\n    function drawCredits(i) {\n        if (i >= credits.length) {\n            return;\n        }\n\n        // redraw lines bottom to top to avoid cutting off letters\n        for (var j = i; j >= 0; j--) {\n            var line = credits[j];\n            map._display.drawText(line[0], line[1], line[2]);\n        }\n\n        map.timeout(function () {drawCredits(i+1);}, 2000)\n    }\n\n    map.timeout(function () {drawCredits(0);}, 4000);\n\n#END_OF_START_LEVEL#\n}\n 	', 
+=======
+    'levels/01_theGreatWall.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.0",\n    "commandsIntroduced":\n        ["global.startLevel", "global.onExit", "map.placePlayer",\n         "map.placeObject", "map.getHeight", "map.getWidth",\n         "map.displayChapter", "map.getPlayer", "player.hasItem"],\n    "music": "The Green"\n}\n#END_PROPERTIES#\n/*****************\n * theGreatWall.js *\n *****************\n *\n * The great wall defensed enemies in ancient.\n * Meanwhile, it blocked citizens travel and trade to outside.\n *\n * Today, the great wall which replaced with electronic stones is still standing there.\n *\n * BREAK OUT! MAN!\n *\n * Freedom is not free!\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    map.displayChapter(\'Chapter 1\\nFreedom is not freecacapipi\');\n\n    map.placePlayer(25, map.getHeight() - 5);\n\n    for (x = 0; x < map.getWidth(); x++) {\n		if ((x % 10) < 5 ) {\n        	map.placeObject(x, 5, \'block\');\n		} else {\n        	map.placeObject(x, 7, \'block\');\n			for (y = 0; y < 3; y ++) {\n	        	map.placeObject(x, 7 - y, \'block\');				\n			}\n		}\n        map.placeObject(x, 10, \'block\');\n    }\n\n#BEGIN_EDITABLE#\n\n#END_EDITABLE#\n\n    map.placeObject(15, 12, \'computer\');\n    map.placeObject(25, 0, \'exit\');\n#END_OF_START_LEVEL#\n}\n\nfunction onExit(map) {\n    if (!map.getPlayer().hasItem(\'computer\')) {\n        map.writeStatus("Don\'t forget to pick up the computer!");\n        return false;\n    } else {\n        return true;\n    }\n}\n 	', 
+    'levels/02_theCorridor.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "0.1",\n    "commandsIntroduced": []\n}\n#END_PROPERTIES#\n/***********************\n * theCorridor.js      *\n * from HangoverX      *\n * by mongoose11235813 *\n ***********************\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    map.displayChapter(\'Chapter 4.1\\nChapters are supposed to be more than one level long\');\n\n    map.defineObject(\'trap_left\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'>\',\n        \'color\': \'#900\',\n        \'impassable\': \'true\',\n        \'behavior\': function (me) {\n            trap_behaviour(me, 1, 6);\n        }\n    }\n    );\n    map.defineObject(\'trap_right\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'<\',\n        \'color\': \'#900\',\n        \'impassable\': \'true\',\n        \'behavior\': function (me) {\n            trap_behaviour(me, -5, 0);\n        }\n    }\n    );\n    map.defineObject(\'laser\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'-\',\n        \'color\': \'#f00\',\n        \'onCollision\': function (player) {\n            player.killedBy(\'a laser\');\n        }\n    }\n    );\n    function trap_behaviour (me, left, right) {\n        var player_pos = me.findNearest(\'player\');\n        if (player_pos.y - me.getY() <= 1 && !me.trapTriggered) {\n            me.trapTriggered = true;\n            for (var x = left; x < right; ++x) {\n                map.placeObject(me.getX() + x, me.getY(), \'laser\')\n            }\n        }\n    }\n\n    var level_map = [\n        \'#######\',\n        \'#  x  #\',\n        \'#     #\',\n        \'>     #\',\n        \'#     #\',\n        \'#     <\',\n        \'#     #\',\n        \'>     #\',\n        \'#     #\',\n        \'#     <\',\n        \'#     #\',\n        \'#  @ e#\',\n        \'#######\'\n    ]\n    var width = map.getWidth();\n    var height = map.getHeight();\n    var map_left = Math.floor((width - level_map[0].length) / 2);\n    var map_top = Math.floor((height - level_map.length) / 2);\n    map.createFromGrid(level_map, {\n      \'x\': \'exit\',\n      \'#\': \'block\',\n      \'@\': \'player\',\n      \'e\': \'eye\',\n      \'>\': \'trap_left\',\n      \'<\': \'trap_right\'\n    }, map_left, map_top);\n\n#BEGIN_EDITABLE#\n\n#END_EDITABLE#\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    map.validateExactlyXManyObjects(1, \'exit\');\n}\n 	', 
+    'levels/03_caca.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.0",\n    "music": "The Green"\n}\n#END_PROPERTIES#\n/**************\n * mod.js *\n *************\n *\n * fuck you\n *\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n#BEGIN_EDITABLE#\n    map.displayChapter(\'Chapter 1\\nFreedom is not freecacapipi\');\n\n    map.placePlayer(25, map.getHeight() - 5);\n\n    for (x = 0; x < map.getWidth(); x++) {\n		if ((x % 10) < 5 ) {\n        	map.placeObject(x, 5, \'block\');\n		} else {\n        	map.placeObject(x, 7, \'block\');\n			for (y = 0; y < 3; y ++) {\n	        	map.placeObject(x, 7 - y, \'block\');				\n			}\n		}\n        map.placeObject(x, 10, \'block\');\n    }\n\n    map.placeObject(15, 12, \'computer\');\n    map.placeObject(25, 0, \'exit\');\n#END_EDITABLE#\n#END_OF_START_LEVEL#\n}\n 	', 
+>>>>>>> feature/Oli
 };
 $(document).ready(function() {
     var startLevel = getParameterByName('lvl') ? parseInt(getParameterByName('lvl')) : null;
