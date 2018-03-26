@@ -1059,7 +1059,7 @@ function CodeEditor(textAreaDomID, width, height, game) {
         };
 
         $.ajax({
-            'url': 'https://api.github.com/gists',
+            'url': 'https://api.github.com/gists?access_token=033a3c0d83189ac4b5f2734e32ccbfc7c5f5192f',
             'type': 'POST',
             'data': JSON.stringify(data),
             'success': function (data, status, xhr) {
