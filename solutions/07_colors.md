@@ -9,6 +9,32 @@ colors=['#f00','#ff0','#0f0','#f00','#ff0'];
 player.setColor(colors[player.turn]);
 ```
 
+# Math, man!
+## Rudedog9d
+
+```js
+        let pad = number => ("000"+number).slice(-3);
+        var player = map.getPlayer();
+
+        function getNextColor(color){
+        	// parse the string, treat hex as binary, and add 2
+            // ex, #0f0 becomes 010
+        	let i = parseInt(color.replace(/f/g, 1).substring(1,4), 2) + 2;
+            // If value got too big, recursively call with reset val of 0
+            if(i > 6) return getNextColor(pad(0));
+            // convert binary back to hex, ensure left padding, and add #
+            // ex, 100 becomes #f00
+            return '#' + pad(i.toString(2).replace(/1/g, 'f'));
+        }
+
+        // Set next color
+        player.setColor(getNextColor(player.getColor()));
+```
+
+Basically, if you look at the problem as a binary one (rather than hex), you need to go `2 -> 4 -> 6 -> 2...`. So this solution takes each hex value, converts it to binary (`#0f0` becomes `010`), adds 2 (or resets back to 2), and converts back to the correct hex value.
+
+I was trying to do this with a bit shift `<<`, but I couldn't quite pull it off.
+
 # Location-based Color
 ## esolitos
 ```javascript
