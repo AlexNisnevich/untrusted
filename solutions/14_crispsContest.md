@@ -4,6 +4,12 @@ This method makes the green locks passable, no matter what. It was interesting t
 
 Basically, finish the `if` the statement, make the green locks always passable if the key doesn't exist, then add a bogus `if` statement to make it syntatically correct. (the `('')` doesn't really make sense, but it's what we had to work with :P)
 
+Path to follow:
+
+- Go through upper-left labrynth, get **yellow** key
+- Go through upper-right labrynth, get **blue** key
+- Go through bottom labrynth, get **algorithm**
+
 ```js
 map.defineObject('greenLock', {
         'symbol': String.fromCharCode(0x2297),
