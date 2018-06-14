@@ -301,7 +301,7 @@ if (meX < playerX) {
 }
 ```
 
-## @antimoney: Use color as remote control
+## @antimoney: Use player color as remote control
 ```javascript
 if(player.getColor() == '#0f0') me.move('right');
 if(player.getColor() == '#0f1') me.move('down');
