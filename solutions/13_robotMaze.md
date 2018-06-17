@@ -166,7 +166,7 @@ Wander with visit counts.
 ```
 
 # Player-controlled approaches
-##Pcat0
+## Pcat0
 Hit 'q' to toggle between controlling you and the robot. Works for 11, 12, 13
 ```javascript
           me.move(dr);
@@ -299,6 +299,34 @@ if (meX < playerX) {
 } else if (meY > 2 * mazeHeight - playerY) {
   me.move('up');
 }
+```
+
+## @antimoney: Use player color as remote control
+```javascript
+if(player.getColor() == '#0f0') me.move('right');
+if(player.getColor() == '#0f1') me.move('down');
+if(player.getColor() == '#0f2') me.move('left');
+if(player.getColor() == '#0f3') me.move('up');
+player.setPhoneCallback(function () {
+	switch(player.getColor()) {
+		case '#0f0':
+			player.setColor('#0f1');
+			break;
+		case '#0f1':
+			player.setColor('#0f2');
+			break;
+		case '#0f2':
+			player.setColor('#0f3');
+			break;
+		case '#0f3':
+			player.setColor('#0f0');
+			break;
+	}
+	if(player.getColor() == '#0f0') map.writeStatus('right');
+	if(player.getColor() == '#0f1') map.writeStatus('down');
+	if(player.getColor() == '#0f2') map.writeStatus('left');
+	if(player.getColor() == '#0f3') map.writeStatus('up');
+});
 ```
 
 # Portal style

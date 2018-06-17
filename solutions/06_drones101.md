@@ -41,6 +41,25 @@ map.createFromGrid([
     }, 38, 8);
 ```
 
+## @antimoney: Drone cage made of drones 
+```javascript
+    map.defineObject('attackDrone2', {
+        'type': 'dynamic',
+        'symbol': 'd',
+        'color': 'red',
+        'onCollision': function (player) {
+        	player.killedBy('an attack drone');
+        },
+        'behavior': function (me) {
+            moveToward(me, 'attackDrone');
+        }
+    });
+    map.placeObject(map.getWidth()-8, 12, 'attackDrone2');
+    map.placeObject(map.getWidth()-2, 13, 'attackDrone2');
+    map.placeObject(map.getWidth()-5, 15, 'attackDrone2');
+    map.placeObject(map.getWidth()-5, 9, 'attackDrone2');
+```
+
 # Function Override
 ## esolitos
 
@@ -67,5 +86,3 @@ map.placeObject(25, 12, 'block');
 ```
 Oh yeah, solution: Move down until you, the drone, and the block are collinear. Then advance right, hiding behind the block: `@#d`. Move down, then come around the block and dart for the exit.
 This solution would not work at all with proper path-finding.
-
-
