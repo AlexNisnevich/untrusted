@@ -641,3 +641,21 @@ Its a game about hacking, so its not cheating right?
 (this ["vali"+"dateLevel"]=0,(d=>((a,b,c)=>(c(a+1,b,'exit'),c(a+1,b+1,'phone'),
 c(a,b+1,'theAlgorithm')))(d.getX(),d.getY(),map.placeObject))(map.getPlayer()))
 ```
+
+## juh9870: Return bullets to sender
+
+Why not just kill boss with his own bullets??
+
+```javascript
+map.overrideKey('down', function(){
+	map.getDynamicObjects().forEach(function(e){
+        var bm = e.move;
+        e.move=function(direction){
+            if(direction=='left'||direction=='right')return;
+            bm('up');
+        };
+    });
+    map.getPlayer().move('down');
+});
+```
+    
