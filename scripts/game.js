@@ -114,7 +114,7 @@ function Game(debugMode, startLevel) {
         }
 
         // Enable controls
-        this.enableShortcutKeys();
+        this.enableShortcutKeysWithoutComputer();
         this.enableButtons();
         this.setUpNotepad();
 

@@ -11,6 +11,20 @@ var toggleFocus = (function () {
     };
 })();
 
+Game.prototype.enableShortcutKeysWithoutComputer = function () {
+    var game = this;
+
+    shortcut.add('ctrl+4', function () {
+        $("#resetButton").click();
+        return true;
+    });
+
+    shortcut.add('ctrl+0', function () {
+        $("#menuButton").click();
+        return true;
+    });
+};
+
 Game.prototype.enableShortcutKeys = function () {
     var game = this;
 
@@ -19,18 +33,13 @@ Game.prototype.enableShortcutKeys = function () {
         return true;
     });
 
-	shortcut.add('ctrl+2', function () {
+    shortcut.add('ctrl+2', function () {
         $("#toggleFocusButton").click();
-		return true;
-	});
-
-    shortcut.add('ctrl+3', function () {
-        $("#notepadButton").click();
         return true;
     });
 
-    shortcut.add('ctrl+4', function () {
-        $("#resetButton").click();
+    shortcut.add('ctrl+3', function () {
+        $("#notepadButton").click();
         return true;
     });
 
@@ -43,27 +52,22 @@ Game.prototype.enableShortcutKeys = function () {
         $("#phoneButton").click();
         return true;
     });
-
-    shortcut.add('ctrl+0', function () {
-        $("#menuButton").click();
-        return true;
-    });
 };
 
 Game.prototype.enableButtons = function () {
     var game = this;
 
-    $("#helpButton").click( function () {
+    $("#helpButton").click(function () {
         game.sound.playSound('select');
         game.openHelp();
     });
 
-    $("#toggleFocusButton").click( function () {
+    $("#toggleFocusButton").click(function () {
         game.sound.playSound('select');
         toggleFocus(game);
     });
 
-    $('#notepadButton').click( function () {
+    $('#notepadButton').click(function () {
         game.sound.playSound('select');
         $('#helpPane, #menuPane').hide();
         $('#notepadPane').toggle();
@@ -71,32 +75,32 @@ Game.prototype.enableButtons = function () {
         return true;
     });
 
-    $("#resetButton").click( function () {
+    $("#resetButton").click(function () {
         game.sound.playSound('blip');
-        game._resetLevel( game._currentLevel );
+        game._resetLevel(game._currentLevel);
     });
 
-    $("#executeButton").click( function () {
+    $("#executeButton").click(function () {
         game.sound.playSound('blip');
         game._evalLevelCode();
     });
 
-    $("#phoneButton").click( function () {
+    $("#phoneButton").click(function () {
         game.sound.playSound('select');
         game.usePhone();
     });
 
-    $("#menuButton").click( function () {
+    $("#menuButton").click(function () {
         game.sound.playSound('select');
         game.openMenu();
     });
 
-    $("#helpPaneCloseButton").click ( function () {
+    $("#helpPaneCloseButton").click(function () {
         game.sound.playSound('select');
         $('#helpPane').hide();
     });
 
-    $("#muteButton").click( function () {
+    $("#muteButton").click(function () {
         game.sound.toggleSound();
     });
 };
@@ -162,6 +166,11 @@ Game.prototype.activateSuperMenu = function () {
         $('#menuPane').addClass('expanded');
         $('#leftMenuPane').show();
         $('#rightMenuPane .pop_up_box_heading').hide();
+        
+        $('#leftMenuPane li').removeClass('selected');
+        $('#rightMenuPane div').hide();
+        $('#rootDir').addClass('selected');
+        $('#root').show();
 
         $('#rootDir').click(function () {
             $('#leftMenuPane li').removeClass('selected');
@@ -191,12 +200,26 @@ Game.prototype.activateSuperMenu = function () {
             $('#bonus').show();
         });
 
+        $('#displayDir').click(function () {
+            $('#leftMenuPane li').removeClass('selected');
+            $('#rightMenuPane div').hide();
+            $('#displayDir').addClass('selected');
+            $('#display').show();
+        });
+
+        // here we can put options for the displays
+        var test = $('<input>');
+        test.text("display position").click(function () {
+            console.log("display changed");
+        });
+        test.appendTo('#menuPane #display');
+
         $.each(game._viewableScripts, function (i, script) {
             var scriptButton = $('<button>');
             scriptButton.text(script).click(function () {
                 game._editFile('scripts/' + script);
                 $('#menuPane').hide();
-            });
+            });   
 
             if (game._editableScripts.indexOf(script) == -1) {
                 scriptButton.addClass('uneditable');
@@ -221,7 +244,7 @@ Game.prototype.activateSuperMenu = function () {
     }
 }
 
-Game.prototype.openHelp = function () {
+Game.prototype.openHelp = function (p_codeEditor) {
     var game = this;
 
     var categories = [];
@@ -237,7 +260,7 @@ Game.prototype.openHelp = function () {
             if (categories.indexOf(reference.category) == -1) {
                 categories.push(reference.category);
 
-                var categoryLink = $('<li class="category" id="'+ reference.category +'">');
+                var categoryLink = $('<li class="category" id="' + reference.category + '">');
                 categoryLink.text(reference.category)
                     .click(function () {
                         $('#helpPaneSidebar .category').removeClass('selected');
@@ -245,22 +268,50 @@ Game.prototype.openHelp = function () {
 
                         $('#helpPaneContent .category').hide();
                         $('#helpPaneContent .category#' + this.id).show();
-                });
+                    });
                 $('#helpPaneSidebar ul').append(categoryLink);
 
-                $('#helpPaneContent').append($('<div class="category" id="'+ reference.category +'">'));
+                $('#helpPaneContent').append($('<div class="category" id="' + reference.category + '">'));
             }
 
             var $command = $('<div class="command">');
             $command.appendTo($('#helpPaneContent .category#' + reference.category));
 
             var $commandTitle = $('<div class="commandTitle">');
-            $commandTitle.text(reference.name)
-                .appendTo($command);
+            $commandTitle.text(reference.name).appendTo($command);
 
             var $commandDescription = $('<div class="commandDescription">');
-            $commandDescription.html(reference.description)
-                .appendTo($command);
+            $commandDescription.html(reference.description).appendTo($command);
+
+            $commandTitle.on({
+                mouseover: function (e) {
+                    $commandTitle.css('cursor', 'pointer');
+                    $commandTitle.css('background-color', 'red');
+                },
+                mouseleave: function () {
+                    $commandTitle.css('background-color', 'black');
+                },
+                click: function () {
+                    // Elements of the api notification (span)
+                    var text = "Added";
+                    var idName = "apiSuccessNotification"
+
+                    // Change the text and the id if the code has not been added (charLimit)
+                    if (!game.editor.addCodeIntoEditor(reference.name)) {
+                        text = "Max line width";
+                        idName = "apiErrorNotification"
+                    }
+
+                    $commandTitle.children("span").remove(); // Remove all span from children
+                    var apiNotification = $('<span id="' + idName + '">' + text + '</span>');
+                    $commandTitle.append(apiNotification); // Add a new span to the command title
+
+                    // Remove the notification after a few seconds 
+                    setTimeout(function () {
+                        apiNotification.remove();
+                    }, 3000);
+                }
+            });
         }
     });
 

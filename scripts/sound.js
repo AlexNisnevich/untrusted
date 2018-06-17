@@ -153,12 +153,13 @@ function Sound(source) {
         'cloudfront': 'http://dk93t8qfl63bu.cloudfront.net/'
     };
 
+
     this.bgPlayerElt = $("#jquery_bgPlayer");
     this.soundPlayerElt = $("#jquery_soundPlayer");
     this.muted = false;
     this.currentLevelNum = -1;
 
-    this.init = function() {
+    this.init = function () {
         var sound = this;
 
         this.source = this.sources[source];
@@ -174,6 +175,14 @@ function Sound(source) {
             loop: false,
             supplied: 'wav',
             swfPath: "lib/Jplayer.swf"
+        });
+
+        //adjust the sound
+        $(".knob").knob({
+            change: function (value) {
+                $("#jquery_bgPlayer").jPlayer("volume", value / 100);
+                $("#jquery_soundPlayer").jPlayer("volume", value / 100);
+            }
         });
 
         $(window).focus(function () {
@@ -218,7 +227,7 @@ function Sound(source) {
         $(this.soundPlayerElt).jPlayer('play');
     };
 
-    this.toggleSound = function() {
+    this.toggleSound = function () {
         if (this.muted) {
             this.bgPlayerElt.jPlayer('unmute');
             this.soundPlayerElt.jPlayer('unmute');
