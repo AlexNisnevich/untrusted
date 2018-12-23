@@ -40,6 +40,26 @@ map.createFromGrid([
     	'#': 'block',
     }, 38, 8);
 ```
+# akafael: Live cage
+Create your own drone army just because you can
+
+```javascript
+map.defineObject('defenceDrone', {
+    'type': 'dynamic',
+    'symbol': 'o',
+    'color': 'blue',
+    'onCollision': function (player) {
+         // harmless drone
+    },
+    'behavior': function (me) {
+        moveToward(me, 'attackDrone');
+    }
+});
+
+for (y = 9; y < 14; i++) {
+    map.placeObject(map.getWidth()-8, y, 'defenceDrone');
+}
+```
 
 # Function Override
 ## esolitos
