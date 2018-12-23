@@ -76,3 +76,39 @@ switch(playerColor) {
     break;
 }
 ```
+# Rainbow path
+Create a unlock object just before the lock one.
+```
+var player = map.getPlayer();
+
+map.placeObject(21, 12, 'greenUnlock');
+map.placeObject(24, 12, 'redUnlock');
+map.placeObject(27, 12, 'yellowUnlock');
+map.placeObject(30, 12, 'greenUnlock');
+map.placeObject(33, 12, 'redUnlock');
+map.placeObject(36, 12, 'yellowUnlock');
+});
+
+map.defineObject('redUnlock', {
+symbol: '☒',
+color: "#f00", // red
+'onCollision': function (player) {
+    player.setColor('#f00');
+}
+});
+
+map.defineObject('greenUnlock', {
+symbol: '☒',
+color: "#0f0", // green
+'onCollision': function (player) {
+    player.setColor('#0f0');
+}
+});
+
+map.defineObject('yellowUnlock', {
+symbol: '☒',
+color: "#ff0", // yellow
+'onCollision': function (player) {
+    player.setColor('#ff0');
+}
+```
