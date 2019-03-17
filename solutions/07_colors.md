@@ -112,3 +112,13 @@ color: "#ff0", // yellow
     player.setColor('#ff0');
 }
 ```
+# Circular queue
+```javascript
+var player = map.getPlayer();
+if (!map.colors) {
+    map.colors = ['#f00', '#0f0', '#ff0'];
+}
+newColor = map.colors.pop();
+map.colors.unshift(newColor);
+player.setColor(newColor);
+```
