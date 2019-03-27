@@ -44,6 +44,22 @@ player.setPhoneCallback( function(){
 } );
 ```
 
+## mmccall0813
+
+```javascript
+
+ctx.strokeStyle = color;
+
+//
+
+  var player = map.getPlayer();
+player.setPhoneCallback(function(){
+        if(player.getColor() == 'teal'){player.setColor('red')}else{
+        if(player.getColor() == 'red'){player.setColor('yellow')}else{
+        if(player.getColor() == 'yellow'){player.setColor('teal')}else{
+        player.setColor('teal')}}}});
+```
+
 # Function Redefinition
 ## Jhack (giacgbj)
 
