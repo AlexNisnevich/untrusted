@@ -122,3 +122,11 @@ newColor = map.colors.pop();
 map.colors.unshift(newColor);
 player.setColor(newColor);
 ```
+
+# hijack the getter.
+
+```javascript
+map.writeStatus("The radiation seems to be affecting you...");
+map.getPlayer().getColor = () => ['#0f0','#f00','#ff0'][Math.floor(Math.random()*3)];
+```
+
