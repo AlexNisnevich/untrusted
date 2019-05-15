@@ -6,3 +6,4 @@ scripts/build/*.js
 _site/*
 node_modules
 levels.js
+package-lock.json
