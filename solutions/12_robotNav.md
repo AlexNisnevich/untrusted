@@ -263,3 +263,34 @@ Creating no other path
 		map.placeObject(me.getX(), me.getY()-1, 'block');
 	}
 ```
+
+# DaPutzy
+
+Making it easier for the path finding by adding `setPhoneCallback`. Press `q` and then walk to the right and up to get the key.
+
+```javascript
+            if (!me.canMove('up') && !me.canMove('right')) {
+                me.move('down');
+            } else if (!me.canMove('down') && !me.canMove('right')) {
+                me.move('up');
+            } else if (!me.canMove('right')) {
+                me.move('down');
+            } else {
+                me.move('right');
+            }
+        }
+    });
+
+    player.setPhoneCallback(function () {
+        map.placeObject(13, 1, 'block');
+        map.placeObject(14, 2, 'block');
+        map.placeObject(15, 3, 'block');
+        map.placeObject(16, 4, 'block');
+
+        map.placeObject(31, 5, 'block');
+        map.placeObject(30, 6, 'block');
+        map.placeObject(29, 7, 'block');
+        map.placeObject(28, 8, 'block');
+    
+        if (true) {
+```
