@@ -517,8 +517,8 @@ function Map(display, __game) {
         } else if (delay < 25) {
             throw "startTimer(): minimum delay is 25 milliseconds";
         }
-
-        __intervals.push(setInterval(timer, delay));
+        var validate = this._validateCallback;
+        __intervals.push(setInterval(function(){validate(timer)}, delay));
     }, this);
 
     this.timeout = wrapExposedMethod(function(timer, delay) {
@@ -527,8 +527,8 @@ function Map(display, __game) {
         } else if (delay < 25) {
             throw "timeout(): minimum delay is 25 milliseconds";
         }
-
-        __intervals.push(setTimeout(timer, delay));
+        var validate = this._validateCallback;
+        __intervals.push(setTimeout(function(){validate(timer)}, delay));
     }, this);
 
     this.displayChapter = wrapExposedMethod(function(chapterName, cssClass) {
