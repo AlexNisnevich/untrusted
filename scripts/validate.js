@@ -84,7 +84,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             throw 'startLevel() returned prematurely!';
         }
         // issue#385 check for tampering with validateLevel and startLevel
-        if(initialValidateLevel != window.validateLevel) {
+        if(initialValidateLevel !== window.validateLevel) {
             throw "validateLevel() has been tampered with!";
         }
         if(initialOnExit !== window.onExit) {
