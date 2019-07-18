@@ -337,6 +337,10 @@ function Game(debugMode, startLevel) {
         // validate the code
         // if it passes validation, returns the startLevel function if it pass
         // if it fails validation, returns false
+        var player = this.map.getPlayer();
+        if(player) {
+            player._allowDeath = false;
+        }
         var validatedStartLevel = this.validate(allCode, playerCode, restartingLevelFromScript);
 
         if (validatedStartLevel) { // code is valid
@@ -399,8 +403,10 @@ function Game(debugMode, startLevel) {
             }
 
             // finally, allow player movement
-            if (this.map.getPlayer()) {
-                this.map.getPlayer()._canMove = true;
+            player = this.map.getPlayer();
+            if (player) {
+                player._canMove = true;
+                player._allowDeath = true;
                 game.display.focus();
             }
         } else { // code is invalid

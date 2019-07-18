@@ -11,6 +11,7 @@ function Player(x, y, __map, __game) {
     /* unexposed variables */
 
     this._canMove = false;
+    this._allowDeath = false;
 
     /* wrapper */
 
@@ -190,6 +191,10 @@ function Player(x, y, __map, __game) {
     }, this);
 
     this.killedBy = wrapExposedMethod(function (killer) {
+        if(!this._allowDeath) {
+            // issue#416 don't restart level during validation/initialization of level to prevent nasty bugs
+            throw 'You have been killed by ' + killer + '!';
+        }
         __game.sound.playSound('hurt');
         __game._restartLevel();
 
