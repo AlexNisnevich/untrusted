@@ -126,7 +126,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForbiddenCalls) {
     var savedException = null;
     var exceptionFound = false;
-	try {
+    try {
         // run the callback and check for forbidden method calls
         try {
             if (!ignoreForbiddenCalls) {
