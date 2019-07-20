@@ -212,6 +212,9 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
 
             return result;
         }
+        if(exceptionFound) {
+            throw savedException;
+        }
     } catch (e) {
         this.map.writeStatus(e.toString());
 
