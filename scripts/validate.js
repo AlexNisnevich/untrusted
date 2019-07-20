@@ -58,7 +58,8 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         if (this._debugMode) {
             console.log(allCode);
         }
-
+        // save reference implementations to prevent tampering
+        this.saveReferenceImplementations(dummyMap, dummyMap.getPlayer());
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
 
         this._eval(allCode);
@@ -205,7 +206,7 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
                 return;
             }
             if(exceptionFound) {
-            	throw savedException;
+                throw savedException;
             }
             // refresh the map, just in case
             this.map.refresh();
@@ -325,17 +326,19 @@ Game.prototype.referenceImplementations = {
     }
 }
 
-Game.prototype.saveReferenceImplementations = function() {
-    for (f in this.referenceImplementations.map) {
-        if (this.referenceImplementations.map.hasOwnProperty(f)) {
-            this.referenceImplementations.map[f] = this.map[f];
+Game.prototype.saveReferenceImplementations = function(map, player) {
+    if (map) {
+        for (f in this.referenceImplementations.map) {
+            if (this.referenceImplementations.map.hasOwnProperty(f)) {
+                this.referenceImplementations.map[f] = map[f];
+            }
         }
     }
-
-    var dummyPlayer = new Player(0, 0, this.map, this);
-    for (f in this.referenceImplementations.player) {
-        if (this.referenceImplementations.player.hasOwnProperty(f)) {
-            this.referenceImplementations.player[f] = dummyPlayer[f];
+    if (player) {
+        for (f in this.referenceImplementations.player) {
+            if (this.referenceImplementations.player.hasOwnProperty(f)) {
+                this.referenceImplementations.player[f] = player[f];
+            }
         }
     }
 };
@@ -348,7 +351,7 @@ Game.prototype.detectTampering = function(map, player) {
 
     for (f in this.referenceImplementations.map) {
         if (this.referenceImplementations.map.hasOwnProperty(f)) {
-            if (this.referenceImplementations.map[f].toString() != map[f].toString()) {
+            if (this.referenceImplementations.map[f] !== map[f]) {
                 throw (f + '() has been tampered with!');
             }
         }
@@ -357,7 +360,7 @@ Game.prototype.detectTampering = function(map, player) {
     if (player) {
         for (f in this.referenceImplementations.player) {
             if (this.referenceImplementations.player.hasOwnProperty(f)) {
-                if (this.referenceImplementations.player[f].toString() != player[f].toString()) {
+                if (this.referenceImplementations.player[f] !== player[f]) {
                     throw (f + '() has been tampered with!');
                 }
             }
