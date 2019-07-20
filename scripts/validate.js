@@ -155,7 +155,7 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
                 this.sound.playSound('static');
                 this.map.getPlayer()._canMove = false;
                 this.map._callbackValidationFailed = true;
-
+                this.map._clearIntervals();
                 // throw e; // for debugging
                 return;
             } else {
@@ -180,7 +180,7 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
             // disable player movement
             this.map.getPlayer()._canMove = false;
             this.map._callbackValidationFailed = true;
-
+            this.map._clearIntervals();
             return;
         }
 
@@ -201,7 +201,7 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
                 // disable player movement
                 this.map.getPlayer()._canMove = false;
                 this.map._callbackValidationFailed = true;
-
+                this.map._clearIntervals();
                 return;
             }
             if(exceptionFound) {
