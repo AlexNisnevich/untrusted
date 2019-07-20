@@ -60,6 +60,8 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
 
         this._eval(allCode);
+        var initialOnExit = window.onExit;
+        var initialValidateLevel = window.validateLevel;
 
         // start the level on a dummy map to validate
         this._setPlayerCodeRunning(true);
@@ -80,6 +82,13 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         }
         if (!this._endOfStartLevelReached && !restartingLevelFromScript) {
             throw 'startLevel() returned prematurely!';
+        }
+        // issue#385 check for tampering with validateLevel and startLevel
+        if(initialValidateLevel !== window.validateLevel) {
+            throw "validateLevel() has been tampered with!";
+        }
+        if(initialOnExit !== window.onExit) {
+            throw "onExit() has been tampered with!";
         }
 
         // has the player tampered with any functions?
