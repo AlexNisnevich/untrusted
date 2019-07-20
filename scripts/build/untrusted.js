@@ -2219,8 +2219,8 @@ function Map(display, __game) {
         } else if (delay < 25) {
             throw "startTimer(): minimum delay is 25 milliseconds";
         }
-
-        __intervals.push(setInterval(timer, delay));
+        var validate = this._validateCallback;
+        __intervals.push(setInterval(function(){validate(timer)}, delay));
     }, this);
 
     this.timeout = wrapExposedMethod(function(timer, delay) {
@@ -2229,8 +2229,8 @@ function Map(display, __game) {
         } else if (delay < 25) {
             throw "timeout(): minimum delay is 25 milliseconds";
         }
-
-        __intervals.push(setTimeout(timer, delay));
+        var validate = this._validateCallback;
+        __intervals.push(setTimeout(function(){validate(timer)}, delay));
     }, this);
 
     this.displayChapter = wrapExposedMethod(function(chapterName, cssClass) {
@@ -3576,7 +3576,9 @@ Game.prototype.verbotenWords = [
     'self.', 'self[', 'top.', 'top[', 'frames',  // self === top === frames === window
     'parent', 'content', // parent === content === window in most of cases
     'validate', 'onExit', 'objective', // don't let players rewrite these methods
-    'this[' // prevents this['win'+'dow'], etc.
+    'this[', // prevents this['win'+'dow'], etc.
+    '_', // make it a little harder to call "private" methods as in issue #322
+     '\\u' // prevents usage of arbitrary code through unicode escape characters, see issue #378
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
 
@@ -3621,6 +3623,8 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
 
         this._eval(allCode);
+        var initialOnExit = window.onExit;
+        var initialValidateLevel = window.validateLevel;
 
         // start the level on a dummy map to validate
         this._setPlayerCodeRunning(true);
@@ -3641,6 +3645,13 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         }
         if (!this._endOfStartLevelReached && !restartingLevelFromScript) {
             throw 'startLevel() returned prematurely!';
+        }
+        // issue#385 check for tampering with validateLevel and startLevel
+        if(initialValidateLevel !== window.validateLevel) {
+            throw "validateLevel() has been tampered with!";
+        }
+        if(initialOnExit !== window.onExit) {
+            throw "onExit() has been tampered with!";
         }
 
         // has the player tampered with any functions?
@@ -3685,6 +3696,8 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForbiddenCalls) {
+    var savedException = null;
+    var exceptionFound = false;
     try {
         // run the callback and check for forbidden method calls
         try {
@@ -3707,8 +3720,9 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
                 // throw e; // for debugging
                 return;
             } else {
-                // other exceptions are fine here - just pass them up
-                throw e;
+                // other exceptions are fine here, but be sure to run validation before passing them up
+                savedException = e;
+                exceptionFound = true;
             }
         }
 
@@ -3751,7 +3765,9 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
 
                 return;
             }
-
+            if(exceptionFound) {
+            	throw savedException;
+            }
             // refresh the map, just in case
             this.map.refresh();
 
