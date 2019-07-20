@@ -16,6 +16,7 @@ Game.prototype.verbotenWords = [
     'parent', 'content', // parent === content === window in most of cases
     'validate', 'onExit', 'objective', // don't let players rewrite these methods
     'this[', // prevents this['win'+'dow'], etc.
+    '_', // make it a little harder to call "private" methods as in issue #322
      '\\u' // prevents usage of arbitrary code through unicode escape characters, see issue #378
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
