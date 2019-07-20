@@ -134,6 +134,8 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
 Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForbiddenCalls) {
+    var savedException = null;
+    var exceptionFound = false;
     try {
         // run the callback and check for forbidden method calls
         try {
@@ -156,8 +158,9 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
                 // throw e; // for debugging
                 return;
             } else {
-                // other exceptions are fine here - just pass them up
-                throw e;
+                // other exceptions are fine here, but be sure to run validation before passing them up
+                savedException = e;
+                exceptionFound = true;
             }
         }
 
@@ -200,7 +203,9 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
 
                 return;
             }
-
+            if(exceptionFound) {
+            	throw savedException;
+            }
             // refresh the map, just in case
             this.map.refresh();
 
