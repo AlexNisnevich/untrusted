@@ -634,15 +634,6 @@ With our recent escapades in jQuery land, we now have access to jQuery. With thi
     }, 1000);
 ```
 
-## Pcat0: Hank the game not the level
-
-Its a game about hacking, so its not cheating right?
-
-```javascript
-(this ["vali"+"dateLevel"]=0,(d=>((a,b,c)=>(c(a+1,b,'exit'),c(a+1,b+1,'phone'),
-c(a,b+1,'theAlgorithm')))(d.getX(),d.getY(),map.placeObject))(map.getPlayer()))
-```
-
 ## juh9870: Return bullets to sender
 
 Why not just kill boss with his own bullets?
