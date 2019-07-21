@@ -575,14 +575,28 @@ function Map(display, __game) {
     /* canvas-related stuff */
 
     this.getCanvasContext = wrapExposedMethod(function() {
-        return $('#drawingCanvas')[0].getContext('2d');
+        var ctx = $('#drawingCanvas')[0].getContext('2d');
+        if(!this._dummy) {
+            var opts = this._display.getOptions();
+            ctx.font = opts.fontSize+"px " +opts.fontFamily;
+        }
+        return ctx;
     }, this);
 
-    this.getCanvasCoords = wrapExposedMethod(function(obj) {
+    this.getCanvasCoords = wrapExposedMethod(function() {
+        var x, y;
+        if(arguments.length == 1) {
+            var obj = arguments[0];
+            x = obj.getX();
+            y = obj.getY();
+        } else {
+            x = arguments[0];
+            y = arguments[1];
+        }
         var canvas =  $('#drawingCanvas')[0];
         return {
-            x: (obj.getX() + 0.5) * canvas.width / __game._dimensions.width,
-            y: (obj.getY() + 0.5) * canvas.height / __game._dimensions.height
+            x: (x + 0.5) * canvas.width / __game._dimensions.width,
+            y: (y + 0.5) * canvas.height / __game._dimensions.height
         };
     }, this);
 
