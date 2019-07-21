@@ -83,7 +83,7 @@ function Player(x, y, __map, __game) {
                 this._pickUpItem(objectName, objectDef);
             } else if (objectDef.onCollision) {
                 __game.validateCallback(function () {
-                    objectDef.onCollision(player, __game);
+                    objectDef.onCollision(player);
                 }, false, true);
             }
         }
