@@ -437,6 +437,7 @@ function Map(display, __game) {
         }
 
         __player = new __game._playerPrototype(x, y, this, __game);
+        __game.saveReferenceImplementations(null, __player);
         this._display.drawAll(this);
     }, this);
 
