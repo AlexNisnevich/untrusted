@@ -345,59 +345,6 @@ map.getPlayer().setPhoneCallback(function() {
 
 ```
 
-## XadillaX's Hack Solution
-
-Define a new block type and let them at the bottom of bosses and bullets:
-
-```javascript
-map.defineObject("sb", {
-    impassable: function() {
-        return true;
-    },
-    symbol: "a",
-    onCollision: function() {
-    }
-});
-
-for(var i = 0; i < map.getWidth(); i++) {
-
-    map.placeObject(i, 9, "sb");
-}
-```
-
-And then you can get phone.
-
-Set the phone callback function to hack:
-
-Get all dynamic objects, and let the `_destroy` function of `boss` to `bullet`. That means when a bullet is to destroy, the `boss` will be destroyed instead:
-
-```javascript
-map.getPlayer().setPhoneCallback(function() {
-    var bosses = [];
-    var bullets = [];
-    var objects = map.getDynamicObjects();
-    for(var i = 0; i < objects.length; i++) {
-        if(objects[i].getType() == "boss") {
-            bosses.push(objects[i]);
-        } else {
-            bullets.push(objects[i]);
-        }
-    }
-    for(var i = 0; i < Math.min(bosses.length, bullets.length); i++) {
-        bullets[i]._destroy = bosses[i]._destroy;
-    }
-
-    if(bosses.length === 0) {
-        map.placeObject(map.getPlayer().getX(), map.getPlayer().getY() + 1,
-            'theAlgorithm');
-    }
-});
-```
-
-But don't forget to generate `theAlgorithm` after all `boss` destroyed.
-
-Now you can get your phone and press `Q` until all bosses are destroyed and get `theAlgorithm` to next stage!
-
 ## garzon: hide and shoot
 
 Don't panic! Just hide in the shelters and make phone calls. :)
@@ -632,15 +579,6 @@ With our recent escapades in jQuery land, we now have access to jQuery. With thi
     	for(var i = 0; i < 25; i++) 
 		map.placeObject(i+3, map.getHeight() - 4, 'myBoss');
     }, 1000);
-```
-
-## Pcat0: Hank the game not the level
-
-Its a game about hacking, so its not cheating right?
-
-```javascript
-(this ["vali"+"dateLevel"]=0,(d=>((a,b,c)=>(c(a+1,b,'exit'),c(a+1,b+1,'phone'),
-c(a,b+1,'theAlgorithm')))(d.getX(),d.getY(),map.placeObject))(map.getPlayer()))
 ```
 
 ## juh9870: Return bullets to sender

@@ -83,12 +83,7 @@ function Map(display, __game) {
         });
         __dynamicObjects = [];
         __player = null;
-
-        for (var i = 0; i < __intervals.length; i++) {
-            clearInterval(__intervals[i]);
-        }
-        __intervals = [];
-
+        this._clearIntervals();
         __lines = [];
         __dom = '';
         this._overrideKeys = {};
@@ -100,6 +95,13 @@ function Map(display, __game) {
 
         this.finalLevel = false;
         this._callbackValidationFailed = false;
+    };
+    this._clearIntervals = function() {
+        if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._clearIntervals()';}
+        for (var i = 0; i < __intervals.length; i++) {
+            clearInterval(__intervals[i]);
+        }
+        __intervals = [];
     };
 
     this._ready = function () {
@@ -435,6 +437,7 @@ function Map(display, __game) {
         }
 
         __player = new __game._playerPrototype(x, y, this, __game);
+        __game.saveReferenceImplementations(null, __player);
         this._display.drawAll(this);
     }, this);
 

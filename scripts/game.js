@@ -105,7 +105,6 @@ function Game(debugMode, startLevel) {
         this.objects = this.getListOfObjects();
 
         // Initialize validator
-        this.saveReferenceImplementations(); // prevents tampering with methods
         this._globalVars = []; // keep track of current global variables
         for (p in window) {
             if (window.propertyIsEnumerable(p)) {
@@ -361,6 +360,9 @@ function Game(debugMode, startLevel) {
 
             // set correct inventory state
             this.setInventoryStateByLevel(this._currentLevel);
+
+            // save reference implementations to prevent tampering
+            this.saveReferenceImplementations(this.map, this.map.getPlayer());
 
             // start the level
             validatedStartLevel(this.map);
