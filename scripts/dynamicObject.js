@@ -237,9 +237,13 @@ function DynamicObject(map, type, x, y, __game) {
         this.target = target;
     }, this);
 
+    // call secureObject to prevent user code from tampering with private attributes
+    __game.secureObject(this, type+".");
+
     // constructor
 
     if (!map._dummy && __definition.interval) {
         this._onTurn();
     }
+
 }
