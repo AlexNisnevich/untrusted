@@ -31,7 +31,7 @@ Game.prototype.removeFromInventory = function (itemName) {
 	this.drawInventory();
 
 	if (object.onDrop) {
-		object.onDrop(this);
+		object.onDrop();
 	}
 };
 
