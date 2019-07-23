@@ -1,7 +1,15 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2.1",
-    "music": "Brazil"
+    "version": "1.3.0",
+    "music": "Brazil",
+    "mapProperties": {
+        "showDrawingCanvas": "true"
+    },
+    "commandsIntroduced": [
+            "canvas.fillStyle",
+            "canvas.fillText",
+            "map.timeout"
+    ]
 }
 #END_PROPERTIES#
 /**************
@@ -75,13 +83,11 @@ function startLevel(map) {
         if (i >= credits.length) {
             return;
         }
-
-        // redraw lines bottom to top to avoid cutting off letters
-        for (var j = i; j >= 0; j--) {
-            var line = credits[j];
-            map._display.drawText(line[0], line[1], line[2]);
-        }
-
+        var ctx = map.getCanvasContext();
+        ctx.fillStyle = "#ccc";
+        var line = credits[i];
+        var coords = map.getCanvasCoords(line[0],line[1]);
+        ctx.fillText(line[2],coords.x, coords.y)
         map.timeout(function () {drawCredits(i+1);}, 2000)
     }
 

@@ -2,8 +2,8 @@
 Objects can have the following parameters:
     color: '#fff' by default
     impassable: true if it blocks the player from movement (false by default)
-    onCollision: function (player, game) called when player moves over the object
-    onPickUp: function (player, game) called when player picks up the item
+    onCollision: function (player) called when player moves over the object
+    onPickUp: function (player) called when player picks up the item
     symbol: Unicode character representing the object
     type: 'item' or null
 */

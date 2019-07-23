@@ -192,7 +192,7 @@ function Game(debugMode, startLevel) {
 '01_inTheDesert.jsx','02_theEmptyRoom.jsx','03_theCollapsingRoom.jsx','04_theGuard.jsx','05_theCorridor.jsx','AB_1_ANewJourney.jsx','AB_2_FrozenCave.jsx','AB_3_BoulderMadness.jsx','AB_4_BatAttack.jsx','AB_5_PathOfDoom.jsx','_sampleLevel.jsx','darkAlley.jsx','ice.jsx','labryinth.jsx','levelName.jsx','noWayOut.jsx','pushme.jsx','soccer.jsx','threeKeys.jsx','trapped.jsx','wallsWithEyes.jsx'
     ].filter(function (lvl) { return (lvl.indexOf('_') != 0); }); // filter out bonus levels that start with '_'
 
-	this._mod = '';
+    this._mod = '';
 
     this._viewableScripts = [
         'codeEditor.js',
@@ -230,7 +230,7 @@ function Game(debugMode, startLevel) {
 
     this._getHelpCommands = function () { return __commands; };
     this._isPlayerCodeRunning = function () { return __playerCodeRunning; };
-	this._getLocalKey = function (key) { return (this._mod.length == 0 ? '' : this._mod + '.') + key; };
+    this._getLocalKey = function (key) { return (this._mod.length == 0 ? '' : this._mod + '.') + key; };
 
     /* unexposed setters */
 
@@ -486,6 +486,7 @@ function Game(debugMode, startLevel) {
     };
 
     this._evalLevelCode = function (allCode, playerCode, isNewLevel, restartingLevelFromScript) {
+        this.map._clearIntervals();
         var game = this;
 
         // by default, get code from the editor
@@ -1616,7 +1617,7 @@ Game.prototype.removeFromInventory = function (itemName) {
 	this.drawInventory();
 
 	if (object.onDrop) {
-		object.onDrop(this);
+		object.onDrop();
 	}
 };
 
@@ -2279,14 +2280,28 @@ function Map(display, __game) {
     /* canvas-related stuff */
 
     this.getCanvasContext = wrapExposedMethod(function() {
-        return $('#drawingCanvas')[0].getContext('2d');
+        var ctx = $('#drawingCanvas')[0].getContext('2d');
+        if(!this._dummy) {
+            var opts = this._display.getOptions();
+            ctx.font = opts.fontSize+"px " +opts.fontFamily;
+        }
+        return ctx;
     }, this);
 
-    this.getCanvasCoords = wrapExposedMethod(function(obj) {
+    this.getCanvasCoords = wrapExposedMethod(function() {
+        var x, y;
+        if(arguments.length == 1) {
+            var obj = arguments[0];
+            x = obj.getX();
+            y = obj.getY();
+        } else {
+            x = arguments[0];
+            y = arguments[1];
+        }
         var canvas =  $('#drawingCanvas')[0];
         return {
-            x: (obj.getX() + 0.5) * canvas.width / __game._dimensions.width,
-            y: (obj.getY() + 0.5) * canvas.height / __game._dimensions.height
+            x: (x + 0.5) * canvas.width / __game._dimensions.width,
+            y: (y + 0.5) * canvas.height / __game._dimensions.height
         };
     }, this);
 
@@ -2390,8 +2405,8 @@ function Map(display, __game) {
 Objects can have the following parameters:
     color: '#fff' by default
     impassable: true if it blocks the player from movement (false by default)
-    onCollision: function (player, game) called when player moves over the object
-    onPickUp: function (player, game) called when player picks up the item
+    onCollision: function (player) called when player moves over the object
+    onPickUp: function (player) called when player picks up the item
     symbol: Unicode character representing the object
     type: 'item' or null
 */
@@ -2722,7 +2737,7 @@ function Player(x, y, __map, __game) {
                 this._pickUpItem(objectName, objectDef);
             } else if (objectDef.onCollision) {
                 __game.validateCallback(function () {
-                    objectDef.onCollision(player, __game);
+                    objectDef.onCollision(player);
                 }, false, true);
             }
         }
@@ -2888,7 +2903,18 @@ Game.prototype.reference = {
         'type': 'property',
         'description': 'Determines the color (and, optionally, other properties) of the next lines drawn.'
     },
-
+    'canvas.fillStyle': {
+        'name': 'canvasContext.fillStyle',
+        'category': 'canvas',
+        'type': 'property',
+        'description': 'Determines the color (and, optionally, other properties) of the text drawn woth <b>fillText</b>.'
+    },
+    'canvas.fillText': {
+        'name': 'canvasContext.fillText(text, x, y)',
+        'category': 'canvas',
+        'type': 'method',
+        'description': 'Draws a given piece of text, starting at specified coordinates, to to the canvas',
+    },
     'global.$': {
         'name': '$(html)',
         'category': 'global',
@@ -3036,10 +3062,10 @@ Game.prototype.reference = {
         'description': 'Returns the 2D drawing context of the <a onclick="$(\'#helpPaneSidebar .category#canvas\').click();">canvas</a> overlaying the map.'
     },
     'map.getCanvasCoords': {
-        'name': 'map.getCanvasCoords(obj)',
+        'name': 'map.getCanvasCoords(obj) / map.getCanvasCoords(x, y)',
         'category': 'map',
         'type': 'method',
-        'description': 'Returns {"x": x, "y": y}, where x and y are the respective coordinates of the given object on the canvas returned by map.getCanvasContext().'
+        'description': 'Returns {"x": x, "y": y}, where x and y are the respective coordinates of the given object or grid position on the canvas returned by map.getCanvasContext().'
     },
     'map.getDOM': {
         'name': 'map.getDOM()',
@@ -3112,6 +3138,12 @@ Game.prototype.reference = {
         'category': 'map',
         'type': 'method',
         'description': 'Sets the background color of the given square.'
+    },
+    'map.timeout': {
+        'name': 'map.timeout(callback, delay)',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Starts a timer (c.f. setTimeout) of the given delay, in milliseconds (minimum 25 ms). Unlike map.startTimer, the callback will only run once.'
     },
     'map.startTimer': {
         'name': 'map.startTimer(callback, delay)',
@@ -3642,6 +3674,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._endOfStartLevelReached = false;
         dummyMap._reset();
         startLevel(dummyMap);
+        dummyMap._clearIntervals();
 
         // does startLevel() execute fully?
         // (if we're restarting a level after editing a script, we can't test for this
@@ -4241,7 +4274,7 @@ Game.prototype._levels = {
     'levels/19_documentObjectMadness.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.3",\n    "commandsIntroduced":\n        ["global.objective", "map.getDOM", "map.createFromDOM",\n         "map.updateDOM", "map.overrideKey", "global.$",\n         "jQuery.find", "jQuery.addClass", "jQuery.hasClass",\n         "jQuery.removeClass", "jQuery.parent", "jQuery.length",\n         "jQuery.children", "jQuery.first", "jQuery.next",\n         "jQuery.prev"],\n    "music": "BossLoop",\n    "mapProperties": {\n        "showDummyDom": true\n    }\n}\n#END_PROPERTIES#\n/****************************\n * documentObjectMadness.js *\n ****************************\n *\n * I can\'t believe it! I can\'t believe you made it onto\n * Department of Theoretical Computation\'s web server!\n * YOU SHOULD HAVE BEEN DELETED! This shouldn\'t even be\n * possible! What the hell were the IT folks thinking?\n *\n * No matter. I still have the Algorithm. That\'s the\n * important part. The rest is just implementation, and\n * how hard could that be?\n *\n * Anyway you\'re not going to catch me now, my good Doctor.\n * After all, you\'re a tenured professor with a well-respected\n * history of research - you probably don\'t know jQuery!\n */\n\nfunction objective(map) {\n    return map.getDOM().find(\'.adversary\').hasClass(\'drEval\');\n}\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    var html = "<div class=\'container\'>" +\n    "<div style=\'width: 600px; height: 500px; background-color: white; font-size: 10px;\'>" +\n        "<center><h1>Department of Theoretical Computation</h1></center>" +\n        "<hr />" +\n        "<table border=\'0\'><tr valign=\'top\'>" +\n            "<td><div id=\'face\' /></td>" +\n            "<td>" +\n                "<h2 class=facultyName>Cornelius Eval</h2>" +\n                "<h3>Associate Professor of Computer Science</h3>" +\n                "<ul>" +\n                    "<li>BS, Mathematics, University of Manitoba</li>" +\n                    "<li>PhD, Theoretical Computation, <a href=\'http://www.mit.edu\'>MIT</a></li>" +\n                "</ul>" +\n                "<h4>About me</h4>" +\n                "<p>I am an associate professor of computer science, attached to the Department of " +\n                "Theoretical Computation. My current research interests include the human-machine " +\n                "interface, NP complete problems, and parallelized mesh mathematics.</p>" +\n                "<p>I am also the current faculty advisor to the <a href=\'\'>undergraduate Super Smash Bros. team</a>. " +\n                "In my spare time I enjoy polka and dirtbiking. </p>" +\n            "</td>" +\n        "</tr></table>" +\n\n        "<div id=\'class_schedule\'>" +\n          "<h4>Class Schedule</h4>" +\n            "<table>" +\n             "<tr>" +\n                "<th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th>" +\n             "</tr>" +\n             "<tr>" +\n                "<td>CS145 - Semicolons</td><td>Nothing Planned</td><td>CS145 - Semicolons</td><td>CS199 - Practical Theorycrafting </td><td>CS145 - Semicolons</td>" +\n             "</tr>" +\n            "</table>" +\n        "</div>" +\n        "<div id=\'loremIpsum\'>" +\n        "<h4>Lorem Ipsum</h4>" +\n          "<blockquote>" +\n            "<code>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci " +\n            "velit, sed quia nonnumquam eiusmodi tempora incidunt ut labore et dolore magnam aliquam quaerat " +\n            "voluptatem.</code>" +\n            "<footer>— " +\n              "<cite>Cicero, De Finibus Bonorum et Malorum</cite>" +\n            "</footer>" +\n          "</blockquote>" +\n        "</div>" +\n    "</div></div>";\n\n    var $dom = $(html);\n\n    $dom.find(\'.facultyName\').addClass(\'drEval\');\n    $dom.find(\'cite\').addClass(\'adversary\');\n\n    function moveToParent(className) {\n        var currentPosition = $dom.find(\'.\' + className);\n        if (currentPosition.parent().length > 0) {\n            if (currentPosition.parent().hasClass(\'container\')) {\n                if (className === \'drEval\') {\n                    map.getPlayer().killedBy(\'moving off the edge of the DOM\');\n                } else {\n                    return false;\n                }\n            } else {\n                currentPosition.parent().addClass(className);\n                currentPosition.removeClass(className);\n                map.updateDOM($dom);\n            }\n        }\n    }\n\n    function moveToFirstChild(className) {\n        var currentPosition = $dom.find(\'.\' + className);\n        if (currentPosition.children().length > 0) {\n            currentPosition.children().first().addClass(className);\n            currentPosition.removeClass(className);\n            map.updateDOM($dom);\n        }\n    }\n\n    function moveToPreviousSibling(className) {\n        var currentPosition = $dom.find(\'.\' + className);\n        if (currentPosition.prev().length > 0) {\n            currentPosition.prev().addClass(className);\n            currentPosition.removeClass(className);\n            map.updateDOM($dom);\n        }\n    }\n\n    function moveToNextSibling(className) {\n        var currentPosition = $dom.find(\'.\' + className);\n        if (currentPosition.next().length > 0) {\n            currentPosition.next().addClass(className);\n            currentPosition.removeClass(className);\n            map.updateDOM($dom);\n        }\n    }\n\n    map.overrideKey(\'up\', function () { moveToParent(\'drEval\'); });\n    map.overrideKey(\'down\', function () { moveToFirstChild(\'drEval\'); });\n    map.overrideKey(\'left\', function () { moveToPreviousSibling(\'drEval\'); });\n    map.overrideKey(\'right\', function () { moveToNextSibling(\'drEval\'); });\n\n    map.defineObject(\'adversary\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'@\',\n        \'color\': \'red\',\n        \'behavior\': function (me) {\n            var move = Math.floor(Math.random() * 4) + 1; // 1, 2, 3, or 4\n            if (move == 1) {\n                moveToParent(\'adversary\');\n            } else if (move == 2) {\n                moveToFirstChild(\'adversary\');\n            } else if (move == 3) {\n                moveToPreviousSibling(\'adversary\');\n            } else if (move == 4) {\n                moveToNextSibling(\'adversary\');\n            }\n        }\n    });\n\n    map.placePlayer(1, 1);\n    map.placeObject(map.getWidth() - 2, map.getHeight() - 2, \'adversary\');\n\n    map.createFromDOM($dom);\n#END_OF_START_LEVEL#\n}\n ', 
     'levels/20_bossFight.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2",\n    "commandsIntroduced":\n        ["object.onDestroy", "object.projectile",\n         "map.countObjects", "map.isStartOfLevel",\n         "map.validateAtMostXDynamicObjects", "map.validateNoTimers"],\n	"music": "Adversity",\n    "mapProperties": {\n        "refreshRate": 50,\n        "quickValidateCallback": true\n    }\n}\n#END_PROPERTIES#\n\n/*****************\n * bossFight.js *\n *****************\n *\n * NO FARTHER, DR. EVAL!!!!\n * YOU WILL NOT GET OUT OF HERE ALIVE!!!!\n * IT\'S TIME YOU SEE MY TRUE FORM!!!!\n * FACE MY ROBOT WRATH!!!!!\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n	map.defineObject(\'boss\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'⊙\',\n        \'color\': \'red\',\n        \'interval\': 200,\n        \'onCollision\': function (player) {\n            player.killedBy(\'the boss\');\n        },\n        \'behavior\': function (me) {\n        	if (!me.direction) {\n        		me.direction = \'right\';\n        	}\n        	if (me.canMove(me.direction)) {\n            	me.move(me.direction);\n        	} else {\n        		me.direction = (me.direction == \'right\') ? \'left\' : \'right\';\n        	}\n        	if (Math.random() < 0.3) {\n            	map.placeObject(me.getX(), me.getY() + 2, \'bullet\');\n        	}\n        },\n        \'onDestroy\': function (me) {\n            if (map.countObjects(\'boss\') == 0) {\n                map.placeObject(me.getX(), me.getY(), \'theAlgorithm\');\n            }\n        }\n    });\n\n    map.defineObject(\'bullet\', {\n        \'type\': \'dynamic\',\n        \'symbol\': \'.\',\n        \'color\': \'red\',\n        \'interval\': 100,\n        \'projectile\': true,\n        \'behavior\': function (me) {\n            me.move(\'down\');\n        }\n    });\n\n    map.placePlayer(0, map.getHeight() - 3);\n    map.placeObject(map.getWidth() - 1, map.getHeight() - 1, \'exit\');\n\n    // Not so tough now, huh?\n    map.getPlayer().removeItem(\'phone\');\n    map.placeObject(map.getWidth() - 1, map.getHeight() - 3, \'phone\');\n\n    map.placeObject(0, map.getHeight() - 4, \'block\');\n    map.placeObject(1, map.getHeight() - 4, \'block\');\n    map.placeObject(2, map.getHeight() - 4, \'block\');\n    map.placeObject(2, map.getHeight() - 3, \'block\');\n    map.placeObject(map.getWidth() - 1, map.getHeight() - 4, \'block\');\n    map.placeObject(map.getWidth() - 2, map.getHeight() - 4, \'block\');\n    map.placeObject(map.getWidth() - 3, map.getHeight() - 4, \'block\');\n    map.placeObject(map.getWidth() - 3, map.getHeight() - 3, \'block\');\n\n    for (var x = 0; x < map.getWidth(); x++) {\n        map.placeObject(x, 4, \'block\');\n    }\n\n    map.placeObject(9, 5, \'boss\');\n    map.placeObject(11, 5, \'boss\');\n    map.placeObject(13, 5, \'boss\');\n    map.placeObject(15, 5, \'boss\');\n    map.placeObject(17, 5, \'boss\');\n    map.placeObject(19, 5, \'boss\');\n    map.placeObject(21, 5, \'boss\');\n    map.placeObject(23, 5, \'boss\');\n    map.placeObject(25, 5, \'boss\');\n    map.placeObject(27, 5, \'boss\');\n    map.placeObject(29, 5, \'boss\');\n    map.placeObject(31, 5, \'boss\');\n\n    map.placeObject(10, 6, \'boss\');\n    map.placeObject(12, 6, \'boss\');\n    map.placeObject(14, 6, \'boss\');\n    map.placeObject(16, 6, \'boss\');\n    map.placeObject(18, 6, \'boss\');\n    map.placeObject(20, 6, \'boss\');\n    map.placeObject(22, 6, \'boss\');\n    map.placeObject(24, 6, \'boss\');\n    map.placeObject(26, 6, \'boss\');\n    map.placeObject(28, 6, \'boss\');\n    map.placeObject(30, 6, \'boss\');\n\n#BEGIN_EDITABLE#\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#END_EDITABLE#\n\n#END_OF_START_LEVEL#\n}\n\nfunction validateLevel(map) {\n    // called at start of level and whenever a callback executes\n    map.validateAtMostXObjects(59, \'block\');\n    map.validateAtMostXObjects(1, \'phone\');\n\n    if (map.countObjects(\'theAlgorithm\') > 0 && map.countObjects(\'boss\') > 0) {\n        throw "The Algorithm can only be dropped by the boss!";\n    }\n\n    // only called at start of level\n    if (map.isStartOfLevel()) {\n        map.validateAtMostXDynamicObjects(23);\n        map.validateNoTimers();\n    }\n}\n\nfunction onExit(map) {\n    if (!map.getPlayer().hasItem(\'theAlgorithm\')) {\n        map.writeStatus("You must take back the Algorithm!!");\n        return false;\n    } else if (!map.getPlayer().hasItem(\'phone\')) {\n        map.writeStatus("We need the phone!");\n        return false;\n    } else {\n        return true;\n    }\n}\n ', 
     'levels/21_endOfTheLine.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2",\n    "music": "Comme Des Orages"\n}\n#END_PROPERTIES#\n\n/*******************\n * endOfTheLine.js *\n *******************\n *\n * I don\'t feel guilty at all, Cornelius.\n *\n * Did you really expect me to? Did you really think that\n * you could be trusted with coauthorship on the paper that\n * would prove P = NP in the eyes of the world?\n *\n * You\'re a very pure researcher, my good Doctor. "Department\n * of Theoretical Computation", divorced from the realities\n * of the world. I don\'t think you ever considered the\n * implications - the *physical* implications - of the\n * Algorithm. What humanity might do if it was as easy to\n * solve an intractable puzzle as it was to conceive of it.\n *\n * We would become as unto Gods, Cornelius, if this knowledge\n * was public. Immature children wielding power unimaginable.\n * We\'ve already had one Oppenheimer - we don\'t need Dr.\n * Cornelius Eval to be another.\n *\n * If I had succeeded the Algorithm would be safe and secure\n * in the hands of those with the sound judgement and sense\n * of responsibility to use it wisely. I pray my failure\n * will not doom mankind - but I cannot hope so\n * optimistically.\n *\n * You may have defeated my robot form, but I anticipated\n * this eventuality. The Algorithm must never leave the\n * Machine Continuum. And so neither can you.\n *\n * This is bigger than me and bigger than you. I have no\n * regrets. I would do it again in an instant.\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    map.finalLevel = true;\n    map.placePlayer(15, 12);\n    map.placeObject(25, 12, \'exit\');\n#END_OF_START_LEVEL#\n}\n ', 
-    'levels/22_credits.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.2.1",\n    "music": "Brazil"\n}\n#END_PROPERTIES#\n/**************\n * credits.js *\n *************\n *\n * Congratulations! Dr. Eval has successfully escaped from the\n * Machine Continuum with the Algorithm in hand.\n *\n * Give yourself a pat on the back. You are one clever hacker.\n *\n *\n *\n * Hungry for more?\n *\n * Check out Untrusted\'s github repository at\n *      https://github.com/AlexNisnevich/untrusted\n *\n * Perhaps try your hand at making your own level or two!\n *\n * Like what you\'ve been hearing? You can listen to the full\n * soundtrack at\n *      https://soundcloud.com/untrusted\n *\n * Feel free to drop us a line at [\n *      \'alex [dot] nisnevich [at] gmail [dot] com\',\n *      \'greg [dot] shuflin [at] gmail [dot] com\'\n * ]\n *\n * Once again, congratulations!\n *\n *             -- Alex and Greg\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    var credits = [\n        [15, 1, "U N T R U S T E D"],\n        [20, 2, "- or -"],\n        [5, 3, "THE CONTINUING ADVENTURES OF DR. EVAL"],\n        [1, 4, "{"],\n        [2, 5, "a_game_by: \'Alex Nisnevich and Greg Shuflin\',"],\n        [2, 7, "special_thanks_to: {"],\n        [5, 8, "Dmitry_Mazin: [\'design\', \'code\'],"],\n        [5, 9, "Jordan_Arnesen: [\'levels\', \'playtesting\'],"],\n        [5, 10, "Natasha_HullRichter: [\'levels\',\'playtesting\']"],\n        [2, 11, "},"],\n        [2, 13, "music_by: "],\n        [4, 14, "[\'Jonathan Holliday\',"],\n        [5, 15, "\'Dmitry Mazin\',"],\n        [5, 16, "\'Revolution Void\',"],\n        [5, 17, "\'Fex\',"],\n        [5, 18, "\'iNTRICATE\',"],\n        [5, 19, "\'Tortue Super Sonic\',"],\n        [5, 20, "\'Broke For Free\',"],\n        [5, 21, "\'Sycamore Drive\',"],\n        [5, 22, "\'Eric Skiff\'],"],\n        [30, 14, "\'Mike and Alan\',"],\n        [30, 15, "\'RoccoW\',"],\n        [30, 16, "\'That Andy Guy\',"],\n        [30, 17, "\'Obsibilo\',"],\n        [30, 18, "\'BLEO\',"],\n        [30, 19, "\'Rolemusic\',"],\n        [30, 20, "\'Seropard\',"],\n        [30, 21, "\'Vernon Lenoir\',"],\n        [15, map.getHeight() - 2, "Thank_you: \'for playing!\'"],\n        [1, map.getHeight() - 1, "}"]\n    ];\n\n    function drawCredits(i) {\n        if (i >= credits.length) {\n            return;\n        }\n\n        // redraw lines bottom to top to avoid cutting off letters\n        for (var j = i; j >= 0; j--) {\n            var line = credits[j];\n            map._display.drawText(line[0], line[1], line[2]);\n        }\n\n        map.timeout(function () {drawCredits(i+1);}, 2000)\n    }\n\n    map.timeout(function () {drawCredits(0);}, 4000);\n\n#END_OF_START_LEVEL#\n}\n ', 
+    'levels/22_credits.jsx': '#BEGIN_PROPERTIES#\n{\n    "version": "1.3.0",\n    "music": "Brazil",\n    "mapProperties": {\n        "showDrawingCanvas": "true"\n    },\n    "commandsIntroduced": [\n            "canvas.fillStyle",\n            "canvas.fillText",\n            "map.timeout"\n    ]\n}\n#END_PROPERTIES#\n/**************\n * credits.js *\n *************\n *\n * Congratulations! Dr. Eval has successfully escaped from the\n * Machine Continuum with the Algorithm in hand.\n *\n * Give yourself a pat on the back. You are one clever hacker.\n *\n *\n *\n * Hungry for more?\n *\n * Check out Untrusted\'s github repository at\n *      https://github.com/AlexNisnevich/untrusted\n *\n * Perhaps try your hand at making your own level or two!\n *\n * Like what you\'ve been hearing? You can listen to the full\n * soundtrack at\n *      https://soundcloud.com/untrusted\n *\n * Feel free to drop us a line at [\n *      \'alex [dot] nisnevich [at] gmail [dot] com\',\n *      \'greg [dot] shuflin [at] gmail [dot] com\'\n * ]\n *\n * Once again, congratulations!\n *\n *             -- Alex and Greg\n */\n\nfunction startLevel(map) {\n#START_OF_START_LEVEL#\n    var credits = [\n        [15, 1, "U N T R U S T E D"],\n        [20, 2, "- or -"],\n        [5, 3, "THE CONTINUING ADVENTURES OF DR. EVAL"],\n        [1, 4, "{"],\n        [2, 5, "a_game_by: \'Alex Nisnevich and Greg Shuflin\',"],\n        [2, 7, "special_thanks_to: {"],\n        [5, 8, "Dmitry_Mazin: [\'design\', \'code\'],"],\n        [5, 9, "Jordan_Arnesen: [\'levels\', \'playtesting\'],"],\n        [5, 10, "Natasha_HullRichter: [\'levels\',\'playtesting\']"],\n        [2, 11, "},"],\n        [2, 13, "music_by: "],\n        [4, 14, "[\'Jonathan Holliday\',"],\n        [5, 15, "\'Dmitry Mazin\',"],\n        [5, 16, "\'Revolution Void\',"],\n        [5, 17, "\'Fex\',"],\n        [5, 18, "\'iNTRICATE\',"],\n        [5, 19, "\'Tortue Super Sonic\',"],\n        [5, 20, "\'Broke For Free\',"],\n        [5, 21, "\'Sycamore Drive\',"],\n        [5, 22, "\'Eric Skiff\'],"],\n        [30, 14, "\'Mike and Alan\',"],\n        [30, 15, "\'RoccoW\',"],\n        [30, 16, "\'That Andy Guy\',"],\n        [30, 17, "\'Obsibilo\',"],\n        [30, 18, "\'BLEO\',"],\n        [30, 19, "\'Rolemusic\',"],\n        [30, 20, "\'Seropard\',"],\n        [30, 21, "\'Vernon Lenoir\',"],\n        [15, map.getHeight() - 2, "Thank_you: \'for playing!\'"],\n        [1, map.getHeight() - 1, "}"]\n    ];\n\n    function drawCredits(i) {\n        if (i >= credits.length) {\n            return;\n        }\n        var ctx = map.getCanvasContext();\n        ctx.fillStyle = "#ccc";\n        var line = credits[i];\n        var coords = map.getCanvasCoords(line[0],line[1]);\n        ctx.fillText(line[2],coords.x, coords.y)\n        map.timeout(function () {drawCredits(i+1);}, 2000)\n    }\n\n    map.timeout(function () {drawCredits(0);}, 4000);\n\n#END_OF_START_LEVEL#\n}\n ', 
 };
 $(document).ready(function() {
     new Game()._initialize();
