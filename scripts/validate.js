@@ -76,6 +76,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._endOfStartLevelReached = false;
         dummyMap._reset();
         startLevel(dummyMap);
+        dummyMap._clearIntervals();
 
         // does startLevel() execute fully?
         // (if we're restarting a level after editing a script, we can't test for this

@@ -20,7 +20,7 @@ function Game(debugMode, startLevel) {
 //%BONUS%
     ].filter(function (lvl) { return (lvl.indexOf('_') != 0); }); // filter out bonus levels that start with '_'
 
-	this._mod = '//%MOD%';
+    this._mod = '//%MOD%';
 
     this._viewableScripts = [
         'codeEditor.js',
@@ -58,7 +58,7 @@ function Game(debugMode, startLevel) {
 
     this._getHelpCommands = function () { return __commands; };
     this._isPlayerCodeRunning = function () { return __playerCodeRunning; };
-	this._getLocalKey = function (key) { return (this._mod.length == 0 ? '' : this._mod + '.') + key; };
+    this._getLocalKey = function (key) { return (this._mod.length == 0 ? '' : this._mod + '.') + key; };
 
     /* unexposed setters */
 
@@ -314,6 +314,7 @@ function Game(debugMode, startLevel) {
     };
 
     this._evalLevelCode = function (allCode, playerCode, isNewLevel, restartingLevelFromScript) {
+        this.map._clearIntervals();
         var game = this;
 
         // by default, get code from the editor

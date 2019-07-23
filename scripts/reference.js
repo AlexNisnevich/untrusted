@@ -35,7 +35,18 @@ Game.prototype.reference = {
         'type': 'property',
         'description': 'Determines the color (and, optionally, other properties) of the next lines drawn.'
     },
-
+    'canvas.fillStyle': {
+        'name': 'canvasContext.fillStyle',
+        'category': 'canvas',
+        'type': 'property',
+        'description': 'Determines the color (and, optionally, other properties) of the text drawn woth <b>fillText</b>.'
+    },
+    'canvas.fillText': {
+        'name': 'canvasContext.fillText(text, x, y)',
+        'category': 'canvas',
+        'type': 'method',
+        'description': 'Draws a given piece of text, starting at specified coordinates, to to the canvas',
+    },
     'global.$': {
         'name': '$(html)',
         'category': 'global',
@@ -183,10 +194,10 @@ Game.prototype.reference = {
         'description': 'Returns the 2D drawing context of the <a onclick="$(\'#helpPaneSidebar .category#canvas\').click();">canvas</a> overlaying the map.'
     },
     'map.getCanvasCoords': {
-        'name': 'map.getCanvasCoords(obj)',
+        'name': 'map.getCanvasCoords(obj) / map.getCanvasCoords(x, y)',
         'category': 'map',
         'type': 'method',
-        'description': 'Returns {"x": x, "y": y}, where x and y are the respective coordinates of the given object on the canvas returned by map.getCanvasContext().'
+        'description': 'Returns {"x": x, "y": y}, where x and y are the respective coordinates of the given object or grid position on the canvas returned by map.getCanvasContext().'
     },
     'map.getDOM': {
         'name': 'map.getDOM()',
@@ -259,6 +270,12 @@ Game.prototype.reference = {
         'category': 'map',
         'type': 'method',
         'description': 'Sets the background color of the given square.'
+    },
+    'map.timeout': {
+        'name': 'map.timeout(callback, delay)',
+        'category': 'map',
+        'type': 'method',
+        'description': 'Starts a timer (c.f. setTimeout) of the given delay, in milliseconds (minimum 25 ms). Unlike map.startTimer, the callback will only run once.'
     },
     'map.startTimer': {
         'name': 'map.startTimer(callback, delay)',
