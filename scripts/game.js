@@ -104,14 +104,6 @@ function Game(debugMode, startLevel) {
         this.map = new Map(this.display, this);
         this.objects = this.getListOfObjects();
 
-        // Initialize validator
-        this._globalVars = []; // keep track of current global variables
-        for (p in window) {
-            if (window.propertyIsEnumerable(p)) {
-                this._globalVars.push(p);
-            }
-        }
-
         // Enable controls
         this.enableShortcutKeys();
         this.enableButtons();
@@ -367,9 +359,6 @@ function Game(debugMode, startLevel) {
 
             // start the level
             validatedStartLevel(this.map);
-
-            // deal with sneaky players
-            this.clearModifiedGlobals();
 
             // draw the map
             this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
