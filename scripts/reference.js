@@ -39,7 +39,7 @@ Game.prototype.reference = {
         'name': 'canvasContext.fillStyle',
         'category': 'canvas',
         'type': 'property',
-        'description': 'Determines the color (and, optionally, other properties) of the text drawn woth <b>fillText</b>.'
+        'description': 'Determines the color (and, optionally, other properties) of the text drawn with <b>fillText</b>.'
     },
     'canvas.fillText': {
         'name': 'canvasContext.fillText(text, x, y)',

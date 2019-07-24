@@ -1,19 +1,11 @@
 Game.prototype.verbotenWords = [
-    'eval', '.call', 'call(', 'apply', 'bind', // prevents arbitrary code execution
+    '.call', 'call(', 'apply', 'bind', // prevents arbitrary code execution
     'prototype', // prevents messing with prototypes
-    'setTimeout', 'setInterval', // requires players to use map.startTimer() instead
-    'requestAnimationFrame', 'mozRequestAnimationFrame', // (more timeout-like methods)
-    'webkitRequestAnimationFrame', 'setImmediate', // (more timeout-like methods)
-    'prompt', 'confirm', // prevents dialogs asking for user input
     'debugger', // prevents pausing execution
     'delete', // prevents removing items
-    'atob(','btoa(',//prevent bypassing checks using Base64
-    'Function(', //prevent constructing arbitrary function
     'constructor', // prevents retrieval of Function using an instance of it
     'window', // prevents setting "window.[...] = map", etc.
-    'document', // in particular, document.write is dangerous
-    'self.', 'self[', 'top.', 'top[', 'frames',  // self === top === frames === window
-    'parent', 'content', // parent === content === window in most of cases
+    'top', // prevents user code from escaping the iframe
     'validate', 'onExit', 'objective', // don't let players rewrite these methods
     'this[', // prevents this['win'+'dow'], etc.
     '_', // make it a little harder to call "private" methods as in issue #322
@@ -58,24 +50,32 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         if (this._debugMode) {
             console.log(allCode);
         }
+
         // save reference implementations to prevent tampering
         this.saveReferenceImplementations(dummyMap, dummyMap.getPlayer());
+
+        var allowjQuery = dummyMap._properties.showDummyDom;
+        // setup iframe in which code is run. As a side effect, this sets `this._eval` correctly
+        var userCode = this.initIframe(allowjQuery);
+
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
 
         this._eval(allCode);
-        var initialOnExit = window.onExit;
-        var initialValidateLevel = window.validateLevel;
+        var initialOnExit = userCode.onExit;
+        var initialValidateLevel = userCode.validateLevel;
 
         // start the level on a dummy map to validate
         this._setPlayerCodeRunning(true);
-        startLevel(dummyMap);
+        userCode.startLevel(dummyMap);
         this._setPlayerCodeRunning(false);
 
         // re-run to check if the player messed with startLevel
         this._startOfStartLevelReached = false;
         this._endOfStartLevelReached = false;
         dummyMap._reset();
-        startLevel(dummyMap);
+        this._setPlayerCodeRunning(true);
+        userCode.startLevel(dummyMap);
+        this._setPlayerCodeRunning(false);
         dummyMap._clearIntervals();
 
         // does startLevel() execute fully?
@@ -88,10 +88,10 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             throw 'startLevel() returned prematurely!';
         }
         // issue#385 check for tampering with validateLevel and startLevel
-        if(initialValidateLevel !== window.validateLevel) {
+        if(initialValidateLevel !== userCode.validateLevel) {
             throw "validateLevel() has been tampered with!";
         }
-        if(initialOnExit !== window.onExit) {
+        if(initialOnExit !== userCode.onExit) {
             throw "onExit() has been tampered with!";
         }
 
@@ -100,22 +100,22 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
         this.validateLevel = function () { return true; };
         // does validateLevel() succeed?
-        if (typeof(validateLevel) === "function") {
-            this.validateLevel = validateLevel;
-            validateLevel(dummyMap);
+        if (typeof(userCode.validateLevel) === "function") {
+            this.validateLevel = userCode.validateLevel;
+            userCode.validateLevel(dummyMap);
         }
 
         this.onExit = function () { return true; };
-        if (typeof onExit === "function") {
-            this.onExit = onExit;
+        if (typeof userCode.onExit === "function") {
+            this.onExit = userCode.onExit;
         }
 
         this.objective = function () { return false; };
-        if (typeof objective === "function") {
-            this.objective = objective;
+        if (typeof userCode.objective === "function") {
+            this.objective = userCode.objective;
         }
 
-        return startLevel;
+        return userCode.startLevel;
     } catch (e) {
         // cleanup
         this._setPlayerCodeRunning(false);
@@ -189,7 +189,6 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
         // on maps with many objects (e.g. boss fight),
         // we can't afford to do these steps
         if (!this.map._properties.quickValidateCallback) {
-            this.clearModifiedGlobals();
 
             // has the player tampered with any functions?
             try {
@@ -255,7 +254,52 @@ Game.prototype.validateAndRunScript = function (code) {
         //throw e; // for debugging
     }
 }
+var allowedGlobals = {
+    // These four are allowed primarily to avoid confusing the programmer
+    'Object':true,
+    'Array':true,
+    'String':true,
+    'Number':true,
+    // Math.Floor and Math.random are used in many levels
+    'Math':true,
+    // parseInt is used in a few bonus levels
+    'parseInt':true,
+    // Date is used by the infinite loop prevention code
+    'Date':true
+}
 
+Game.prototype.initIframe = function(allowjQuery){
+    var iframe = $("#user_code")[0];
+    // reset any state in the iframe
+    iframe.src = "about:blank";
+    var iframewindow = iframe.contentWindow;
+    this._eval = iframewindow.eval;
+    // delete any unwated global variables in the iframe
+    function purgeObject(object) {
+        var globals = Object.getOwnPropertyNames(object);
+        for (var i = 0;i < globals.length;i++) {
+            var variable = globals[i];
+            if (!allowedGlobals.hasOwnProperty(variable)) {
+                delete object[variable];
+            }
+        }
+        var prototype = Object.getPrototypeOf(object);
+        if (prototype && prototype != iframewindow.Object.prototype) {
+            purgeObject(prototype);
+        }
+    }
+    purgeObject(iframewindow);
+    // document can't be deleted, so purge it instead
+    purgeObject(iframewindow.document);
+    // add in any necessary global variables
+    iframewindow.ROT = {Map: {DividedMaze: ROT.Map.DividedMaze }}
+    if (allowjQuery) {
+        // this is not secure, however it doesn't matter since the only level
+        // with showDummyDom set has no editable code
+        iframewindow.$ = iframewindow.jQuery = jQuery;
+    }
+    return iframewindow;
+}
 // awful awful awful method that tries to find the line
 // of code where a given error occurs
 Game.prototype.findSyntaxError = function(code, errorMsg) {
@@ -272,14 +316,6 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
         }
     }
     return null;
-};
-
-Game.prototype.clearModifiedGlobals = function() {
-    for (p in window) {
-        if (window.propertyIsEnumerable(p) && this._globalVars.indexOf(p) == -1) {
-            window[p] = null;
-        }
-    }
 };
 
 // Function tampering prevention
