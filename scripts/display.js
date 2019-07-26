@@ -96,8 +96,9 @@ ROT.Display.prototype.drawAll = function(map) {
     }
 
     // place dynamic objects
-    for (var i = 0; i < map.getDynamicObjects().length; i++) {
-        var obj = map.getDynamicObjects()[i];
+    var dynamicObjects = map.getDynamicObjects();
+    for (var i = 0; i < dynamicObjects.length; i++) {
+        var obj = dynamicObjects[i];
         grid[obj.getX()][obj.getY()] = {
             type: obj.getType(),
             bgColor: map._getGrid()[obj.getX()][obj.getY()].bgColor

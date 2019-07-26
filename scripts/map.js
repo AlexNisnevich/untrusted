@@ -56,7 +56,14 @@ function Map(display, __game) {
 
     /* exposed getters */
 
-    this.getDynamicObjects = function () { return __dynamicObjects; };
+    this.getDynamicObjects = function () {
+        // copy dynamic object list to fix issue#166
+        var copy = [];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            copy[i] = __dynamicObjects[i];
+        }
+        return copy;
+    };
     this.getPlayer = function () { return __player; };
     this.getWidth = function () { return __game._dimensions.width; };
     this.getHeight = function () { return __game._dimensions.height; };
@@ -209,8 +216,8 @@ function Map(display, __game) {
         }
 
         // look for dynamic objects
-        for (var i = 0; i < this.getDynamicObjects().length; i++) {
-            var object = this.getDynamicObjects()[i];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
             if (object.getType() === type) {
                 foundObjects.push({x: object.getX(), y: object.getY()});
             }
@@ -243,8 +250,8 @@ function Map(display, __game) {
 
         var x = Math.floor(x); var y = Math.floor(y);
 
-        for (var i = 0; i < this.getDynamicObjects().length; i++) {
-            var object = this.getDynamicObjects()[i];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
             if (object.getX() === x && object.getY() === y) {
                 return true;
             }
@@ -257,8 +264,8 @@ function Map(display, __game) {
 
         var x = Math.floor(x); var y = Math.floor(y);
 
-        for (var i = 0; i < this.getDynamicObjects().length; i++) {
-            var object = this.getDynamicObjects()[i];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
             if (object.getX() === x && object.getY() === y) {
                 return object;
             }
@@ -275,14 +282,14 @@ function Map(display, __game) {
         // TODO: make this not be the case
 
         // "move" teleporters
-        this.getDynamicObjects().filter(function (object) {
+        __dynamicObjects.filter(function (object) {
             return (object.getType() === 'teleporter');
         }).forEach(function(object) {
             object._onTurn();
         });
 
         // move everything else
-        this.getDynamicObjects().filter(function (object) {
+        __dynamicObjects.filter(function (object) {
             return (object.getType() !== 'teleporter');
         }).forEach(function(object) {
             object._onTurn();
@@ -391,7 +398,7 @@ function Map(display, __game) {
         }
 
         // count dynamic objects
-        this.getDynamicObjects().forEach(function (obj) {
+        __dynamicObjects.forEach(function (obj) {
             if (obj.getType() === type) {
                 count++;
             }
