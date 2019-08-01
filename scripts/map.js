@@ -118,7 +118,9 @@ function Map(display, __game) {
 
         // set refresh rate if one is specified
         if (__refreshRate) {
-            map.startTimer(function () {
+            // wrapExposedMethod is necessary here to prevent the game from thinking
+            //  `map._status` is an unauthorized attempt to access a private attribute.
+            map.startTimer(wrapExposedMethod(function () {
                 // refresh the map
                 map.refresh();
 
@@ -131,7 +133,7 @@ function Map(display, __game) {
                 if (typeof(__game.objective) === 'function' && __game.objective(map)) {
                     __game._moveToNextLevel();
                 }
-            }, __refreshRate);
+            }), __refreshRate);
         }
     };
 
@@ -702,4 +704,7 @@ function Map(display, __game) {
     /* initialization */
 
     this._reset();
+
+    // call secureObject to prevent user code from tampering with private attributes
+    __game.secureObject(this, "map.");
 }
