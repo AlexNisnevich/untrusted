@@ -56,7 +56,14 @@ function Map(display, __game) {
 
     /* exposed getters */
 
-    this.getDynamicObjects = function () { return __dynamicObjects; };
+    this.getDynamicObjects = function () {
+        // copy dynamic object list to fix issue#166
+        var copy = [];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            copy[i] = __dynamicObjects[i];
+        }
+        return copy;
+    };
     this.getPlayer = function () { return __player; };
     this.getWidth = function () { return __game._dimensions.width; };
     this.getHeight = function () { return __game._dimensions.height; };
@@ -111,7 +118,9 @@ function Map(display, __game) {
 
         // set refresh rate if one is specified
         if (__refreshRate) {
-            map.startTimer(function () {
+            // wrapExposedMethod is necessary here to prevent the game from thinking
+            //  `map._status` is an unauthorized attempt to access a private attribute.
+            map.startTimer(wrapExposedMethod(function () {
                 // refresh the map
                 map.refresh();
 
@@ -124,7 +133,7 @@ function Map(display, __game) {
                 if (typeof(__game.objective) === 'function' && __game.objective(map)) {
                     __game._moveToNextLevel();
                 }
-            }, __refreshRate);
+            }), __refreshRate);
         }
     };
 
@@ -209,8 +218,8 @@ function Map(display, __game) {
         }
 
         // look for dynamic objects
-        for (var i = 0; i < this.getDynamicObjects().length; i++) {
-            var object = this.getDynamicObjects()[i];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
             if (object.getType() === type) {
                 foundObjects.push({x: object.getX(), y: object.getY()});
             }
@@ -243,8 +252,8 @@ function Map(display, __game) {
 
         var x = Math.floor(x); var y = Math.floor(y);
 
-        for (var i = 0; i < this.getDynamicObjects().length; i++) {
-            var object = this.getDynamicObjects()[i];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
             if (object.getX() === x && object.getY() === y) {
                 return true;
             }
@@ -257,8 +266,8 @@ function Map(display, __game) {
 
         var x = Math.floor(x); var y = Math.floor(y);
 
-        for (var i = 0; i < this.getDynamicObjects().length; i++) {
-            var object = this.getDynamicObjects()[i];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
             if (object.getX() === x && object.getY() === y) {
                 return object;
             }
@@ -275,14 +284,14 @@ function Map(display, __game) {
         // TODO: make this not be the case
 
         // "move" teleporters
-        this.getDynamicObjects().filter(function (object) {
+        __dynamicObjects.filter(function (object) {
             return (object.getType() === 'teleporter');
         }).forEach(function(object) {
             object._onTurn();
         });
 
         // move everything else
-        this.getDynamicObjects().filter(function (object) {
+        __dynamicObjects.filter(function (object) {
             return (object.getType() !== 'teleporter');
         }).forEach(function(object) {
             object._onTurn();
@@ -391,7 +400,7 @@ function Map(display, __game) {
         }
 
         // count dynamic objects
-        this.getDynamicObjects().forEach(function (obj) {
+        __dynamicObjects.forEach(function (obj) {
             if (obj.getType() === type) {
                 count++;
             }
@@ -695,4 +704,7 @@ function Map(display, __game) {
     /* initialization */
 
     this._reset();
+
+    // call secureObject to prevent user code from tampering with private attributes
+    __game.secureObject(this, "map.");
 }

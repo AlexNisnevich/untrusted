@@ -1174,8 +1174,9 @@ ROT.Display.prototype.drawAll = function(map) {
     }
 
     // place dynamic objects
-    for (var i = 0; i < map.getDynamicObjects().length; i++) {
-        var obj = map.getDynamicObjects()[i];
+    var dynamicObjects = map.getDynamicObjects();
+    for (var i = 0; i < dynamicObjects.length; i++) {
+        var obj = dynamicObjects[i];
         grid[obj.getX()][obj.getY()] = {
             type: obj.getType(),
             bgColor: map._getGrid()[obj.getX()][obj.getY()].bgColor
@@ -1567,11 +1568,15 @@ function DynamicObject(map, type, x, y, __game) {
         this.target = target;
     }, this);
 
+    // call secureObject to prevent user code from tampering with private attributes
+    __game.secureObject(this, type+".");
+
     // constructor
 
     if (!map._dummy && __definition.interval) {
         this._onTurn();
     }
+
 }
 Game.prototype.inventory = [];
 
@@ -1750,7 +1755,14 @@ function Map(display, __game) {
 
     /* exposed getters */
 
-    this.getDynamicObjects = function () { return __dynamicObjects; };
+    this.getDynamicObjects = function () {
+        // copy dynamic object list to fix issue#166
+        var copy = [];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            copy[i] = __dynamicObjects[i];
+        }
+        return copy;
+    };
     this.getPlayer = function () { return __player; };
     this.getWidth = function () { return __game._dimensions.width; };
     this.getHeight = function () { return __game._dimensions.height; };
@@ -1805,7 +1817,9 @@ function Map(display, __game) {
 
         // set refresh rate if one is specified
         if (__refreshRate) {
-            map.startTimer(function () {
+            // wrapExposedMethod is necessary here to prevent the game from thinking
+            //  `map._status` is an unauthorized attempt to access a private attribute.
+            map.startTimer(wrapExposedMethod(function () {
                 // refresh the map
                 map.refresh();
 
@@ -1818,7 +1832,7 @@ function Map(display, __game) {
                 if (typeof(__game.objective) === 'function' && __game.objective(map)) {
                     __game._moveToNextLevel();
                 }
-            }, __refreshRate);
+            }), __refreshRate);
         }
     };
 
@@ -1903,8 +1917,8 @@ function Map(display, __game) {
         }
 
         // look for dynamic objects
-        for (var i = 0; i < this.getDynamicObjects().length; i++) {
-            var object = this.getDynamicObjects()[i];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
             if (object.getType() === type) {
                 foundObjects.push({x: object.getX(), y: object.getY()});
             }
@@ -1937,8 +1951,8 @@ function Map(display, __game) {
 
         var x = Math.floor(x); var y = Math.floor(y);
 
-        for (var i = 0; i < this.getDynamicObjects().length; i++) {
-            var object = this.getDynamicObjects()[i];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
             if (object.getX() === x && object.getY() === y) {
                 return true;
             }
@@ -1951,8 +1965,8 @@ function Map(display, __game) {
 
         var x = Math.floor(x); var y = Math.floor(y);
 
-        for (var i = 0; i < this.getDynamicObjects().length; i++) {
-            var object = this.getDynamicObjects()[i];
+        for (var i = 0; i < __dynamicObjects.length; i++) {
+            var object = __dynamicObjects[i];
             if (object.getX() === x && object.getY() === y) {
                 return object;
             }
@@ -1969,14 +1983,14 @@ function Map(display, __game) {
         // TODO: make this not be the case
 
         // "move" teleporters
-        this.getDynamicObjects().filter(function (object) {
+        __dynamicObjects.filter(function (object) {
             return (object.getType() === 'teleporter');
         }).forEach(function(object) {
             object._onTurn();
         });
 
         // move everything else
-        this.getDynamicObjects().filter(function (object) {
+        __dynamicObjects.filter(function (object) {
             return (object.getType() !== 'teleporter');
         }).forEach(function(object) {
             object._onTurn();
@@ -2085,7 +2099,7 @@ function Map(display, __game) {
         }
 
         // count dynamic objects
-        this.getDynamicObjects().forEach(function (obj) {
+        __dynamicObjects.forEach(function (obj) {
             if (obj.getType() === type) {
                 count++;
             }
@@ -2389,6 +2403,9 @@ function Map(display, __game) {
     /* initialization */
 
     this._reset();
+
+    // call secureObject to prevent user code from tampering with private attributes
+    __game.secureObject(this, "map.");
 }
 /*
 Objects can have the following parameters:
@@ -2853,7 +2870,10 @@ function Player(x, y, __map, __game) {
     this.setPhoneCallback = wrapExposedMethod(function(func) {
         this._phoneFunc = func;
     }, this);
-    
+
+    // call secureObject to prevent user code from tampering with private attributes
+    __game.secureObject(this,"player.");
+
 }
 Game.prototype.reference = {
     'canvas.beginPath': {
@@ -3595,7 +3615,6 @@ Game.prototype.verbotenWords = [
     'top', // prevents user code from escaping the iframe
     'validate', 'onExit', 'objective', // don't let players rewrite these methods
     'this[', // prevents this['win'+'dow'], etc.
-    '_', // make it a little harder to call "private" methods as in issue #322
      '\\u' // prevents usage of arbitrary code through unicode escape characters, see issue #378
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
@@ -3738,7 +3757,9 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
             // cleanup
             this._setPlayerCodeRunning(false);
 
-            if (e.toString().indexOf("Forbidden method call") > -1) {
+            if (e.toString().indexOf("Forbidden method call") > -1 ||
+                e.toString().indexOf("Attempt to modify private property") > -1 ||
+                e.toString().indexOf("Attempt to read private property") > -1) {
                 // display error, disable player movement
                 this.display.appendError(e.toString(), "%c{red}Please reload the level.");
                 this.sound.playSound('static');
@@ -3887,6 +3908,42 @@ Game.prototype.initIframe = function(allowjQuery){
     }
     return iframewindow;
 }
+
+// takes an object and modifies it so that all properties starting with `_`
+// throw an error when accessed in level code
+Game.prototype.secureObject = function(object, errorstring) {
+    errorstring = errorstring || "";
+    for (var prop in object) {
+        if(prop == "_startOfStartLevelReached" || prop == "_endOfStartLevelReached"){
+            // despite starting with an _, these two properties are intended to be called from map code
+            continue;
+        }
+        if(prop[0] == "_"){
+            this.secureProperty(object, prop, errorstring);
+        }
+    }
+}
+Game.prototype.secureProperty = function(object, prop, errorstring){
+    var val = object[prop];
+    var game = this;
+    Object.defineProperty(object, prop, {
+            configurable:false,
+            enumerable:false,
+            get:function(){
+                if (game._isPlayerCodeRunning()) {
+                    throw "Attempt to read private property " + errorstring + prop;
+                }
+                return val;
+            },
+            set:function(newValue){
+                if(game._isPlayerCodeRunning()) {
+                    throw "Attempt to modify private property " + errorstring + prop;
+                }
+                val = newValue
+            }
+    });
+}
+
 // awful awful awful method that tries to find the line
 // of code where a given error occurs
 Game.prototype.findSyntaxError = function(code, errorMsg) {

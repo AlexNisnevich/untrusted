@@ -8,7 +8,6 @@ Game.prototype.verbotenWords = [
     'top', // prevents user code from escaping the iframe
     'validate', 'onExit', 'objective', // don't let players rewrite these methods
     'this[', // prevents this['win'+'dow'], etc.
-    '_', // make it a little harder to call "private" methods as in issue #322
      '\\u' // prevents usage of arbitrary code through unicode escape characters, see issue #378
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
@@ -151,7 +150,9 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
             // cleanup
             this._setPlayerCodeRunning(false);
 
-            if (e.toString().indexOf("Forbidden method call") > -1) {
+            if (e.toString().indexOf("Forbidden method call") > -1 ||
+                e.toString().indexOf("Attempt to modify private property") > -1 ||
+                e.toString().indexOf("Attempt to read private property") > -1) {
                 // display error, disable player movement
                 this.display.appendError(e.toString(), "%c{red}Please reload the level.");
                 this.sound.playSound('static');
@@ -300,6 +301,42 @@ Game.prototype.initIframe = function(allowjQuery){
     }
     return iframewindow;
 }
+
+// takes an object and modifies it so that all properties starting with `_`
+// throw an error when accessed in level code
+Game.prototype.secureObject = function(object, errorstring) {
+    errorstring = errorstring || "";
+    for (var prop in object) {
+        if(prop == "_startOfStartLevelReached" || prop == "_endOfStartLevelReached"){
+            // despite starting with an _, these two properties are intended to be called from map code
+            continue;
+        }
+        if(prop[0] == "_"){
+            this.secureProperty(object, prop, errorstring);
+        }
+    }
+}
+Game.prototype.secureProperty = function(object, prop, errorstring){
+    var val = object[prop];
+    var game = this;
+    Object.defineProperty(object, prop, {
+            configurable:false,
+            enumerable:false,
+            get:function(){
+                if (game._isPlayerCodeRunning()) {
+                    throw "Attempt to read private property " + errorstring + prop;
+                }
+                return val;
+            },
+            set:function(newValue){
+                if(game._isPlayerCodeRunning()) {
+                    throw "Attempt to modify private property " + errorstring + prop;
+                }
+                val = newValue
+            }
+    });
+}
+
 // awful awful awful method that tries to find the line
 // of code where a given error occurs
 Game.prototype.findSyntaxError = function(code, errorMsg) {
