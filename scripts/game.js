@@ -354,9 +354,6 @@ function Game(debugMode, startLevel) {
             // set correct inventory state
             this.setInventoryStateByLevel(this._currentLevel);
 
-            // save reference implementations to prevent tampering
-            this.saveReferenceImplementations(this.map, this.map.getPlayer());
-
             // start the level
             validatedStartLevel(this.map);
 

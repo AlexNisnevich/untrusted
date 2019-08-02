@@ -1,14 +1,13 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2",
+    "version": "1.2.1",
     "commandsIntroduced":
         ["object.onDestroy", "object.projectile",
          "map.countObjects", "map.isStartOfLevel",
          "map.validateAtMostXDynamicObjects", "map.validateNoTimers"],
 	"music": "Adversity",
     "mapProperties": {
-        "refreshRate": 50,
-        "quickValidateCallback": true
+        "refreshRate": 50
     }
 }
 #END_PROPERTIES#
