@@ -94,8 +94,9 @@ function DynamicObject(map, type, x, y, __game) {
                     // projectiles automatically kill
                     map.getPlayer().killedBy('a ' + __type);
                 } else {
+                    var thing = this;
                     map._validateCallback(function () {
-                        __definition.onCollision(map.getPlayer(), this);
+                        __definition.onCollision(map.getPlayer(), thing);
                     });
                 }
             }
@@ -118,7 +119,9 @@ function DynamicObject(map, type, x, y, __game) {
             // this part is used by janosgyerik's bonus levels
             if (object.deactivatedBy && object.deactivatedBy.indexOf(__type) > -1) {
                 if (typeof(object.onDeactivate) === 'function') {
-                    object.onDeactivate();
+                    __game.validateCallback(function(){
+                            object.onDeactivate();
+                    });
                 }
                 map._removeItemFromMap(__x, __y, objectName);
             }
@@ -187,7 +190,10 @@ function DynamicObject(map, type, x, y, __game) {
                 // projectiles automatically kill
                 map.getPlayer().killedBy('a ' + __type);
             } else {
-                __definition.onCollision(map.getPlayer(), this);
+                var thing = this;
+                map._validateCallback(function() {
+                    __definition.onCollision(map.getPlayer(), thing);
+                });
             }
         } else if (map._canMoveTo(dest.x, dest.y, __type) &&
                 !map._isPointOccupiedByDynamicObject(dest.x, dest.y)) {

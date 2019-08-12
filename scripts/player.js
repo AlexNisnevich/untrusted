@@ -84,16 +84,17 @@ function Player(x, y, __map, __game) {
             } else if (objectDef.onCollision) {
                 __game.validateCallback(function () {
                     objectDef.onCollision(player);
-                }, false, true);
+                });
             }
         }
 
         // check for collision with any lines on the map
         __map.testLineCollisions(this);
 
-        // check for nonstandard victory condition (e.g. DOM level)
-        if (typeof(__game.objective) === 'function' && __game.objective(__map)) {
-            __game._moveToNextLevel();
+        // don't run checkObjective if validation has already failed to prevent duplicate `Validation failed` errors
+        if (!__map._callbackValidationFailed) {
+            // check for nonstandard victory condition (e.g. DOM level)
+            __game._checkObjective()
         }
     };
 
@@ -109,12 +110,7 @@ function Player(x, y, __map, __game) {
 
         if (object.onPickUp) {
             __game.validateCallback(function () {
-                setTimeout(function () {
-                    object.onPickUp(player);
-                }, 100);
-                // timeout is so that written text is not immediately overwritten
-                // TODO: play around with Display.writeStatus so that this is
-                // not necessary
+                object.onPickUp(player);
             });
         }
     };

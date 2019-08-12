@@ -90,7 +90,9 @@ Game.prototype.getListOfObjects = function () {
             'color': '#0ff',
             'onCollision': function (player) {
                 if (!game.map.finalLevel) {
-                    game._moveToNextLevel();
+                    game._callUnexposedMethod(function () {
+                        game._moveToNextLevel();
+                    });
                 }
             }
         },

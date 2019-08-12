@@ -95,7 +95,9 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         // does validateLevel() succeed?
         if (typeof(userCode.validateLevel) === "function") {
             this.validateLevel = userCode.validateLevel;
+            this._setPlayerCodeRunning(true);
             userCode.validateLevel(dummyMap);
+            this._setPlayerCodeRunning(false);
         }
 
         this.onExit = function () { return true; };
@@ -129,15 +131,13 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
-Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForbiddenCalls) {
+Game.prototype.validateCallback = function(callback, throwExceptions) {
     var savedException = null;
     var exceptionFound = false;
     try {
         // run the callback and check for forbidden method calls
         try {
-            if (!ignoreForbiddenCalls) {
-                this._setPlayerCodeRunning(true);
-            }
+            this._setPlayerCodeRunning(true);
             var result = callback();
             this._setPlayerCodeRunning(false);
         } catch (e) {
@@ -165,9 +165,12 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
         // check if validator still passes
         try {
             if (typeof(this.validateLevel) === 'function') {
+                this._setPlayerCodeRunning(true);
                 this.validateLevel(this.map);
+                this._setPlayerCodeRunning(false);
             }
         } catch (e) {
+            this._setPlayerCodeRunning(false);
             // validation failed - not much to do here but restart the level, unfortunately
             this.display.appendError(e.toString(), "%c{red}Validation failed! Please reload the level.");
 
