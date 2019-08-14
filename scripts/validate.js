@@ -277,7 +277,7 @@ Game.prototype.initIframe = function(allowjQuery){
 
 // takes an object and modifies it so that all properties starting with `_`
 // throw an error when accessed in level code,
-// and that certain protected methods are unwritable
+// and that all functions are unwritable
 Game.prototype.secureObject = function(object, objecttype) {
     for (var prop in object) {
         if(prop == "_startOfStartLevelReached" || prop == "_endOfStartLevelReached"){
@@ -286,14 +286,11 @@ Game.prototype.secureObject = function(object, objecttype) {
         }
         if(prop[0] == "_"){
             this.secureProperty(object, prop, objecttype);
-        } else if (!this._superMenuActivated) {
-            var protectedMethods = this.protectedMethods[objecttype];
-            if(protectedMethods && protectedMethods.hasOwnProperty(prop)){
-                Object.defineProperty(object, prop, {
-                        configurable:false,
-                        writable:false
-                });
-            }
+        } else if (!this._superMenuActivated && typeof object[prop] == "function") {
+            Object.defineProperty(object, prop, {
+                    configurable:false,
+                    writable:false
+            });
         }
     }
 }
@@ -335,48 +332,3 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
     }
     return null;
 };
-Game.prototype.protectedMethods = {
-    'map': {
-        'countObjects': '',
-        'createFromDOM': '',
-        'createFromGrid': '',
-        'displayChapter': '',
-        'defineObject': '',
-        'getAdjacentEmptyCells': '',
-        'getCanvasContext': '',
-        'getCanvasCoords': '',
-        'getDOM': '',
-        'getDynamicObjects': '',
-        'getHeight': '',
-        'getObjectTypeAt': '',
-        'getPlayer': '',
-        'getRandomColor': '',
-        'getWidth': '',
-        'isStartOfLevel': '',
-        'overrideKey': '',
-        'placeObject': '',
-        'placePlayer': '',
-        'setSquareColor': '',
-        'startTimer': '',
-        'updateDOM': '',
-        'validateAtLeastXObjects': '',
-        'validateAtMostXObjects': '',
-        'validateExactlyXManyObjects': '',
-        'validateAtMostXDynamicObjects': '',
-        'validateNoTimers': '',
-        'validateAtLeastXLines': ''
-    },
-    'player': {
-        'atLocation': '',
-        'getColor': '',
-        'getLastMoveDirection': '',
-        'getX': '',
-        'getY': '',
-        'hasItem': '',
-        'killedBy': '',
-        'move': '',
-        'removeItem': '',
-        'setColor': '',
-        'setPhoneCallback': ''
-    }
-}
