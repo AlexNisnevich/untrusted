@@ -212,6 +212,6 @@ function Player(x, y, __map, __game) {
     }, this);
 
     // call secureObject to prevent user code from tampering with private attributes
-    __game.secureObject(this,"player.");
+    __game.secureObject(this,"player");
 
 }

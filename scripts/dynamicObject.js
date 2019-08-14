@@ -238,7 +238,7 @@ function DynamicObject(map, type, x, y, __game) {
     }, this);
 
     // call secureObject to prevent user code from tampering with private attributes
-    __game.secureObject(this, type+".");
+    __game.secureObject(this, type);
 
     // constructor
 

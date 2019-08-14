@@ -446,7 +446,6 @@ function Map(display, __game) {
         }
 
         __player = new __game._playerPrototype(x, y, this, __game);
-        __game.saveReferenceImplementations(null, __player);
         this._display.drawAll(this);
     }, this);
 
@@ -706,5 +705,5 @@ function Map(display, __game) {
     this._reset();
 
     // call secureObject to prevent user code from tampering with private attributes
-    __game.secureObject(this, "map.");
+    __game.secureObject(this, "map");
 }
