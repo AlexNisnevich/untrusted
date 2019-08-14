@@ -114,26 +114,19 @@ function Map(display, __game) {
     this._ready = function () {
         if (__game._isPlayerCodeRunning()) { throw 'Forbidden method call: map._ready()';}
 
-        var map = this;
-
         // set refresh rate if one is specified
         if (__refreshRate) {
-            // wrapExposedMethod is necessary here to prevent the game from thinking
-            //  `map._status` is an unauthorized attempt to access a private attribute.
-            map.startTimer(wrapExposedMethod(function () {
+            // wrapExposedMethod is necessary here to prevent the `_moveToNextLevel`
+            // call from breaking
+            this.startTimer(wrapExposedMethod(function () {
                 // refresh the map
-                map.refresh();
-
-                // rewrite status
-                if (map._status) {
-                    map.writeStatus(map._status);
-                }
+                this.refresh();
 
                 // check for nonstandard victory condition
                 if (typeof(__game.objective) === 'function' && __game.objective(map)) {
                     __game._moveToNextLevel();
                 }
-            }), __refreshRate);
+            }, this), __refreshRate);
         }
     };
 
@@ -182,13 +175,9 @@ function Map(display, __game) {
                 return true;
             } else if (typeof object.impassable === 'function') {
                 // the obstacle is impassable only in certain circumstances
-                try {
-                    return this._validateCallback(function () {
-                        return !object.impassable(__player, object);
-                    });
-                } catch (e) {
-                    display.writeStatus(e.toString());
-                }
+                return this._validateCallback(function () {
+                    return !object.impassable(__player, object);
+                });
             } else {
                 // the obstacle is always impassable
                 return false;
@@ -330,9 +319,6 @@ function Map(display, __game) {
         __chapterHideTimeout = setTimeout(function () {
             $('#chapter').fadeOut(1000);
         }, $('#chapter').hasClass('death') ? 2500 : 0);
-
-        // also, clear any status text if map is refreshing automatically (e.g. boss level)
-        this._status = '';
     };
 
     this._refreshDynamicObjects = function() {
@@ -383,6 +369,10 @@ function Map(display, __game) {
             this._display.renderDom(domHTML, __domCSS);
         } else {
             this._display.drawAll(this);
+        }
+        // rewrite any status messages
+        if (this._status) {
+            this._display.writeStatus(this._status);
         }
         __game.drawInventory();
     }, this);
@@ -446,7 +436,6 @@ function Map(display, __game) {
         }
 
         __player = new __game._playerPrototype(x, y, this, __game);
-        __game.saveReferenceImplementations(null, __player);
         this._display.drawAll(this);
     }, this);
 
@@ -561,17 +550,13 @@ function Map(display, __game) {
     }, this);
 
     this.writeStatus = wrapExposedMethod(function(status) {
-        this._status = status;
-
-        if (__refreshRate) {
-            // write the status immediately
-            display.writeStatus(status);
-        } else {
-            // wait 100 ms for redraw reasons
-            setTimeout(function () {
-                display.writeStatus(status);
-            }, 100);
+        if (this._status) {
+            // refresh to hide the old status message
+            this._status = "";
+            this.refresh();
         }
+        this._status = status;
+        this._display.writeStatus(status);
     }, this);
 
     // used by validators
@@ -706,5 +691,5 @@ function Map(display, __game) {
     this._reset();
 
     // call secureObject to prevent user code from tampering with private attributes
-    __game.secureObject(this, "map.");
+    __game.secureObject(this, "map");
 }

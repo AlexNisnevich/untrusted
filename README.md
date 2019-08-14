@@ -53,7 +53,6 @@ jsx files are like regular JavaScript files, but have some additional syntax:
   - `mapProperties`: optionally contains any of the following:
      - `allowOverwrite`: if true, placed static objects can be overwritten by other objects
      - `keyDelay`: specifies the lag, in milliseconds, between player keystrokes (default: 0)
-     - `quickValidateCallback`: speeds up validation of callback methods at the cost of some security (useful for levels with very many dynamic objects)
      - `refreshRate`: the refresh rate of the level, in milliseconds (required for dynamic objects with `interval` properties to work correctly)
      - `showDrawingCanvas`: if true, the drawing canvas overlay is displayed
      - `showDummyDom`: if true, a dummy DOM will be displayed instead of the regular map

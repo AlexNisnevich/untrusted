@@ -130,18 +130,21 @@ function Player(x, y, __map, __game) {
             return false;
         }
 
-        if (__map._overrideKeys[direction] && fromKeyboard) {
-            try {
-                __game.validateCallback(__map._overrideKeys[direction], true);
+        if (fromKeyboard) {
+            // clear any status text
+            __map._status = "";
+            if (__map._overrideKeys[direction]) {
+                try {
+                    __game.validateCallback(__map._overrideKeys[direction], true);
 
-                __map.refresh();
-                this._canMove = false;
-                __map._reenableMovementForPlayer(this); // (key delay can vary by map)
-                this._afterMove(__x, __y);
-            } catch (e) {
+                    __map.refresh();
+                    this._canMove = false;
+                    __map._reenableMovementForPlayer(this); // (key delay can vary by map)
+                    this._afterMove(__x, __y);
+                } catch (e) {
+                }
+                return;
             }
-
-            return;
         }
 
         var new__x;
@@ -212,6 +215,6 @@ function Player(x, y, __map, __game) {
     }, this);
 
     // call secureObject to prevent user code from tampering with private attributes
-    __game.secureObject(this,"player.");
+    __game.secureObject(this,"player");
 
 }

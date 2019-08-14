@@ -50,9 +50,6 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             console.log(allCode);
         }
 
-        // save reference implementations to prevent tampering
-        this.saveReferenceImplementations(dummyMap, dummyMap.getPlayer());
-
         var allowjQuery = dummyMap._properties.showDummyDom;
         // setup iframe in which code is run. As a side effect, this sets `this._eval` correctly
         var userCode = this.initIframe(allowjQuery);
@@ -93,9 +90,6 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         if(initialOnExit !== userCode.onExit) {
             throw "onExit() has been tampered with!";
         }
-
-        // has the player tampered with any functions?
-        this.detectTampering(dummyMap, dummyMap.getPlayer());
 
         this.validateLevel = function () { return true; };
         // does validateLevel() succeed?
@@ -187,36 +181,14 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
             return;
         }
 
-        // on maps with many objects (e.g. boss fight),
-        // we can't afford to do these steps
-        if (!this.map._properties.quickValidateCallback) {
-
-            // has the player tampered with any functions?
-            try {
-                this.detectTampering(this.map, this.map.getPlayer());
-            } catch (e) {
-                this.display.appendError(e.toString(), "%c{red}Validation failed! Please reload the level.");
-
-                // play error sound
-                this.sound.playSound('static');
-
-                // disable player movement
-                this.map.getPlayer()._canMove = false;
-                this.map._callbackValidationFailed = true;
-                this.map._clearIntervals();
-                return;
-            }
-            if(exceptionFound) {
-                throw savedException;
-            }
-            // refresh the map, just in case
+        // refresh the map (unless it refreshes automatically), just in case
+        if(!this.map._properties.refreshRate) {
             this.map.refresh();
-
-            return result;
         }
         if(exceptionFound) {
             throw savedException;
         }
+        return result;
     } catch (e) {
         this.map.writeStatus(e.toString());
 
@@ -301,22 +273,31 @@ Game.prototype.initIframe = function(allowjQuery){
     }
     return iframewindow;
 }
+// Object security
 
 // takes an object and modifies it so that all properties starting with `_`
-// throw an error when accessed in level code
-Game.prototype.secureObject = function(object, errorstring) {
-    errorstring = errorstring || "";
+// throw an error when accessed in level code,
+// and that certain protected methods are unwritable
+Game.prototype.secureObject = function(object, objecttype) {
     for (var prop in object) {
         if(prop == "_startOfStartLevelReached" || prop == "_endOfStartLevelReached"){
             // despite starting with an _, these two properties are intended to be called from map code
             continue;
         }
         if(prop[0] == "_"){
-            this.secureProperty(object, prop, errorstring);
+            this.secureProperty(object, prop, objecttype);
+        } else if (!this._superMenuActivated) {
+            var protectedMethods = this.protectedMethods[objecttype];
+            if(protectedMethods && protectedMethods.hasOwnProperty(prop)){
+                Object.defineProperty(object, prop, {
+                        configurable:false,
+                        writable:false
+                });
+            }
         }
     }
 }
-Game.prototype.secureProperty = function(object, prop, errorstring){
+Game.prototype.secureProperty = function(object, prop, objecttype){
     var val = object[prop];
     var game = this;
     Object.defineProperty(object, prop, {
@@ -324,13 +305,13 @@ Game.prototype.secureProperty = function(object, prop, errorstring){
             enumerable:false,
             get:function(){
                 if (game._isPlayerCodeRunning()) {
-                    throw "Attempt to read private property " + errorstring + prop;
+                    throw "Attempt to read private property " + objecttype + "." + prop;
                 }
                 return val;
             },
             set:function(newValue){
                 if(game._isPlayerCodeRunning()) {
-                    throw "Attempt to modify private property " + errorstring + prop;
+                    throw "Attempt to modify private property " + objecttype + "." + prop;
                 }
                 val = newValue
             }
@@ -354,10 +335,7 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
     }
     return null;
 };
-
-// Function tampering prevention
-
-Game.prototype.referenceImplementations = {
+Game.prototype.protectedMethods = {
     'map': {
         'countObjects': '',
         'createFromDOM': '',
@@ -402,45 +380,3 @@ Game.prototype.referenceImplementations = {
         'setPhoneCallback': ''
     }
 }
-
-Game.prototype.saveReferenceImplementations = function(map, player) {
-    if (map) {
-        for (f in this.referenceImplementations.map) {
-            if (this.referenceImplementations.map.hasOwnProperty(f)) {
-                this.referenceImplementations.map[f] = map[f];
-            }
-        }
-    }
-    if (player) {
-        for (f in this.referenceImplementations.player) {
-            if (this.referenceImplementations.player.hasOwnProperty(f)) {
-                this.referenceImplementations.player[f] = player[f];
-            }
-        }
-    }
-};
-
-Game.prototype.detectTampering = function(map, player) {
-    // once the super menu is activated, we don't care anymore!
-    if (this._superMenuActivated) {
-        return;
-    }
-
-    for (f in this.referenceImplementations.map) {
-        if (this.referenceImplementations.map.hasOwnProperty(f)) {
-            if (this.referenceImplementations.map[f] !== map[f]) {
-                throw (f + '() has been tampered with!');
-            }
-        }
-    }
-
-    if (player) {
-        for (f in this.referenceImplementations.player) {
-            if (this.referenceImplementations.player.hasOwnProperty(f)) {
-                if (this.referenceImplementations.player[f] !== player[f]) {
-                    throw (f + '() has been tampered with!');
-                }
-            }
-        }
-    }
-};

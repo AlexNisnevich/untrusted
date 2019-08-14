@@ -1,9 +1,8 @@
 #BEGIN_PROPERTIES#
 {
-	"version": "1.0",
+	"version": "1.0.1",
 	"mapProperties": {
-		"refreshRate": 50,
-		"quickValidateCallback": true
+		"refreshRate": 50
 	}
 }
 #END_PROPERTIES#
