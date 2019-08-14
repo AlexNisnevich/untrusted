@@ -276,6 +276,7 @@ function Game(debugMode, startLevel) {
     this._resetLevel = function( level ) {
         var game = this;
         var resetTimeout_msec = 2500;
+        var reset_game_msg = "To reset this level press ^4 again.";
 
         if ( this._resetTimeout != null ) {
             $('body, #buttons').css('background-color', '#000');
@@ -287,12 +288,18 @@ function Game(debugMode, startLevel) {
             } else {
                 this._getLevel(level, true);
             }
+            if(game.map._status == reset_game_msg) {
+                game.map.writeStatus("");
+            }
         } else {
-            this.display.writeStatus("To reset this level press ^4 again.");
+            this.map.writeStatus(reset_game_msg);
             $('body, #buttons').css('background-color', '#900');
 
             this._resetTimeout = setTimeout(function () {
                 game._resetTimeout = null;
+                if(game.map._status == reset_game_msg) {
+                    game.map.writeStatus("");
+                }
 
                 $('body, #buttons').css('background-color', '#000');
             }, resetTimeout_msec );
@@ -371,7 +378,7 @@ function Game(debugMode, startLevel) {
                 // workaround because we can't use writeStatus() in startLevel()
                 // (due to the text getting overwritten by the fade-in)
                 if (game.editor.getProperties().startingMessage) {
-                    game.display.writeStatus(game.editor.getProperties().startingMessage);
+                    game.map.writeStatus(game.editor.getProperties().startingMessage);
                 }
             });
 
