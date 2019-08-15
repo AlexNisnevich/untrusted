@@ -59,6 +59,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._eval(allCode);
         var initialOnExit = userCode.onExit;
         var initialValidateLevel = userCode.validateLevel;
+        var initalObjective = userCode.objective;
 
         // start the level on a dummy map to validate
         this._setPlayerCodeRunning(true);
@@ -83,12 +84,15 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         if (!this._endOfStartLevelReached && !restartingLevelFromScript) {
             throw 'startLevel() returned prematurely!';
         }
-        // issue#385 check for tampering with validateLevel and startLevel
+        // issue#385 check for tampering with validateLevel/onExit/objective
         if(initialValidateLevel !== userCode.validateLevel) {
             throw "validateLevel() has been tampered with!";
         }
         if(initialOnExit !== userCode.onExit) {
             throw "onExit() has been tampered with!";
+        }
+        if(initalObjective !== userCode.objective) {
+            throw "objective() has been tampered with!"
         }
 
         this.validateLevel = function () { return true; };
