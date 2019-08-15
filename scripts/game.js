@@ -145,9 +145,15 @@ function Game(debugMode, startLevel) {
 
     this._moveToNextLevel = function () {
         // is the player permitted to exit?
-        if (typeof this.onExit === 'function' && !this.onExit(this.map)) {
-            this.sound.playSound('blip');
-            return;
+        if (typeof this.onExit === 'function') {
+            var game = this;
+            var canExit = this.validateCallback(function () {
+                    return game.onExit(game.map);
+            });
+            if (!canExit) {
+                this.sound.playSound('blip');
+                return;
+            }
         }
 
         this.sound.playSound('complete');
@@ -418,4 +424,15 @@ function Game(debugMode, startLevel) {
             return f();
         }
     };
+    this._checkObjective = function() {
+        if (typeof(this.objective) === 'function') {
+            var game = this;
+            var objectiveIsMet = this.validateCallback(function() {
+                return game.objective(game.map);
+            });
+            if (objectiveIsMet) {
+                this._moveToNextLevel();
+            }
+        }
+    }
 }

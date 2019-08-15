@@ -123,9 +123,7 @@ function Map(display, __game) {
                 this.refresh();
 
                 // check for nonstandard victory condition
-                if (typeof(__game.objective) === 'function' && __game.objective(map)) {
-                    __game._moveToNextLevel();
-                }
+                 __game._checkObjective()
             }, this), __refreshRate);
         }
     };
@@ -619,7 +617,9 @@ function Map(display, __game) {
             if (pDistance(playerCoords.x, playerCoords.y,
                     line.start[0], line.start[1],
                     line.end[0], line.end[1]) < threshold) {
-                line.callback(__player);
+                __game.validateCallback(function() {
+                        line.callback(__player);
+                });
             }
         })
     }, this);
