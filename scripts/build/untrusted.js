@@ -317,9 +317,15 @@ function Game(debugMode, startLevel) {
 
     this._moveToNextLevel = function () {
         // is the player permitted to exit?
-        if (typeof this.onExit === 'function' && !this.onExit(this.map)) {
-            this.sound.playSound('blip');
-            return;
+        if (typeof this.onExit === 'function') {
+            var game = this;
+            var canExit = this.validateCallback(function () {
+                    return game.onExit(game.map);
+            });
+            if (!canExit) {
+                this.sound.playSound('blip');
+                return;
+            }
         }
 
         this.sound.playSound('complete');
@@ -590,6 +596,17 @@ function Game(debugMode, startLevel) {
             return f();
         }
     };
+    this._checkObjective = function() {
+        if (typeof(this.objective) === 'function') {
+            var game = this;
+            var objectiveIsMet = this.validateCallback(function() {
+                return game.objective(game.map);
+            });
+            if (objectiveIsMet) {
+                this._moveToNextLevel();
+            }
+        }
+    }
 }
 function CodeEditor(textAreaDomID, width, height, game) {
     var symbols = {
@@ -1429,8 +1446,9 @@ function DynamicObject(map, type, x, y, __game) {
                     // projectiles automatically kill
                     map.getPlayer().killedBy('a ' + __type);
                 } else {
+                    var thing = this;
                     map._validateCallback(function () {
-                        __definition.onCollision(map.getPlayer(), this);
+                        __definition.onCollision(map.getPlayer(), thing);
                     });
                 }
             }
@@ -1453,7 +1471,9 @@ function DynamicObject(map, type, x, y, __game) {
             // this part is used by janosgyerik's bonus levels
             if (object.deactivatedBy && object.deactivatedBy.indexOf(__type) > -1) {
                 if (typeof(object.onDeactivate) === 'function') {
-                    object.onDeactivate();
+                    __game.validateCallback(function(){
+                            object.onDeactivate();
+                    });
                 }
                 map._removeItemFromMap(__x, __y, objectName);
             }
@@ -1522,7 +1542,10 @@ function DynamicObject(map, type, x, y, __game) {
                 // projectiles automatically kill
                 map.getPlayer().killedBy('a ' + __type);
             } else {
-                __definition.onCollision(map.getPlayer(), this);
+                var thing = this;
+                map._validateCallback(function() {
+                    __definition.onCollision(map.getPlayer(), thing);
+                });
             }
         } else if (map._canMoveTo(dest.x, dest.y, __type) &&
                 !map._isPointOccupiedByDynamicObject(dest.x, dest.y)) {
@@ -1615,7 +1638,13 @@ Game.prototype.removeFromInventory = function (itemName) {
 	this.drawInventory();
 
 	if (object.onDrop) {
-		object.onDrop();
+		this._setPlayerCodeRunning(true);
+		try {
+			object.onDrop();
+		} catch (e) {
+			this.map.writeStatus(e.toString())
+		}
+		this._setPlayerCodeRunning(false);
 	}
 };
 
@@ -1826,9 +1855,7 @@ function Map(display, __game) {
                 this.refresh();
 
                 // check for nonstandard victory condition
-                if (typeof(__game.objective) === 'function' && __game.objective(map)) {
-                    __game._moveToNextLevel();
-                }
+                 __game._checkObjective()
             }, this), __refreshRate);
         }
     };
@@ -2322,7 +2349,9 @@ function Map(display, __game) {
             if (pDistance(playerCoords.x, playerCoords.y,
                     line.start[0], line.start[1],
                     line.end[0], line.end[1]) < threshold) {
-                line.callback(__player);
+                __game.validateCallback(function() {
+                        line.callback(__player);
+                });
             }
         })
     }, this);
@@ -2458,13 +2487,13 @@ function followAndKeepDistance(obj, type) {
 }
 
 // used by bonus levels 01 through 04
-function killPlayerIfTooFar(obj) {
+function killPlayerIfTooFar(obj, map) {
     var target = obj.findNearest('player');
     var leftDist = obj.getX() - target.x;
     var upDist = obj.getY() - target.y;
 
     if (Math.abs(upDist) > 8 || Math.abs(leftDist) > 8) {
-        obj._map.getPlayer().killedBy('"suspicious circumstances"');
+        map.getPlayer().killedBy('"suspicious circumstances"');
     }
 }
 
@@ -2488,7 +2517,9 @@ Game.prototype.getListOfObjects = function () {
             'color': '#0ff',
             'onCollision': function (player) {
                 if (!game.map.finalLevel) {
-                    game._moveToNextLevel();
+                    game._callUnexposedMethod(function () {
+                        game._moveToNextLevel();
+                    });
                 }
             }
         },
@@ -2626,7 +2657,7 @@ Game.prototype.getListOfObjects = function () {
             'color': 'red',
             'behavior': function (me) {
                 followAndKeepDistance(me, 'player');
-                killPlayerIfTooFar(me);
+                killPlayerIfTooFar(me, game.map);
             },
             'onCollision': function (player) {
                 player.killedBy('"the eye"');
@@ -2733,16 +2764,17 @@ function Player(x, y, __map, __game) {
             } else if (objectDef.onCollision) {
                 __game.validateCallback(function () {
                     objectDef.onCollision(player);
-                }, false, true);
+                });
             }
         }
 
         // check for collision with any lines on the map
         __map.testLineCollisions(this);
 
-        // check for nonstandard victory condition (e.g. DOM level)
-        if (typeof(__game.objective) === 'function' && __game.objective(__map)) {
-            __game._moveToNextLevel();
+        // don't run checkObjective if validation has already failed to prevent duplicate `Validation failed` errors
+        if (!__map._callbackValidationFailed) {
+            // check for nonstandard victory condition (e.g. DOM level)
+            __game._checkObjective()
         }
     };
 
@@ -2758,12 +2790,7 @@ function Player(x, y, __map, __game) {
 
         if (object.onPickUp) {
             __game.validateCallback(function () {
-                setTimeout(function () {
-                    object.onPickUp(player);
-                }, 100);
-                // timeout is so that written text is not immediately overwritten
-                // TODO: play around with Display.writeStatus so that this is
-                // not necessary
+                object.onPickUp(player);
             });
         }
     };
@@ -3658,6 +3685,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._eval(allCode);
         var initialOnExit = userCode.onExit;
         var initialValidateLevel = userCode.validateLevel;
+        var initalObjective = userCode.objective;
 
         // start the level on a dummy map to validate
         this._setPlayerCodeRunning(true);
@@ -3682,19 +3710,24 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         if (!this._endOfStartLevelReached && !restartingLevelFromScript) {
             throw 'startLevel() returned prematurely!';
         }
-        // issue#385 check for tampering with validateLevel and startLevel
+        // issue#385 check for tampering with validateLevel/onExit/objective
         if(initialValidateLevel !== userCode.validateLevel) {
             throw "validateLevel() has been tampered with!";
         }
         if(initialOnExit !== userCode.onExit) {
             throw "onExit() has been tampered with!";
         }
+        if(initalObjective !== userCode.objective) {
+            throw "objective() has been tampered with!"
+        }
 
         this.validateLevel = function () { return true; };
         // does validateLevel() succeed?
         if (typeof(userCode.validateLevel) === "function") {
             this.validateLevel = userCode.validateLevel;
+            this._setPlayerCodeRunning(true);
             userCode.validateLevel(dummyMap);
+            this._setPlayerCodeRunning(false);
         }
 
         this.onExit = function () { return true; };
@@ -3728,15 +3761,13 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
 // makes sure nothing un-kosher happens during a callback within the game
 // e.g. item collison; function phone
-Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForbiddenCalls) {
+Game.prototype.validateCallback = function(callback, throwExceptions) {
     var savedException = null;
     var exceptionFound = false;
     try {
         // run the callback and check for forbidden method calls
         try {
-            if (!ignoreForbiddenCalls) {
-                this._setPlayerCodeRunning(true);
-            }
+            this._setPlayerCodeRunning(true);
             var result = callback();
             this._setPlayerCodeRunning(false);
         } catch (e) {
@@ -3764,9 +3795,12 @@ Game.prototype.validateCallback = function(callback, throwExceptions, ignoreForb
         // check if validator still passes
         try {
             if (typeof(this.validateLevel) === 'function') {
+                this._setPlayerCodeRunning(true);
                 this.validateLevel(this.map);
+                this._setPlayerCodeRunning(false);
             }
         } catch (e) {
+            this._setPlayerCodeRunning(false);
             // validation failed - not much to do here but restart the level, unfortunately
             this.display.appendError(e.toString(), "%c{red}Validation failed! Please reload the level.");
 
@@ -3876,7 +3910,7 @@ Game.prototype.initIframe = function(allowjQuery){
 
 // takes an object and modifies it so that all properties starting with `_`
 // throw an error when accessed in level code,
-// and that certain protected methods are unwritable
+// and that all functions are unwritable
 Game.prototype.secureObject = function(object, objecttype) {
     for (var prop in object) {
         if(prop == "_startOfStartLevelReached" || prop == "_endOfStartLevelReached"){
@@ -3885,14 +3919,11 @@ Game.prototype.secureObject = function(object, objecttype) {
         }
         if(prop[0] == "_"){
             this.secureProperty(object, prop, objecttype);
-        } else if (!this._superMenuActivated) {
-            var protectedMethods = this.protectedMethods[objecttype];
-            if(protectedMethods && protectedMethods.hasOwnProperty(prop)){
-                Object.defineProperty(object, prop, {
-                        configurable:false,
-                        writable:false
-                });
-            }
+        } else if (!this._superMenuActivated && typeof object[prop] == "function") {
+            Object.defineProperty(object, prop, {
+                    configurable:false,
+                    writable:false
+            });
         }
     }
 }
@@ -3934,51 +3965,6 @@ Game.prototype.findSyntaxError = function(code, errorMsg) {
     }
     return null;
 };
-Game.prototype.protectedMethods = {
-    'map': {
-        'countObjects': '',
-        'createFromDOM': '',
-        'createFromGrid': '',
-        'displayChapter': '',
-        'defineObject': '',
-        'getAdjacentEmptyCells': '',
-        'getCanvasContext': '',
-        'getCanvasCoords': '',
-        'getDOM': '',
-        'getDynamicObjects': '',
-        'getHeight': '',
-        'getObjectTypeAt': '',
-        'getPlayer': '',
-        'getRandomColor': '',
-        'getWidth': '',
-        'isStartOfLevel': '',
-        'overrideKey': '',
-        'placeObject': '',
-        'placePlayer': '',
-        'setSquareColor': '',
-        'startTimer': '',
-        'updateDOM': '',
-        'validateAtLeastXObjects': '',
-        'validateAtMostXObjects': '',
-        'validateExactlyXManyObjects': '',
-        'validateAtMostXDynamicObjects': '',
-        'validateNoTimers': '',
-        'validateAtLeastXLines': ''
-    },
-    'player': {
-        'atLocation': '',
-        'getColor': '',
-        'getLastMoveDirection': '',
-        'getX': '',
-        'getY': '',
-        'hasItem': '',
-        'killedBy': '',
-        'move': '',
-        'removeItem': '',
-        'setColor': '',
-        'setPhoneCallback': ''
-    }
-}
 var toggleFocus = (function () {
     var focus_state = undefined;
     return function do_toggle(game) {

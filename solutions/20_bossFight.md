@@ -544,20 +544,3 @@ Touch the '7' to call two bigger bosses that will let you safely pick up the two
     });
     map.placeObject(1, map.getHeight() - 3, 'button');
 ```
-
-## juh9870: Return bullets to sender
-
-Why not just kill boss with his own bullets?
-
-```javascript
-map.overrideKey('down', function(){
-	map.getDynamicObjects().forEach(function(e){
-        var bm = e.move;
-        e.move=function(direction){
-            if(direction=='left'||direction=='right')return;
-            bm('up');
-        };
-    });
-    map.getPlayer().move('down');
-});
-```

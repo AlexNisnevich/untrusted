@@ -60,13 +60,13 @@ function followAndKeepDistance(obj, type) {
 }
 
 // used by bonus levels 01 through 04
-function killPlayerIfTooFar(obj) {
+function killPlayerIfTooFar(obj, map) {
     var target = obj.findNearest('player');
     var leftDist = obj.getX() - target.x;
     var upDist = obj.getY() - target.y;
 
     if (Math.abs(upDist) > 8 || Math.abs(leftDist) > 8) {
-        obj._map.getPlayer().killedBy('"suspicious circumstances"');
+        map.getPlayer().killedBy('"suspicious circumstances"');
     }
 }
 
@@ -90,7 +90,9 @@ Game.prototype.getListOfObjects = function () {
             'color': '#0ff',
             'onCollision': function (player) {
                 if (!game.map.finalLevel) {
-                    game._moveToNextLevel();
+                    game._callUnexposedMethod(function () {
+                        game._moveToNextLevel();
+                    });
                 }
             }
         },
@@ -228,7 +230,7 @@ Game.prototype.getListOfObjects = function () {
             'color': 'red',
             'behavior': function (me) {
                 followAndKeepDistance(me, 'player');
-                killPlayerIfTooFar(me);
+                killPlayerIfTooFar(me, game.map);
             },
             'onCollision': function (player) {
                 player.killedBy('"the eye"');
