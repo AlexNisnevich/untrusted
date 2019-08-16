@@ -290,7 +290,7 @@ Game.prototype.reference = {
         'description': 'Updates the <a onclick="$(\'#helpPaneSidebar .category#jQuery\').click();">jQuery</a> instance representing the map.'
     },
     'map.validateAtLeastXLines': {
-        'name': 'map.validateAtLeastXObjects(num)',
+        'name': 'map.validateAtLeastXLines(num)',
         'category': 'map',
         'type': 'method',
         'description': 'Raises an exception if there are not at least num lines (created by map.createLine) on the map.'
