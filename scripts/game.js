@@ -417,8 +417,11 @@ function Game(debugMode, startLevel) {
     this._callUnexposedMethod = function(f) {
         if (__playerCodeRunning) {
             __playerCodeRunning = false;
-            res = f();
-            __playerCodeRunning = true;
+            try {
+                res = f();
+            } finally {
+                __playerCodeRunning = true;
+            }
             return res;
         } else {
             return f();
