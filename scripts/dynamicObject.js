@@ -51,6 +51,10 @@ function DynamicObject(map, type, x, y, __game) {
         var player = map.getPlayer();
 
         function executeTurn() {
+            if (map._callbackValidationFailed) {
+                clearInterval(__timer);
+                return;
+            }
             __myTurn = true;
 
             try {
