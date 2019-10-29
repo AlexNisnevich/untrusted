@@ -165,6 +165,7 @@ Game.prototype.getListOfObjects = function () {
 
         'phone': {
             'type': 'item',
+            'minimumLevel': 7,
             'symbol': String.fromCharCode(0x260E), // ☎
             'onPickUp': function (player) {
                 game.map.writeStatus('You have picked up the function phone!');
@@ -177,6 +178,7 @@ Game.prototype.getListOfObjects = function () {
 
         'redKey': {
             'type': 'item',
+            'minimumLevel': 11,
             'symbol': 'k',
             'color': 'red',
             'onPickUp': function (player) {
@@ -186,6 +188,7 @@ Game.prototype.getListOfObjects = function () {
 
         'greenKey': {
             'type': 'item',
+            'minimumLevel': 12,
             'symbol': 'k',
             'color': '#0f0',
             'onPickUp': function (player) {
@@ -195,6 +198,7 @@ Game.prototype.getListOfObjects = function () {
 
         'blueKey': {
             'type': 'item',
+            'minimumLevel': 13,
             'symbol': 'k',
             'color': '#06f',
             'onPickUp': function (player) {
@@ -204,6 +208,7 @@ Game.prototype.getListOfObjects = function () {
 
         'yellowKey': {
             'type': 'item',
+            'minimumLevel': 14,
             'symbol': 'k',
             'color': 'yellow',
             'onPickUp': function (player) {
@@ -212,6 +217,7 @@ Game.prototype.getListOfObjects = function () {
         },
 
         'theAlgorithm': {
+            'minimumLevel': 14,
             'type': 'item',
             'symbol': 'A',
             'color': 'white',
