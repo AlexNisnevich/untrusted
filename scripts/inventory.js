@@ -56,7 +56,7 @@ Game.prototype.setInventoryStateByLevel = function (levelNum) {
 	// repopulate inventory by level
 	if (levelNum > 1) {
 		this.addToInventory('computer');
-		$('#editorPane').fadeIn();
+		$('#editorPane, #savedLevelMsg').fadeIn();
 		this.editor.refresh();
 	}
 	if (levelNum > 7) {

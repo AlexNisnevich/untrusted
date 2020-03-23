@@ -154,12 +154,12 @@ Game.prototype.getListOfObjects = function () {
             'symbol': String.fromCharCode(0x2318), // ⌘
             'color': '#ccc',
             'onPickUp': function (player) {
-                $('#editorPane').fadeIn();
+                $('#editorPane, #savedLevelMsg').fadeIn();
                 game.editor.refresh();
                 game.map.writeStatus('You have picked up the computer!');
             },
             'onDrop': function () {
-                $('#editorPane').hide();
+                $('#editorPane, #savedLevelMsg').hide();
             }
         },
 

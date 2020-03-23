@@ -374,9 +374,9 @@ function Game(debugMode, startLevel) {
             
             // Add the computer to bonus levels that lack it
             if (this._currentLevel == "bonus" && this.map.countObjects("computer") == 0) {
-            	this.addToInventory("computer")
-            	$('#editorPane').show();
-            	this.editor.refresh();
+                this.addToInventory("computer")
+                $('#editorPane, #savedLevelMsg').show();
+                this.editor.refresh();
             }
 
             // draw the map
