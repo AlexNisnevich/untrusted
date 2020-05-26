@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
+    "version": "1.0.1",
     "mapProperties": {
         "allowOverwrite": true
     }	
@@ -52,8 +52,8 @@ function startLevel(map) {
             savedDirection = 'left';
           }
         }
-        dirs = ['up', 'down', 'left', 'right'];
-        for (d=0;d<dirs.length;d++) {
+        var dirs = ['up', 'down', 'left', 'right'];
+        for (var d=0;d<dirs.length;d++) {
           if (dirs[d] != savedDirection) {
             map.overrideKey(dirs[d], function(){});
           }
@@ -62,8 +62,8 @@ function startLevel(map) {
     });
 	
     map.startTimer(function() {
-      player = map.getPlayer();
-      x = player.getX(); y = player.getY();
+      var player = map.getPlayer();
+      var x = player.getX(), y = player.getY();
       if (map.getObjectTypeAt(x,y) == 'ice') {
         player.move(savedDirection);
       }
@@ -116,7 +116,7 @@ function startLevel(map) {
     }, 0, 0);
 	
 	for (var i = 0; i < 75; i++) {
-		player = map.getPlayer();
+		var player = map.getPlayer();
         var x = getRandomInt(0, map.getWidth() - 1);
         var y = getRandomInt(0, map.getHeight() - 1);
         if ((x != player.getX() || y != player.getY())

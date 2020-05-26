@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "0.0",
+    "version": "0.1",
     "commandsIntroduced": []
 }
 #END_PROPERTIES#
@@ -35,8 +35,8 @@ function startLevel(map) {
             savedDirection = 'left';
           }
         }
-        dirs = ['up', 'down', 'left', 'right'];
-        for (d=0;d<dirs.length;d++) {
+        var dirs = ['up', 'down', 'left', 'right'];
+        for (var d=0;d<dirs.length;d++) {
           if (dirs[d] != savedDirection) {
             map.overrideKey(dirs[d], function(){});
           }
@@ -44,8 +44,8 @@ function startLevel(map) {
       }
     });
     map.startTimer(function() {
-      player = map.getPlayer();
-      x = player.getX(); y = player.getY();
+      var player = map.getPlayer();
+      var x = player.getX(), y = player.getY();
       if (map.getObjectTypeAt(x,y) == 'ice') {
         player.move(savedDirection);
       }

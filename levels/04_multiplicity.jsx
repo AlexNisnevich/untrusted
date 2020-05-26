@@ -23,14 +23,14 @@ function startLevel(map) {
 
     map.placePlayer(map.getWidth()-5, map.getHeight()-4);
 
-    for (y = 7; y <= map.getHeight() - 3; y++) {
+    for (var y = 7; y <= map.getHeight() - 3; y++) {
         map.placeObject(7, y, 'block');
         map.placeObject(map.getWidth() - 3, y, 'block');
     }
 #BEGIN_EDITABLE#
 
 #END_EDITABLE#
-    for (x = 7; x <= map.getWidth() - 3; x++) {
+    for (var x = 7; x <= map.getWidth() - 3; x++) {
         map.placeObject(x, 7, 'block');
         map.placeObject(x, map.getHeight() - 3, 'block');
     }
