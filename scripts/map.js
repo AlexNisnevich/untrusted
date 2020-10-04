@@ -403,6 +403,10 @@ function Map(display, __game) {
         if (!__objectDefinitions[type]) {
             throw "There is no type of object named " + type + "!";
         }
+        var minLevel = __objectDefinitions[type].minimumLevel
+        if (minLevel && __game._currentLevel < minLevel) {
+            throw type.capitalize() + "s are not available until level " + minLevel;
+        }
 
         if (__player && x == __player.getX() && y == __player.getY()) {
             throw "Can't place object on top of player!";

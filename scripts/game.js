@@ -332,6 +332,7 @@ function Game(debugMode, startLevel) {
 
         // if we're editing a script file, do something completely different
         if (this._currentFile !== null && !restartingLevelFromScript) {
+            __currentCode = allCode;
             this.validateAndRunScript(allCode);
             return;
         }
@@ -352,7 +353,9 @@ function Game(debugMode, startLevel) {
             this.map._setProperties(this.editor.getProperties()['mapProperties']);
 
             // save editor state
-            __currentCode = allCode;
+            if (!restartingLevelFromScript) {
+                __currentCode = allCode;
+            }
             if (loadedFromEditor && !restartingLevelFromScript) {
                 this.editor.saveGoodState();
             }
@@ -417,8 +420,11 @@ function Game(debugMode, startLevel) {
     this._callUnexposedMethod = function(f) {
         if (__playerCodeRunning) {
             __playerCodeRunning = false;
-            res = f();
-            __playerCodeRunning = true;
+            try {
+                res = f();
+            } finally {
+                __playerCodeRunning = true;
+            }
             return res;
         } else {
             return f();
