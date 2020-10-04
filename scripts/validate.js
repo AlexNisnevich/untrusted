@@ -73,7 +73,6 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._setPlayerCodeRunning(true);
         userCode.startLevel(dummyMap);
         this._setPlayerCodeRunning(false);
-        dummyMap._clearIntervals();
 
         // does startLevel() execute fully?
         // (if we're restarting a level after editing a script, we can't test for this
@@ -103,6 +102,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             userCode.validateLevel(dummyMap);
             this._setPlayerCodeRunning(false);
         }
+        dummyMap._clearIntervals();
 
         this.onExit = function () { return true; };
         if (typeof userCode.onExit === "function") {
@@ -118,6 +118,9 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
     } catch (e) {
         // cleanup
         this._setPlayerCodeRunning(false);
+        if (dummyMap) {
+            dummyMap._clearIntervals();
+        }
 
         var exceptionText = e.toString();
         if (e instanceof SyntaxError) {

@@ -208,15 +208,20 @@ ROT.Display.prototype.writeStatus = function(text) {
 };
 
 ROT.Display.prototype.appendError = function(errorText, command) {
-    var map = this.game.map;
+    var game = this.game;
+    if (game._currentLevel == "bonus") {
+        var levelName = game._currentBonusLevel;
+    } else {
+        var levelName = game._levelFileNames[game._currentLevel - 1];
+    }
     if (!command) {
-        command = "%c{#0f0}> run " + this.game._levelFileNames[this.game._currentLevel - 1];
+        command = "%c{#0f0}> run " + levelName;
     }
 
     this.offset -= 3;
     this.errors = this.errors.concat([command, errorText, ""]);
     this.clear();
-    this.drawAll(map);
+    this.drawAll(game.map);
 };
 
 ROT.Display.prototype.focus = function() {

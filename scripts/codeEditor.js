@@ -463,9 +463,10 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         var t = ['372f2dad', '3edbb23c', '7c82f871', '36a67eb8', '623e8b32'];
         $.ajax({
-            'url': 'https://api.github.com/gists?access_token=' + t.join(''),
+            'url': 'https://api.github.com/gists',
             'type': 'POST',
             'data': JSON.stringify(data),
+            'headers': { 'Authorization': 'token ' + t.join('') },
             'success': function (data, status, xhr) {
                 $('#savedLevelMsg').html('Level ' + lvlNum + ' solution saved at <a href="'
                     + data['html_url'] + '" target="_blank">' + data['html_url'] + '</a>');

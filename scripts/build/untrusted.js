@@ -504,6 +504,7 @@ function Game(debugMode, startLevel) {
 
         // if we're editing a script file, do something completely different
         if (this._currentFile !== null && !restartingLevelFromScript) {
+            __currentCode = allCode;
             this.validateAndRunScript(allCode);
             return;
         }
@@ -524,7 +525,9 @@ function Game(debugMode, startLevel) {
             this.map._setProperties(this.editor.getProperties()['mapProperties']);
 
             // save editor state
-            __currentCode = allCode;
+            if (!restartingLevelFromScript) {
+                __currentCode = allCode;
+            }
             if (loadedFromEditor && !restartingLevelFromScript) {
                 this.editor.saveGoodState();
             }
@@ -589,8 +592,11 @@ function Game(debugMode, startLevel) {
     this._callUnexposedMethod = function(f) {
         if (__playerCodeRunning) {
             __playerCodeRunning = false;
-            res = f();
-            __playerCodeRunning = true;
+            try {
+                res = f();
+            } finally {
+                __playerCodeRunning = true;
+            }
             return res;
         } else {
             return f();
@@ -1073,9 +1079,10 @@ function CodeEditor(textAreaDomID, width, height, game) {
 
         var t = ['372f2dad', '3edbb23c', '7c82f871', '36a67eb8', '623e8b32'];
         $.ajax({
-            'url': 'https://api.github.com/gists?access_token=' + t.join(''),
+            'url': 'https://api.github.com/gists',
             'type': 'POST',
             'data': JSON.stringify(data),
+            'headers': { 'Authorization': 'token ' + t.join('') },
             'success': function (data, status, xhr) {
                 $('#savedLevelMsg').html('Level ' + lvlNum + ' solution saved at <a href="'
                     + data['html_url'] + '" target="_blank">' + data['html_url'] + '</a>');
@@ -1307,15 +1314,20 @@ ROT.Display.prototype.writeStatus = function(text) {
 };
 
 ROT.Display.prototype.appendError = function(errorText, command) {
-    var map = this.game.map;
+    var game = this.game;
+    if (game._currentLevel == "bonus") {
+        var levelName = game._currentBonusLevel;
+    } else {
+        var levelName = game._levelFileNames[game._currentLevel - 1];
+    }
     if (!command) {
-        command = "%c{#0f0}> run " + this.game._levelFileNames[this.game._currentLevel - 1];
+        command = "%c{#0f0}> run " + levelName;
     }
 
     this.offset -= 3;
     this.errors = this.errors.concat([command, errorText, ""]);
     this.clear();
-    this.drawAll(map);
+    this.drawAll(game.map);
 };
 
 ROT.Display.prototype.focus = function() {
@@ -1403,6 +1415,10 @@ function DynamicObject(map, type, x, y, __game) {
         var player = map.getPlayer();
 
         function executeTurn() {
+            if (map._callbackValidationFailed) {
+                clearInterval(__timer);
+                return;
+            }
             __myTurn = true;
 
             try {
@@ -2135,6 +2151,10 @@ function Map(display, __game) {
         if (!__objectDefinitions[type]) {
             throw "There is no type of object named " + type + "!";
         }
+        var minLevel = __objectDefinitions[type].minimumLevel
+        if (minLevel && __game._currentLevel < minLevel) {
+            throw type.capitalize() + "s are not available until level " + minLevel;
+        }
 
         if (__player && x == __player.getX() && y == __player.getY()) {
             throw "Can't place object on top of player!";
@@ -2592,6 +2612,7 @@ Game.prototype.getListOfObjects = function () {
 
         'phone': {
             'type': 'item',
+            'minimumLevel': 7,
             'symbol': String.fromCharCode(0x260E), // ☎
             'onPickUp': function (player) {
                 game.map.writeStatus('You have picked up the function phone!');
@@ -2604,6 +2625,7 @@ Game.prototype.getListOfObjects = function () {
 
         'redKey': {
             'type': 'item',
+            'minimumLevel': 11,
             'symbol': 'k',
             'color': 'red',
             'onPickUp': function (player) {
@@ -2613,6 +2635,7 @@ Game.prototype.getListOfObjects = function () {
 
         'greenKey': {
             'type': 'item',
+            'minimumLevel': 12,
             'symbol': 'k',
             'color': '#0f0',
             'onPickUp': function (player) {
@@ -2622,6 +2645,7 @@ Game.prototype.getListOfObjects = function () {
 
         'blueKey': {
             'type': 'item',
+            'minimumLevel': 13,
             'symbol': 'k',
             'color': '#06f',
             'onPickUp': function (player) {
@@ -2631,6 +2655,7 @@ Game.prototype.getListOfObjects = function () {
 
         'yellowKey': {
             'type': 'item',
+            'minimumLevel': 14,
             'symbol': 'k',
             'color': 'yellow',
             'onPickUp': function (player) {
@@ -2639,6 +2664,7 @@ Game.prototype.getListOfObjects = function () {
         },
 
         'theAlgorithm': {
+            'minimumLevel': 14,
             'type': 'item',
             'symbol': 'A',
             'color': 'white',
@@ -3186,7 +3212,7 @@ Game.prototype.reference = {
         'description': 'Updates the <a onclick="$(\'#helpPaneSidebar .category#jQuery\').click();">jQuery</a> instance representing the map.'
     },
     'map.validateAtLeastXLines': {
-        'name': 'map.validateAtLeastXObjects(num)',
+        'name': 'map.validateAtLeastXLines(num)',
         'category': 'map',
         'type': 'method',
         'description': 'Raises an exception if there are not at least num lines (created by map.createLine) on the map.'
@@ -3699,7 +3725,6 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._setPlayerCodeRunning(true);
         userCode.startLevel(dummyMap);
         this._setPlayerCodeRunning(false);
-        dummyMap._clearIntervals();
 
         // does startLevel() execute fully?
         // (if we're restarting a level after editing a script, we can't test for this
@@ -3729,6 +3754,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
             userCode.validateLevel(dummyMap);
             this._setPlayerCodeRunning(false);
         }
+        dummyMap._clearIntervals();
 
         this.onExit = function () { return true; };
         if (typeof userCode.onExit === "function") {
@@ -3744,6 +3770,9 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
     } catch (e) {
         // cleanup
         this._setPlayerCodeRunning(false);
+        if (dummyMap) {
+            dummyMap._clearIntervals();
+        }
 
         var exceptionText = e.toString();
         if (e instanceof SyntaxError) {
