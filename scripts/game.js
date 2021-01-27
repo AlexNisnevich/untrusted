@@ -51,7 +51,6 @@ function Game(debugMode, startLevel) {
     this._levelReached = 1;
     this._displayedChapters = [];
 
-    this._eval = window.eval; // store our own copy of eval so that we can override window.eval
     this._playerPrototype = Player; // to allow messing with map.js and player.js later
 
     /* unexposed getters */
