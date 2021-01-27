@@ -372,6 +372,13 @@ function Game(debugMode, startLevel) {
 
             // start the level
             validatedStartLevel(this.map);
+            
+            // Add the computer to bonus levels that lack it
+            if (this._currentLevel == "bonus" && this.map.countObjects("computer") == 0) {
+            	this.addToInventory("computer")
+            	$('#editorPane').show();
+            	this.editor.refresh();
+            }
 
             // draw the map
             this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
