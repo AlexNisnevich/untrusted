@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2",
+    "version": "1.2.1",
     "commandsIntroduced": [],
     "music": "coming soon"
 }

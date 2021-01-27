@@ -40,7 +40,7 @@ function startLevel(map) {
 }
 
 function validateLevel(map) {
-    numBlocks = 2 * (map.getHeight()-13) + 2 * (map.getWidth()-10);
+    var numBlocks = 2 * (map.getHeight()-13) + 2 * (map.getWidth()-10);
 
     map.validateAtLeastXObjects(numBlocks, 'block');
     map.validateExactlyXManyObjects(1, 'exit');
