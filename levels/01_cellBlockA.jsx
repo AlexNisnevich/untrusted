@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2",
+    "version": "1.2.1",
     "commandsIntroduced":
         ["global.startLevel", "global.onExit", "map.placePlayer",
          "map.placeObject", "map.getHeight", "map.getWidth",
@@ -37,12 +37,12 @@ function startLevel(map) {
     map.placePlayer(7, 5);
 #BEGIN_EDITABLE#
 
-    for (y = 3; y <= map.getHeight() - 10; y++) {
+    for (var y = 3; y <= map.getHeight() - 10; y++) {
         map.placeObject(5, y, 'block');
         map.placeObject(map.getWidth() - 5, y, 'block');
     }
 
-    for (x = 5; x <= map.getWidth() - 5; x++) {
+    for (var x = 5; x <= map.getWidth() - 5; x++) {
         map.placeObject(x, 3, 'block');
         map.placeObject(x, map.getHeight() - 10, 'block');
     }

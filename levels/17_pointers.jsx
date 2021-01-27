@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2.1",
+    "version": "1.2.2",
     "commandsIntroduced":
         ["map.getDynamicObjects", "map.getCanvasCoords", "object.setTarget"],
     "music": "Tart",
@@ -62,7 +62,7 @@ function startLevel(map) {
     var teleportersAndTraps = map.getDynamicObjects();
     teleportersAndTraps = shuffle(teleportersAndTraps);
 
-    for (i = 0; i < teleportersAndTraps.length; i+=2) {
+    for (var i = 0; i < teleportersAndTraps.length; i+=2) {
         var t1 = teleportersAndTraps[i];
         var t2 = teleportersAndTraps[i+1];
 

@@ -7,7 +7,6 @@ Game.prototype.verbotenWords = [
     'window', // prevents setting "window.[...] = map", etc.
     'top', // prevents user code from escaping the iframe
     'validate', 'onExit', 'objective', // don't let players rewrite these methods
-    'this[', // prevents this['win'+'dow'], etc.
      '\\u' // prevents usage of arbitrary code through unicode escape characters, see issue #378
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
@@ -45,6 +44,8 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
                         "throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + game.allowedTime + " ms exceeded.';" +
                     "}");
         }).join('\n');
+        allCode = "'use strict';var validateLevel,onExit,objective\n"+allCode;
+        allCode = allCode+"\n({startLevel:startLevel,validateLevel:validateLevel,onExit:onExit,objective:objective})";
 
         if (this._debugMode) {
             console.log(allCode);
@@ -52,18 +53,14 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
         var allowjQuery = dummyMap._properties.showDummyDom;
         // setup iframe in which code is run. As a side effect, this sets `this._eval` correctly
-        var userCode = this.initIframe(allowjQuery);
+        var userEnv = this.initIframe(allowjQuery);
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
-
-        this._eval(allCode);
-        var initialOnExit = userCode.onExit;
-        var initialValidateLevel = userCode.validateLevel;
-        var initalObjective = userCode.objective;
+        var userOutput = this._eval(allCode);
 
         // start the level on a dummy map to validate
         this._setPlayerCodeRunning(true);
-        userCode.startLevel(dummyMap);
+        userOutput.startLevel(dummyMap);
         this._setPlayerCodeRunning(false);
 
         // re-run to check if the player messed with startLevel
@@ -71,7 +68,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._endOfStartLevelReached = false;
         dummyMap._reset();
         this._setPlayerCodeRunning(true);
-        userCode.startLevel(dummyMap);
+        userOutput.startLevel(dummyMap);
         this._setPlayerCodeRunning(false);
 
         // does startLevel() execute fully?
@@ -83,38 +80,27 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         if (!this._endOfStartLevelReached && !restartingLevelFromScript) {
             throw 'startLevel() returned prematurely!';
         }
-        // issue#385 check for tampering with validateLevel/onExit/objective
-        if(initialValidateLevel !== userCode.validateLevel) {
-            throw "validateLevel() has been tampered with!";
-        }
-        if(initialOnExit !== userCode.onExit) {
-            throw "onExit() has been tampered with!";
-        }
-        if(initalObjective !== userCode.objective) {
-            throw "objective() has been tampered with!"
-        }
-
         this.validateLevel = function () { return true; };
         // does validateLevel() succeed?
-        if (typeof(userCode.validateLevel) === "function") {
-            this.validateLevel = userCode.validateLevel;
+        if (typeof(userOutput.validateLevel) === "function") {
+            this.validateLevel = userOutput.validateLevel;
             this._setPlayerCodeRunning(true);
-            userCode.validateLevel(dummyMap);
+            userOutput.validateLevel(dummyMap);
             this._setPlayerCodeRunning(false);
         }
         dummyMap._clearIntervals();
 
         this.onExit = function () { return true; };
-        if (typeof userCode.onExit === "function") {
-            this.onExit = userCode.onExit;
+        if (typeof userOutput.onExit === "function") {
+            this.onExit = userOutput.onExit;
         }
 
         this.objective = function () { return false; };
-        if (typeof userCode.objective === "function") {
-            this.objective = userCode.objective;
+        if (typeof userOutput.objective === "function") {
+            this.objective = userOutput.objective;
         }
 
-        return userCode.startLevel;
+        return userOutput.startLevel;
     } catch (e) {
         // cleanup
         this._setPlayerCodeRunning(false);

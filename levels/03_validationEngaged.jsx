@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2",
+    "version": "1.2.1",
     "commandsIntroduced":
         ["global.validateLevel", "map.validateAtLeastXObjects",
          "map.validateExactlyXManyObjects"],
@@ -24,12 +24,12 @@ function startLevel(map) {
     map.placePlayer(map.getWidth()-7, map.getHeight()-5);
 #BEGIN_EDITABLE#
 
-    for (y = 10; y <= map.getHeight() - 3; y++) {
+    for (var y = 10; y <= map.getHeight() - 3; y++) {
         map.placeObject(5, y, 'block');
         map.placeObject(map.getWidth() - 5, y, 'block');
     }
 
-    for (x = 5; x <= map.getWidth() - 5; x++) {
+    for (var x = 5; x <= map.getWidth() - 5; x++) {
         map.placeObject(x, 10, 'block');
         map.placeObject(x, map.getHeight() - 3, 'block');
     }
@@ -40,7 +40,7 @@ function startLevel(map) {
 }
 
 function validateLevel(map) {
-    numBlocks = 2 * (map.getHeight()-13) + 2 * (map.getWidth()-10);
+    var numBlocks = 2 * (map.getHeight()-13) + 2 * (map.getWidth()-10);
 
     map.validateAtLeastXObjects(numBlocks, 'block');
     map.validateExactlyXManyObjects(1, 'exit');

@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
+    "version": "1.0.1",
 }
 #END_PROPERTIES#
 /********************************
@@ -56,7 +56,7 @@ function startLevel(map) {
 	
 	
 	for (var i = 0; i < 580; i++) {
-		player = map.getPlayer();
+		var player = map.getPlayer();
         var x = getRandomInt(0, map.getWidth() - 1);
         var y = getRandomInt(0, map.getHeight() - 1);
         if ((x != player.getX() || y != player.getY())
