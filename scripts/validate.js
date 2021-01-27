@@ -242,7 +242,9 @@ Game.prototype.initIframe = function(allowjQuery){
     // reset any state in the iframe
     iframe.src = "about:blank";
     var iframewindow = iframe.contentWindow;
-    this._eval = iframewindow.eval;
+    if (iframewindow.eval) {
+        this._eval = iframewindow.eval;
+    }
     // delete any unwated global variables in the iframe
     function purgeObject(object) {
         var globals = Object.getOwnPropertyNames(object);
