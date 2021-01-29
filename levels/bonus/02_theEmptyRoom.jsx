@@ -1,7 +1,8 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
-    "commandsIntroduced": []
+    "version": "1.0.1",
+    "commandsIntroduced": [],
+    "nextBonusLevel": "03_theCollapsingRoom.jsx"
 }
 #END_PROPERTIES#
 /*******************

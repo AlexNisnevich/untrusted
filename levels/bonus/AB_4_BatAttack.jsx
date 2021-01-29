@@ -4,6 +4,7 @@
     "commandsIntroduced":
         ["object.passableFor",
          "map.validateExactlyXManyObjects"],
+    "nextBonusLevel": "AB_5_PathOfDoom.jsx"
 }
 #END_PROPERTIES#
 /****************************

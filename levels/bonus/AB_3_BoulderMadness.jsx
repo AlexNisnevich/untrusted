@@ -1,6 +1,7 @@
 #BEGIN_PROPERTIES#
 {
     "version": "1.0.1",
+    "nextBonusLevel": "AB_4_BatAttack.jsx"
 }
 #END_PROPERTIES#
 /********************************

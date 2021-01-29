@@ -53,6 +53,8 @@ function Game(debugMode, startLevel) {
 
     this._playerPrototype = Player; // to allow messing with map.js and player.js later
 
+    this._nextBonusLevel = null;
+
     /* unexposed getters */
 
     this._getHelpCommands = function () { return __commands; };
@@ -161,9 +163,13 @@ function Game(debugMode, startLevel) {
         this.map.getPlayer()._canMove = false;
 
         if (this._currentLevel == 'bonus') {
-            // open main menu
-            $('#helpPane, #notepadPane').hide();
-            $('#menuPane').show();
+            if (this._nextBonusLevel) {
+                this._getLevelByPath("levels/bonus/" + this._nextBonusLevel);
+            } else {
+                // open main menu
+                $('#helpPane, #notepadPane').hide();
+                $('#menuPane').show();
+            }
         } else {
             this._getLevel(this._currentLevel + 1, false, true);
         }
@@ -249,6 +255,9 @@ function Game(debugMode, startLevel) {
 
             // load level code in editor
             editor.loadCode(lvlCode);
+
+            // save next bonus level
+            game._nextBonusLevel = editor.getProperties()["nextBonusLevel"];
 
             // start the level and fade in
             game._evalLevelCode(null, null, true);

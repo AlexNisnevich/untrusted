@@ -1,9 +1,10 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "mapProperties": {
         "allowOverwrite": true
-    }	
+    },
+    "nextBonusLevel": "AB_3_BoulderMadness.jsx"
 }
 #END_PROPERTIES#
 /**************************
