@@ -59,6 +59,7 @@ jsx files are like regular JavaScript files, but have some additional syntax:
   - `music`: name of the background track for the level (see `sound.js`)
   - `startingMessage`: message displayed at the bottom of the screen when the level starts (if any)
   - `version`: increase the level version whenever you update a level
+  - `nextBonusLevel`: load another level automatically when this one is solved
 - `#START_OF_START_LEVEL#` and `#END_OF_START_LEVEL#` should be the first and last line of the `startLevel` method, respectively
 
 #### Adding music
