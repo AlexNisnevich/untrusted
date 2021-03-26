@@ -52,7 +52,8 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         }
 
         var allowjQuery = dummyMap._properties.showDummyDom;
-        // setup iframe in which code is run. As a side effect, this sets `this._eval` correctly
+        // setup iframe in which code is run. As a side effect, this sets `this._eval`
+        // and `this.SyntaxError` correctly.
         var userEnv = this.initIframe(allowjQuery);
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
@@ -109,7 +110,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         }
 
         var exceptionText = e.toString();
-        if (e instanceof SyntaxError) {
+        if (e instanceof this.SyntaxError) {
             var lineNum = this.findSyntaxError(allCode, e.message);
             if (lineNum) {
                 exceptionText = "[Line " + lineNum + "] " + exceptionText;
@@ -244,6 +245,7 @@ Game.prototype.initIframe = function(allowjQuery){
     var iframewindow = iframe.contentWindow;
     if (iframewindow.eval) {
         this._eval = iframewindow.eval;
+        this.SyntaxError = iframewindow.SyntaxError;
     }
     // delete any unwated global variables in the iframe
     function purgeObject(object) {
@@ -317,14 +319,25 @@ Game.prototype.secureProperty = function(object, prop, objecttype){
 // of code where a given error occurs
 Game.prototype.findSyntaxError = function(code, errorMsg) {
     var lines = code.split('\n');
+    // One line at the top is the added declarations and doesn't
+    // correspond to any real editor code
+    var phantomLines = 1;
     for (var i = 1; i <= lines.length; i++) {
+        var line = lines[i - 1];
+        var startStartLevel = "map._startOfStartLevelReached()";
+        var endStartLevel = "map._endOfStartLevelReached()";
+        if (line == startStartLevel || line == endStartLevel ) {
+            // This line was added by the editor and doesn't show up to the user
+            // so shouldn't be counted.
+            phantomLines += 1;
+        }
         var testCode = lines.slice(0, i).join('\n');
 
         try {
-            this._eval(testCode);
+            this._eval("'use strict';" + testCode);
         } catch (e) {
             if (e.message === errorMsg) {
-                return i;
+                return i - phantomLines;
             }
         }
     }
