@@ -45,6 +45,9 @@ function startLevel(map) {
             if (!challenge()) {
                 player.killedBy('wrong answer');
             }
+            if (getAnswer(input) == undefined) {
+                player.killedBy('unanswered');
+            }
             if (!map.opened) {
                 map.writeStatus("*click*");
                 map.opened = true;
