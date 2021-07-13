@@ -25,15 +25,15 @@ function startLevel(map) {
     maze.create( function (x, y, mapValue) {
 
         // don't write maze over player
-        if (map.getPlayer().atLocation(x,y)) {
+        if (map.getPlayer().atLocation(x, y)) {
             return 0;
         }
 
         else if (mapValue === 1) { //0 is empty space 1 is wall
-            map.placeObject(x,y, 'block');
+            map.placeObject(x, y, 'block');
         }
         else {
-            map.placeObject(x,y,'empty');
+            map.placeObject(x, y, 'empty');
         }
     });
 
