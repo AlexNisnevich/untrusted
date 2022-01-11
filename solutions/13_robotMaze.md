@@ -472,3 +472,28 @@ if (me.state == 0)
         }
 } else me.move('down'); // got key, exit
 ```
+# Movement based on player's position
+Make the drone move in a certain direction when the player is in a specific position. Can colour those positions for ease.
+
+```javascript
+var player = map.getPlayer();
+var x = player.getX();
+var y = player.getY();
+
+//to know current position
+map.writeStatus("x = " + x + " y = " + y);
+
+//can colour the control squares for ease
+map.setSquareColor(map.getWidth()-1, map.getHeight()-2, '#ff0');
+map.setSquareColor(map.getWidth()-1, map.getHeight()-3, '#f00');
+map.setSquareColor(map.getWidth()-2, map.getHeight()-1, '#0f0');
+
+if(y == 23)
+	me.move('up');
+else if(y == 22)
+	me.move('left');
+else if(x == 48)
+	me.move('right');
+else
+	me.move('down');
+```
