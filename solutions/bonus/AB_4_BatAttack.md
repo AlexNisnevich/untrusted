@@ -33,3 +33,21 @@ map.defineObject("shield",{
         }
     });
 ```
+
+## kedilayanaveen10: Teleport
+Teleport in front of the exit
+```javascript
+map.placeObject(map.getPlayer().getX(), map.getPlayer().getY()-1, 'teleporter');
+map.placeObject(map.getWidth()-11, 1, 'teleporter');
+teleporters = map.getDynamicObjects();
+
+//teleporters we placed will be at the end of the array because map pushes every new dynamic object at the back of the array __dynamicObjects that it maintains.
+//Code in map.placeObject (in map.js):
+//__dynamicObjects.push(new DynamicObject(this, type, x, y, __game));
+
+var t1 = teleporters[teleporters.length-2];
+var t2 = teleporters[teleporters.length-1];
+
+t1.setTarget(t2);
+t2.setTarget(t1);
+```
