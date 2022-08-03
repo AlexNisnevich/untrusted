@@ -149,5 +149,16 @@ function antiGravity() {
 map.startTimer(antiGravity, 25);
 ```
 
+# Fly to the other side (slow a little bit, speed it up using arrow keys)
+## M-Programer
+function jump() {
+```javascript
+        player.move('up')
+        player.move('right')
+    }
+    map.startTimer(jump, 30)
+    function bye() {
+```
+}
 
 
