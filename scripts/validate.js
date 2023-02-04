@@ -286,7 +286,7 @@ Game.prototype.secureObject = function(object, objecttype) {
         }
         if(prop[0] == "_"){
             this.secureProperty(object, prop, objecttype);
-        } else if (!this._superMenuActivated && typeof object[prop] == "function") {
+        } else if (typeof object[prop] == "function") {
             Object.defineProperty(object, prop, {
                     configurable:false,
                     writable:false
