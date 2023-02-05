@@ -188,7 +188,7 @@ function Sound(source) {
 
         var track = this.tracks[name];
         if (track.url) {
-            var nowPlayingMsg = 'Now playing: "' + track.title + '" - <a target="_blank" href="' + track.url + '">' + track.artist + '</a>';
+            var nowPlayingMsg = 'Now playing: "' + track.title + '" - <a target="_blank" draggable="false" href="' + track.url + '">' + track.artist + '</a>';
         } else {
             var nowPlayingMsg = 'Now playing: "' + track.title + '" - ' + track.artist;
         }
