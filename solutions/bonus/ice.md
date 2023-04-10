@@ -8,4 +8,7 @@ Edit the impassable property of the 'block' object in objects.js to make it pass
             'impassable': false
         },
 ```
-
+## pppery: move up on a timer
+```
+map.startTimer(function(){map.getPlayer().move("up")},200);
+```
