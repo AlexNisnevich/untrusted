@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "0.0",
+    "version": "0.1",
     "commandsIntroduced": []
 }
 #END_PROPERTIES#
@@ -18,14 +18,14 @@ function startLevel(map) {
     map.placePlayer(7, 5);
 
     // The basic level layout.
-    for (y = 0; y <= map.getHeight(); y++) {
+    for (var y = 0; y <= map.getHeight(); y++) {
         map.placeObject(16, y, 'block');
         map.placeObject(32, y, 'block');
     }
 
-    for (x = 17; x <= 31; x++) {
-    	map.placeObject(x, 7, 'block');
-	map.placeObject(x, 17, 'block');
+    for (var x = 17; x <= 31; x++) {
+        map.placeObject(x, 7, 'block');
+        map.placeObject(x, 17, 'block');
     }
 
     map.placeObject(24, 3, 'redKey');

@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2.1",
+    "version": "1.2.2",
     "commandsIntroduced": ["map.setSquareColor"],
     "music": "cloudy_sin"
 }
@@ -24,8 +24,8 @@ function getRandomInt(min, max) {
 
 function startLevel(map) {
 #START_OF_START_LEVEL#
-    for (x = 0; x < map.getWidth(); x++) {
-        for (y = 0; y < map.getHeight(); y++) {
+    for (var x = 0; x < map.getWidth(); x++) {
+        for (var y = 0; y < map.getHeight(); y++) {
             map.setSquareColor(x, y, '#f00');
         }
     }

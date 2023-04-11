@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"mapProperties": {
 		"refreshRate": 50
 	}
@@ -117,8 +117,8 @@ function startLevel(map) {
 	});
 
 	map.startTimer(function() {
-	    player = map.getPlayer();
-	    x = player.getX();
+	    var player = map.getPlayer();
+	    var x = player.getX();
 	    if (x > 23){
 	    	map.overrideKey('right', function(){});
 		    player.move('left');

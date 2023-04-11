@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2.1",
+    "version": "1.2.2",
     "commandsIntroduced": [],
     "music": "Brazil"
 }
@@ -60,8 +60,8 @@ function startLevel(map) {
             savedDirection = 'left';
           }
         }
-        dirs = ['up', 'down', 'left', 'right'];
-        for (d=0;d<dirs.length;d++) {
+        var dirs = ['up', 'down', 'left', 'right'];
+        for (var d=0;d<dirs.length;d++) {
           if (dirs[d] != savedDirection) {
             map.overrideKey(dirs[d], function(){});
           }
@@ -70,8 +70,8 @@ function startLevel(map) {
     });
   
     map.startTimer(function() {
-      player = map.getPlayer();
-      x = player.getX(); y = player.getY();
+      var player = map.getPlayer();
+      var x = player.getX(), y = player.getY();
       if (map.getObjectTypeAt(x,y) == 'ice') {
         player.move(savedDirection);
       }
@@ -222,67 +222,68 @@ function startLevel(map) {
 
   var teleporters = map.getDynamicObjects();
   teleporters = shuffle(teleporters);
-  for(i = 0; i < teleporters.length; i++){
+  var t1, t2;
+  for(var i = 0; i < teleporters.length; i++){
     if(teleporters[i].getType() == 'teleporter'){
-      var t1 = teleporters[i];
+      t1 = teleporters[i];
     }
   }
-  for(j = teleporters.length - 1; j >= 0; j--){
+  for(var j = teleporters.length - 1; j >= 0; j--){
     if(teleporters[j].getType() == 'teleporter'){
-      var t2 = teleporters[j];
+      t2 = teleporters[j];
     }
   }
   t1.setTarget(t2);
   t2.setTarget(t1);
 
-  for(x = 3; x < 26; x++) {
+  for(var x = 3; x < 26; x++) {
     map.placeObject(x, 10, 'invisibleBoulder');
   }
-  for(x = 4; x < 27; x++) {
+  for(var x = 4; x < 27; x++) {
     map.placeObject(x, 8, 'invisibleBoulder');
   }
-  for(x = 0; x < 26; x++) {
+  for(var x = 0; x < 26; x++) {
     map.placeObject(x, 6, 'invisibleBoulder');
   }
-  for(y = 1; y < 6; y++) {
+  for(var y = 1; y < 6; y++) {
     map.placeObject(25, y, 'invisibleBoulder');
   }
-  for(y = 0; y < 5; y++) {
+  for(var y = 0; y < 5; y++) {
     map.placeObject(23, y, 'invisibleBoulder');
   }
-  for(y = 1; y < 6; y++) {
+  for(var y = 1; y < 6; y++) {
     map.placeObject(21, y, 'invisibleBoulder');
   }
-  for(y = 0; y < 5; y++) {
+  for(var y = 0; y < 5; y++) {
     map.placeObject(19, y, 'invisibleBoulder');
   }
-  for(y = 1; y < 6; y++) {
+  for(var y = 1; y < 6; y++) {
     map.placeObject(17, y, 'invisibleBoulder');
   }
-  for(y = 0; y < 5; y++) {
+  for(var y = 0; y < 5; y++) {
     map.placeObject(15, y, 'invisibleBoulder');
   }
-  for(y = 1; y < 6; y++) {
+  for(var y = 1; y < 6; y++) {
     map.placeObject(13, y, 'invisibleBoulder');
   }
-  for(y = 0; y < 5; y++) {
+  for(var y = 0; y < 5; y++) {
     map.placeObject(11, y, 'invisibleBoulder');
   }
-  for(y = 1; y < 6; y++) {
+  for(var y = 1; y < 6; y++) {
     map.placeObject(9, y, 'invisibleBoulder');
   }
-  for(y = 0; y < 5; y++) {
+  for(var y = 0; y < 5; y++) {
     map.placeObject(7, y, 'invisibleBoulder');
   }
-  for(y = 1; y < 6; y++) {
+  for(var y = 1; y < 6; y++) {
     map.placeObject(5, y, 'invisibleBoulder');
   }
-  for(y = 0; y < 5; y++) {
+  for(var y = 0; y < 5; y++) {
     map.placeObject(3, y, 'invisibleBoulder');
   }
 
 #BEGIN_EDITABLE#
-  for(x = 43; x < 46; x++) {
+  for(var x = 43; x < 46; x++) {
     map.placeObject(x, 1, 'boulder');
     map.placeObject(x, 3, 'boulder');
   }
@@ -291,7 +292,7 @@ function startLevel(map) {
   map.placeObject(1, 9, 'boulder');
   map.placeObject(30, 14, 'boulder');
   map.placeObject(36, 11, 'boulder');
-  for(x = map.getWidth() - 13; x < map.getWidth() - 1; x++) {
+  for(var x = map.getWidth() - 13; x < map.getWidth() - 1; x++) {
     map.placeObject(x, 6, 'boulder');
   }
 #END_EDITABLE#

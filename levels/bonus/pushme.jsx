@@ -1,6 +1,6 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.2.1",
+    "version": "1.2.2",
     "commandsIntroduced": ['object.pushable'],
     "music": "Brazil"
 }
@@ -60,8 +60,8 @@ function startLevel(map) {
     map.placePlayer(0, 12);
     map.placeObject(map.getWidth()/2, map.getHeight()/2, 'exit');
 
-    for (x = map.getWidth()/2 - 1; x <= map.getWidth()/2 + 1; x++) {
-        for (y = map.getHeight()/2 - 1; y <= map.getHeight()/2 + 1; y++) {
+    for (var x = map.getWidth()/2 - 1; x <= map.getWidth()/2 + 1; x++) {
+        for (var y = map.getHeight()/2 - 1; y <= map.getHeight()/2 + 1; y++) {
             if (x != map.getWidth()/2 || y != map.getHeight()/2) {
                 map.placeObject(x, y, 'attackDrone');
             }

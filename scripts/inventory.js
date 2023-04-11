@@ -43,10 +43,10 @@ Game.prototype.removeFromInventory = function (itemName) {
 
 Game.prototype.setInventoryStateByLevel = function (levelNum) {
 	// first remove items that have onDrop effects on UI
-	if (levelNum == 1) {
+	if (levelNum == 1 || levelNum == "bonus") {
 		this.removeFromInventory('computer');
 	}
-	if (levelNum <= 7) {
+	if (levelNum <= 7 || levelNum == "bonus") {
 		this.removeFromInventory('phone');
 	}
 
@@ -56,7 +56,7 @@ Game.prototype.setInventoryStateByLevel = function (levelNum) {
 	// repopulate inventory by level
 	if (levelNum > 1) {
 		this.addToInventory('computer');
-		$('#editorPane').fadeIn();
+		$('#editorPane, #savedLevelMsg').fadeIn();
 		this.editor.refresh();
 	}
 	if (levelNum > 7) {

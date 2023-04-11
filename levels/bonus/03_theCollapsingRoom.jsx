@@ -1,7 +1,8 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "0.1",
-    "commandsIntroduced": []
+    "version": "0.1.1",
+    "commandsIntroduced": [],
+    "nextBonusLevel": "04_theGuard.jsx"
 }
 #END_PROPERTIES#
 /************************

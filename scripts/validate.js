@@ -7,7 +7,6 @@ Game.prototype.verbotenWords = [
     'window', // prevents setting "window.[...] = map", etc.
     'top', // prevents user code from escaping the iframe
     'validate', 'onExit', 'objective', // don't let players rewrite these methods
-    'this[', // prevents this['win'+'dow'], etc.
      '\\u' // prevents usage of arbitrary code through unicode escape characters, see issue #378
 ];
 Game.prototype.allowedTime = 2000; // for infinite loop prevention
@@ -45,25 +44,24 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
                         "throw '[Line " + (i+1) + "] TimeOutException: Maximum loop execution time of " + game.allowedTime + " ms exceeded.';" +
                     "}");
         }).join('\n');
+        allCode = "'use strict';var validateLevel,onExit,objective\n"+allCode;
+        allCode = allCode+"\n({startLevel:startLevel,validateLevel:validateLevel,onExit:onExit,objective:objective})";
 
         if (this._debugMode) {
             console.log(allCode);
         }
 
         var allowjQuery = dummyMap._properties.showDummyDom;
-        // setup iframe in which code is run. As a side effect, this sets `this._eval` correctly
-        var userCode = this.initIframe(allowjQuery);
+        // setup iframe in which code is run. As a side effect, this sets `this._eval`
+        // and `this.SyntaxError` correctly.
+        var userEnv = this.initIframe(allowjQuery);
 
         // evaluate the code to get startLevel() and (opt) validateLevel() methods
-
-        this._eval(allCode);
-        var initialOnExit = userCode.onExit;
-        var initialValidateLevel = userCode.validateLevel;
-        var initalObjective = userCode.objective;
+        var userOutput = this._eval(allCode);
 
         // start the level on a dummy map to validate
         this._setPlayerCodeRunning(true);
-        userCode.startLevel(dummyMap);
+        userOutput.startLevel(dummyMap);
         this._setPlayerCodeRunning(false);
 
         // re-run to check if the player messed with startLevel
@@ -71,7 +69,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         this._endOfStartLevelReached = false;
         dummyMap._reset();
         this._setPlayerCodeRunning(true);
-        userCode.startLevel(dummyMap);
+        userOutput.startLevel(dummyMap);
         this._setPlayerCodeRunning(false);
 
         // does startLevel() execute fully?
@@ -83,38 +81,27 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         if (!this._endOfStartLevelReached && !restartingLevelFromScript) {
             throw 'startLevel() returned prematurely!';
         }
-        // issue#385 check for tampering with validateLevel/onExit/objective
-        if(initialValidateLevel !== userCode.validateLevel) {
-            throw "validateLevel() has been tampered with!";
-        }
-        if(initialOnExit !== userCode.onExit) {
-            throw "onExit() has been tampered with!";
-        }
-        if(initalObjective !== userCode.objective) {
-            throw "objective() has been tampered with!"
-        }
-
         this.validateLevel = function () { return true; };
         // does validateLevel() succeed?
-        if (typeof(userCode.validateLevel) === "function") {
-            this.validateLevel = userCode.validateLevel;
+        if (typeof(userOutput.validateLevel) === "function") {
+            this.validateLevel = userOutput.validateLevel;
             this._setPlayerCodeRunning(true);
-            userCode.validateLevel(dummyMap);
+            userOutput.validateLevel(dummyMap);
             this._setPlayerCodeRunning(false);
         }
         dummyMap._clearIntervals();
 
         this.onExit = function () { return true; };
-        if (typeof userCode.onExit === "function") {
-            this.onExit = userCode.onExit;
+        if (typeof userOutput.onExit === "function") {
+            this.onExit = userOutput.onExit;
         }
 
         this.objective = function () { return false; };
-        if (typeof userCode.objective === "function") {
-            this.objective = userCode.objective;
+        if (typeof userOutput.objective === "function") {
+            this.objective = userOutput.objective;
         }
 
-        return userCode.startLevel;
+        return userOutput.startLevel;
     } catch (e) {
         // cleanup
         this._setPlayerCodeRunning(false);
@@ -123,7 +110,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
         }
 
         var exceptionText = e.toString();
-        if (e instanceof SyntaxError) {
+        if (e instanceof this.SyntaxError) {
             var lineNum = this.findSyntaxError(allCode, e.message);
             if (lineNum) {
                 exceptionText = "[Line " + lineNum + "] " + exceptionText;
@@ -256,7 +243,10 @@ Game.prototype.initIframe = function(allowjQuery){
     // reset any state in the iframe
     iframe.src = "about:blank";
     var iframewindow = iframe.contentWindow;
-    this._eval = iframewindow.eval;
+    if (iframewindow.eval) {
+        this._eval = iframewindow.eval;
+        this.SyntaxError = iframewindow.SyntaxError;
+    }
     // delete any unwated global variables in the iframe
     function purgeObject(object) {
         var globals = Object.getOwnPropertyNames(object);
@@ -296,7 +286,7 @@ Game.prototype.secureObject = function(object, objecttype) {
         }
         if(prop[0] == "_"){
             this.secureProperty(object, prop, objecttype);
-        } else if (!this._superMenuActivated && typeof object[prop] == "function") {
+        } else if (typeof object[prop] == "function") {
             Object.defineProperty(object, prop, {
                     configurable:false,
                     writable:false
@@ -329,14 +319,25 @@ Game.prototype.secureProperty = function(object, prop, objecttype){
 // of code where a given error occurs
 Game.prototype.findSyntaxError = function(code, errorMsg) {
     var lines = code.split('\n');
+    // One line at the top is the added declarations and doesn't
+    // correspond to any real editor code
+    var phantomLines = 1;
     for (var i = 1; i <= lines.length; i++) {
+        var line = lines[i - 1];
+        var startStartLevel = "map._startOfStartLevelReached()";
+        var endStartLevel = "map._endOfStartLevelReached()";
+        if (line == startStartLevel || line == endStartLevel ) {
+            // This line was added by the editor and doesn't show up to the user
+            // so shouldn't be counted.
+            phantomLines += 1;
+        }
         var testCode = lines.slice(0, i).join('\n');
 
         try {
-            this._eval(testCode);
+            this._eval("'use strict';" + testCode);
         } catch (e) {
             if (e.message === errorMsg) {
-                return i;
+                return i - phantomLines;
             }
         }
     }

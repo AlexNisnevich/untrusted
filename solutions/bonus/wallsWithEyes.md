@@ -19,3 +19,11 @@
 ```
 Explanation: Move up to activate the trap, then turn back and let the walls close all the way. They won't spawn on grass.
 Then, walk up the grass path.
+  
+  
+## kedilayanaveen10: Plug in the teleporters!
+The teleporters are already created. They're just not connected to each other.
+```javascript
+teleport1.setTarget(teleport2);
+teleport2.setTarget(teleport1);
+```

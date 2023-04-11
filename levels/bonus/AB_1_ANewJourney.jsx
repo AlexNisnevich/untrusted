@@ -1,9 +1,10 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
+    "version": "1.0.1",
 	"mapProperties": {
         "allowOverwrite": true
-    }
+    },
+    "nextBonusLevel": "AB_2_FrozenCave.jsx"
 }
 #END_PROPERTIES#
 /***************************

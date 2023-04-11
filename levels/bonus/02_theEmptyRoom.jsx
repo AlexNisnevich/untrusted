@@ -1,7 +1,8 @@
 #BEGIN_PROPERTIES#
 {
-    "version": "1.0",
-    "commandsIntroduced": []
+    "version": "1.0.1",
+    "commandsIntroduced": [],
+    "nextBonusLevel": "03_theCollapsingRoom.jsx"
 }
 #END_PROPERTIES#
 /*******************
@@ -43,6 +44,9 @@ function startLevel(map) {
             }
             if (!challenge()) {
                 player.killedBy('wrong answer');
+            }
+            if (getAnswer(input) == undefined) {
+                player.killedBy('unanswered');
             }
             if (!map.opened) {
                 map.writeStatus("*click*");

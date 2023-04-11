@@ -51,8 +51,9 @@ function Game(debugMode, startLevel) {
     this._levelReached = 1;
     this._displayedChapters = [];
 
-    this._eval = window.eval; // store our own copy of eval so that we can override window.eval
     this._playerPrototype = Player; // to allow messing with map.js and player.js later
+
+    this._nextBonusLevel = null;
 
     /* unexposed getters */
 
@@ -162,9 +163,13 @@ function Game(debugMode, startLevel) {
         this.map.getPlayer()._canMove = false;
 
         if (this._currentLevel == 'bonus') {
-            // open main menu
-            $('#helpPane, #notepadPane').hide();
-            $('#menuPane').show();
+            if (this._nextBonusLevel) {
+                this._getLevelByPath("levels/bonus/" + this._nextBonusLevel);
+            } else {
+                // open main menu
+                $('#helpPane, #notepadPane').hide();
+                $('#menuPane').show();
+            }
         } else {
             this._getLevel(this._currentLevel + 1, false, true);
         }
@@ -250,6 +255,9 @@ function Game(debugMode, startLevel) {
 
             // load level code in editor
             editor.loadCode(lvlCode);
+
+            // save next bonus level
+            game._nextBonusLevel = editor.getProperties()["nextBonusLevel"];
 
             // start the level and fade in
             game._evalLevelCode(null, null, true);
@@ -372,6 +380,13 @@ function Game(debugMode, startLevel) {
 
             // start the level
             validatedStartLevel(this.map);
+            
+            // Add the computer to bonus levels that lack it
+            if (this._currentLevel == "bonus" && this.map.countObjects("computer") == 0) {
+                this.addToInventory("computer")
+                $('#editorPane, #savedLevelMsg').show();
+                this.editor.refresh();
+            }
 
             // draw the map
             this.display.fadeIn(this.map, isNewLevel ? 100 : 10, function () {
