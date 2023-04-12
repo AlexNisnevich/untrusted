@@ -49,3 +49,13 @@ var t2 = teleporters[1];
 t1.setTarget(t2);
 t2.setTarget(t1);
 ```
+## Pppery: logging
+```
+	for (var i = map.getWidth() - 20; i < map.getWidth(); i++) {
+    	for (var j = 0; j < 20; j++) {
+        	if (map.getObjectTypeAt(i, j) != "exit") {
+            	map.placeObject(i, j, "empty");
+            }
+        }
+    }
+```
