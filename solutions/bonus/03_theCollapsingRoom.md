@@ -15,7 +15,7 @@ If we want to stop the rain, we can destroy rainmaker.
 ```javascript
 Math.random = function() { return 0.75; }
 ```
-## Edit "objects.js. 
+## Edit "objects.js". 
 ```javascript
  // obstacles
         'block': {
