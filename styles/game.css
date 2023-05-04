@@ -403,6 +403,26 @@ body {
 	display: none;
 }
 
+#new {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	font-size: 0.8em;
+	color: #ccc;
+}
+
+#new a {
+	cursor: pointer;
+	color: #ccc;
+	text-decoration: underline;
+}
+
+#new-text {
+	color: white;
+	background-color: red;
+	padding: 1px 3px;
+}
+
 #paypal {
 	position: absolute;
 	bottom: 10px;
