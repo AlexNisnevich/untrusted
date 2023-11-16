@@ -148,6 +148,17 @@ function antiGravity() {
 }
 map.startTimer(antiGravity, 25);
 ```
+# "Straight Shot"
+## H3Xivall
 
+```javascript
+// Walk up to the edge and press the phone button
+var ob = 0
+for (let i = ob; i < 10; i++) {
+map.defineObject(i.toString(), 10);
+map.placeObject(player.getX()+1+i,player.getY()+1,i.toString());
+}
+// Now just walk across
+```
 
 
