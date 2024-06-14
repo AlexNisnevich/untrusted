@@ -112,16 +112,14 @@
 
 	<div id="jquery_bgPlayer" class="jp-jplayer"></div>
 	<div id="jquery_soundPlayer" class="jp-jplayer"></div>
-	<script type="text/javascript">
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-345959-12']);
-	  _gaq.push(['_trackPageview']);
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-CNGKWCR3CM"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
 
-	  (function() {
-		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
+		gtag('config', 'G-CNGKWCR3CM');
 	</script>
 	<iframe id="user_code" style="display:none;" />
 </body>
