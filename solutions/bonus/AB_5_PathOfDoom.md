@@ -15,3 +15,14 @@ map.defineObject('switch', {
 
 ## kedilayanaveen10: Flip the plates
 This can also be solved without any code change. Just move in and out of the plate at the begninning as much as possible and the arrows stop firing on their own.
+
+## Peter-developer01: Place the teleporters
+Create teleporters on hitting the switch to teleport right nearby the exit.
+```javascript
+map.placeObject(5, 2, "teleporter");
+map.placeObject(map.getWidth() - 6, map.getHeight() - 5, "teleporter");
+let [t1, t2] = map.getDynamicObjects()
+	.filter(t => t.getType() === "teleporter");
+t1.setTarget(t2);
+t2.setTarget(t1);
+```
