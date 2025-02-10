@@ -36,7 +36,7 @@ Game.prototype.validate = function(allCode, playerCode, restartingLevelFromScrip
 
         // modify the code to always check time to prevent infinite loops
         allCode = allCode.replace(/\)\s*{/g, ") {"); // converts Allman indentation -> K&R
-        allCode = allCode.replace(/\n\s*while\s*\((.*)\)/g, "\nfor (dummy=0;$1;)"); // while -> for
+        allCode = allCode.replace(/\n\s*while\s*\((.*)\)/g, "\nfor (var dummy=0;$1;)"); // while -> for
         allCode = $.map(allCode.split('\n'), function (line, i) {
             return line.replace(/for\s*\((.*);(.*);(.*)\)\s*{/g,
                 "for ($1, startTime = Date.now();$2;$3){" +
