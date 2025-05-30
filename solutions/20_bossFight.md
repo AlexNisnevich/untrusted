@@ -544,3 +544,247 @@ Touch the '7' to call two bigger bosses that will let you safely pick up the two
     });
     map.placeObject(1, map.getHeight() - 3, 'button');
 ```
+
+## NestorAjax: fancy gadgetry
+
+Touch the purple gear to toggle the force barrier.
+
+Phone key switches between move and aim modes. Aim with direction keys, then press the rest key (R) to fire a blast airstrike.
+
+```javascript
+    var width = map.getWidth();
+    var height = map.getHeight();
+    var player = map.getPlayer();
+    var dirs = {
+        'left': {
+            'dx': -1,
+            'dy': 0
+        },
+        'right': {
+            'dx': 1,
+            'dy': 0
+        },
+        'up': {
+            'dx': 0,
+            'dy': -1
+        },
+        'down': {
+            'dx': 0,
+            'dy': 1
+        },
+        'rest': {
+            'dx': 0,
+            'dy': 0
+        }
+    };
+
+    function getObjectTypeAtDir(me, dir) {
+        var offsets = dirs[dir];
+        var x = me.getX() + offsets.dx;
+        var y = me.getY() + offsets.dy;
+        map.getObjectTypeAt(x, y);
+    }
+
+    function setControls(callback) {
+        if (callback == null) {
+            for (var dir in dirs) {
+                map.overrideKey(dir, null);
+            }
+        } else {
+            function overrideWithClosure(dir) {
+                map.overrideKey(dir, function () {
+                    callback(dir);
+                });
+            }
+            for (var dir in dirs) {
+                overrideWithClosure(dir);
+            }
+        }
+    }
+
+
+    var barrier = {
+        'symbol': ' ',
+        'color': 'purple',
+        'impassable': false,
+        'toggle': function () {
+            if (this.impassable) {
+                this.symbol = ' ';
+                this.impassable = false;
+            } else {
+                this.symbol = '░';
+                this.impassable = true;
+            }
+        }
+    };
+    map.defineObject('barrier', barrier);
+    for (var x = 3; x <= width - 4; ++x) {
+        map.placeObject(x, height - 4, 'barrier');
+    }
+
+    map.defineObject('barrierControl', {
+        'symbol': '⚙',
+        'color': 'purple',
+        'onCollision': function () {
+            barrier.toggle();
+        }
+    });
+    map.placeObject(1, height - 3, 'barrierControl');
+
+    map.defineObject('blast', {
+        'type': 'dynamic',
+        'symbol': '✦',
+        'color': 'orange',
+        'interval': 100,
+        'projectile': true,
+        'pickDirection': function (me) {
+            var dirProbs = {
+                'left': 1.0,
+                'right': 1.0,
+                'up': 1.0,
+                'down': 1.0
+            };
+            var sumProbs = 0.0;
+            for (var dir in dirProbs) {
+                if (!me.canMove(dir)) {
+                    if (getObjectTypeAtDir(me, dir) == 'blast') {
+                        dirProbs[dir] = 0.1;
+                    } else {
+                        dirProbs[dir] = 5.0;
+                    }
+                }
+                sumProbs += dirProbs[dir];
+            }
+            var rand = Math.random() * sumProbs;
+            for (var dir in dirProbs) {
+                sumProbs -= dirProbs[dir];
+                if (rand >= sumProbs) {
+                    return dir;
+                }
+            }
+            throw new Error('Unreachable');
+        },
+        'behavior': function (me) {
+            me.counter = ~~(me.counter) + 1;
+            var turnProb = 0.0;
+            if (me.counter < 8) {
+                turnProb = 1.0 - (me.counter / 8);
+            }
+            if (
+                !me.direction ||
+                turnProb > 0 && Math.random() < turnProb
+            ) {
+                me.direction = this.pickDirection(me);
+            }
+            me.move(me.direction);
+        }
+    });
+
+    var airstrike = {
+        'x': ~~(width / 2),
+        'y': ~~(height / 2),
+        'active': false,
+        'area': {
+            'x': [3, width - 4],
+            'y': [3, height - 4]
+        },
+        'blastZone': {
+            'x': [-6, 6],
+            'y': [-6, 6]
+        },
+        'crosshair': {
+            'size': [7, 7],
+            'offset': [-3, -3],
+            'shape': [
+                'xx   xx',
+                'x     x',
+                '       ',
+                '   x   ',
+                '       ',
+                'x     x',
+                'xx   xx'
+            ],
+            'draw': function (x, y, color) {
+                for (var dy = 0; dy < this.size[1]; ++dy) {
+                    for (var dx = 0; dx < this.size[0]; ++dx) {
+                        if (this.shape[dy][dx] != ' ') {
+                            map.setSquareColor(
+                                x + this.offset[0] + dx,
+                                y + this.offset[1] + dy,
+                                color
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        'drawCrosshair': function () {
+            this.crosshair.draw(this.x, this.y, 'darkred');
+        },
+        'clearCrosshair': function () {
+            this.crosshair.draw(this.x, this.y, 'black');
+        },
+        'enable': function () {
+            this.active = true;
+            this.drawCrosshair();
+        },
+        'disable': function () {
+            this.clearCrosshair();
+            this.active = false;
+        },
+        'move': function (dir) {
+            if (this.active) {
+                var offsets = dirs[dir];
+                var x = this.x + offsets.dx;
+                var y = this.y + offsets.dy;
+                if (
+                    x >= this.area.x[0] &&
+                    x <= this.area.x[1] &&
+                    y >= this.area.y[0] &&
+                    y <= this.area.y[1]
+                ) {
+                    this.clearCrosshair();
+                    this.x = x;
+                    this.y = y;
+                    this.drawCrosshair();
+                }
+            }
+        },
+        'fire': function () {
+            var bz = this.blastZone;
+            for (var dy = bz.y[0]; dy <= bz.y[1]; ++dy) {
+                for (var dx = bz.x[0]; dx <= bz.x[1]; ++dx) {
+                    var squareDistance = dx * dx + dy * dy;
+                    var likelihood = 1 / (3 + squareDistance);
+                    if (Math.random() < likelihood) {
+                        map.placeObject(this.x + dx, this.y + dy, 'blast');
+                    }
+                }
+            }
+        }
+    };
+
+    player.setPhoneCallback(function () {
+        if (player.getColor() == '#f00') {
+            setControls(null);
+            airstrike.disable();
+            player.setColor('#0f0');
+        } else {
+            player.setColor('#f00');
+            airstrike.enable();
+            setControls(function (action) {
+                switch (action) {
+                case 'left':
+                case 'right':
+                case 'up':
+                case 'down':
+                    airstrike.move(action);
+                    break;
+                case 'rest':
+                    airstrike.fire();
+                    break;
+                }
+            });
+        }
+    });
+```
