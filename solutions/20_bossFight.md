@@ -578,11 +578,11 @@ Phone key switches between move and aim modes. Aim with direction keys, then pre
         }
     };
 
-    function getObjectTypeAtDir(me, dir) {
+    function getCoordsAtDir(me, dir) {
         var offsets = dirs[dir];
         var x = me.getX() + offsets.dx;
         var y = me.getY() + offsets.dy;
-        map.getObjectTypeAt(x, y);
+        return { 'x': x, 'y': y };
     }
 
     function setControls(callback) {
@@ -601,7 +601,6 @@ Phone key switches between move and aim modes. Aim with direction keys, then pre
             }
         }
     }
-
 
     var barrier = {
         'symbol': ' ',
@@ -638,31 +637,48 @@ Phone key switches between move and aim modes. Aim with direction keys, then pre
         'interval': 100,
         'projectile': true,
         'pickDirection': function (me) {
-            var dirProbs = {
-                'left': 1.0,
-                'right': 1.0,
-                'up': 1.0,
-                'down': 1.0
-            };
-            var sumProbs = 0.0;
-            for (var dir in dirProbs) {
-                if (!me.canMove(dir)) {
-                    if (getObjectTypeAtDir(me, dir) == 'blast') {
-                        dirProbs[dir] = 0.1;
-                    } else {
-                        dirProbs[dir] = 5.0;
+            var dirData = {};
+            ['left', 'right', 'up', 'down'].forEach(function (dir) {
+                var coords = getCoordsAtDir(me, dir);
+                var objType = map.getObjectTypeAt(coords.x, coords.y);
+                dirData[dir] = { 'coords': coords, 'objType': objType };
+            });
+            map.getDynamicObjects().forEach(function (obj) {
+                var x = obj.getX();
+                var y = obj.getY();
+                for (var dir in dirData) {
+                    if (
+                        x == dirData[dir].coords.x &&
+                        y == dirData[dir].coords.y
+                    ) {
+                        dirData[dir].objType = obj.getType();
                     }
                 }
-                sumProbs += dirProbs[dir];
+            });
+            var sumProbs = 0.0;
+            for (var dir in dirData) {
+                var prob = 1.0;
+                if (!me.canMove(dir)) {
+                    switch (dirData[dir].objType) {
+                    case 'blast':
+                    case 'bullet':
+                        prob = 0.1;
+                        break;
+                    default:
+                        prob = 5.0;
+                    }
+                }
+                dirData[dir].prob = prob;
+                sumProbs += prob;
             }
             var rand = Math.random() * sumProbs;
-            for (var dir in dirProbs) {
-                sumProbs -= dirProbs[dir];
+            for (var dir in dirData) {
+                sumProbs -= dirData[dir].prob;
                 if (rand >= sumProbs) {
                     return dir;
                 }
             }
-            throw new Error('Unreachable');
+            throw "Unreachable";
         },
         'behavior': function (me) {
             me.counter = ~~(me.counter) + 1;
