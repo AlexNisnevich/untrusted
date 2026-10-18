@@ -166,6 +166,14 @@ Wander with visit counts.
 ```
 
 # Player-controlled approaches
+
+##Koffie
+
+Probably the shortest one
+```javascript
+me.move(player.getLastMoveDirection());
+```
+
 ##Pcat0
 Hit 'q' to toggle between controlling you and the robot. Works for 11, 12, 13
 ```javascript
